@@ -1,11 +1,11 @@
 {
-    "name": "youtube-timestamp-ext",
+    "name": "Pinboard for YouTube",
     "version": "1.0.0",
     "description": "A convenient YouTube extension which stores links and timestamps for quick retrieval.",
     "manifest_version": 3,
     "author": "Liam McRailt",
     "action":{
         "default_popup": "index.html",
-        "default_title": "youtube-timestamp-ext"
+        "default_title": "Pinboard for YouTube"
     }
 }
