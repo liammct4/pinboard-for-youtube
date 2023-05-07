@@ -14,7 +14,7 @@ class SplitHeading extends HTMLElement {
 		// Import styling.
 		const styleLink = document.createElement("link");
 		styleLink.setAttribute("link", "stylesheet");
-		styleLink.setAttribute("href", "elements/split-heading.css");
+		styleLink.setAttribute("href", "elements/split-heading/split-heading.css");
 		innerWrapper.appendChild(styleLink);
 
 		// Create element inner elements.
@@ -29,7 +29,7 @@ class SplitHeading extends HTMLElement {
 		innerWrapper.appendChild(text);
 
 		const style = document.createElement("style");
-		style.innerHTML = "@import url(elements/split-heading.css);"
+		style.innerHTML = "@import url(elements/split-heading/split-heading.css);"
 
 		this.shadowRoot.append(style, innerWrapper);
 	}
