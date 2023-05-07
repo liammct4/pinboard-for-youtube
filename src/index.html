@@ -4,8 +4,32 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Pinboard for YouTube</title>
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<script src="elements/split-heading.js"></script>
 	</head>
-	<body>
-
+	<body id="outer-body">
+		<div class="outer-section-area top-area">
+			<div id="top-section-inner-wrap">
+				<img class="logo-standard" src="../assets/logo/logo.png"/>
+				<h1 class="title-heading">Pinboard for YouTube</h1>
+			</div>
+			<hr>
+		</div>
+		<div class="inner-body">
+			<!-- Current video -->
+			<split-heading header="Current video"></split-heading>
+			<!-- My timestamps -->
+			<split-heading header="My video timestamps"></split-heading>
+			<div id="timestamp-scrollbox">
+			</div>
+		</div>
+		<div class="outer-section-area bottom-area">
+			<hr>
+			<div id="bottom-section-inner-wrap">
+				<button style="grid-column: 1; grid-row: 1;" class="button-small">Options</button>
+				<button style="grid-column: 1; grid-row: 2;" class="button-small">Help</button>
+				<h2 class="outer-area-subtle-text">Version 1.0.0</h2>
+			</div>
+		</div>
 	</body>
 </html>

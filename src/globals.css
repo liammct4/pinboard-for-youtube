@@ -1,0 +1,13 @@
+* {
+	padding: 0;
+	margin: 0;
+}
+
+:root {
+	--outer-solid: #F8B295;
+	--light-accent: #FF824D;
+	--dark-accent: #C64A15;
+	--subtle-background: #FBDECD;
+	--raised-background: #FFD5BD;
+	--dim-accent: #C28B74;
+}
