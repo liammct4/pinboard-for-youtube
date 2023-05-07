@@ -29,7 +29,7 @@ hr {
 
 /* Outer areas */
 #outer-body {
-	width: 330px;
+	width: 370px;
 	height: 445px;
 	display: grid;
 	grid-template-rows: auto 1fr auto;
@@ -104,6 +104,17 @@ hr {
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
+}
+
+.current-video-card {
+	margin: 5px 0 5px 0;
+}
+
+.current-video-options {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 12px;
+	gap: 5px;
 }
 
 #timestamp-scrollbox {

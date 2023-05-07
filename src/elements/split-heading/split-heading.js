@@ -6,8 +6,6 @@ class SplitHeading extends HTMLElement {
 	connectedCallback() {
 		this.attachShadow({ mode: "open" });
 
-		console.log(document);
-
 		const innerWrapper = document.createElement("div");
 		innerWrapper.setAttribute("class", "split-heading");
 

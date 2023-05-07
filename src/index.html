@@ -6,6 +6,7 @@
 		<title>Pinboard for YouTube</title>
 		<link rel="stylesheet" type="text/css" href="main.css">
 		<script src="elements/split-heading/split-heading.js"></script>
+		<script src="elements/video-card/video-card.js"></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -21,6 +22,11 @@
 		<div class="inner-body">
 			<!-- Current video -->
 			<split-heading header="Current video"></split-heading>
+			<video-card class="current-video-card" url="https://www.youtube.com/watch?v=xcJtL7QggTI"></video-card>
+			<div class="current-video-options">
+				<button class="button-small">Save video</button>
+				<button class="button-small">Pin timestamp</button>
+			</div>
 			<!-- My timestamps -->
 			<split-heading header="My video timestamps"></split-heading>
 			<div id="timestamp-scrollbox">
