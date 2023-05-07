@@ -18,6 +18,7 @@ function Get(url){
 class VideoCard extends HTMLElement {
 	constructor() {
 		super();
+		this.init = true;
 	}
 
 	connectedCallback() {
@@ -32,35 +33,60 @@ class VideoCard extends HTMLElement {
 		styleLink.setAttribute("href", "elements/video-card/video-card.css");
 		innerWrapper.appendChild(styleLink);
 
-		let url = this.getAttribute("url");
-		let videoId = getVideoIdFromYoutubeLink(url);
-
 		// Thumbnail
-		const thumb = document.createElement("img");
-		thumb.setAttribute("src", `https://img.youtube.com/vi/${videoId}/default.jpg`);
+		let thumb = document.createElement("img");
 		thumb.setAttribute("alt", "Current video thumbnail.");
-		thumb.classList.add("video-card-thumb");
+		thumb.setAttribute("id", "video-card-thumb");
 		innerWrapper.appendChild(thumb);
 
-		let info = JSON.parse(Get(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`))
-
 		// Title
-		const title = document.createElement("h2");
-		title.innerHTML = info["title"];
-		title.classList.add("video-card-title");
+		let title = document.createElement("h2");
+		title.setAttribute("id", "video-card-title");
 		innerWrapper.appendChild(title);
 
 		// URL
-		const urlLink = document.createElement("a");
-		urlLink.setAttribute("href", url);
-		urlLink.innerHTML = url;
-		urlLink.classList.add("video-card-url");
+		let urlLink = document.createElement("a");
+		urlLink.setAttribute("id", "video-card-url");
 		innerWrapper.appendChild(urlLink);
 
 		const style = document.createElement("style");
 		style.innerHTML = "@import url(elements/video-card/video-card.css);"
 
 		this.shadowRoot.append(style, innerWrapper);
+		this.update()
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		switch (name) {
+			case "url":
+				// Skip first call as the shadow DOM hasn't been created yet.
+				if (this.init) {
+					this.init = false;
+					return;
+				}
+
+				this.update();
+				break;
+		}
+	}
+
+	update() {
+		let thumb = this.shadowRoot.getElementById('video-card-thumb');
+		let urlLink = this.shadowRoot.getElementById('video-card-url');
+		let title = this.shadowRoot.getElementById('video-card-title');
+
+		let url = this.getAttribute("url");
+		let videoId = getVideoIdFromYoutubeLink(url);
+		thumb.setAttribute("src", `https://img.youtube.com/vi/${videoId}/default.jpg`);
+
+		let info = JSON.parse(Get(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`))
+		title.innerHTML = info["title"];
+		urlLink.setAttribute("href", url);
+		urlLink.innerHTML = url;
+	}
+
+	static get observedAttributes() {
+		return ["url"]
 	}
 }
 
