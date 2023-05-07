@@ -9,12 +9,22 @@ hr {
 
 .button-small {
 	border: 1px solid var(--light-accent);
-	background: white;
+	background: var(--very-bright-light-shade);
 	color: var(--dark-accent);
 	font-weight: bold;
 	font-size: 9;
 	border-radius: 3px;
 	padding: 0 10px;
+	transition: background 0.2s, border 0.1s;
+}
+
+.button-small:hover {
+	background: var(--bright-light-shade);
+	border: 1px solid var(--dark-accent);
+}
+
+.button-small:active {
+	background: var(--regular-light-shade);
 }
 
 /* Outer areas */
