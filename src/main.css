@@ -1,31 +1,5 @@
 @import "globals.css";
-
-/* Common definitions */
-hr {
-	background-color: var(--light-accent);
-	height: 1px;
-	border: none;
-}
-
-.button-small {
-	border: 1px solid var(--light-accent);
-	background: var(--very-bright-light-shade);
-	color: var(--dark-accent);
-	font-weight: bold;
-	font-size: 9;
-	border-radius: 3px;
-	padding: 0 10px;
-	transition: background 0.2s, border 0.1s;
-}
-
-.button-small:hover {
-	background: var(--bright-light-shade);
-	border: 1px solid var(--dark-accent);
-}
-
-.button-small:active {
-	background: var(--regular-light-shade);
-}
+@import "common-definitions.css";
 
 /* Outer areas */
 #outer-body {
@@ -123,4 +97,14 @@ hr {
 	border-radius: 12px;
 	flex-grow: 1;
 	margin-top: 8px;
+	overflow-y: scroll;
+	height: 0px;
+}
+
+#timestamp-scrollbox-list {
+	margin: 10px;
+}
+
+#timestamp-scrollbox::-webkit-scrollbar-track {
+	margin: 5px 0 5px 0;
 }

@@ -1,0 +1,28 @@
+@import url("../../common-definitions.css");
+@import url("../../globals.css");
+
+#video-timestamp-inner {
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+	align-items: center;
+}
+
+#video-timestamp-time {
+	font-size: 9pt;
+}
+
+#video-timestamp-separator {
+	height: 12px;
+	width: 1px;
+	margin: 0 3px;
+	background: var(--light-accent);
+}
+
+#video-timestamp-message {
+	font-size: 9pt;
+}
+
+#video-timestamp-filler {
+	flex-grow: 1;
+}

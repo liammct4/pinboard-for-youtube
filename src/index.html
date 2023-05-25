@@ -7,6 +7,9 @@
 		<link rel="stylesheet" type="text/css" href="main.css">
 		<script src="elements/split-heading/split-heading.js"></script>
 		<script src="elements/video-card/video-card.js"></script>
+		<script src="elements/subtle-expander/subtle-expander.js"></script>
+		<script src="elements/video-timestamp-list/video-timestamp-list.js"></script>
+		<script src="elements/video-timestamp/video-timestamp.js"></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
@@ -22,7 +25,7 @@
 		<div class="inner-body">
 			<!-- Current video -->
 			<split-heading header="Current video"></split-heading>
-			<video-card id="current-video-card" url="https://www.youtube.com/watch?v=xcJtL7QggTI"></video-card>
+			<video-card id="current-video-card" videoid="xcJtL7QggTI"></video-card>
 			<div class="current-video-options">
 				<button class="button-small">Save video</button>
 				<button class="button-small">Pin timestamp</button>
@@ -30,6 +33,14 @@
 			<!-- My timestamps -->
 			<split-heading header="My video timestamps"></split-heading>
 			<div id="timestamp-scrollbox">
+				<ul id="timestamp-scrollbox-list">
+					<video-timestamp-list url="https://www.youtube.com/watch?v=LXb3EKWsInQ"></video-timestamp-list>
+					<video-timestamp-list url="https://www.youtube.com/watch?v=njX2bu-_Vw4"></video-timestamp-list>
+					<video-timestamp-list url="https://www.youtube.com/watch?v=AKeUssuu3Is"></video-timestamp-list>
+					<video-timestamp-list url="https://www.youtube.com/watch?v=ZjVAsJOl8SM"></video-timestamp-list>
+					<video-timestamp-list url="https://www.youtube.com/watch?v=PnvkrBXmLSI"></video-timestamp-list>
+					<video-timestamp-list url="https://www.youtube.com/watch?v=ERYG3NE1DO8"></video-timestamp-list>
+				</ul>
 			</div>
 		</div>
 		<div class="outer-section-area bottom-area">

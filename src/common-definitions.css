@@ -1,0 +1,45 @@
+hr {
+	background-color: var(--light-accent);
+	height: 1px;
+	border: none;
+}
+
+.button-small {
+	height: 16px;
+	border: 1px solid var(--light-accent);
+	background: var(--very-bright-light-shade);
+	color: var(--dark-accent);
+	font-weight: bold;
+	font-size: 9pt;
+	border-radius: 3px;
+	padding: 0px 10px 0px 10px;
+	transition: background 0.2s, border 0.1s;
+	line-height: 0px;
+}
+
+.button-small:hover {
+	background: var(--bright-light-shade);
+	border: 1px solid var(--dark-accent);
+}
+
+.button-small:active {
+	background: var(--regular-light-shade);
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+	margin-top: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--bright-accent);
+	border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--light-accent);
+}
+
+::-webkit-scrollbar-thumb:active {
+	background: var(--dark-accent);
+}

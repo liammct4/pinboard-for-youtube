@@ -1,12 +1,3 @@
-// TODO: Put in own modules
-const YOUTUBE_EXTRACT_VIDEO_ID_REGEX = /.*\?v=(?<VideoID>[\w\d\-]*)/
-
-function getVideoIdFromYoutubeLink(url) {
-	const { groups: { VideoID } } = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(url);
-
-	return VideoID;
-}
-
 function Get(url){
 	var Httpreq = new XMLHttpRequest(); // a new request
 	Httpreq.open("GET", url, false);
@@ -53,18 +44,18 @@ class VideoCard extends HTMLElement {
 		style.innerHTML = "@import url(elements/video-card/video-card.css);"
 
 		this.shadowRoot.append(style, innerWrapper);
+		this.init = false;
 		this.update()
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		switch (name) {
-			case "url":
-				// Skip first call as the shadow DOM hasn't been created yet.
-				if (this.init) {
-					this.init = false;
-					return;
-				}
+		// Skip first call as the shadow DOM hasn't been created yet.
+		if (this.init) {
+			return;
+		}	
 
+		switch (name) {
+			case "videoid":
 				this.update();
 				break;
 		}
@@ -75,18 +66,22 @@ class VideoCard extends HTMLElement {
 		let urlLink = this.shadowRoot.getElementById('video-card-url');
 		let title = this.shadowRoot.getElementById('video-card-title');
 
-		let url = this.getAttribute("url");
-		let videoId = getVideoIdFromYoutubeLink(url);
+		let url = this.getUrl();
+		let videoId = this.getAttribute("videoid");
 		thumb.setAttribute("src", `https://img.youtube.com/vi/${videoId}/default.jpg`);
 
-		let info = JSON.parse(Get(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`))
+		let info = JSON.parse(Get(`https://noembed.com/embed?url=${url}`))
 		title.innerHTML = info["title"];
 		urlLink.setAttribute("href", url);
 		urlLink.innerHTML = url;
 	}
 
+	getUrl() {
+		return `https://www.youtube.com/watch?v=${this.getAttribute("videoid")}`;
+	}
+
 	static get observedAttributes() {
-		return ["url"]
+		return ["videoid"]
 	}
 }
 
