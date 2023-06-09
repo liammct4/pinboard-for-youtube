@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import logo from './../assets/logo/logo.png'
+import SplitHeading from "./components/SplitHeading/SplitHeading.jsx"
 import './App.css'
 
 // TODO: Convert web components to react components
 
 function App() {
-	const [count, setCount] = useState(0)
-
 	return (
 		<div className="outer-body">
 			<div className="outer-section-area top-area">
@@ -18,14 +17,14 @@ function App() {
 			</div>
 			<div className="inner-body">
 				{/* Current video */}
-				<split-heading header="Current video"></split-heading>
+				<SplitHeading text="Current video"></SplitHeading>
 				<video-card id="current-video-card" videoid="xcJtL7QggTI"></video-card>
 				<div className="current-video-options">
 					<button className="button-small">Save video</button>
 					<button className="button-small">Pin timestamp</button>
 				</div>
 				{/* My timestamps */}
-				<split-heading header="My video timestamps"></split-heading>
+				<SplitHeading text="My video timestamps"></SplitHeading>
 				<div id="timestamp-scrollbox">
 					<ul id="timestamp-scrollbox-list">
 						<video-timestamp-list url="https://www.youtube.com/watch?v=LXb3EKWsInQ"></video-timestamp-list>

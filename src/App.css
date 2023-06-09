@@ -2,9 +2,10 @@
 @import "common-definitions.css";
 
 /* Outer areas */
-#outer-body {
+.outer-body {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
+	height: 100%;
 }
 
 .top-heading {

@@ -1,8 +1,7 @@
 @import url("../../globals.css");
 
-.split-heading {
+.outer-heading {
 	width: 100%;
-	height: 100%;
 	padding: 2px;
 	display: flex;
 	flex-direction: row;
