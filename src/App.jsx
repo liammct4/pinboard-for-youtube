@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import logo from './../assets/logo/logo.png'
 import SplitHeading from "./components/SplitHeading/SplitHeading.jsx"
+import VideoCard from "./components/video/VideoCard/VideoCard.jsx"
 import './App.css'
 
 // TODO: Convert web components to react components
@@ -18,7 +19,9 @@ function App() {
 			<div className="inner-body">
 				{/* Current video */}
 				<SplitHeading text="Current video"></SplitHeading>
-				<video-card id="current-video-card" videoid="xcJtL7QggTI"></video-card>
+				<div id="current-video-card">
+					<VideoCard video-id="xcJtL7QggTI"></VideoCard>
+				</div>
 				<div className="current-video-options">
 					<button className="button-small">Save video</button>
 					<button className="button-small">Pin timestamp</button>
@@ -27,12 +30,13 @@ function App() {
 				<SplitHeading text="My video timestamps"></SplitHeading>
 				<div id="timestamp-scrollbox">
 					<ul id="timestamp-scrollbox-list">
-						<video-timestamp-list url="https://www.youtube.com/watch?v=LXb3EKWsInQ"></video-timestamp-list>
-						<video-timestamp-list url="https://www.youtube.com/watch?v=njX2bu-_Vw4"></video-timestamp-list>
-						<video-timestamp-list url="https://www.youtube.com/watch?v=AKeUssuu3Is"></video-timestamp-list>
-						<video-timestamp-list url="https://www.youtube.com/watch?v=ZjVAsJOl8SM"></video-timestamp-list>
-						<video-timestamp-list url="https://www.youtube.com/watch?v=PnvkrBXmLSI"></video-timestamp-list>
-						<video-timestamp-list url="https://www.youtube.com/watch?v=ERYG3NE1DO8"></video-timestamp-list>
+						{/* TODO: Convert video-timestamp-list to react component with full URL's. */}
+						<li><VideoCard video-id="LXb3EKWsInQ"></VideoCard></li>
+						<li><VideoCard video-id="njX2bu-_Vw4"></VideoCard></li>
+						<li><VideoCard video-id="AKeUssuu3Is"></VideoCard></li>
+						<li><VideoCard video-id="ZjVAsJOl8SM"></VideoCard></li>
+						<li><VideoCard video-id="PnvkrBXmLSI"></VideoCard></li>
+						<li><VideoCard video-id="ERYG3NE1DO8"></VideoCard></li>
 					</ul>
 				</div>
 			</div>

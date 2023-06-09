@@ -1,4 +1,4 @@
-@import url("../../globals.css");
+@import "src/globals.css";
 
 .video-card-inner {
 	display: grid;
@@ -26,7 +26,7 @@
 #video-card-url {
 	grid-column: 2;
 	grid-row: 2;
-	font-size: 7pt;
+	font-size: 6.7pt;
 	font-weight: bold;
 	color: var(--dim-accent);
 }
