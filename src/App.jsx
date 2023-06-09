@@ -2,6 +2,7 @@ import { useState } from 'react'
 import logo from './../assets/logo/logo.png'
 import SplitHeading from "./components/SplitHeading/SplitHeading.jsx"
 import VideoCard from "./components/video/VideoCard/VideoCard.jsx"
+import VideoTimestamp from "./components/video/VideoTimestamp/VideoTimestamp.jsx"
 import './App.css'
 
 // TODO: Convert web components to react components
@@ -31,7 +32,12 @@ function App() {
 				<div id="timestamp-scrollbox">
 					<ul id="timestamp-scrollbox-list">
 						{/* TODO: Convert video-timestamp-list to react component with full URL's. */}
-						<li><VideoCard video-id="LXb3EKWsInQ"></VideoCard></li>
+						<li>
+							<VideoCard video-id="LXb3EKWsInQ"></VideoCard>
+							{/* Test timestamps which will be integrated into video-timestamp-list. */}
+							<VideoTimestamp video-id="AKeUssuu3Is" time="63" message="Timestamp at the start of the video to test string padding."></VideoTimestamp>
+							<VideoTimestamp video-id="AKeUssuu3Is" time="4351" message="Timestamp in the middle..."></VideoTimestamp>
+						</li>
 						<li><VideoCard video-id="njX2bu-_Vw4"></VideoCard></li>
 						<li><VideoCard video-id="AKeUssuu3Is"></VideoCard></li>
 						<li><VideoCard video-id="ZjVAsJOl8SM"></VideoCard></li>
