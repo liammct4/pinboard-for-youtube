@@ -102,6 +102,8 @@
 
 #timestamp-scrollbox-list {
 	margin: 10px;
+	list-style-type: none;
+	padding: 0;
 }
 
 #timestamp-scrollbox::-webkit-scrollbar-track {

@@ -1,7 +1,7 @@
 hr {
+	border: initial !important;
 	background-color: var(--light-accent);
 	height: 1px;
-	border: none;
 }
 
 .button-small {

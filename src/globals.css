@@ -16,3 +16,24 @@
 	--bright-light-shade: #e7e7e7;
 	--very-bright-light-shade: #ffffff;
 }
+
+/* Override Bootstrap. */
+h1 {
+	margin: initial;
+}
+
+h2 {
+	margin: initial;
+}
+h3 {
+	margin: initial;
+}
+h4 {
+	margin: initial;
+}
+h5 {
+	margin: initial;
+}
+h6 {
+	margin: initial;
+}

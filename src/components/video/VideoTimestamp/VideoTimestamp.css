@@ -20,8 +20,15 @@
 	background: var(--light-accent);
 }
 
+.video-timestamp-list-container {
+	list-style-type: none;
+	padding: 0;
+	margin-left: 10px;
+}
+
 #video-timestamp-message {
 	font-size: 9pt;
+	margin: 0;
 }
 
 #video-timestamp-filler {

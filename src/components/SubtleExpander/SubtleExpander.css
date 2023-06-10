@@ -1,0 +1,46 @@
+@import "src/globals.css";
+
+.subtle-expander-inner {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto auto;
+}
+
+.subtle-expander-button {
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: var(--light-accent);
+	border: 1px solid var(--dark-accent);
+	margin: auto 0 auto 0;
+	transition: background 0.2s;
+}
+
+.subtle-expander-button:hover {
+	background: var(--dark-accent);
+}
+
+.subtle-expander-symbol {
+	transition: transform 0.3s, margin-bottom 0.3s;
+	margin-bottom: 10.5px;
+}
+
+.rotate-open {
+	transform: rotate(0deg);
+}
+
+.rotate-close {
+	transform: rotate(180deg);
+}
+
+.subtle-expander-text {
+	font-weight: bold;
+	font-size: 9pt;
+	color: var(--dark-accent);
+	margin-left: 3px;
+}
+
+.subtle-expander-content {
+	grid-row: 2;
+	grid-column: 1 / 3;
+}

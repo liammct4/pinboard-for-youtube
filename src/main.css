@@ -1,3 +1,5 @@
+@import "src/globals.css";
+
 #root {
 	width: 370px;
 	height: 445px;
