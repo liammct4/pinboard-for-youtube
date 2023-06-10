@@ -12,7 +12,7 @@ export function SubtleExpander({ "open-message": open, "close-message": close, c
 		<div className="subtle-expander-inner">
 			<button onClick={(x) => {
 				setExpanded(!expanded)
-			}} className="subtle-expander-button" data-bs-toggle="collapse" href={"#" + collapseID} role="button" aria-expanded="false" aria-controls={collapseID}>
+			}} className="circle-button subtle-expander-button" data-bs-toggle="collapse" href={"#" + collapseID} role="button" aria-expanded="false" aria-controls={collapseID}>
 				<img className={styling} src="./../../../assets/symbols/arrow.svg"/>
 			</button>
 			<h3 className="subtle-expander-text">{expanded ? open : close}</h3>

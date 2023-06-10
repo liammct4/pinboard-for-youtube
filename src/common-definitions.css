@@ -4,6 +4,7 @@ hr {
 	height: 1px;
 }
 
+/* Small button */
 .button-small {
 	height: 16px;
 	border: 1px solid var(--light-accent);
@@ -13,8 +14,12 @@ hr {
 	font-size: 9pt;
 	border-radius: 3px;
 	padding: 0px 10px 0px 10px;
-	transition: background 0.2s, border 0.1s;
+	transition: background 0.2s, border 0.1s, outline 0.05s;
 	line-height: 0px;
+}
+
+.button-small:focus {
+	outline: 2px solid var(--dark-accent);
 }
 
 .button-small:hover {
@@ -26,6 +31,22 @@ hr {
 	background: var(--regular-light-shade);
 }
 
+/* Circle button */
+.circle-button {
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: var(--light-accent);
+	border: 1px solid var(--dark-accent);
+	margin: auto 0 auto 0;
+	transition: background 0.2s;
+}
+
+.circle-button:hover {
+	background: var(--dark-accent);
+}
+
+/* Scrollbars */
 ::-webkit-scrollbar {
 	width: 12px;
 	margin-top: 10px;

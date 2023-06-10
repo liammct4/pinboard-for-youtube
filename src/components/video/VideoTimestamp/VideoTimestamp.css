@@ -34,3 +34,66 @@
 #video-timestamp-filler {
 	flex-grow: 1;
 }
+
+.edit-grid {
+	display: grid;
+	gap: 10px;
+	font-size: 10pt;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: 1fr 1fr;
+	color: var(--dark-accent) !important;
+	font-weight: bold;
+}
+
+.edit-grid > h6 {
+	margin: auto 0;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+.edit-grid > input {
+	border: 1px solid var(--dark-accent);
+	border-radius: 3px;
+	transition: outline 0.05s;
+	padding: 0 5px;
+}
+
+.edit-grid > input:focus {
+	outline: 2px solid var(--dim-accent);
+}
+
+/* Modal styling */
+.modal-close-button {
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 15pt;
+}
+
+.modal-close-button:hover {
+	font-weight: bolder;
+}
+
+.modal-title {
+	font-weight: bold;
+	color: var(--dark-accent) !important;
+}
+
+.modal-header {
+	padding: 5px !important;
+	background: var(--outer-solid);
+}
+
+.modal-body {
+	padding: 5px 10px !important;
+	background: var(--subtle-background);
+}
+
+.modal-footer {
+	padding: 5px !important;
+	background: var(--outer-solid) !important;
+}

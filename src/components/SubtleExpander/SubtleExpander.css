@@ -6,20 +6,6 @@
 	grid-template-rows: auto auto;
 }
 
-.subtle-expander-button {
-	width: 16px;
-	height: 16px;
-	border-radius: 8px;
-	background: var(--light-accent);
-	border: 1px solid var(--dark-accent);
-	margin: auto 0 auto 0;
-	transition: background 0.2s;
-}
-
-.subtle-expander-button:hover {
-	background: var(--dark-accent);
-}
-
 .subtle-expander-symbol {
 	transition: transform 0.3s, margin-bottom 0.3s;
 	margin-bottom: 10.5px;

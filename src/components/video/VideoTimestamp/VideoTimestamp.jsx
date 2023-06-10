@@ -1,15 +1,30 @@
-import { useState} from "react"
+import { useState, useRef, useEffect } from "react"
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
 import * as YTUtil from "./../../../lib/youtube-util.js" 
+import { v4 as uuidv4 } from 'uuid';
 import "./VideoTimestamp.css"
 
 /* "time" is in seconds, not a timestamp. So 1032 instead of 17:12 for example. */
-/* TODO: Implement ability to edit timestamps using the edit button. */
-export function VideoTimestamp({ "video-id": videoID, "message": message, "time": time }) {
-	let [seconds, setSeconds] = useState(Number(time));
+export function VideoTimestamp({ "video-id": videoID, "message": defaultMessage, "time": time }) {
+	const [seconds, setSeconds] = useState(Number(time));
+	const [message, setMessage] = useState(defaultMessage);
+
+	let timeRef = useRef(getTimestampFromSeconds(seconds));
+	let messageRef = useRef(message);
 
 	let stringTime = getTimestampFromSeconds(seconds);
 	let timeLink = YTUtil.getTimestampVideoLinkFromSeconds(videoID, seconds);
+	
+	// Set a unique ID for Bootstrap components as to not interfere with other VideoTimestamp components in the DOM.
+	let uniqueID = "vtl-" + uuidv4();
+
+	const onSave = () => {
+		// TODO: Add error handling.
+		let time = getSecondsFromTimestamp(timeRef.current);
+
+		setMessage(messageRef.current);
+		setSeconds(time);
+	}
 
 	return (
 		<div id="video-timestamp-inner">
@@ -17,7 +32,34 @@ export function VideoTimestamp({ "video-id": videoID, "message": message, "time"
 			<div id="video-timestamp-separator"></div>
 			<p id="video-timestamp-message">{message}</p>
 			<div id="video-timestamp-filler"></div>
-			<button id="video-timestamp-button" className="button-small">Edit</button>
+			<button id="video-timestamp-button" className="button-small" data-bs-toggle="modal" data-bs-target={"#" + uniqueID}>Edit</button>
+			{/* Edit modal */}
+			<div className="modal fade" id={uniqueID} role="dialog">
+				<div className="modal-dialog" role="document">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h5 className="modal-title">Edit timestamp</h5>
+							<button type="button" className="circle-button modal-close-button" data-bs-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div className="modal-body">
+							<div id={uniqueID} className="edit-grid">
+								{/* Time */}
+								<h6>Time:</h6>
+								<input onChange={(x) => timeRef.current = x.target.value} defaultValue={stringTime}></input>
+								{/* Message */}
+								<h6>Message:</h6>
+								<input onChange={(x) => messageRef.current = x.target.value} defaultValue={message}></input>
+							</div>
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="button-small" onClick={onSave}>Save</button>
+							<button type="button" className="button-small" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
