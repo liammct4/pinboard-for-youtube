@@ -100,12 +100,6 @@
 	height: 0px;
 }
 
-#timestamp-scrollbox-list {
-	margin: 10px;
-	list-style-type: none;
-	padding: 0;
-}
-
 #timestamp-scrollbox::-webkit-scrollbar-track {
 	margin: 5px 0 5px 0;
 }
