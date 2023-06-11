@@ -5,7 +5,7 @@
     "manifest_version": 3,
     "author": "Liam McRailt",
     "action":{
-        "default_popup": "src/index.html",
+        "default_popup": "index.html",
         "default_title": "Pinboard for YouTube"
     },
     "icons":{
