@@ -9,9 +9,9 @@ export function VideoCard({ "video-id": videoID }) {
 
 	return (
 		<div className="video-card-inner">
-			<img id="video-card-thumb" src={`https://img.youtube.com/vi/${videoID}/default.jpg`}/>
-			<h2 id="video-card-title">{info["title"]}</h2>
-			<a id="video-card-url" href={url}>{url}</a>
+			<img className="video-card-thumb" src={`https://img.youtube.com/vi/${videoID}/default.jpg`}/>
+			<h2 className="video-card-title">{info["title"]}</h2>
+			<a className="video-card-url" href={url}>{url}</a>
 		</div>
 	)
 }

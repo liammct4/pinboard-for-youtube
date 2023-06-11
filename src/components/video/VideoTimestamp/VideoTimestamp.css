@@ -1,7 +1,7 @@
 @import "src/common-definitions.css";
 @import "src/globals.css";
 
-#video-timestamp-inner {
+.video-timestamp-inner {
 	display: flex;
 	flex-direction: row;
 	box-sizing: border-box;
@@ -9,11 +9,11 @@
 	margin: 1px 0;
 }
 
-#video-timestamp-time {
+.video-timestamp-time {
 	font-size: 9pt;
 }
 
-#video-timestamp-separator {
+.video-timestamp-separator {
 	height: 12px;
 	width: 1px;
 	margin: 0 3px;
@@ -26,12 +26,12 @@
 	margin-left: 10px;
 }
 
-#video-timestamp-message {
+.video-timestamp-message {
 	font-size: 9pt;
 	margin: 0;
 }
 
-#video-timestamp-filler {
+.video-timestamp-filler {
 	flex-grow: 1;
 }
 

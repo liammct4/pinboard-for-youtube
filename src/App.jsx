@@ -6,8 +6,6 @@ import VideoTimestamp from "./components/video/VideoTimestamp/VideoTimestamp.jsx
 import VideoTimestampList from "./components/video/VideoTimestampList/VideoTimestampList.jsx"
 import './App.css'
 
-// TODO: Convert web components to react components
-
 function App() {
 	return (
 		<div className="outer-body">

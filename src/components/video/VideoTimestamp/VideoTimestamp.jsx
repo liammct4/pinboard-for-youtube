@@ -27,24 +27,24 @@ export function VideoTimestamp({ "video-id": videoID, "message": defaultMessage,
 	}
 
 	return (
-		<div id="video-timestamp-inner">
-			<a id="video-timestamp-time" href={timeLink}>{stringTime}</a>
-			<div id="video-timestamp-separator"></div>
-			<p id="video-timestamp-message">{message}</p>
-			<div id="video-timestamp-filler"></div>
-			<button id="video-timestamp-button" className="button-small" data-bs-toggle="modal" data-bs-target={"#" + uniqueID}>Edit</button>
+		<div className="video-timestamp-inner">
+			<a className="video-timestamp-time" href={timeLink}>{stringTime}</a>
+			<div className="video-timestamp-separator"></div>
+			<p className="video-timestamp-message">{message}</p>
+			<div className="video-timestamp-filler"></div>
+			<button className="button-small video-timestamp-button" data-bs-toggle="modal" data-bs-target={"#" + uniqueID}>Edit</button>
 			{/* Edit modal */}
 			<div className="modal fade" id={uniqueID} role="dialog">
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
 						<div className="modal-header">
 							<h5 className="modal-title">Edit timestamp</h5>
-							<button type="button" className="circle-button modal-close-button" data-bs-dismiss="modal" aria-label="Close">
+							<button type="button" title="Close" className="circle-button modal-close-button" data-bs-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div className="modal-body">
-							<div id={uniqueID} className="edit-grid">
+							<div className="edit-grid">
 								{/* Time */}
 								<h6>Time:</h6>
 								<input onChange={(x) => timeRef.current = x.target.value} defaultValue={stringTime}></input>

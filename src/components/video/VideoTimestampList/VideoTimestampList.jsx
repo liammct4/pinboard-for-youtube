@@ -15,11 +15,11 @@ export function VideoTimestampList({ "video-id": videoID, timestamps }) {
 		]
 	*/
 
-	let timestampItems = times.map((x) => <li><VideoTimestamp video-id={videoID} time={x.time} message={x.message}></VideoTimestamp></li>);
+	let timestampItems = times.map((x) => <li key={`${videoID}-${x.time}`}><VideoTimestamp video-id={videoID} time={x.time} message={x.message}></VideoTimestamp></li>);
 
 	return (
 		<>
-			<div id="video-timestamp-list">
+			<div className="video-timestamp-list">
 				<VideoCard video-id={videoID}></VideoCard>
 				<hr className="video-timestamp-list-margin"></hr>
 				<SubtleExpander open-message="Close timestamps" close-message="Expand timestamps">	

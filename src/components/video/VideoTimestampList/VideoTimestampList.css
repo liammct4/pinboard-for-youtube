@@ -1,6 +1,6 @@
 @import "src/globals.css";
 
-#video-timestamp-list {
+.video-timestamp-list {
 	display: flex;
 	flex-direction: column;
 }
