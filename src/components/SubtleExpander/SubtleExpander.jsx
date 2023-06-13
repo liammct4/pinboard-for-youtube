@@ -1,6 +1,6 @@
 import { useState } from "react"
 import "./SubtleExpander.css"
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 export function SubtleExpander({ "open-message": open, "close-message": close, children }) {
 	const [expanded, setExpanded] = useState(false);

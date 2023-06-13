@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
 import * as YTUtil from "./../../../lib/youtube-util.js" 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import "./VideoTimestamp.css"
 
 /* "time" is in seconds, not a timestamp. So 1032 instead of 17:12 for example. */
