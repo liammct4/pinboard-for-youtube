@@ -6,7 +6,7 @@ export function VideoCollection({ videos }) {
 	/* Structure of "videos", which is a JSON array of objects:
 		"video": [
 			{
-				"video-id": "LXb3EKWsInQ",
+				"videoID": "LXb3EKWsInQ",
 				"timestamps": [
 					{ "time": 103, "message": "Test message" },
 					{ "time": 493, "message": "Another message" },
@@ -14,7 +14,7 @@ export function VideoCollection({ videos }) {
 				]
 			},
 			{
-				"video-id": "ZjVAsJOl8SM",
+				"videoID": "ZjVAsJOl8SM",
 				"timestamps": [
 					{ "time": 1063, "message": "Another timestamp." }
 				]
@@ -22,7 +22,7 @@ export function VideoCollection({ videos }) {
 		]
 	*/
 
-	let items = videos.map((x) => <li key={x["video-id"]}><VideoTimestampList timestamps={x["timestamps"]} video-id={x["video-id"]}></VideoTimestampList></li>);
+	let items = videos.map((x) => <li key={x["videoID"]}><VideoTimestampList timestamps={x["timestamps"]} video-id={x["videoID"]}></VideoTimestampList></li>);
 
 	return (
 		<ul className="timestamp-scrollbox-list">
