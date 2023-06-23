@@ -1,6 +1,8 @@
+import { Video } from "./../lib/user/user-data.ts"
+
 /* This files contains all of the testing/sample data needed. */
 
-export const sampleVideoData = [
+export const sampleVideoData: Array<Video> = [
 	{
 		"videoID": "LXb3EKWsInQ",
 		"timestamps": [

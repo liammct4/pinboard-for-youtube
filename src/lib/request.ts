@@ -1,4 +1,4 @@
-export function requestGet(url) {
+export function requestGet(url: string): any {
 	var request = new XMLHttpRequest();
 
 	request.open("GET", url, false);

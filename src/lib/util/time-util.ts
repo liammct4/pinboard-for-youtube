@@ -1,15 +1,15 @@
-export function getSecondsFromTimestamp(time) {
+export function getSecondsFromTimestamp(time: string): number {
 	if (!/^\s*(\d+:)?\d{2}:\d{2}\s*$/.test(time)) {
 		throw new TypeError(`Invalid argument provided, the timestamp was an invalid value. Value proivded: '${time}'.`);
 	}
 
-	let parts = time.split(":").reverse();
+	let parts: Array<string> = time.split(":").reverse();
 
-	let total = 0;
-	let mult = [1, 60, 3600, 86400];
+	let total: number = 0;
+	let mult: Array<number> = [1, 60, 3600, 86400];
 	
 	for (let i = 0; i < parts.length; i++) {
-		let num = Number(parts[i]);
+		let num: number = Number(parts[i]);
 
 		total += num * mult[i];
 	}
@@ -17,20 +17,20 @@ export function getSecondsFromTimestamp(time) {
 	return total;
 }
 
-export function getTimestampFromSeconds(seconds) {
+export function getTimestampFromSeconds(seconds: number): string {
 	if (seconds < 0) {
 		throw new TypeError("Invalid argument provided, seconds was negative.");
 	}
 
-	let remaining = seconds;
+	let remaining: number = seconds;
 
-	let hours = Math.floor(remaining / (60 * 60));
+	let hours: number = Math.floor(remaining / (60 * 60));
 	remaining = remaining % (60 * 60);
 
-	let minutes = Math.floor(remaining / 60);
+	let minutes: number = Math.floor(remaining / 60);
 	remaining = remaining % 60;
 
-	let result = "";
+	let result: string = "";
 
 	if (hours > 0) {
 		result += `${hours}:`;

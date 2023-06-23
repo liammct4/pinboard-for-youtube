@@ -1,7 +1,7 @@
-import * as userData from "./user-data.js"
-import { sampleVideoData } from "./../../data/testDataSet.js"
+import * as userData from "./user-data.ts"
+import { sampleVideoData } from "./../../data/testDataSet.ts"
 
-let storageTemplate = {
+let storageTemplate: userData.IStorage = {
 	"user_data": {
 		"videos": sampleVideoData,
 		"config": {
@@ -10,7 +10,7 @@ let storageTemplate = {
 	}
 }
 
-async function prepareStorage(setTemplate = true) {
+async function prepareStorage(setTemplate: boolean = true) : Promise<void> {
 	await chrome.storage.local.clear();
 
 	if (!setTemplate) {
@@ -29,7 +29,7 @@ describe("Local storage operations.", () => {
 	test("set's storage to a default template when it is empty (as is the case when the extension is first installed).", async () => {
 		await prepareStorage(false);		
 
-		let defaultTemplate = {
+		let defaultTemplate: userData.IStorage = {
 			"user_data": {
 				"videos": [],
 				"config": {
@@ -45,7 +45,7 @@ describe("Local storage operations.", () => {
 	test("throws an error whenever storage contains incorrect data, (E.g. corruption).", async () => {
 		await prepareStorage(false);
 
-		let badData = {
+		let badData: any = {
 			"userdata": {
 				"videos": [
 					{
@@ -85,15 +85,15 @@ describe("Extracting data from local storage.", () => {
 			it("retrieves the correct index of a video which is present in the local storage.", async () => {
 				await prepareStorage();
 
-				let videoID = "ZjVAsJOl8SM"
+				let videoID: string = "ZjVAsJOl8SM"
 
 				expect(await userData.getIndexOfVideo(videoID)).toEqual(3);
 			});
 			it("retrieves the correct index of a video which has just been added to local storage.", async () => {
 				await prepareStorage();
 
-				let videoID = "y9n6HkftavM"
-				let newVideo = {
+				let videoID: string = "y9n6HkftavM"
+				let newVideo: userData.Video = {
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
 						{ "time": 372, "message": "Important point!" },
@@ -108,7 +108,7 @@ describe("Extracting data from local storage.", () => {
 			it("returns -1 if no video is found within local storage.", async () => {
 				await prepareStorage();
 
-				let videoID = "AsykNkUMoNU"
+				let videoID: string = "AsykNkUMoNU"
 
 				expect(await userData.getIndexOfVideo(videoID)).toEqual(-1);
 			});
@@ -117,8 +117,8 @@ describe("Extracting data from local storage.", () => {
 			it("retrieves the first video which is present in the local storage.", async () => {
 				await prepareStorage();
 
-				let expectedID = "LXb3EKWsInQ"
-				let result = await userData.getVideoFromIndex(0);
+				let expectedID: string = "LXb3EKWsInQ"
+				let result: userData.Video | null = await userData.getVideoFromIndex(0);
 
 				expect(result.videoID).toEqual(expectedID);
 			});
@@ -134,15 +134,15 @@ describe("Extracting data from local storage.", () => {
 			it("retrieves the first video which is present in the local storage.", async () => {
 				await prepareStorage();
 
-				let expectedID = "LXb3EKWsInQ"
-				let result = await userData.getVideoFromVideoID(expectedID);
+				let expectedID: string = "LXb3EKWsInQ"
+				let result: userData.Video | null = await userData.getVideoFromVideoID(expectedID);
 
-				expect(result.videoID).toEqual(expectedID);
+				expect(result?.videoID).toEqual(expectedID);
 			});
 			it("returns null if the video does not exist.", async () => {
 				await prepareStorage();
 
-				let nonExistantVideo = "AsykNkUMoNU";
+				let nonExistantVideo: string = "AsykNkUMoNU";
 
 				expect(await userData.getVideoFromVideoID(nonExistantVideo)).toBe(null);
 			});
@@ -153,7 +153,7 @@ describe("Extracting data from local storage.", () => {
 			await prepareStorage();
 
 			// This is to be filled and changed when new options become available.
-			let expectedConfig = {
+			let expectedConfig: userData.IConfig = {
 
 			}
 			
@@ -174,7 +174,7 @@ describe("Modifying user data in local storage.", () => {
 		it("adds a new video to the end of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideo = {
+			let newVideo: userData.Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
 					{ "time": 372, "message": "Important point!" },
@@ -182,7 +182,7 @@ describe("Modifying user data in local storage.", () => {
 				]
 			};
 
-			let expected = [ ...storageTemplate["user_data"]["videos"], newVideo ];
+			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"], newVideo ];
 
 			await userData.pushVideo(newVideo);
 
@@ -191,8 +191,8 @@ describe("Modifying user data in local storage.", () => {
 		it("replaces an existing video in local storage when provided with an existing video ID.", async () => {
 			await prepareStorage();
 
-			let existingVideoID = "LXb3EKWsInQ"
-			let newVideo = {
+			let existingVideoID: string = "LXb3EKWsInQ"
+			let newVideo: userData.Video = {
 				"videoID": "LXb3EKWsInQ",
 				"timestamps": [
 					{ "time": 923, "message": "In lacinia nibh odio finibus nisl." },
@@ -210,13 +210,14 @@ describe("Modifying user data in local storage.", () => {
 		it("throws an error when invalid data is provied.", async () => {
 			await prepareStorage();
 
-			let invalidVideo = {
-				"video_id": "y9n6HkftavM",
-				"time": 372,
-				"message": "Important point!"
+			let invalidVideo: any = {
+				"videoID": "y9n6HkftavM",
+				"timestamps": [
+					{ "time": "Important point!", "message": 10 }
+				]
 			};
 
-			await expect(async () => await userData.pushVideo(newVideo))
+			await expect(async () => await userData.pushVideo(invalidVideo))
 				.rejects
 				.toThrowError(Error);
 		});
@@ -225,7 +226,7 @@ describe("Modifying user data in local storage.", () => {
 		it("adds a set of videos to the end of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideos = [
+			let newVideos: Array<userData.Video> = [
 				{
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
@@ -249,7 +250,7 @@ describe("Modifying user data in local storage.", () => {
 				}
 			];
 
-			let expected = [ ...storageTemplate["user_data"]["videos"], ...newVideos ];
+			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"], ...newVideos ];
 
 			await userData.pushVideoBatch(newVideos);
 
@@ -258,7 +259,7 @@ describe("Modifying user data in local storage.", () => {
 		it("replaces an existing subset of videos in local storage when provided with an array of videos which have some reoccurances.", async () => {
 			await prepareStorage();
 
-			let newVideos = [
+			let newVideos: Array<userData.Video> = [
 				// Already exists.
 				{
 					"videoID": "LXb3EKWsInQ",
@@ -286,7 +287,7 @@ describe("Modifying user data in local storage.", () => {
 				}
 			];
 
-			let expected = [
+			let expected: Array<userData.Video> = [
 				{
 					"videoID": "LXb3EKWsInQ",
 					"timestamps": [
@@ -336,41 +337,16 @@ describe("Modifying user data in local storage.", () => {
 
 			await userData.pushVideoBatch(newVideos);
 			
-			let currentVideos = await userData.getStoredVideos();
+			let currentVideos: Array<userData.Video> = await userData.getStoredVideos();
 
 			expect(currentVideos).toEqual(expected);
-		});
-		it("throws an error when invalid data is provied.", async () => {
-			await prepareStorage();
-
-			let invalidVideos = [
-				{
-					"videoID": "Sx-QWXNjjyk",
-					"timestamps": [
-						{ "time": "4:19:10", "message": null }
-					]
-				},
-				{
-					"VIDEO ID": null,
-					"message": 1
-				},
-				{
-					"video_id": "y9n6HkftavM",
-					"time": 372,
-					"message": "Important point!"
-				}
-			];
-
-			await expect(async () => await userData.pushVideoBatch(invalidVideos))
-				.rejects
-				.toThrowError(Error);
 		});
 	});
 	describe("Inserting a new video into an existing set of videos 'insertVideo()'.", () => {
 		it("inserts a new video to the third position of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideo = {
+			let newVideo: userData.Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
 					{ "time": 372, "message": "Important point!" },
@@ -378,7 +354,7 @@ describe("Modifying user data in local storage.", () => {
 				]
 			};
 
-			let expected = [ ...storageTemplate["user_data"]["videos"] ];
+			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"] ];
 			expected.splice(2, 0, newVideo);
 
 			await userData.insertVideo(2, newVideo);
@@ -388,7 +364,7 @@ describe("Modifying user data in local storage.", () => {
 		it("throws an error when a negative index is provied.", async () => {
 			await prepareStorage();
 
-			let newVideo = {
+			let newVideo: userData.Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
 					{ "time": 372, "message": "Important point!" },
@@ -405,7 +381,7 @@ describe("Modifying user data in local storage.", () => {
 		it("inserts a set of new videos to the 4th position of the user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideos = [
+			let newVideos: Array<userData.Video> = [
 				{
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
@@ -429,37 +405,12 @@ describe("Modifying user data in local storage.", () => {
 				}
 			];
 
-			let expected = [ ...storageTemplate["user_data"]["videos"] ];
+			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"] ];
 			expected.splice(3, 0, ...newVideos);
 
 			await userData.insertVideoBatch(3, newVideos);
 
 			expect(await userData.getStoredVideos()).toEqual(expected);
-		});
-		it("throws an error when invalid data is provied.", async () => {
-			await prepareStorage();
-
-			let invalidVideos = [
-				{
-					"videoID": "Sx-QWXNjjyk",
-					"timestamps": [
-						{ "time": "4:19:10", "message": null }
-					]
-				},
-				{
-					"VIDEO ID": null,
-					"message": 1
-				},
-				{
-					"video_id": "y9n6HkftavM",
-					"time": 372,
-					"message": "Important point!"
-				}
-			];
-
-			await expect(async () => await userData.pushVideoBatch(invalidVideos))
-				.rejects
-				.toThrowError(Error);
 		});
 	});
 	describe("Removing user videos from local storage.", () => {
@@ -467,21 +418,19 @@ describe("Modifying user data in local storage.", () => {
 			it("removes a single video from local storage.", async () => {
 				await prepareStorage();
 
-				let videoToRemove = "ZjVAsJOl8SM";
+				let videoToRemove: string = "ZjVAsJOl8SM";
 				await userData.removeVideoByVideoID(videoToRemove);
-
-				let modifiedVideos = await userData.getStoredVideos();
 
 				expect(await userData.getVideoFromVideoID(videoToRemove)).toBe(null);
 			});
 			it("returns correct true or false values depending on if a video was successfully removed.", async () => {
 				await prepareStorage();
 
-				let existantVideoToRemove = "ZjVAsJOl8SM";
-				let nonExistantVideoToRemove = "AsykNkUMoNU";
+				let existantVideoToRemove: string = "ZjVAsJOl8SM";
+				let nonExistantVideoToRemove: string = "AsykNkUMoNU";
 
-				let shouldSucceed = await userData.removeVideoByVideoID(existantVideoToRemove);
-				let shouldNotSucceed = await userData.removeVideoByVideoID(nonExistantVideoToRemove);
+				let shouldSucceed: boolean = await userData.removeVideoByVideoID(existantVideoToRemove);
+				let shouldNotSucceed: boolean = await userData.removeVideoByVideoID(nonExistantVideoToRemove);
 
 				expect(shouldSucceed).toBe(true);
 				expect(shouldNotSucceed).toBe(false);

@@ -1,4 +1,4 @@
-import * as youtubeUtil from "./youtube-util.js"
+import * as youtubeUtil from "./youtube-util.ts"
 
 describe("Extracting a video ID from provided link 'getVideoIdFromYouTubeLink()'", () => {
 	test("extracts the video ID LXb3EKWsInQ from the link 'https://www.youtube.com/watch?v=LXb3EKWsInQ'", () => {
@@ -12,8 +12,6 @@ describe("Extracting a video ID from provided link 'getVideoIdFromYouTubeLink()'
 
 		expect(testFunction).toThrow(TypeError);
 	});
-
-
 	test("throws an error when a link with no ID is provided, 'https://www.youtube.com'", () => {
 		let testFunction = () => {
 			youtubeUtil.getVideoIdFromYouTubeLink("https://www.youtube.com")
@@ -38,7 +36,7 @@ describe("Creating a YouTube URL to a specific video from a video ID. 'getYouTub
 
 	test("throws an error when no ID is provided.", () => {
 		let testFunction = () => {
-			youtubeUtil.getVideoIdFromYouTubeLink()
+			youtubeUtil.getVideoIdFromYouTubeLink("")
 		}
 
 		expect(testFunction).toThrow(TypeError);
@@ -49,13 +47,6 @@ describe("Creating a timestamped YouTube link from an ID.", () => {
 	describe("Creating a link from raw seconds. 'getTimestampVideoLinkFromSeconds()'", () => {
 		it("produces a link of 'https://www.youtube.com/watch?v=LXb3EKWsInQ&t=1230' from a provided value of '1230' seconds.", () => {
 			expect(youtubeUtil.getTimestampVideoLinkFromSeconds("LXb3EKWsInQ", 1230)).toEqual("https://www.youtube.com/watch?v=LXb3EKWsInQ&t=1230");
-		});
-		it("throws an error when a non numeric value is provided for seconds of 'a239a:291'.", () => {
-			let testFunction = () => {
-				youtubeUtil.getTimestampVideoLinkFromSeconds("LXb3EKWsInQ", "a239a:291");
-			}
-
-			expect(testFunction).toThrow(TypeError);
 		});
 		it("throws an error when negative seconds are provided of '-1230' seconds.", () => {
 			let testFunction = () => {

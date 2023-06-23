@@ -1,4 +1,4 @@
-import { getTimestampFromSeconds, getSecondsFromTimestamp } from "./time-util.js"
+import { getTimestampFromSeconds, getSecondsFromTimestamp } from "./time-util.ts"
 
 describe("Converting raw seconds to a timestamp. (E.g. '2000s' to '33:20').", () => {
 	test("converts 60 seconds into one minute timestamp '01:00'.", () => {

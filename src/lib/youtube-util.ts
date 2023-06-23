@@ -1,24 +1,24 @@
-import * as TimeUtil from "./util/time-util.js"
-import { isNumeric } from "./util/misc/type-util.js"
+import * as TimeUtil from "./util/time-util.ts"
 
-const YOUTUBE_EXTRACT_VIDEO_ID_REGEX = /.*\?v=(?<VideoID>[\w\d\-\_]*)/
+const YOUTUBE_EXTRACT_VIDEO_ID_REGEX: RegExp = /.*\?v=(?<VideoID>[\w\d\-\_]*)/
 
-export function getVideoIdFromYouTubeLink(url) {
+export function getVideoIdFromYouTubeLink(url: string): string {
 	const match = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(url);
 	
 	if (match == null) {
 		throw new TypeError("Invalid argument provided, the link provided does not contain a video ID.")
 	}
 
-	let VideoID = match.groups["VideoID"]
+	let videoID: string = match!.groups!["VideoID"]!;
 
-	if (VideoID.length != 11) {
+	if (videoID?.length != 11) {
 		throw new TypeError("Invalid argument provided, the extracted video ID was not 11 characters long.")
 	}
-	return VideoID;
+
+	return videoID;
 }
 
-export function getYouTubeLinkFromVideoID(videoID) {
+export function getYouTubeLinkFromVideoID(videoID: string): string {
 	if (!videoID) {
 		throw new TypeError("Invalid argument provided, the video ID was empty.");
 	}
@@ -30,13 +30,9 @@ export function getYouTubeLinkFromVideoID(videoID) {
 	return `https://www.youtube.com/watch?v=${videoID}`;
 }
 
-export function getTimestampVideoLinkFromSeconds(videoID, seconds) {
+export function getTimestampVideoLinkFromSeconds(videoID: string, seconds: number): string {
 	if (!videoID) {
 		throw new TypeError("Invalid argument provided, the video ID was empty.");
-	}
-
-	if (!isNumeric(seconds)) {
-		throw new TypeError("Invalid argument provided, the seconds was not a number.");
 	}
 
 	if (seconds < 0) {
@@ -46,8 +42,8 @@ export function getTimestampVideoLinkFromSeconds(videoID, seconds) {
 	return `${getYouTubeLinkFromVideoID(videoID)}&t=${seconds}`;
 }
 
-export function getTimestampVideoLinkFromTimestamp(videoID, timestamp) {
-	let seconds = TimeUtil.getSecondsFromTimestamp(timestamp);
+export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: string) : string {
+	let seconds: number = TimeUtil.getSecondsFromTimestamp(timestamp);
 
 	return getTimestampVideoLinkFromSeconds(videoID, seconds);
 }
