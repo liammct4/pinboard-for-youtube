@@ -1,0 +1,27 @@
+@import url("../../globals.css");
+
+.outer-heading {
+	width: 100%;
+	padding: 2px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	box-sizing: border-box;
+	background: var(--raised-background);
+}
+
+.split-heading-left-highlight {
+	width: 2px;
+	height: 100%;
+	margin-left: 4px;
+	box-sizing: border-box;
+	background-color: var(--light-accent);
+}
+
+.split-heading-text {
+	margin: 0;
+	font-size: 12pt;
+	margin-left: 8px;
+	font-weight: bold;
+	color: var(--dark-accent);
+}

@@ -1,0 +1,8 @@
+@import "src/globals.css";
+@import "src/common-definitions.css";
+
+.timestamp-scrollbox-list {
+	margin: 10px;
+	list-style-type: none;
+	padding: 0;
+}
