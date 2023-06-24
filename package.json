@@ -11,6 +11,7 @@
 		"test": "jest"
 	},
 	"dependencies": {
+		"@reduxjs/toolkit": "^1.9.5",
 		"@types/chrome": "^0.0.237",
 		"@types/uuid": "^9.0.2",
 		"bootstrap": "^5.3.0",
@@ -19,6 +20,7 @@
 		"mem-storage-area": "^1.0.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-redux": "^8.1.1",
 		"semver": "^7.5.3",
 		"uuid": "^9.0.0"
 	},
