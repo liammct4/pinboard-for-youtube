@@ -2,7 +2,9 @@ import { useState } from "react";
 import SubtleExpander from "./../../SubtleExpander/SubtleExpander.jsx"
 import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
-import { Timestamp } from "./../../../lib/user/user-data.ts"
+import { Timestamp, Video } from "./../../../lib/user/user-data.ts"
+import { useSelector, useDispatch } from "react-redux"
+import { addVideo, updateVideo } from "./../../../features/videos/videoSlice.js"
 import "./VideoTimestampList.css"
 
 export interface IVideoTimestampListProperties {
@@ -11,9 +13,26 @@ export interface IVideoTimestampListProperties {
 }
 
 export function VideoTimestampList({ videoID, timestamps }: IVideoTimestampListProperties): React.ReactNode {
-	const [times, setTimes] = useState(timestamps ?? []);
+	const dispatch = useDispatch();
 
-	let timestampItems: Array<JSX.Element> = times.map((x) => <li key={`${videoID}-${x.time}`}><VideoTimestamp videoID={videoID} timestamp={x}></VideoTimestamp></li>);
+	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp) => {
+		let updatedTimestamps: Array<Timestamp> = [ ...timestamps ];
+
+		for (let i = 0; i < updatedTimestamps.length; i++) {
+			if (updatedTimestamps[i].time == oldTimestamp.time) {
+				updatedTimestamps[i] = newTimestamp;
+			}
+		}
+
+		let updatedVideo: Video = {
+			"videoID": videoID,
+			"timestamps": updatedTimestamps
+		}
+
+		dispatch(updateVideo(updatedVideo));
+	}
+
+	let timestampItems: Array<JSX.Element> = timestamps.map((x) => <li key={x.time}><VideoTimestamp videoID={videoID} timestamp={x} onChange={onChange}></VideoTimestamp></li>);
 
 	return (
 		<>

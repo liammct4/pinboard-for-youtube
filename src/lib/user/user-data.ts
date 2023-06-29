@@ -219,6 +219,23 @@ async function modifyStorageVideos(): Promise<[any, Array<Video>]> {
 	return [userData, storageVideos];
 }
 
+export async function setStoredVideos(videos: Array<Video>) {
+	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
+
+	userData[USER_DATA_KEY]["videos"] = videos;
+
+	await chrome.storage.local.set(userData);
+}
+
+export async function clearStoredVideos() {
+	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
+	
+	// Clears the array.
+	storageVideos.length = 0;
+
+	await chrome.storage.local.set(userData);
+}
+
 export async function pushVideoBatch(newVideos: Array<Video>): Promise<void> {
 	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
 

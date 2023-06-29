@@ -437,4 +437,46 @@ describe("Modifying user data in local storage.", () => {
 			});
 		})
 	});
+	describe("Setting the entirety of the videos stored in existing storage 'setStoredVideos()'.", () => {
+		it("replaces the existing videos in local storage, removing the old ones.", async () => {
+			await prepareStorage();
+
+			let newVideos: Array<userData.Video> = [
+				{
+					"videoID": "Sx-QWXNjjyk",
+					"timestamps": [
+						{ "time": 419, "message": "Extra important point!" }
+					]
+				},
+				{
+					"videoID": "QJ792KIE82Q",
+					"timestamps": [
+						{ "time": 816, "message": "Check the background." },
+						{ "time": 625, "message": "Lorem ipsum dolor sit amet." },
+						{ "time": 1062, "message": "Nunc magna enim, consequat non sagittis ut." }
+					]
+				},
+				{
+					"videoID": "y9n6HkftavM",
+					"timestamps": [
+						{ "time": 372, "message": "Important point!" },
+						{ "time": 625, "message": "Watch later." }
+					]
+				}
+			];
+
+			await userData.setStoredVideos(newVideos);
+
+			expect(await userData.getStoredVideos()).toEqual(newVideos);
+		});
+	});
+	describe("Clearing all videos in storage. 'clearStoredVideos()'.", () => {
+		it("removes all videos in local storage.", async () => {
+			await prepareStorage();
+			expect(await userData.getStoredVideos()).toEqual(storageTemplate["user_data"]["videos"]);
+
+			await userData.clearStoredVideos();
+			expect((await userData.getStoredVideos()).length).toEqual(0);
+		});
+	});
 });

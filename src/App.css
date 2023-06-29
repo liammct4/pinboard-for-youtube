@@ -83,11 +83,15 @@
 	margin: 5px 0 5px 0;
 }
 
-.current-video-options {
+.button-bar {
 	display: flex;
 	flex-direction: row;
-	margin-bottom: 12px;
+	margin-bottom: 5px;
 	gap: 5px;
+}
+
+.regular-vmargin {
+	margin: 5px 0;
 }
 
 #timestamp-scrollbox {
@@ -95,7 +99,6 @@
 	border: 1px solid var(--light-accent);
 	border-radius: 12px;
 	flex-grow: 1;
-	margin-top: 8px;
 	overflow-y: scroll;
 	height: 0px;
 }

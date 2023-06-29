@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import logo from "./../assets/logo/logo.png"
 import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
 import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
@@ -6,28 +6,26 @@ import VideoTimestamp from "./components/video/VideoTimestamp/VideoTimestamp.tsx
 import VideoTimestampList from "./components/video/VideoTimestampList/VideoTimestampList.tsx"
 import VideoCollection from "./components/video/VideoCollection/VideoCollection.tsx"
 import * as TestData from "./data/testDataSet.ts"
-import { RootState } from "./app/store.ts"
+import * as userData from "./lib/user/user-data.ts"
+import { store, RootState } from "./app/store.ts"
+import { Video } from "./lib/user/user-data.ts"
 import { useSelector, useDispatch } from "react-redux"
-import { setValue, } from "./features/videos/videoSlice.js"
-import './App.css'
+import { addVideo, updateVideo, clearVideos } from "./features/videos/videoSlice.ts"
+import "./App.css"
 
 function App(): JSX.Element {
-	const [nextTestValue, setNextTestValue] = useState(0);
-
-	const testValue = useSelector((state: RootState) => state.video.testValue);
+	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const dispatch = useDispatch();
 
-	const reduxTest = () => {
-		setNextTestValue(Math.floor(Math.random() * 501));
-		dispatch(setValue(nextTestValue));
+	const addVideoClick = () => {
+		// TODO: Add modal to enter video data.
+		let item: Video = TestData.sampleVideoData[Math.floor(Math.random() * TestData.sampleVideoData.length)];
+
+		dispatch(addVideo(item))
 	}
 
 	return (
 		<div className="outer-body">
-			{/* Redux setup test */}
-			<button className="button-small" onClick={reduxTest}>Test redux</button>
-			<p>The current value is: {testValue}<br></br>The next value is: {nextTestValue}</p>
-
 			<div className="outer-section-area top-area">
 				<div id="top-section-inner-wrap">
 					<img className="logo-standard" src="../assets/logo/logo.png"/>
@@ -41,14 +39,18 @@ function App(): JSX.Element {
 				<div id="current-video-card">
 					<VideoCard videoID="xcJtL7QggTI"></VideoCard>
 				</div>
-				<div className="current-video-options">
+				<div className="button-bar">
 					<button className="button-small">Save video</button>
 					<button className="button-small">Pin timestamp</button>
 				</div>
 				{/* My timestamps */}
 				<SplitHeading text="My video timestamps"></SplitHeading>
+				<div className="button-bar regular-vmargin">
+					<button className="button-small" onClick={addVideoClick}>Add video</button>
+					<button className="button-small" onClick={() => dispatch(clearVideos())}>Clear videos</button>
+				</div>
 				<div id="timestamp-scrollbox">
-					<VideoCollection videos={TestData.sampleVideoData}></VideoCollection>
+					<VideoCollection videos={videos}></VideoCollection>
 				</div>
 			</div>
 			<div className="outer-section-area bottom-area">
@@ -63,4 +65,4 @@ function App(): JSX.Element {
 	);
 }
 
-export default App
+export default App;
