@@ -62,38 +62,7 @@
 	outline: 2px solid var(--dim-accent);
 }
 
-/* Modal styling */
-.modal-close-button {
-	width: 20px;
-	height: 20px;
-	padding: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: white;
-	font-size: 15pt;
-}
-
-.modal-close-button:hover {
-	font-weight: bolder;
-}
-
-.modal-title {
-	font-weight: bold;
-	color: var(--dark-accent) !important;
-}
-
-.modal-header {
-	padding: 5px !important;
-	background: var(--outer-solid);
-}
-
-.modal-body {
-	padding: 5px 10px !important;
-	background: var(--subtle-background);
-}
-
-.modal-footer {
-	padding: 5px !important;
-	background: var(--outer-solid) !important;
+.timestamp-form {
+	grid-template-rows: 1fr 1fr;
+	grid-template-columns: auto 1fr;
 }

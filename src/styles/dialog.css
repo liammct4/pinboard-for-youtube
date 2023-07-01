@@ -1,0 +1,130 @@
+@import "/src/common-definitions.css";
+@import "/src/globals.css";
+
+:root {
+	--dialog-margin: 10px;
+	--dialog-margin-multiplier: 3;
+}
+
+.dialog-overlay {
+	background-color: #23232385;
+	position: fixed;
+	inset: 0;
+	animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-body {
+	background-color: var(--subtle-background);
+	border-radius: 15px;
+	box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	width: calc(100% - var(--dialog-margin) * 2);
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: calc(var(--dialog-margin) * var(--dialog-margin-multiplier));
+	animation: contentShow 350ms cubic-bezier(0.26, 1, 0.5, 1);
+}
+
+.dialog-body:focus {
+	outline: none;
+}
+
+.dialog-content {
+	margin: 10px;
+	color: var(--dark-accent);
+}
+
+.dialog-header {
+	background-color: var(--outer-solid);
+	padding: 6px 6px;
+	border-radius: 15px 15px 0 0;
+	font-weight: bold;
+	color: var(--dark-accent);
+	font-size: 15pt;
+}
+
+.dialog-footer {
+	background-color: var(--outer-solid);
+	padding: 10px;
+	border-radius: 0 0 15px 15px;
+	display: flex;
+	flex-direction: row;
+	justify-content: right;
+	gap: 10px;
+}
+
+.dialog-description {
+	margin: 10px 0 20px;
+	color: var(--dark-accent);
+	font-weight: bold;
+	font-size: 11pt;
+}
+
+.close-button {
+	border-radius: 100%;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 15pt;
+}
+
+.close-button:hover {
+	font-weight: bolder;
+}
+
+/* This stylesheet is generic and not specific to any form type (e.g. Edit timestamp) so grid-template-columns/rows is set per form. */
+.dialog-form {
+	display: grid;
+	gap: 10px;
+}
+
+.dialog-content input {
+	border: 1px solid var(--dark-accent);
+	border-radius: 3px;
+	transition: outline 0.05s;
+	padding: 0 5px;
+}
+
+.dialog-content input:hover {
+	outline: 2px solid var(--dim-accent);
+}
+
+.dialog-content input:focus {
+	outline: 1px solid var(--dark-accent);
+}
+
+.dialog-content label {
+	margin: auto 0;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+@keyframes overlayShow {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes contentShow {
+	from {
+		opacity: 0;
+		margin-top: 6px;
+		transform: scale(0.9);
+	}
+	to {
+		opacity: 1;
+		margin-top: calc(var(--dialog-margin) * var(--dialog-margin-multiplier));
+		transform: scale(1);
+	}
+}

@@ -11,6 +11,7 @@ hr {
 	background: var(--very-bright-light-shade);
 	color: var(--dark-accent);
 	font-weight: bold;
+	text-align: center;
 	font-size: 9pt;
 	border-radius: 3px;
 	padding: 0px 10px 0px 10px;
@@ -19,7 +20,7 @@ hr {
 }
 
 .button-small:focus {
-	outline: 2px solid var(--dark-accent);
+	outline: 1px solid var(--dark-accent);
 }
 
 .button-small:hover {

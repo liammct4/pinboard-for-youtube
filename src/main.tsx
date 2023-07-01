@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import "bootstrap"
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import './main.css'
