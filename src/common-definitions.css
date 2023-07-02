@@ -39,8 +39,13 @@ hr {
 	border-radius: 8px;
 	background: var(--light-accent);
 	border: 1px solid var(--dark-accent);
+	color: white;
 	margin: auto 0 auto 0;
 	transition: background 0.2s;
+	font-size: 15pt;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .circle-button:hover {

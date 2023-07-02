@@ -50,7 +50,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 			{/* Edit modal */}
 			<Dialog.Root>
 				<Dialog.Trigger asChild>
-					<button className="button-small">Edit</button>
+					<button className="button-small" style={{ marginRight: "1px" }}>Edit</button>
 				</Dialog.Trigger>
 				<Dialog.Portal>
 					<Dialog.Overlay className="dialog-overlay" />

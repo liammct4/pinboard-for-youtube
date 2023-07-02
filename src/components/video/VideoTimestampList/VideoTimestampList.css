@@ -1,5 +1,37 @@
 @import "src/globals.css";
 
+.add-timestamp-button-outer {
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: row;
+	justify-content: right;
+}
+
+.add-timestamp-text {
+	color: var(--dim-accent);
+	font-size: 9pt;
+	margin: auto 0 auto 3px;
+}
+
+.add-timestamp-button {
+	margin-left: 100px;
+	padding-top: 3px !important;
+	width: 14px !important;
+	height: 14px !important;
+}
+
+.add-timestamp-button > img {
+	margin-bottom: 3px;
+}
+
+.add-timestamp-fake-time {
+	opacity: 0.6;
+	font-style: italic;
+	color: var(--dim-accent);
+	font-size: 9pt;
+	margin-left: 10px;
+}
+
 .video-timestamp-list {
 	display: flex;
 	flex-direction: column;
