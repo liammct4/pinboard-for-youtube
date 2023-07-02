@@ -4,6 +4,7 @@ import * as YTUtil from "./../../../lib/youtube-util.js"
 import * as Dialog from "@radix-ui/react-dialog";
 import { Timestamp } from "./../../../lib/user/user-data.ts"
 import { useForm, SubmitHandler } from "react-hook-form"
+import Bin from "src/../assets/icons/bin.svg"
 import "src/styles/dialog.css"
 import "./VideoTimestamp.css"
 
@@ -15,7 +16,7 @@ type EditTimestampForm = {
 export interface IVideoTimestampProperties {
 	videoID: string,
 	timestamp: Timestamp,
-	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp) => void
+	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void
 }
 
 function validateTimestamp(value: string): boolean {
@@ -37,6 +38,10 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 
 		onChange(timestamp, { "time": inputTime, "message": data.message });
 	}
+
+	const onDelete: () => void = () => {
+		onChange(timestamp, null);
+	}
 	
 	let stringTime: string = getTimestampFromSeconds(timestamp.time);
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
@@ -44,10 +49,12 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	return (
 		<div className="video-timestamp-inner">
 			<a className="video-timestamp-time" href={timeLink}>{stringTime}</a>
-			<div className="video-timestamp-separator"></div>
 			<p className="video-timestamp-message">{timestamp.message}</p>
 			<div className="video-timestamp-filler"></div>
-			{/* Edit modal */}
+			<button className="button-small delete-timestamp-button" onClick={onDelete}>
+				<img className="delete-timestamp-icon" src={Bin}/>
+			</button>
+			{/* Edit dialog */}
 			<Dialog.Root>
 				<Dialog.Trigger asChild>
 					<button className="button-small" style={{ marginRight: "1px" }}>Edit</button>

@@ -17,12 +17,19 @@ export interface IVideoTimestampListProperties {
 export function VideoTimestampList({ videoID, timestamps }: IVideoTimestampListProperties): React.ReactNode {
 	const dispatch = useDispatch();
 
-	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp) => {
+	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
 		let updatedTimestamps: Array<Timestamp> = [ ...timestamps ];
-
-		for (let i = 0; i < updatedTimestamps.length; i++) {
-			if (updatedTimestamps[i].time == oldTimestamp.time) {
-				updatedTimestamps[i] = newTimestamp;
+		
+		if (newTimestamp == null) {
+			// The timestamp has been deleted.
+			let index = updatedTimestamps.findIndex(x => x.time == oldTimestamp.time);
+			updatedTimestamps.splice(index, 1);
+		}
+		else {
+			for (let i = 0; i < updatedTimestamps.length; i++) {
+				if (updatedTimestamps[i].time == oldTimestamp.time) {
+					updatedTimestamps[i] = newTimestamp;
+				}
 			}
 		}
 
