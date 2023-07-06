@@ -37,7 +37,6 @@
 	display: grid;
 	gap: 10px;
 	font-size: 10pt;
-	grid-template-columns: auto 1fr;
 	grid-template-rows: 1fr 1fr;
 	color: var(--dark-accent) !important;
 	font-weight: bold;

@@ -45,6 +45,10 @@
 	flex-direction: row;
 }
 
+.add-video-form {
+	grid-template-rows: 1fr;
+}
+
 /* Bottom outer area */
 .bottom-area {
 	grid-row: 3;

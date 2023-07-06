@@ -58,10 +58,9 @@
 }
 
 .dialog-description {
-	margin: 10px 0 20px;
+	margin: 10px 10px 20px;
 	color: var(--dark-accent);
-	font-weight: bold;
-	font-size: 11pt;
+	font-size: 10pt;
 }
 
 .close-button {
@@ -80,6 +79,7 @@
 .dialog-form {
 	display: grid;
 	gap: 10px;
+	grid-template-columns: auto 1fr;
 }
 
 .dialog-content input {

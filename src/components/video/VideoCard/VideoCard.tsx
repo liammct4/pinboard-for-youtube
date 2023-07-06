@@ -9,7 +9,7 @@ export interface IVideoCardProperties {
 
 export function VideoCard({ videoID }: IVideoCardProperties): React.ReactNode {
 	let url: string = YTUtil.getYouTubeLinkFromVideoID(videoID);
-	let info: any = JSON.parse(request.requestGet(`https://noembed.com/embed?url=${url}`))
+	let info: any = YTUtil.getYoutubeVideoInfoFromVideoID(videoID);
 
 	return (
 		<div className="video-card-inner">
