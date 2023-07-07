@@ -64,7 +64,7 @@ export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: s
 export function getYoutubeVideoInfoFromLink(url: string): any {
 	let result = JSON.parse(request.requestGet(`https://noembed.com/embed?url=${url}`))
 	
-	if (result.hasOwnProperty("error") && result.error == "400 Bad Request") {
+	if (result.hasOwnProperty("error")) {
 		throw new DoesNotExistError("The video requested does not exist.", url, result.error);
 	}
 

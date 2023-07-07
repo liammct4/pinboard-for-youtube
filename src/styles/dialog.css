@@ -75,11 +75,10 @@
 	font-weight: bolder;
 }
 
-/* This stylesheet is generic and not specific to any form type (e.g. Edit timestamp) so grid-template-columns/rows is set per form. */
 .dialog-form {
-	display: grid;
+	display: flex;
+	flex-direction: column;
 	gap: 10px;
-	grid-template-columns: auto 1fr;
 }
 
 .dialog-content input {

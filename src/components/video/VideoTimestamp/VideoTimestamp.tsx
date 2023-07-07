@@ -1,14 +1,16 @@
-import { useState, useRef, useEffect, MutableRefObject } from "react"
+import { useState, useRef, useEffect, MutableRefObject, useCallback } from "react"
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
 import * as YTUtil from "./../../../lib/youtube-util.js" 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Timestamp } from "./../../../lib/user/user-data.ts"
 import { useForm, SubmitHandler } from "react-hook-form"
 import Bin from "src/../assets/icons/bin.svg"
+import { FormField } from "../../forms/FormField/FormField.tsx";
+import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
 import "src/styles/dialog.css"
 import "./VideoTimestamp.css"
 
-type EditTimestampForm = {
+interface IEditTimestampForm extends IErrorFieldValues {
 	time: string
 	message: string
 }
@@ -19,25 +21,29 @@ export interface IVideoTimestampProperties {
 	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void
 }
 
-function validateTimestamp(value: string): boolean {
+function validateTimestamp(value: string): string | null {
+	if (value.length == 0) {
+		return "This value is required.";
+	}
+
 	try {
 		getSecondsFromTimestamp(value);
-		return true;
 	}
 	catch {
-		return false;
+		return "Invalid value provided.";
 	}
+
+	return null;
 }
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestampProperties): React.ReactNode {
-	let { register, handleSubmit } = useForm<EditTimestampForm>();
-
-	const onSave: SubmitHandler<EditTimestampForm> = (data: EditTimestampForm) => {
+	let onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
 		onChange(timestamp, { "time": inputTime, "message": data.message });
-	}
+	}, []);
+	let { register, handleSubmit, handler, submit } = useValidatedForm<IEditTimestampForm>(onSave);
 
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
@@ -64,13 +70,24 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 					<Dialog.Content className="dialog-body">
 						<Dialog.Title className="dialog-header">Edit timestamp</Dialog.Title>
 						<div className="dialog-content">
-							<form className="dialog-form timestamp-form" id="edit-form" onSubmit={handleSubmit(onSave)}>
-								{/* Name */}
-								<label>Time:</label>
-								<input {...register("time", { validate: value => validateTimestamp(value) })} defaultValue={stringTime}></input>
+							<form className="dialog-form timestamp-form" id="edit-form" onSubmit={handleSubmit(handler)}>
+								{/* Time */}
+								<FormField<IEditTimestampForm> register={register} registerOptions={null}
+									label="Time:"
+									name="time"
+									size="small"
+									selector={(data) => data.time}
+									submitEvent={submit.current}
+									validationMethod={validateTimestamp}
+									defaultValue={stringTime}/>
 								{/* Message */}
-								<label>Message:</label>
-								<input {...register("message")} defaultValue={timestamp.message}></input>
+								<FormField<IEditTimestampForm> register={register} registerOptions={null}
+									label="Message:"
+									name="message"
+									size="large"
+									selector={(data) => data.message}
+									submitEvent={submit.current}
+									defaultValue={timestamp.message}/>
 								<Dialog.Close asChild>
 									<button type="button" className="circle-button close-button" aria-label="Close">&times;</button>
 								</Dialog.Close>

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react"
+import { useState, useRef, useEffect, useCallback, MutableRefObject } from "react"
 import logo from "./../assets/logo/logo.png"
 import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
 import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
@@ -13,44 +13,55 @@ import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo, clearVideos } from "./features/videos/videoSlice.ts"
 import * as YTUtil from "./lib/youtube-util.ts"
 import * as Dialog from "@radix-ui/react-dialog"
-import { useForm, SubmitHandler, Validate } from "react-hook-form"
+import { useForm, SubmitHandler, Validate, InternalFieldErrors } from "react-hook-form"
 import "./styles/dialog.css"
 import "./App.css"
+import { FormField } from "./components/forms/FormField/FormField.tsx"
+import { MultiEvent } from "./lib/events/Event.ts"
+import { FormValidator, IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
 
-type AddVideoForm = {
+interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
+	error: boolean
+}
+
+function validateVideo(value: string): string | null {
+	// Don't use 'videos' with useSelector at the top as it will not be updated
+	// if the videos in the store changes.
+	let currentVideos = store.getState().video.currentVideos;
+
+	if (value.length == 0) {
+		return "This field is required."
+	}
+	else if (!YTUtil.YOUTUBE_EXTRACT_VIDEO_ID_REGEX.test(value)) {
+		return "The link entered was invalid."
+	}
+	else if (!YTUtil.videoExists(value)) {
+		return "Video does not exist.";
+	}
+	else if (currentVideos.findIndex(x => x.videoID == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
+		return "Video has already been added.";
+	}
+
+	return null;
 }
 
 function App(): JSX.Element {
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const dispatch = useDispatch();
-	let { register, handleSubmit, reset } = useForm<AddVideoForm>();
-
-	// Resets the "Add video" dialog after a video has been entered.
-	useEffect(() => {
-		reset();
-	}, [reset, videos]);
-
-	const validateVideo: Validate<string, AddVideoForm> = (value: string) => {
-		// TODO:
-		//  - Add validation to check if the link entered is valid.
-		//  - Add validation to check if it already has been added.
-		//  - Implement an easy to add error message system to display issues.
-		if (!YTUtil.YOUTUBE_EXTRACT_VIDEO_ID_REGEX.test(value) || !YTUtil.videoExists(value)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	const onAddVideo: SubmitHandler<AddVideoForm> = (data) => {		
+	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
 			timestamps: []
 		};
 
 		dispatch(addVideo(newVideo));
-	}
+	}, [videos]);
+	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
+
+	useEffect(() => {
+		reset();
+	}, [reset, videos]);
 
 	return (
 		<div className="outer-body">
@@ -84,10 +95,15 @@ function App(): JSX.Element {
 							<Dialog.Content className="dialog-body">
 								<Dialog.Title className="dialog-header">Add video</Dialog.Title>
 								<div className="dialog-content">
-									<form className="dialog-form add-video-form" id="edit-form" onSubmit={handleSubmit(onAddVideo)}>
-										{/* Name */}
-										<label>Link:</label>
-										<input {...register("link", { validate: validateVideo })}></input>
+									<form className="dialog-form add-video-form" id="edit-form" onSubmit={handleSubmit(handler)}>
+										{/* Link */}
+										<FormField<IAddVideoForm> register={register}
+											label="Link:"
+											name="link"
+											size="max"
+											submitEvent={submit.current}
+											validationMethod={validateVideo}
+											selector={(data: IAddVideoForm) => data.link}/>
 										<Dialog.Close asChild>
 											<button type="button" className="circle-button close-button" aria-label="Close">&times;</button>
 										</Dialog.Close>
