@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit"
-import videoReducer from "../features/videos/videoSlice.js"
+import videoReducer from "../features/videos/videoSlice.ts"
 
 export let store = configureStore({
 	reducer: {
-		video: videoReducer
+		video: videoReducer,
 	}
 })
 

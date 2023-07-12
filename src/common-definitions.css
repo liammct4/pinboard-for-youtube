@@ -32,6 +32,12 @@ hr {
 	background: var(--regular-light-shade);
 }
 
+.button-small:disabled {
+	background-color: var(--regular-light-shade);
+	color: var(--dim-accent);
+	border: 1px solid var(--outer-solid);
+}
+
 /* Circle button */
 .circle-button {
 	width: 16px;

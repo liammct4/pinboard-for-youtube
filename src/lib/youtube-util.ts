@@ -63,7 +63,7 @@ export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: s
 
 export function getYoutubeVideoInfoFromLink(url: string): any {
 	let result = JSON.parse(request.requestGet(`https://noembed.com/embed?url=${url}`))
-	
+
 	if (result.hasOwnProperty("error")) {
 		throw new DoesNotExistError("The video requested does not exist.", url, result.error);
 	}
@@ -77,7 +77,12 @@ export function getYoutubeVideoInfoFromVideoID(videoID: string): any {
 	return getYoutubeVideoInfoFromLink(link);
 }
 
-export function videoExists(url: string) {
+/**
+ * Determines whether a YouTube video exists by checking the YouTube API.
+ * @param url The url to check.
+ * @returns True if the video in a YouTube url exists, otherwise False.
+ */
+export function videoExists(url: string): boolean {
 	try {
 		getYoutubeVideoInfoFromLink(url);
 		return true;
@@ -85,4 +90,13 @@ export function videoExists(url: string) {
 	catch (DoesNotExistError) {
 		return false;
 	}
+}
+
+/**
+ * Determines whether a url contains a valid YouTube video ID. This does not check if the video exists, only if it is formatted correctly.
+ * @param url The url to check.
+ * @returns True if the url contains a valid formatted YouTube video ID, otherwise false. 
+ */
+export function urlContainsVideoID(url: string): boolean {
+	return YOUTUBE_EXTRACT_VIDEO_ID_REGEX.test(url);
 }

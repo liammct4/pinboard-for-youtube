@@ -12,6 +12,17 @@
         "256": "assets/logo/logo.png"
     },
     "permissions": [
-        "storage"
-    ]
+        "storage",
+        "tabs",
+        "scripting"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://*.youtube.com/*"],
+            "js": ["content_script.js"]
+        }
+    ],
+    "externally_connectable": {
+        "matches": ["*://*.youtube.com/*"]
+    }
 }

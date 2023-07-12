@@ -2,23 +2,19 @@ import { useState, useRef, useEffect, useCallback, MutableRefObject } from "reac
 import logo from "./../assets/logo/logo.png"
 import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
 import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
-import VideoTimestamp from "./components/video/VideoTimestamp/VideoTimestamp.tsx"
-import VideoTimestampList from "./components/video/VideoTimestampList/VideoTimestampList.tsx"
 import VideoCollection from "./components/video/VideoCollection/VideoCollection.tsx"
-import * as TestData from "./data/testDataSet.ts"
-import * as userData from "./lib/user/user-data.ts"
 import { store, RootState } from "./app/store.ts"
 import { Video } from "./lib/user/user-data.ts"
 import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo, clearVideos } from "./features/videos/videoSlice.ts"
 import * as YTUtil from "./lib/youtube-util.ts"
 import * as Dialog from "@radix-ui/react-dialog"
-import { useForm, SubmitHandler, Validate, InternalFieldErrors } from "react-hook-form"
+import { SubmitHandler } from "react-hook-form"
+import { FormField } from "./components/forms/FormField/FormField.tsx"
+import { IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
+import { getActiveVideoInfo } from "./lib/browser/youtube.ts"
 import "./styles/dialog.css"
 import "./App.css"
-import { FormField } from "./components/forms/FormField/FormField.tsx"
-import { MultiEvent } from "./lib/events/Event.ts"
-import { FormValidator, IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -48,6 +44,7 @@ function validateVideo(value: string): string | null {
 
 function App(): JSX.Element {
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
+	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const dispatch = useDispatch();
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
@@ -57,8 +54,31 @@ function App(): JSX.Element {
 
 		dispatch(addVideo(newVideo));
 	}, [videos]);
-	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
+	const onSaveActiveVideo: () => void = () => {
+		if (videos.find(x => x.videoID == activeVideoID) != undefined) {
+			return;
+		}
 
+		let video: Video = {
+			videoID: activeVideoID!,
+			timestamps: []
+		};
+		dispatch(addVideo(video));
+	};
+	const onPinCurrentTimestamp = async () => {
+		let result = await getActiveVideoInfo();
+		
+		let activeVideo: Video = {
+			videoID: activeVideoID!,
+			timestamps: [
+				...(videos.find(x => x.videoID == activeVideoID)!).timestamps,
+				{ time: Math.floor(result!.currentTime), message: "Current time" }
+			]
+		}
+		
+		dispatch(updateVideo(activeVideo));
+	};
+	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
 	useEffect(() => {
 		reset();
 	}, [reset, videos]);
@@ -76,11 +96,12 @@ function App(): JSX.Element {
 				{/* Current video */}
 				<SplitHeading text="Current video"></SplitHeading>
 				<div id="current-video-card">
-					<VideoCard videoID="xcJtL7QggTI"></VideoCard>
+					<VideoCard videoID={activeVideoID} placeholderTitle="No video found!"></VideoCard>
 				</div>
+				{/* Current video controls */}
 				<div className="button-bar">
-					<button className="button-small">Save video</button>
-					<button className="button-small">Pin timestamp</button>
+					<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
+					<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
 				</div>
 				{/* My timestamps */}
 				<SplitHeading text="My video timestamps"></SplitHeading>

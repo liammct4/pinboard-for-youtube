@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import * as userData from "./../../lib/user/user-data.ts"
-import type { RootState } from "../../app/store"
 // @ts-ignore comment
 import StorageArea from 'mem-storage-area/StorageArea'
+import { getActiveTabURL } from "../../lib/browser/page.ts";
+import { getVideoIdFromYouTubeLink, videoExists } from "../../lib/youtube-util.ts";
 
-interface IVideoState {
-	currentVideos: Array<userData.Video>
+interface IVideoSlice {
+	activeVideoID?: string;
+	currentVideos: Array<userData.Video>;
 }
-
+var activeID: string | undefined = undefined;
 
 // Runs if in dev build.
 if (chrome.storage == undefined) {
@@ -15,11 +17,22 @@ if (chrome.storage == undefined) {
 	chrome.storage = {
 		local: new StorageArea()
 	}
+
+	activeID = "xcJtL7QggTI";
+}
+else {
+	let currentUrl: string | undefined = await getActiveTabURL();
+	
+	if (currentUrl != undefined && videoExists(currentUrl)) {
+		// Means that the current page is not a youtube video.
+		activeID = getVideoIdFromYouTubeLink(currentUrl);
+	}
 }
 
 await userData.ensureInitialized();
 
-const initialState: IVideoState = {
+const initialState: IVideoSlice = {
+	activeVideoID: activeID,
 	currentVideos: await userData.getStoredVideos()
 }
 
