@@ -1,4 +1,5 @@
 import * as userData from "./user-data.ts"
+import { Video, Timestamp, generateTimestamp } from "../video/video.ts";
 import { sampleVideoData } from "./../../data/testDataSet.ts"
 
 let storageTemplate: userData.IStorage = {
@@ -18,6 +19,13 @@ async function prepareStorage(setTemplate: boolean = true) : Promise<void> {
 	}
 
 	await chrome.storage.local.set(storageTemplate);
+}
+
+// For comparison so toEqual does not fail. ID's are unimportant.
+function setVideoTimestampIDsEmpty(videos: Array<Video>) {
+	videos.forEach(x => {
+		x.timestamps.forEach(t => t.id = "");
+	});
 }
 
 describe("Local storage operations.", () => {
@@ -93,11 +101,11 @@ describe("Extracting data from local storage.", () => {
 				await prepareStorage();
 
 				let videoID: string = "y9n6HkftavM"
-				let newVideo: userData.Video = {
+				let newVideo: Video = {
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." },
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later.")
 					]
 				};
 
@@ -118,7 +126,7 @@ describe("Extracting data from local storage.", () => {
 				await prepareStorage();
 
 				let expectedID: string = "LXb3EKWsInQ"
-				let result: userData.Video | null = await userData.getVideoFromIndex(0);
+				let result: Video | null = await userData.getVideoFromIndex(0);
 
 				expect(result.videoID).toEqual(expectedID);
 			});
@@ -135,7 +143,7 @@ describe("Extracting data from local storage.", () => {
 				await prepareStorage();
 
 				let expectedID: string = "LXb3EKWsInQ"
-				let result: userData.Video | null = await userData.getVideoFromVideoID(expectedID);
+				let result: Video | null = await userData.getVideoFromVideoID(expectedID);
 
 				expect(result?.videoID).toEqual(expectedID);
 			});
@@ -174,15 +182,15 @@ describe("Modifying user data in local storage.", () => {
 		it("adds a new video to the end of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideo: userData.Video = {
+			let newVideo: Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
-					{ "time": 372, "message": "Important point!" },
-					{ "time": 625, "message": "Watch later." },
+					generateTimestamp(372, "Important point!"),
+					generateTimestamp(625, "Watch later."),
 				]
 			};
 
-			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"], newVideo ];
+			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"], newVideo ];
 
 			await userData.pushVideo(newVideo);
 
@@ -192,13 +200,13 @@ describe("Modifying user data in local storage.", () => {
 			await prepareStorage();
 
 			let existingVideoID: string = "LXb3EKWsInQ"
-			let newVideo: userData.Video = {
+			let newVideo: Video = {
 				"videoID": "LXb3EKWsInQ",
 				"timestamps": [
-					{ "time": 923, "message": "In lacinia nibh odio finibus nisl." },
-					{ "time": 1921, "message": "In vulputate non odio vitae iaculis." },
-					{ "time": 3964, "message": "At dignissim ligula dui vel erat." },
-					{ "time": 129, "message": "Nulla felis ligula." }
+					generateTimestamp(923, "In lacinia nibh odio finibus nisl."),
+					generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
+					generateTimestamp(3964, "At dignissim ligula dui vel erat."),
+					generateTimestamp(129, "Nulla felis ligula.")
 				]
 			};
 
@@ -226,31 +234,31 @@ describe("Modifying user data in local storage.", () => {
 		it("adds a set of videos to the end of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideos: Array<userData.Video> = [
+			let newVideos: Array<Video> = [
 				{
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
-						{ "time": 419, "message": "Extra important point!" }
+						generateTimestamp(419, "Extra important point!")
 					]
 				},
 				{
 					"videoID": "QJ792KIE82Q",
 					"timestamps": [
-						{ "time": 816, "message": "Check the background." },
-						{ "time": 625, "message": "Lorem ipsum dolor sit amet." },
-						{ "time": 1062, "message": "Nunc magna enim, consequat non sagittis ut." }
+						generateTimestamp(816, "Check the background."),
+						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
+						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
 					]
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." }
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later.")
 					]
 				}
 			];
 
-			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"], ...newVideos ];
+			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"], ...newVideos ];
 
 			await userData.pushVideoBatch(newVideos);
 
@@ -259,67 +267,67 @@ describe("Modifying user data in local storage.", () => {
 		it("replaces an existing subset of videos in local storage when provided with an array of videos which have some reoccurances.", async () => {
 			await prepareStorage();
 
-			let newVideos: Array<userData.Video> = [
+			let newVideos: Array<Video> = [
 				// Already exists.
 				{
 					"videoID": "LXb3EKWsInQ",
 					"timestamps": [
-						{ "time": 923, "message": "In lacinia nibh odio finibus nisl." },
-						{ "time": 1921, "message": "In vulputate non odio vitae iaculis." },
-						{ "time": 3964, "message": "At dignissim ligula dui vel erat." },
-						{ "time": 129, "message": "Nulla felis ligula." }
+						generateTimestamp(923, "In lacinia nibh odio finibus nisl."),
+						generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
+						generateTimestamp(3964, "At dignissim ligula dui vel erat."),
+						generateTimestamp(129, "Nulla felis ligula.")
 					]
 				},
 				// Unique, added to end.
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." },
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later."),
 					]
 				},
 				// Already exists.
 				{
 					"videoID": "njX2bu-_Vw4",
 					"timestamps": [
-						{ "time": 10, "message": "Morbi efficitur." },
+						generateTimestamp(10, "Morbi efficitur."),
 					]
 				}
 			];
 
-			let expected: Array<userData.Video> = [
+			let expected: Array<Video> = [
 				{
 					"videoID": "LXb3EKWsInQ",
 					"timestamps": [
-						{ "time": 923, "message": "In lacinia nibh odio finibus nisl." },
-						{ "time": 1921, "message": "In vulputate non odio vitae iaculis." },
-						{ "time": 3964, "message": "At dignissim ligula dui vel erat." },
-						{ "time": 129, "message": "Nulla felis ligula." }
+						generateTimestamp(923, "In lacinia nibh odio finibus nisl."),
+						generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
+						generateTimestamp(3964, "At dignissim ligula dui vel erat."),
+						generateTimestamp(129, "Nulla felis ligula.")
 					]
 				},
 				{
 					"videoID": "njX2bu-_Vw4",
 					"timestamps": [
-						{ "time": 10, "message": "Morbi efficitur." },
+						generateTimestamp(10, "Morbi efficitur."),
 					]
 				},
 				{
 					"videoID": "AKeUssuu3Is",
 					"timestamps": [
-						{ "time": 16, "message": "Maecenas lectus nisl, pretium." }
+						generateTimestamp(16, "Maecenas lectus nisl, pretium.")
 					]
 				},
 				{
 					"videoID": "ZjVAsJOl8SM",
 					"timestamps": [
-						{ "time": 1063, "message": "Another timestamp." }
+						generateTimestamp(1063, "Another timestamp.")
 					]
 				},
 				{
 					"videoID": "PnvkrBXmLSI",
 					"timestamps": [
-						{ "time": 60342, "message": "Phasellus convallis arcu in malesuada mattis." },
-						{ "time": 0, "message": "Maximus quis purus." },
+						generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
+						generateTimestamp(0, "Maximus quis purus."),
 					]
 				},
 				{
@@ -329,15 +337,18 @@ describe("Modifying user data in local storage.", () => {
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." },
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later."),
 					]
 				}
 			];
 
 			await userData.pushVideoBatch(newVideos);
 			
-			let currentVideos: Array<userData.Video> = await userData.getStoredVideos();
+			let currentVideos: Array<Video> = await userData.getStoredVideos();
+
+			setVideoTimestampIDsEmpty(currentVideos);
+			setVideoTimestampIDsEmpty(expected);
 
 			expect(currentVideos).toEqual(expected);
 		});
@@ -346,15 +357,15 @@ describe("Modifying user data in local storage.", () => {
 		it("inserts a new video to the third position of user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideo: userData.Video = {
+			let newVideo: Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
-					{ "time": 372, "message": "Important point!" },
-					{ "time": 625, "message": "Watch later." },
+					generateTimestamp(372, "Important point!"),
+					generateTimestamp(625, "Watch later."),
 				]
 			};
 
-			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"] ];
+			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"] ];
 			expected.splice(2, 0, newVideo);
 
 			await userData.insertVideo(2, newVideo);
@@ -364,11 +375,11 @@ describe("Modifying user data in local storage.", () => {
 		it("throws an error when a negative index is provied.", async () => {
 			await prepareStorage();
 
-			let newVideo: userData.Video = {
+			let newVideo: Video = {
 				"videoID": "y9n6HkftavM",
 				"timestamps": [
-					{ "time": 372, "message": "Important point!" },
-					{ "time": 625, "message": "Watch later." },
+					generateTimestamp(372, "Important point!"),
+					generateTimestamp(625, "Watch later."),
 				]
 			};
 
@@ -381,31 +392,31 @@ describe("Modifying user data in local storage.", () => {
 		it("inserts a set of new videos to the 4th position of the user videos in local storage.", async () => {
 			await prepareStorage();
 
-			let newVideos: Array<userData.Video> = [
+			let newVideos: Array<Video> = [
 				{
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
-						{ "time": 419, "message": "Extra important point!" }
+						generateTimestamp(419, "Extra important point!")
 					]
 				},
 				{
 					"videoID": "QJ792KIE82Q",
 					"timestamps": [
-						{ "time": 816, "message": "Check the background." },
-						{ "time": 625, "message": "Lorem ipsum dolor sit amet." },
-						{ "time": 1062, "message": "Nunc magna enim, consequat non sagittis ut." }
+						generateTimestamp(816, "Check the background."),
+						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
+						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
 					]
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." }
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later.")
 					]
 				}
 			];
 
-			let expected: Array<userData.Video> = [ ...storageTemplate["user_data"]["videos"] ];
+			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"] ];
 			expected.splice(3, 0, ...newVideos);
 
 			await userData.insertVideoBatch(3, newVideos);
@@ -441,26 +452,26 @@ describe("Modifying user data in local storage.", () => {
 		it("replaces the existing videos in local storage, removing the old ones.", async () => {
 			await prepareStorage();
 
-			let newVideos: Array<userData.Video> = [
+			let newVideos: Array<Video> = [
 				{
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
-						{ "time": 419, "message": "Extra important point!" }
+						generateTimestamp(419, "Extra important point!")
 					]
 				},
 				{
 					"videoID": "QJ792KIE82Q",
 					"timestamps": [
-						{ "time": 816, "message": "Check the background." },
-						{ "time": 625, "message": "Lorem ipsum dolor sit amet." },
-						{ "time": 1062, "message": "Nunc magna enim, consequat non sagittis ut." }
+						generateTimestamp(816, "Check the background."),
+						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
+						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
 					]
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
-						{ "time": 372, "message": "Important point!" },
-						{ "time": 625, "message": "Watch later." }
+						generateTimestamp(372, "Important point!"),
+						generateTimestamp(625, "Watch later.")
 					]
 				}
 			];

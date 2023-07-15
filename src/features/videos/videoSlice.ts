@@ -3,11 +3,12 @@ import * as userData from "./../../lib/user/user-data.ts"
 // @ts-ignore comment
 import StorageArea from 'mem-storage-area/StorageArea'
 import { getActiveTabURL } from "../../lib/browser/page.ts";
+import { Video, Timestamp } from "../../lib/video/video.ts";
 import { getVideoIdFromYouTubeLink, videoExists } from "../../lib/youtube-util.ts";
 
 interface IVideoSlice {
 	activeVideoID?: string;
-	currentVideos: Array<userData.Video>;
+	currentVideos: Array<Video>;
 }
 var activeID: string | undefined = undefined;
 
@@ -40,11 +41,11 @@ export const videoSlice = createSlice({
 	name: "video",
 	initialState,
 	reducers: {
-		addVideo: (state, action: PayloadAction<userData.Video>) => {
+		addVideo: (state, action: PayloadAction<Video>) => {
 			state.currentVideos.push(action.payload);
 			userData.pushVideo(action.payload);
 		},
-		updateVideo: (state, action: PayloadAction<userData.Video>) => {
+		updateVideo: (state, action: PayloadAction<Video>) => {
 			for (let i = 0; i < state.currentVideos.length; i++) {
 				if (state.currentVideos[i].videoID == action.payload.videoID) {
 					state.currentVideos[i] = action.payload;

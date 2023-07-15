@@ -1,5 +1,5 @@
 import VideoTimestampList from "./../VideoTimestampList/VideoTimestampList.jsx"
-import { Video } from "./../../../lib/user/user-data.ts"
+import { Video } from "../../../lib/video/video.ts";
 import "./VideoCollection.css"
 
 export interface IVideoCollectionProperties {
@@ -7,7 +7,7 @@ export interface IVideoCollectionProperties {
 }
 
 export function VideoCollection({ videos }: IVideoCollectionProperties): React.ReactNode {
-	let items: Array<JSX.Element> = videos.map((x) => <li key={x.videoID}><VideoTimestampList timestamps={x.timestamps} videoID={x.videoID}></VideoTimestampList></li>);
+	let items: Array<JSX.Element> = videos.map((x) => <li key={x.videoID}><VideoTimestampList video={x}></VideoTimestampList></li>);
 
 	return (
 		<ul className="timestamp-scrollbox-list">

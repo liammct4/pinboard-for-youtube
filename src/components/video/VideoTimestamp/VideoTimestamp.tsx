@@ -2,8 +2,7 @@ import { useState, useRef, useEffect, MutableRefObject, useCallback } from "reac
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
 import * as YTUtil from "./../../../lib/youtube-util.js" 
 import * as Dialog from "@radix-ui/react-dialog";
-import { Timestamp } from "./../../../lib/user/user-data.ts"
-import { useForm, SubmitHandler } from "react-hook-form"
+import { Timestamp, generateTimestamp, cloneModifyTimestamp } from "../../../lib/video/video.ts";
 import Bin from "src/../assets/icons/bin.svg"
 import { FormField } from "../../forms/FormField/FormField.tsx";
 import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
@@ -41,7 +40,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	let onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
-		onChange(timestamp, { "time": inputTime, "message": data.message });
+		onChange(timestamp, cloneModifyTimestamp(timestamp, inputTime, data.message));
 	}, []);
 	let { register, handleSubmit, handler, submit } = useValidatedForm<IEditTimestampForm>(onSave);
 

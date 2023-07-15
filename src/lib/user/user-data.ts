@@ -1,4 +1,5 @@
 import { validate } from "jsonschema"
+import { Video } from "../video/video"
 
 interface IVideoJsonSchema {
 	type: string,
@@ -11,6 +12,9 @@ interface IVideoJsonSchema {
 			items: {
 				type: string,
 				properties: {
+					id: {
+						type: string
+					},
 					time: {
 						type: string
 					},
@@ -49,16 +53,6 @@ interface IStorageJsonSchema {
 	required: Array<string>
 }
 
-export type Timestamp = {
-	time: number;
-	message: string;
-}
-
-export type Video = {
-	videoID: string;
-	timestamps: Array<Timestamp>;
-}
-
 // TODO: Add config options.
 export interface IConfig { }
 
@@ -82,6 +76,9 @@ const VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
 			"items": {
 				"type": "object",
 				"properties": {
+					"id": {
+						"type": "string"
+					},
 					"time": {
 						"type": "integer"
 					},
@@ -89,7 +86,7 @@ const VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
 						"type": "string"
 					}
 				},
-				"required": [ "time", "message" ]
+				"required": [ "id", "time", "message" ]
 			}
 		}
 	},

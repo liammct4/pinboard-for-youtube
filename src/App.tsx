@@ -4,7 +4,7 @@ import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
 import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
 import VideoCollection from "./components/video/VideoCollection/VideoCollection.tsx"
 import { store, RootState } from "./app/store.ts"
-import { Video } from "./lib/user/user-data.ts"
+import { Video, generateTimestamp } from "./lib/video/video.ts"
 import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo, clearVideos } from "./features/videos/videoSlice.ts"
 import * as YTUtil from "./lib/youtube-util.ts"
@@ -72,7 +72,7 @@ function App(): JSX.Element {
 			videoID: activeVideoID!,
 			timestamps: [
 				...(videos.find(x => x.videoID == activeVideoID)!).timestamps,
-				{ time: Math.floor(result!.currentTime), message: "Current time" }
+				generateTimestamp(Math.floor(result!.currentTime), "Current time")
 			]
 		}
 		
