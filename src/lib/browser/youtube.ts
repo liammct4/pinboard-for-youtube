@@ -18,3 +18,13 @@ export async function getActiveVideoInfo(): Promise<IVideoInfo | null> {
 		})
 	});
 }
+
+/**
+ * Sets the current time of the video playing in the active tab the user is in.
+ * @param seconds The time to set the video to.
+ */
+export function setCurrentVideoTime(seconds: number): void {
+	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
+		chrome.tabs.sendMessage(currentTab.id!, { type: "set_video_position", data: seconds });
+	})
+}

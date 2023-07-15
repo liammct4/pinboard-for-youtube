@@ -38,6 +38,12 @@ hr {
 	border: 1px solid var(--outer-solid);
 }
 
+.square-button {
+	aspect-ratio: 1 / 1;
+	padding: initial !important;
+	align-content: right;
+}
+
 /* Circle button */
 .circle-button {
 	width: 16px;

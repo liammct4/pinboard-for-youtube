@@ -6,6 +6,11 @@ import { Timestamp, generateTimestamp, cloneModifyTimestamp } from "../../../lib
 import Bin from "src/../assets/icons/bin.svg"
 import { FormField } from "../../forms/FormField/FormField.tsx";
 import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store.ts";
+import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
+import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
+import { setCurrentVideoTime } from "../../../lib/browser/youtube.ts";
 import "src/styles/dialog.css"
 import "./VideoTimestamp.css"
 
@@ -37,6 +42,7 @@ function validateTimestamp(value: string): string | null {
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestampProperties): React.ReactNode {
+	let activeID = useSelector((state: RootState) => state.video.activeVideoID);
 	let onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
@@ -47,17 +53,25 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
 	}
-	
+
+	const onJumpToTimestamp: () => void = () => {
+		setCurrentVideoTime(timestamp.time);
+	}
+
+	let isActiveId = activeID == videoID;
 	let stringTime: string = getTimestampFromSeconds(timestamp.time);
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
 
 	return (
 		<div className="video-timestamp-inner">
+			<button type="button" className="button-small square-button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+				<img src={isActiveId ? JumpVideoIcon : JumpVideoIconOff} alt="Play button icon."></img>
+			</button>
 			<a className="video-timestamp-time" href={timeLink}>{stringTime}</a>
 			<p className="video-timestamp-message">{timestamp.message}</p>
 			<div className="video-timestamp-filler"></div>
-			<button className="button-small delete-timestamp-button" onClick={onDelete}>
-				<img className="delete-timestamp-icon" src={Bin}/>
+			<button className="button-small square-button delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
+				<img className="delete-timestamp-icon" src={Bin} alt="Delete icon."/>
 			</button>
 			{/* Edit dialog */}
 			<Dialog.Root>

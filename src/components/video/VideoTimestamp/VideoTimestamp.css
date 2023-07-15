@@ -64,12 +64,6 @@
 	grid-template-columns: auto 1fr;
 }
 
-.delete-timestamp-button {
-	aspect-ratio: 1 / 1;
-	padding: initial !important;
-	align-content: right;
-}
-
 .delete-timestamp-icon {
 	transform: scale(1.2);
 }
