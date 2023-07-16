@@ -1,16 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import * as userData from "./../../lib/user/user-data.ts"
+import * as userData from "../../lib/storage/user-data.ts"
 // @ts-ignore comment
 import StorageArea from 'mem-storage-area/StorageArea'
-import { getActiveTabURL } from "../../lib/browser/page.ts";
-import { Video, Timestamp } from "../../lib/video/video.ts";
-import { getVideoIdFromYouTubeLink, videoExists } from "../../lib/youtube-util.ts";
+import { Video } from "../../lib/video/video.ts";
 
-interface IVideoSlice {
+export interface IVideoSlice {
 	activeVideoID?: string;
 	currentVideos: Array<Video>;
 }
-var activeID: string | undefined = undefined;
 
 // Runs if in dev build.
 if (chrome.storage == undefined) {
@@ -18,29 +15,21 @@ if (chrome.storage == undefined) {
 	chrome.storage = {
 		local: new StorageArea()
 	}
-
-	activeID = "xcJtL7QggTI";
 }
-else {
-	let currentUrl: string | undefined = await getActiveTabURL();
-	
-	if (currentUrl != undefined && videoExists(currentUrl)) {
-		// Means that the current page is not a youtube video.
-		activeID = getVideoIdFromYouTubeLink(currentUrl);
-	}
-}
-
-await userData.ensureInitialized();
 
 const initialState: IVideoSlice = {
-	activeVideoID: activeID,
-	currentVideos: await userData.getStoredVideos()
+	activeVideoID: undefined,
+	currentVideos: []
 }
 
 export const videoSlice = createSlice({
 	name: "video",
 	initialState,
 	reducers: {
+		setVideoState: (state, action: PayloadAction<IVideoSlice>) => {
+			state.activeVideoID = action.payload.activeVideoID;
+			state.currentVideos = action.payload.currentVideos;
+		},
 		addVideo: (state, action: PayloadAction<Video>) => {
 			state.currentVideos.push(action.payload);
 			userData.pushVideo(action.payload);
@@ -62,5 +51,5 @@ export const videoSlice = createSlice({
 	}
 })
 
-export const { addVideo, updateVideo, clearVideos } = videoSlice.actions;
+export const { setVideoState, addVideo, updateVideo, clearVideos } = videoSlice.actions;
 export default videoSlice.reducer;

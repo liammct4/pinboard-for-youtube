@@ -1,8 +1,9 @@
 import * as userData from "./user-data.ts"
 import { Video, Timestamp, generateTimestamp } from "../video/video.ts";
-import { sampleVideoData } from "./../../data/testDataSet.ts"
+import { sampleVideoData } from "../../data/testDataSet.ts"
+import { IStorage, ensureInitialized } from "./storage.ts";
 
-let storageTemplate: userData.IStorage = {
+let storageTemplate: IStorage = {
 	"user_data": {
 		"videos": sampleVideoData,
 		"config": {
@@ -28,51 +29,7 @@ function setVideoTimestampIDsEmpty(videos: Array<Video>) {
 	});
 }
 
-describe("Local storage operations.", () => {
-	test("checks whether the default data has been initialized with a correct value.", async () => {
-		await prepareStorage();
-
-		expect(await userData.ensureInitialized()).toBeUndefined();
-	});
-	test("set's storage to a default template when it is empty (as is the case when the extension is first installed).", async () => {
-		await prepareStorage(false);		
-
-		let defaultTemplate: userData.IStorage = {
-			"user_data": {
-				"videos": [],
-				"config": {
-
-				}
-			}
-		};
-
-		await userData.ensureInitialized();
-
-		expect(await chrome.storage.local.get()).toEqual(defaultTemplate);
-	});
-	test("throws an error whenever storage contains incorrect data, (E.g. corruption).", async () => {
-		await prepareStorage(false);
-
-		let badData: any = {
-			"userdata": {
-				"videos": [
-					{
-						"video_id": null
-					}
-				],
-				"config": []
-			}
-		};
-
-		await chrome.storage.local.set(badData);
-
-		await expect(async () => await userData.ensureInitialized())
-			.rejects
-			.toThrow(Error);
-	});
-});
-
-describe("Extracting data from local storage.", () => {
+describe("Extracting video data from local storage.", () => {
 	describe("Getting video data from local storage.", () => {
 		describe("Getting the entirety of the videos stored in local storage 'getStoredVideos()'.", () => {
 			it("gets the entire array of just added video data.", async () => {
@@ -154,25 +111,6 @@ describe("Extracting data from local storage.", () => {
 
 				expect(await userData.getVideoFromVideoID(nonExistantVideo)).toBe(null);
 			});
-		});
-	});
-	describe("Getting user config data from local storage 'getUserConfig()'.", () => {
-		test("gets user config data from local storage.", async () => {
-			await prepareStorage();
-
-			// This is to be filled and changed when new options become available.
-			let expectedConfig: userData.IConfig = {
-
-			}
-			
-			expect(await userData.getUserConfig()).toEqual(expectedConfig);
-		});
-		test("throws an error when attempting to get user config data from local storage when it does not exist.", async () => {
-			await prepareStorage(false);
-			
-			await expect(async () => await userData.getUserConfig())
-				.rejects
-				.toThrowError(Error);
 		});
 	});
 });

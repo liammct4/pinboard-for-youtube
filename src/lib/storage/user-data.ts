@@ -1,7 +1,9 @@
 import { validate } from "jsonschema"
 import { Video } from "../video/video"
+import { getNestedStorageData } from "./storage"
+import { IConfig } from "./config"
 
-interface IVideoJsonSchema {
+export interface IVideoJsonSchema {
 	type: string,
 	properties: {
 		videoID: {
@@ -29,43 +31,13 @@ interface IVideoJsonSchema {
 	required: Array<string>	
 }
 
-interface IVideoArrayJsonSchema {
+export interface IVideoArrayJsonSchema {
 	$schema: string,
 	type: string,
 	items: IVideoJsonSchema
 }
 
-interface IStorageJsonSchema {
-	$schema: string,
-	type: string,
-	properties: {
-		user_data: {
-			type: string,
-			properties: {
-				videos: IVideoArrayJsonSchema,
-				config: {
-					type: string
-				}
-			},
-			required: Array<string>
-		}
-	},
-	required: Array<string>
-}
-
-// TODO: Add config options.
-export interface IConfig { }
-
-export interface IStorage {
-	user_data: {
-		videos: Array<Video>,
-		config: IConfig
-	}
-}
-
-const USER_DATA_KEY: string = "user_data";
-
-const VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
+export var VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
 	"type": "object",
 	"properties": {
 		"videoID": {
@@ -93,75 +65,14 @@ const VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
 	"required": [ "videoID", "timestamps" ]
 }
 
-const VIDEO_ARRAY_JSON_SCHEMA: IVideoArrayJsonSchema = {
+export var VIDEO_ARRAY_JSON_SCHEMA: IVideoArrayJsonSchema = {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
 	"type": "array",
 	"items": VIDEO_JSON_SCHEMA
 }
 
-const STORAGE_JSON_SCHEMA: IStorageJsonSchema = {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"type": "object",
-	"properties": {
-		"user_data": {
-			"type": "object",
-			"properties": {
-				"videos": VIDEO_ARRAY_JSON_SCHEMA,
-				"config": {
-					"type": "object",
-				}
-			},
-			"required": [ "videos" ]
-		}
-	},
-	"required": [ "user_data" ]
-};
-
-export async function ensureInitialized(): Promise<void> {
-	// Storage is empty if not initialized.
-	let storage: any = await chrome.storage.local.get();
-
-	if (Object.keys(storage).length == 0) {
-		let template: IStorage = {
-			"user_data": {
-				"videos": [],
-				"config": {
-
-				}
-			}
-		};
-
-		await chrome.storage.local.set(template);
-	}
-	else if (!validate(storage, STORAGE_JSON_SCHEMA).valid) {
-		throw new Error("The data stored in local storage was in an invalid format, the data may have possibly been corrupted or externally modified.");
-	}
-}
-
-async function getNestedStorageData(path: string): Promise<any> {
-	let data: any = await chrome.storage.local.get();
-	let keys: Array<string> = path.split(/[\/\\]/).filter(x => x != "");
-
-	let current: string = data[keys[0]];
-
-	if (current == undefined) {
-		return undefined;
-	}
-
-	for (let i: number = 1; i < keys.length; i++) {
-		let nextKey: any = keys[i];
-		current = current[nextKey];
-
-		if (current == undefined) {
-			return undefined;
-		}
-	}
-
-	return current;
-}
-
 export async function getStoredVideos(): Promise<Array<Video>> {
-	let videos: Array<Video> = await getNestedStorageData(`${USER_DATA_KEY}/videos`);
+	let videos: Array<Video> = await getNestedStorageData("user_data/videos");
 
 	if (videos == undefined) {
 		throw new Error("Invalid operation, the user video data does not exist.");
@@ -199,27 +110,17 @@ export async function getIndexOfVideo(videoID: string) : Promise<number> {
 	return index;
 }
 
-export async function getUserConfig(): Promise<IConfig> {
-	let config: IConfig = await getNestedStorageData(`${USER_DATA_KEY}/config`);
-
-	if (config == undefined) {
-		throw new Error("Invalid operation, the user config data does not exist.");
-	}
-
-	return config;
-}
-
 async function modifyStorageVideos(): Promise<[any, Array<Video>]> {
-	let userData: any = await chrome.storage.local.get(USER_DATA_KEY);
-	let storageVideos: Array<Video> = userData[USER_DATA_KEY]["videos"];
+	let userData: any = await chrome.storage.local.get("user_data");
+	let storageVideos: Array<Video> = userData["user_data"]["videos"];
 
 	return [userData, storageVideos];
 }
 
 export async function setStoredVideos(videos: Array<Video>) {
-	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
+	let [userData, _storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
 
-	userData[USER_DATA_KEY]["videos"] = videos;
+	userData["user_data"]["videos"] = videos;
 
 	await chrome.storage.local.set(userData);
 }
