@@ -47,9 +47,14 @@ export const videoSlice = createSlice({
 			state.currentVideos.length = 0;
 
 			userData.clearStoredVideos();
+		},
+		setVideos: (state, action: PayloadAction<Array<Video>>) => {
+			state.currentVideos = action.payload;
+
+			userData.setStoredVideos(action.payload);
 		}
 	}
 })
 
-export const { setVideoState, addVideo, updateVideo, clearVideos } = videoSlice.actions;
+export const { setVideoState, addVideo, updateVideo, clearVideos, setVideos } = videoSlice.actions;
 export default videoSlice.reducer;

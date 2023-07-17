@@ -8,8 +8,9 @@ import { addVideo, updateVideo } from "./../../../features/videos/videoSlice.js"
 import { generateUniqueFrom } from "./../../../lib/util/random-util.ts"
 import { RootState, store } from "../../../app/store.ts";
 import Plus from "src/../assets/symbols/plus.svg"
-import "./VideoTimestampList.css"
+import { Reorder, useDragControls } from "framer-motion";
 import { addExpandedID, removeExpandedID } from "../../../features/state/tempStateSlice.ts";
+import "./VideoTimestampList.css"
 
 export interface IVideoTimestampListProperties {
 	video: Video;
@@ -17,6 +18,7 @@ export interface IVideoTimestampListProperties {
 
 export function VideoTimestampList({ video }: IVideoTimestampListProperties): React.ReactNode {
 	const dispatch = useDispatch();
+	let dragControls = useDragControls();
 	let openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 
 	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
@@ -71,9 +73,13 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 	let timestampItems: Array<JSX.Element> = video.timestamps.map((x) => <li key={x.id}><VideoTimestamp videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp></li>);
 
 	return (
-		<>
+		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>
 			<div className="video-timestamp-list">
-				<VideoCard videoID={video.videoID}/>
+				<div className="video-timestamp-list-card">
+					<VideoCard videoID={video.videoID}/>
+					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
+					</div>
+				</div>
 				<hr className="video-timestamp-list-margin"></hr>
 				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
 					<ul className="video-timestamp-list-container">
@@ -92,7 +98,7 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 				</SubtleExpander>
 			</div>
 			<hr className="video-timestamp-list-separator"></hr>
-		</>
+		</Reorder.Item>
 	)
 }
 

@@ -34,6 +34,7 @@
 
 .video-timestamp-list {
 	display: flex;
+	background: var(--regular-background);
 	flex-direction: column;
 }
 
@@ -51,4 +52,17 @@
 
 .video-card {
 	margin: 100px;
+}
+
+.video-timestamp-list-card {
+	display: flex;
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+.drag-handle {
+	min-width: 20px;
+	height: 34px;
+	margin: auto 0 auto auto;
+	background-image: url("/assets/icons/drag_vrect.svg");
 }

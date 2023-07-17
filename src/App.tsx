@@ -6,7 +6,7 @@ import VideoCollection from "./components/video/VideoCollection/VideoCollection.
 import { store, RootState } from "./app/store.ts"
 import { Video, generateTimestamp } from "./lib/video/video.ts"
 import { useSelector, useDispatch } from "react-redux"
-import { addVideo, updateVideo, clearVideos } from "./features/videos/videoSlice.ts"
+import { addVideo, updateVideo, clearVideos, setVideos } from "./features/videos/videoSlice.ts"
 import * as YTUtil from "./lib/youtube-util.ts"
 import * as Dialog from "@radix-ui/react-dialog"
 import { SubmitHandler } from "react-hook-form"
@@ -78,6 +78,19 @@ function App(): JSX.Element {
 		
 		dispatch(updateVideo(activeVideo));
 	};
+	const handleReorderedItems = (reordered: Array<Video>) => {
+		// To mitigate lag from store dispatching.
+		let listener = (_event: any) => {
+			document.removeEventListener("mouseup", listener);
+			setTimeout(() => {
+				dispatch(setVideos(reordered));
+			}, 100);
+		}
+
+		document.addEventListener("mouseup", listener)
+
+	}
+
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
 	useEffect(() => {
 		reset();
@@ -142,7 +155,7 @@ function App(): JSX.Element {
 					<button className="button-small" onClick={() => dispatch(clearVideos())}>Clear videos</button>
 				</div>
 				<div id="timestamp-scrollbox">
-					<VideoCollection videos={videos}></VideoCollection>
+					<VideoCollection videos={videos} onReorder={handleReorderedItems}></VideoCollection>
 				</div>
 			</div>
 			<div className="outer-section-area bottom-area">
