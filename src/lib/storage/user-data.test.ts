@@ -4,11 +4,14 @@ import { sampleVideoData } from "../../data/testDataSet.ts"
 import { IStorage, ensureInitialized } from "./storage.ts";
 
 let storageTemplate: IStorage = {
-	"user_data": {
-		"videos": sampleVideoData,
-		"config": {
+	user_data: {
+		videos: sampleVideoData,
+		config: {
 
 		}
+	},
+	temp_state: {
+		expandedVideos: []
 	}
 }
 

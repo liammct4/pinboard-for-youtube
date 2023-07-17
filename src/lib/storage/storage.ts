@@ -1,12 +1,14 @@
 import { IConfig } from "./config"
 import { IVideoArrayJsonSchema, VIDEO_ARRAY_JSON_SCHEMA } from "./user-data"
 import { Video } from "../video/video"
+import { ITempState } from "./tempState"
 
 export interface IStorage {
 	user_data: {
 		videos: Array<Video>,
 		config: IConfig
-	}
+	},
+	temp_state: ITempState
 }
 
 export interface IStorageJsonSchema {
@@ -22,6 +24,18 @@ export interface IStorageJsonSchema {
 				}
 			},
 			required: Array<string>
+		},
+		temp_state: {
+			type: string,
+			properties: {
+				expandedVideos: {
+					type: string,
+					items: {
+						type: string
+					}
+				}
+			},
+			required: Array<string>
 		}
 	},
 	required: Array<string>
@@ -29,20 +43,32 @@ export interface IStorageJsonSchema {
 
 export const STORAGE_JSON_SCHEMA: IStorageJsonSchema = {
 	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"type": "object",
-	"properties": {
-		"user_data": {
-			"type": "object",
-			"properties": {
-				"videos": VIDEO_ARRAY_JSON_SCHEMA,
-				"config": {
-					"type": "object",
+	type: "object",
+	properties: {
+		user_data: {
+			type: "object",
+			properties: {
+				videos: VIDEO_ARRAY_JSON_SCHEMA,
+				config: {
+					type: "object",
 				}
 			},
-			"required": [ "videos" ]
+			required: [ "videos" ]
+		},
+		temp_state: {
+			type: "object",
+			properties: {
+				expandedVideos: {
+					type: "array",
+					items: {
+						type: "string"
+					}
+				}
+			},
+			required: [ "expandedVideos" ]
 		}
 	},
-	"required": [ "user_data" ]
+	required: [ "user_data", "temp_state" ]
 };
 
 export async function getNestedStorageData(path: string): Promise<any> {
@@ -73,11 +99,14 @@ export async function ensureInitialized(): Promise<void> {
 
 	if (Object.keys(storage).length == 0) {
 		let template: IStorage = {
-			"user_data": {
-				"videos": [],
-				"config": {
+			user_data: {
+				videos: [],
+				config: {
 
 				}
+			},
+			temp_state: {
+				expandedVideos: []
 			}
 		};
 

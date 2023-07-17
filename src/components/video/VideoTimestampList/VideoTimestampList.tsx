@@ -6,16 +6,18 @@ import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts
 import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo } from "./../../../features/videos/videoSlice.js"
 import { generateUniqueFrom } from "./../../../lib/util/random-util.ts"
-import { store } from "../../../app/store.ts";
+import { RootState, store } from "../../../app/store.ts";
 import Plus from "src/../assets/symbols/plus.svg"
 import "./VideoTimestampList.css"
+import { addExpandedID, removeExpandedID } from "../../../features/state/tempStateSlice.ts";
 
 export interface IVideoTimestampListProperties {
-	video: Video
+	video: Video;
 }
 
 export function VideoTimestampList({ video }: IVideoTimestampListProperties): React.ReactNode {
 	const dispatch = useDispatch();
+	let openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 
 	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
 		let videoTimestamps = store.getState().video.currentVideos.find(x => x.videoID == video.videoID)?.timestamps;
@@ -56,6 +58,16 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 		dispatch(updateVideo(updatedVideo));
 	}
 
+	const handleExpanded = (open: boolean) => {
+		if (open) {
+			dispatch(addExpandedID(video.videoID));
+			return;
+		}
+
+		dispatch(removeExpandedID(video.videoID));
+	} 
+
+	let isOpen = openVideos.includes(video.videoID);
 	let timestampItems: Array<JSX.Element> = video.timestamps.map((x) => <li key={x.id}><VideoTimestamp videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp></li>);
 
 	return (
@@ -63,7 +75,7 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 			<div className="video-timestamp-list">
 				<VideoCard videoID={video.videoID}/>
 				<hr className="video-timestamp-list-margin"></hr>
-				<SubtleExpander openMessage="Close timestamps" closeMessage="Expand timestamps">	
+				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
 					<ul className="video-timestamp-list-container">
 						{timestampItems}
 					</ul>

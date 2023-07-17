@@ -3,16 +3,20 @@ import * as Collapsible from "@radix-ui/react-collapsible"
 import "./SubtleExpander.css"
 
 export interface ISubtleExpanderProperties {
-	openMessage: string,
-	closeMessage: string,
-	children: React.ReactNode
+	expanded: boolean;
+	onExpanded: (open: boolean) => void;
+	openMessage: string;
+	closeMessage: string;
+	children: React.ReactNode;
 }
 
-export function SubtleExpander({ openMessage, closeMessage, children }: ISubtleExpanderProperties): React.ReactNode {
-	const [expanded, setExpanded] = useState(false);
+export function SubtleExpander({ expanded, onExpanded, openMessage, closeMessage, children }: ISubtleExpanderProperties): React.ReactNode {
+	// The state and modification of the state of the expander is left up to the parent component.
+	// However, if no onExpanded is provided, then the component will manage its own state with this useState.
+	let [isExpanded, setExpanded] = useState(expanded);
 
 	return (
-		<Collapsible.Root open={expanded} onOpenChange={setExpanded}>
+		<Collapsible.Root open={onExpanded == null ? isExpanded : expanded} onOpenChange={onExpanded ?? setExpanded}>
 			<div className="subtle-expander-inner">
 				<Collapsible.Trigger asChild>
 					<button type="button" className="circle-button subtle-expander-button">

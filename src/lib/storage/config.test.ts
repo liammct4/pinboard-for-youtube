@@ -3,11 +3,14 @@ import { IConfig, getUserConfig } from "./config";
 import { IStorage } from "./storage";
 
 let storageTemplate: IStorage = {
-	"user_data": {
-		"videos": sampleVideoData,
-		"config": {
+	user_data: {
+		videos: sampleVideoData,
+		config: {
 
 		}
+	},
+	temp_state: {
+		expandedVideos: []
 	}
 }
 

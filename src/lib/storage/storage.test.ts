@@ -2,11 +2,14 @@ import { sampleVideoData } from "../../data/testDataSet";
 import { IStorage, ensureInitialized } from "./storage";
 
 let storageTemplate: IStorage = {
-	"user_data": {
-		"videos": sampleVideoData,
-		"config": {
+	user_data: {
+		videos: sampleVideoData,
+		config: {
 
 		}
+	},
+	temp_state: {
+		expandedVideos: []
 	}
 }
 
@@ -30,11 +33,14 @@ describe("Local storage operations.", () => {
 		await prepareStorage(false);		
 
 		let defaultTemplate: IStorage = {
-			"user_data": {
-				"videos": [],
-				"config": {
+			user_data: {
+				videos: [],
+				config: {
 
 				}
+			},
+			temp_state: {
+				expandedVideos: []
 			}
 		};
 

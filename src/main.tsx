@@ -8,6 +8,8 @@ import { IVideoSlice, setVideoState } from './features/videos/videoSlice.ts'
 import { getVideoIdFromYouTubeLink, videoExists } from './lib/youtube-util.ts'
 import { getStoredVideos } from './lib/storage/user-data.ts'
 import { ensureInitialized } from './lib/storage/storage.ts'
+import { IStateSlice, setTempState } from './features/state/tempStateSlice.ts'
+import { getExpandedVideos } from './lib/storage/tempState.ts'
 import './main.css'
 
 if (chrome.extension != null) {
@@ -16,7 +18,6 @@ if (chrome.extension != null) {
 		target: { tabId: (await getActiveTab()).id },
 		files: ["content_script.js"]
 	});
-
 }
 
 async function setupState() {
@@ -41,7 +42,12 @@ async function setupState() {
 		currentVideos: await getStoredVideos()
 	}
 
+	let tempState: IStateSlice = {
+		expandedVideoIDs: await getExpandedVideos()
+	}
+
 	store.dispatch(setVideoState(videoState));
+	store.dispatch(setTempState(tempState));
 	
 	ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 		<React.StrictMode>

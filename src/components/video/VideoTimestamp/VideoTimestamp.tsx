@@ -20,9 +20,9 @@ interface IEditTimestampForm extends IErrorFieldValues {
 }
 
 export interface IVideoTimestampProperties {
-	videoID: string,
-	timestamp: Timestamp,
-	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void
+	videoID: string;
+	timestamp: Timestamp;
+	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
 }
 
 function validateTimestamp(value: string): string | null {
