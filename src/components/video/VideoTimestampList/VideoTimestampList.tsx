@@ -67,24 +67,39 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 		}
 
 		dispatch(removeExpandedID(video.videoID));
-	} 
+	}
+
+	const handleTimestampReorder = (newTimestamps: Array<Timestamp>) => {
+		let listener = (_event: any) => {
+			document.removeEventListener("mouseup", listener);
+			setTimeout(() => {
+				let newVideo: Video = {
+					...video,
+					timestamps: newTimestamps
+				}
+
+				dispatch(updateVideo(newVideo));
+			}, 100);
+		}
+
+		document.addEventListener("mouseup", listener);
+	};
 
 	let isOpen = openVideos.includes(video.videoID);
-	let timestampItems: Array<JSX.Element> = video.timestamps.map((x) => <li key={x.id}><VideoTimestamp videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp></li>);
 
 	return (
 		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>
 			<div className="video-timestamp-list">
 				<div className="video-timestamp-list-card">
 					<VideoCard videoID={video.videoID}/>
-					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
-					</div>
+					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}/>
 				</div>
 				<hr className="video-timestamp-list-margin"></hr>
 				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
-					<ul className="video-timestamp-list-container">
-						{timestampItems}
-					</ul>
+					<Reorder.Group values={video.timestamps} onReorder={handleTimestampReorder} className="video-timestamp-list-container">
+						{video.timestamps.map((x) => 
+							<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
+					</Reorder.Group>
 					<div className="add-timestamp-button-outer">
 						<p className="add-timestamp-fake-time">00:00</p>
 						<div style={{ flexGrow: "1" }}></div>

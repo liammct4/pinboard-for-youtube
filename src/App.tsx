@@ -87,8 +87,7 @@ function App(): JSX.Element {
 			}, 100);
 		}
 
-		document.addEventListener("mouseup", listener)
-
+		document.addEventListener("mouseup", listener);
 	}
 
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
