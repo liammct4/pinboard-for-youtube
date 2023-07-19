@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit"
 import videoReducer from "../features/videos/videoSlice.ts"
 import tempStateReducer from "../features/state/tempStateSlice.ts"
 import tempStateMiddleware from "../features/state/stateStorageMiddleware.ts"
+import videoStorageMiddleware from "../features/videos/videoStorageMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -9,6 +10,7 @@ export let store = configureStore({
 		tempState: tempStateReducer
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+		.prepend(videoStorageMiddleware.middleware)
 		.prepend(tempStateMiddleware.addIDMiddleware.middleware)
 		.prepend(tempStateMiddleware.removeIDMiddleware.middleware)
 })

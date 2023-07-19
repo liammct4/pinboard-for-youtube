@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import * as userData from "../../lib/storage/user-data.ts"
 // @ts-ignore comment
 import StorageArea from 'mem-storage-area/StorageArea'
 import { Video } from "../../lib/video/video.ts";
@@ -32,7 +31,6 @@ export const videoSlice = createSlice({
 		},
 		addVideo: (state, action: PayloadAction<Video>) => {
 			state.currentVideos.push(action.payload);
-			userData.pushVideo(action.payload);
 		},
 		updateVideo: (state, action: PayloadAction<Video>) => {
 			for (let i = 0; i < state.currentVideos.length; i++) {
@@ -40,18 +38,12 @@ export const videoSlice = createSlice({
 					state.currentVideos[i] = action.payload;
 				}
 			}
-
-			userData.pushVideo(action.payload);
 		},
 		clearVideos: (state) => {
 			state.currentVideos.length = 0;
-
-			userData.clearStoredVideos();
 		},
 		setVideos: (state, action: PayloadAction<Array<Video>>) => {
 			state.currentVideos = action.payload;
-
-			userData.setStoredVideos(action.payload);
 		}
 	}
 })
