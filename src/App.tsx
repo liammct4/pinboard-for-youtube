@@ -13,6 +13,7 @@ import { SubmitHandler } from "react-hook-form"
 import { FormField } from "./components/forms/FormField/FormField.tsx"
 import { IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
 import { getActiveVideoInfo } from "./lib/browser/youtube.ts"
+import { ActionMessageDialog } from "./components/dialogs/ActionDialogMessage.tsx"
 import "./styles/dialog.css"
 import "./App.css"
 
@@ -151,7 +152,17 @@ function App(): JSX.Element {
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog.Root>
-					<button className="button-small" onClick={() => dispatch(clearVideos())}>Clear videos</button>
+					<ActionMessageDialog
+						title="Clear all videos"
+						body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
+						buttons={[ "Continue", "Cancel" ]}
+						onButtonPressed={(action: string) => {
+							if (action == "Continue") {
+								dispatch(clearVideos());
+							}
+						}}>
+						<button className="button-small">Clear videos</button>
+					</ActionMessageDialog>
 				</div>
 				<div id="timestamp-scrollbox">
 					<VideoCollection videos={videos} onReorder={handleReorderedItems}></VideoCollection>

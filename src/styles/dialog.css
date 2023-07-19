@@ -58,7 +58,7 @@
 }
 
 .dialog-description {
-	margin: 10px 10px 20px;
+	margin: 10px;
 	color: var(--dark-accent);
 	font-size: 10pt;
 }
