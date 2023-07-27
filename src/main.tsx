@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
-import { getActiveTab, getActiveTabURL } from './lib/browser/page.ts'
+import { getActiveTabURL, initializeContentScripts } from './lib/browser/page.ts'
 import { IVideoSlice, setVideoState } from './features/videos/videoSlice.ts'
 import { getVideoIdFromYouTubeLink, videoExists } from './lib/youtube-util.ts'
 import { getStoredVideos } from './lib/storage/user-data.ts'
@@ -13,11 +13,7 @@ import { getExpandedVideos } from './lib/storage/tempState.ts'
 import './main.css'
 
 if (chrome.extension != null) {
-	// Link the YouTube page to the chrome messaging system.
-	chrome.scripting.executeScript({
-		target: { tabId: (await getActiveTab()).id },
-		files: ["content_script.js"]
-	});
+	initializeContentScripts(["video.js"]);
 }
 
 async function setupState() {

@@ -45,22 +45,6 @@ numofFolders = get_folder_count("assets")
 
 print(f"   Done copying {TColour.Purple}{numOfFiles}{TColour.Reset} files and {TColour.Purple}{numofFolders}{TColour.Reset} folders.")
 
-# Start copying the content scripts.
-print(f"{TColour.Yellow} > Copying content scripts...{TColour.Reset}")
-
-contentScripts = os.listdir("content_scripts")
-
-for entry in contentScripts:
-	path = os.path.join(baseDir, os.path.join("content_scripts", entry))
-	newRelative = f"dist\\{entry}"
-	newFull = os.path.join(baseDir, newRelative)
-
-	print(f"	{TColour.Cyan}Copying:{TColour.Reset} {TColour.Grey}{newRelative}{TColour.Reset} to {TColour.Grey}\\dist{TColour.Reset}")
-
-	shutil.copyfile(path, newFull)
-
-print(f"   Done copying {TColour.Purple}{len(contentScripts)}{TColour.Reset} files.")
-
 # Start copying the manifest file.
 print(f"{TColour.Yellow} > Copying manifest...{TColour.Reset}")
 

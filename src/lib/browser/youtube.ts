@@ -12,7 +12,7 @@ export interface IVideoInfo {
 export async function getActiveVideoInfo(): Promise<IVideoInfo | null> {
 	return new Promise((resolve, _reject) => {
 		chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
-			chrome.tabs.sendMessage(currentTab.id!, { type: "get_active_info" },
+			chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_get_active_info" },
 				(response) => resolve(response)
 			);
 		})
@@ -25,6 +25,6 @@ export async function getActiveVideoInfo(): Promise<IVideoInfo | null> {
  */
 export function setCurrentVideoTime(seconds: number): void {
 	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
-		chrome.tabs.sendMessage(currentTab.id!, { type: "set_video_position", data: seconds });
+		chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_set_video_position", data: seconds });
 	})
 }
