@@ -12,7 +12,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { SubmitHandler } from "react-hook-form"
 import { FormField } from "./components/forms/FormField/FormField.tsx"
 import { IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
-import { getActiveVideoInfo } from "./lib/browser/youtube.ts"
+import { getActiveVideoInfo, setTimestampButtons } from "./lib/browser/youtube.ts"
 import { ActionMessageDialog } from "./components/dialogs/ActionDialogMessage.tsx"
 import "./styles/dialog.css"
 import "./App.css"
@@ -98,6 +98,11 @@ function App(): JSX.Element {
 
 	return (
 		<div className="outer-body">
+			{/*
+				TODO: Do this automatically. (Temporary)
+				TODO: Make the timeline buttons interactable.
+			*/}
+			<button onClick={() => setTimestampButtons(videos.find(x => x.videoID == activeVideoID)?.timestamps!)}>Show Timestamps</button>
 			<div className="outer-section-area top-area">
 				<div id="top-section-inner-wrap">
 					<img className="logo-standard" src="../assets/logo/logo.png"/>

@@ -5,14 +5,6 @@
 var init = false;
 var mainVideo = null;
 
-function getActiveInfo() {
-	return {
-		paused: mainVideo.paused,
-		currentTime: mainVideo.currentTime,
-		length: mainVideo.duration
-	};
-}
-
 function setVideoPosition(time) {
 	mainVideo.currentTime = time;
 
@@ -34,9 +26,6 @@ chrome.runtime.onMessage.addListener(async (request, _sender, response) => {
 		case "pfy_video.js_init":
 			initialize();
 			response({ });
-			break;
-		case "pfy_get_active_info":
-			response(getActiveInfo());
 			break;
 		case "pfy_set_video_position":
 			response(setVideoPosition(request.data));

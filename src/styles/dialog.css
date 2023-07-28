@@ -1,6 +1,3 @@
-@import "/src/common-definitions.css";
-@import "/src/globals.css";
-
 :root {
 	--dialog-margin: 10px;
 	--dialog-margin-multiplier: 3;

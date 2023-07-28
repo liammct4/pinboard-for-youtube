@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/chrome-manifest",
     "name": "Pinboard for YouTube",
     "version": "1.0.0",
     "description": "A convenient YouTube extension which stores links and timestamps for quick retrieval.",
@@ -20,7 +21,14 @@
     "content_scripts": [
         {
             "matches": ["https://*.youtube.com/*"],
-            "js": ["video.js"]
+            "js": ["webcomponents-bundle.js", "video.js", "timeline.js"],
+            "css": ["globals.css", "common-definitions.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+			"resources": ["arrow_down_timeline.svg"],
+			"matches": ["https://*.youtube.com/*"]
         }
     ],
     "externally_connectable": {

@@ -13,7 +13,7 @@ import { getExpandedVideos } from './lib/storage/tempState.ts'
 import './main.css'
 
 if (chrome.extension != null) {
-	initializeContentScripts(["video.js"]);
+	initializeContentScripts(["video.js", "timeline.js"]);
 }
 
 async function setupState() {

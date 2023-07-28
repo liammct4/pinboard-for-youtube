@@ -1,3 +1,5 @@
+import { Timestamp } from "../video/video";
+
 export interface IVideoInfo {
 	paused: boolean,
 	currentTime: number,
@@ -26,5 +28,15 @@ export async function getActiveVideoInfo(): Promise<IVideoInfo | null> {
 export function setCurrentVideoTime(seconds: number): void {
 	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
 		chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_set_video_position", data: seconds });
+	})
+}
+
+/**
+ * Adds small user clickable timestamp buttons to the currently playing video. 
+ * @param timestamps The timestamps to add.
+ */
+export function setTimestampButtons(timestamps: Array<Timestamp>): void {
+	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
+		chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_set_timestamp_buttons", data: timestamps });
 	})
 }

@@ -1,5 +1,5 @@
-@import "globals.css";
-@import "common-definitions.css";
+@import "./../public/globals.css";
+@import "./../public/common-definitions.css";
 
 /* Outer areas */
 .outer-body {

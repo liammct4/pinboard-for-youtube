@@ -1,5 +1,3 @@
-@import "src/globals.css";
-
 .video-card-inner {
 	display: grid;
 	grid-template-columns: auto 1fr;
