@@ -5,6 +5,8 @@
 var init = false;
 var timelineContainer = null;
 var mainVideo = null;
+var tabID = null;
+var currentVideoID = null;
 
 // This is copy and pasted from the utilities folder.
 // TODO: Find method to reuse the function already defined. 
@@ -75,6 +77,10 @@ class TimestampTimelineButton extends HTMLElement {
 			this.timelineText.innerHTML = getTimestampFromSeconds(this.timestamp.time)
 			boxInner.style.left = collapsedLeft;
 		});
+
+		boxInner.addEventListener("click", () => {
+			mainVideo.currentTime = this.timestamp.time;
+		});
 	}
 }
 
@@ -100,7 +106,8 @@ function getActiveInfo() {
 	};
 }
 
-function initialize() {
+async function initialize() {
+	init = true;
 	let progressBar = document.querySelector(".ytp-chrome-bottom");
 	mainVideo = document.querySelector("video");
 	
@@ -131,6 +138,7 @@ function initialize() {
 				border: 1px solid var(--dark-accent);
 				border-radius: 6px;
 				flex-grow: 1;
+				cursor: pointer;
 				position: absolute;
 				transform: translateY(-87px);
 				transition: width 220ms, left 220ms, transform 220ms;
@@ -142,7 +150,7 @@ function initialize() {
 			}
 
 			.timestamp-box-inner:hover + .timestamp-pointer-arrow {
-				transform: translate(0px, -94px);
+				transform: translate(0px, -95.5px);
 			}
 
 			.timestamp-pointer-arrow {
@@ -152,13 +160,12 @@ function initialize() {
 				top: 100%;
 				position: absolute;
 				pointer-events: none;
-				transform: translate(0px, -90px);
+				transform: translate(0px, -91.5px);
 				transition: transform 220ms;
 			}
 
 			.timestamp-inner-text {
 				text-align: center;
-				text-overflow: ellipsis;
 				text-wrap: nowrap;
 				font-size: 9pt;
 				color: var(--dark-accent);
@@ -176,10 +183,16 @@ function initialize() {
 		</div>
 	`;
 
+	currentVideoID = document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
 	progressBar.appendChild(timelineOuterContainer);
-
 	timelineContainer = timelineOuterContainer.querySelector(".pfy-timeline-inner");
-	init = true;
+	
+	let videos = (await chrome.storage.local.get("user_data"))?.user_data?.videos;
+
+	if (videos != undefined) {
+		let video = videos.find(x => x.videoID == currentVideoID);
+		setTimelineTimestamps(video.timestamps);
+	}
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
@@ -199,3 +212,5 @@ chrome.runtime.onMessage.addListener(async (request, _sender, response) => {
 			break;
 	}
 });
+
+initialize();
