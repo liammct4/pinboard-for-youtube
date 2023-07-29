@@ -8,6 +8,16 @@ var mainVideo = null;
 var tabID = null;
 var currentVideoID = null;
 
+function handleVideoTimelineResize() {
+	timelineContainer.querySelectorAll("pfy-timeline-button").forEach(timestamp => {
+		timestamp.updateOnTimelineBoundsResize();
+	});;
+}
+
+// Observes size changes of the timeline progress bar of the current video, responsible for ensuring that 
+// each timestamps rounded corners are flush with the arrow when overflowing.
+var videoTimelineSizeObserver = new ResizeObserver(handleVideoTimelineResize);
+
 // This is copy and pasted from the utilities folder.
 // TODO: Find method to reuse the function already defined. 
 function getTimestampFromSeconds(seconds) {
@@ -38,7 +48,9 @@ class TimestampTimelineButton extends HTMLElement {
 	constructor(timestamp) {
 		super();
 		this.timestamp = timestamp;
+		this.boxInner = null;
 		this.timelineText = null;
+		this.timestampArrow = null;
 	}
 
 	connectedCallback() {
@@ -51,8 +63,8 @@ class TimestampTimelineButton extends HTMLElement {
 			</div>
 		`;
 
-		let boxInner = this.querySelector(".timestamp-box-inner");
-		let arrow = this.querySelector(".timestamp-pointer-arrow");
+		this.boxInner = this.querySelector(".timestamp-box-inner");
+		this.timestampArrow = this.querySelector(".timestamp-pointer-arrow");
 		
 		// Calculate position along timeline.
 		let multiplier = this.timestamp.time / getActiveInfo().length;
@@ -63,24 +75,45 @@ class TimestampTimelineButton extends HTMLElement {
 		let expandedLeft = `max(0px, min(calc(${percentage} - 100px), calc(100% - 200px)))`;
 		
 		// The arrow positioned directly above the point of the timestamp.
-		arrow.style.left = `max(0px, min(calc(${percentage} - 3px), calc(100% - 6px)))`;
-		boxInner.style.left = collapsedLeft;
+		this.timestampArrow.style.left = `max(0px, min(calc(${percentage} - 3px), calc(100% - 6px)))`;
+		this.boxInner.style.left = collapsedLeft;
 
 		this.timelineText = this.querySelector(".timestamp-inner-text");
 
-		boxInner.addEventListener("mouseover",  () => {
+		this.boxInner.addEventListener("mouseover",  () => {
 			this.timelineText.innerHTML = this.timestamp.message;
-			boxInner.style.left = expandedLeft;
+			this.boxInner.style.left = expandedLeft;
 		});
 
-		boxInner.addEventListener("mouseleave", () => {
+		this.boxInner.addEventListener("mouseleave", () => {
 			this.timelineText.innerHTML = getTimestampFromSeconds(this.timestamp.time)
-			boxInner.style.left = collapsedLeft;
+			this.boxInner.style.left = collapsedLeft;
 		});
 
-		boxInner.addEventListener("click", () => {
+		this.boxInner.addEventListener("click", () => {
 			mainVideo.currentTime = this.timestamp.time;
 		});
+
+		this.updateOnTimelineBoundsResize();
+	}
+
+	updateOnTimelineBoundsResize() {
+		let arrowLeftPixelPosition = parseInt(getComputedStyle(this.timestampArrow).left);
+		let arrowRightPixelPosition = parseInt(getComputedStyle(this.timestampArrow).right);
+
+		// Sets the rounded corners to the available space left by the arrow or the maximum radius of 6px.
+		// This makes the arrow flush with the timestamp.
+		if (arrowLeftPixelPosition < 8) {
+			// Means the arrow is overflowing above the bottom left rounded corner.
+			this.boxInner.style["border-bottom-left-radius"] = `${Math.min(arrowLeftPixelPosition * 2, 6)}px`;
+		}
+		else if (arrowRightPixelPosition < 8) {
+			// Means the arrow is overflowing above the bottom right rounded corner.
+			this.boxInner.style["border-bottom-right-radius"] = `${Math.min(arrowRightPixelPosition * 2, 6)}px`;
+		}
+		else {
+			this.boxInner.style["border-radius"] = "6px";
+		}
 	}
 }
 
@@ -193,6 +226,8 @@ async function initialize() {
 		let video = videos.find(x => x.videoID == currentVideoID);
 		setTimelineTimestamps(video.timestamps);
 	}
+	
+	videoTimelineSizeObserver.observe(timelineContainer);
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
