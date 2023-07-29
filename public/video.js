@@ -20,15 +20,10 @@ function initialize() {
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
 	switch (request.type) {
-		case "pfy_video.js_check_init":
-			response(init);
-			break;
-		case "pfy_video.js_init":
-			initialize();
-			response({ });
-			break;
 		case "pfy_set_video_position":
 			response(setVideoPosition(request.data));
 			break;
 	}
 });
+
+initialize();

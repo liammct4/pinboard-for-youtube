@@ -197,13 +197,6 @@ async function initialize() {
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
 	switch (request.type) {
-		case "pfy_timeline.js_check_init":
-			response(init);
-			break;
-		case "pfy_timeline.js_init":
-			initialize();
-			response({ });
-			break;
 		case "pfy_get_active_info":
 			response(getActiveInfo());
 			break;

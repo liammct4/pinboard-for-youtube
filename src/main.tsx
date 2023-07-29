@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
-import { getActiveTabURL, initializeContentScripts } from './lib/browser/page.ts'
+import { getActiveTabURL } from './lib/browser/page.ts'
 import { IVideoSlice, setVideoState } from './features/videos/videoSlice.ts'
 import { getVideoIdFromYouTubeLink, videoExists } from './lib/youtube-util.ts'
 import { getStoredVideos } from './lib/storage/user-data.ts'
@@ -11,10 +11,6 @@ import { ensureInitialized } from './lib/storage/storage.ts'
 import { IStateSlice, setTempState } from './features/state/tempStateSlice.ts'
 import { getExpandedVideos } from './lib/storage/tempState.ts'
 import './main.css'
-
-if (chrome.extension != null) {
-	initializeContentScripts(["video.js", "timeline.js"]);
-}
 
 async function setupState() {
 	await ensureInitialized();
