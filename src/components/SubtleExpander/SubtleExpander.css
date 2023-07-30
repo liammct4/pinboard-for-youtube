@@ -7,7 +7,7 @@
 	font-weight: bold;
 	font-size: 9pt;
 	color: var(--dark-accent);
-	margin-left: 3px;
+	margin-left: 3px !important;
 }
 
 .subtle-expander-arrow {

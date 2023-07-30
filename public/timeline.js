@@ -289,7 +289,8 @@ async function initialize() {
 	}
 
 	let timelineOuterContainer = document.createElement("div");
-	timelineOuterContainer.setAttribute("class", "pfy-timeline-container");
+	timelineOuterContainer.classList.add("pfy-timeline-container");
+	timelineOuterContainer.classList.add("pfy-style-context");
 
 	timelineOuterContainer.innerHTML = `
 		<style src="common-definitions.css"></style>

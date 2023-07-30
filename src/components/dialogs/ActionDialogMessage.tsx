@@ -29,7 +29,7 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 			</AlertDialog.Trigger>
 			<AlertDialog.Portal>
 				<AlertDialog.Overlay className="dialog-overlay" />
-				<AlertDialog.Content className="dialog-body">
+				<AlertDialog.Content className="pfy-style-context dialog-body">
 					<AlertDialog.Title className="dialog-header">{title}</AlertDialog.Title>
 					<AlertDialog.Description className="dialog-content dialog-description">
 						{body}

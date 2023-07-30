@@ -82,7 +82,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 					</Dialog.Trigger>
 					<Dialog.Portal>
 						<Dialog.Overlay className="dialog-overlay" />
-						<Dialog.Content className="dialog-body">
+						<Dialog.Content className="pfy-style-context dialog-body">
 							<Dialog.Title className="dialog-header">Edit timestamp</Dialog.Title>
 							<div className="dialog-content">
 								<form className="dialog-form timestamp-form" id="edit-form" onSubmit={handleSubmit(handler)}>

@@ -97,7 +97,7 @@ function App(): JSX.Element {
 	}, [reset, videos]);
 
 	return (
-		<div className="outer-body">
+		<div className="pfy-style-context outer-body">
 			<div className="outer-section-area top-area">
 				<div id="top-section-inner-wrap">
 					<img className="logo-standard" src="../assets/logo/logo.png"/>
@@ -126,7 +126,7 @@ function App(): JSX.Element {
 						</Dialog.Trigger>
 						<Dialog.Portal>
 							<Dialog.Overlay className="dialog-overlay" />
-							<Dialog.Content className="dialog-body">
+							<Dialog.Content className="pfy-style-context dialog-body">
 								<Dialog.Title className="dialog-header">Add video</Dialog.Title>
 								<div className="dialog-content">
 									<form className="dialog-form add-video-form" id="edit-form" onSubmit={handleSubmit(handler)}>

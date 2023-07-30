@@ -5,6 +5,10 @@
 	justify-content: right;
 }
 
+.add-timestamp-button-outer * {
+	margin: 2px 0;
+}
+
 .add-timestamp-text {
 	color: var(--dim-accent);
 	font-size: 9pt;

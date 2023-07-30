@@ -1,11 +1,13 @@
-hr {
+/* To prevent any styling conflicts, all provided styles have to be within a pfy-style-context class. */
+
+.pfy-style-context hr {
 	border: initial !important;
 	background-color: var(--light-accent);
 	height: 1px;
 }
 
 /* Small button */
-.button-small {
+.pfy-style-context .button-small {
 	height: 16px;
 	border: 1px solid var(--light-accent);
 	background: var(--very-bright-light-shade);
@@ -19,33 +21,33 @@ hr {
 	line-height: 0px;
 }
 
-.button-small:focus {
+.pfy-style-context .button-small:focus {
 	outline: 1px solid var(--dark-accent);
 }
 
-.button-small:hover {
+.pfy-style-context .button-small:hover {
 	background: var(--bright-light-shade);
 	border: 1px solid var(--dark-accent);
 }
 
-.button-small:active {
+.pfy-style-context .button-small:active {
 	background: var(--regular-light-shade);
 }
 
-.button-small:disabled {
+.pfy-style-context .button-small:disabled {
 	background-color: var(--regular-light-shade);
 	color: var(--dim-accent);
 	border: 1px solid var(--outer-solid);
 }
 
-.square-button {
+.pfy-style-context .square-button {
 	aspect-ratio: 1 / 1;
 	padding: initial !important;
 	align-content: right;
 }
 
 /* Circle button */
-.circle-button {
+.pfy-style-context .circle-button {
 	width: 16px;
 	height: 16px;
 	border-radius: 8px;
@@ -60,25 +62,29 @@ hr {
 	align-items: center;
 }
 
-.circle-button:hover {
+.pfy-style-context .circle-button:hover {
 	background: var(--dark-accent);
 }
 
 /* Scrollbars */
-::-webkit-scrollbar {
+.pfy-style-context ::-webkit-scrollbar {
 	width: 12px;
 	margin-top: 10px;
 }
 
-::-webkit-scrollbar-thumb {
+.pfy-style-context ::-webkit-scrollbar-thumb {
 	background: var(--bright-accent);
 	border-radius: 6px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.pfy-style-context ::-webkit-scrollbar-thumb:hover {
 	background: var(--light-accent);
 }
 
-::-webkit-scrollbar-thumb:active {
+.pfy-style-context ::-webkit-scrollbar-thumb:active {
 	background: var(--dark-accent);
+}
+
+.pfy-style-context :is(h1, h2, h3, h4, h5, h6) {
+	margin: initial;
 }
