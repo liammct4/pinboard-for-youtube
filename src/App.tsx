@@ -98,11 +98,6 @@ function App(): JSX.Element {
 
 	return (
 		<div className="outer-body">
-			{/*
-				TODO: Do this automatically. (Temporary)
-				TODO: Make the timeline buttons interactable.
-			*/}
-			<button onClick={() => setTimestampButtons(videos.find(x => x.videoID == activeVideoID)?.timestamps!)}>Show Timestamps</button>
 			<div className="outer-section-area top-area">
 				<div id="top-section-inner-wrap">
 					<img className="logo-standard" src="../assets/logo/logo.png"/>
