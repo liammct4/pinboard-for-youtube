@@ -57,11 +57,6 @@
 	outline: 2px solid var(--dim-accent);
 }
 
-.timestamp-form {
-	grid-template-rows: 1fr 1fr;
-	grid-template-columns: auto 1fr;
-}
-
 .delete-timestamp-icon {
 	transform: scale(1.2);
 }

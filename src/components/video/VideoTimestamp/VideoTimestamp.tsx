@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, MutableRefObject, useCallback } from "react"
+import { useCallback } from "react"
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
 import * as YTUtil from "./../../../lib/youtube-util.js" 
 import * as Dialog from "@radix-ui/react-dialog";
@@ -11,7 +11,8 @@ import { RootState } from "../../../app/store.ts";
 import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
 import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
 import { setCurrentVideoTime } from "../../../lib/browser/youtube.ts";
-import { Reorder, useDragControls } from "framer-motion";
+import { Reorder } from "framer-motion";
+import { FormDialog } from "../../dialogs/FormDialog.tsx";
 import "src/styles/dialog.css"
 import "./VideoTimestamp.css"
 
@@ -76,47 +77,30 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 					<img className="delete-timestamp-icon" src={Bin} alt="Delete icon."/>
 				</button>
 				{/* Edit dialog */}
-				<Dialog.Root>
-					<Dialog.Trigger asChild>
-						<button className="button-small" style={{ marginRight: "1px" }}>Edit</button>
-					</Dialog.Trigger>
-					<Dialog.Portal>
-						<Dialog.Overlay className="dialog-overlay" />
-						<Dialog.Content className="pfy-style-context dialog-body">
-							<Dialog.Title className="dialog-header">Edit timestamp</Dialog.Title>
-							<div className="dialog-content">
-								<form className="dialog-form timestamp-form" id="edit-form" onSubmit={handleSubmit(handler)}>
-									{/* Time */}
-									<FormField<IEditTimestampForm> register={register} registerOptions={null}
-										label="Time:"
-										name="time"
-										size="small"
-										selector={(data) => data.time}
-										submitEvent={submit.current}
-										validationMethod={validateTimestamp}
-										defaultValue={stringTime}/>
-									{/* Message */}
-									<FormField<IEditTimestampForm> register={register} registerOptions={null}
-										label="Message:"
-										name="message"
-										size="large"
-										selector={(data) => data.message}
-										submitEvent={submit.current}
-										defaultValue={timestamp.message}/>
-									<Dialog.Close asChild>
-										<button type="button" className="circle-button close-button" aria-label="Close">&times;</button>
-									</Dialog.Close>
-								</form>
-							</div>
-							<div className="dialog-footer">
-								<input type="submit" value="Save" form="edit-form" className="button-small"></input>
-								<Dialog.Close asChild>
-									<button type="button" className="button-small">Close</button>
-								</Dialog.Close>
-							</div>
-						</Dialog.Content>
-					</Dialog.Portal>
-				</Dialog.Root>
+				<FormDialog
+					formID="edit-timestamp-form"
+					formTitle="Edit timestamp"
+					submitText="Save"
+					trigger={<button className="button-small" style={{ marginRight: "1px" }}>Edit</button>}
+					handleSubmit={handleSubmit(handler)}>
+						{/* Time */}
+						<FormField<IEditTimestampForm> register={register} registerOptions={null}
+							label="Time:"
+							name="time"
+							size="small"
+							selector={(data) => data.time}
+							submitEvent={submit.current}
+							validationMethod={validateTimestamp}
+							defaultValue={stringTime}/>
+						{/* Message */}
+						<FormField<IEditTimestampForm> register={register} registerOptions={null}
+							label="Message:"
+							name="message"
+							size="large"
+							selector={(data) => data.message}
+							submitEvent={submit.current}
+							defaultValue={timestamp.message}/>
+				</FormDialog>
 			</div>
 		</Reorder.Item>
 	);

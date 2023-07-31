@@ -57,6 +57,11 @@
 	margin: 0;
 }
 
+.form-error-message * {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
 .form-error-message > p {
 	font-size: 10pt;
 }

@@ -308,6 +308,7 @@ async function initialize() {
 			.timestamp-box-inner {
 				width: 40px;
 				height: 22px;
+				padding: 0;
 				background: var(--subtle-background);
 				border: 1px solid var(--dark-accent);
 				border-radius: 6px;

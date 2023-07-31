@@ -68,10 +68,6 @@
 	color: white;
 }
 
-.close-button:hover {
-	font-weight: bolder;
-}
-
 .dialog-form {
 	display: flex;
 	flex-direction: column;

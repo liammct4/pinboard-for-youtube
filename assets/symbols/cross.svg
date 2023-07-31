@@ -2,12 +2,12 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="10"
-   height="10"
-   viewBox="0 0 2.6458333 2.6458334"
+   width="8"
+   height="8"
+   viewBox="0 0 2.1166666 2.1166667"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
    sodipodi:docname="cross.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:zoom="45.725701"
-     inkscape:cx="5.1940155"
-     inkscape:cy="5.4127109"
+     inkscape:zoom="129.33181"
+     inkscape:cx="2.9149827"
+     inkscape:cy="4.3299478"
      inkscape:window-width="1920"
      inkscape:window-height="991"
      inkscape:window-x="-9"
@@ -47,14 +47,14 @@
      id="layer1">
     <g
        id="g825"
-       transform="matrix(0.91513987,0.91496056,-0.91513987,0.91496056,1.3229167,-1.0979138)"
-       style="stroke-width:0.772752">
+       transform="matrix(0.7151331,0.71497312,-0.7151331,0.71497312,1.0583244,-0.83341006)"
+       style="stroke-width:0.988887">
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.245347;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
          d="M 1.3229167,0 V 2.6458334"
          id="path353" />
       <path
-         style="fill:none;stroke:#ffffff;stroke-width:0.245347;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         style="fill:none;stroke:#ffffff;stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
          d="M 2.6458333,1.3232317 5.0000001e-8,1.3226017"
          id="path353-2" />
     </g>

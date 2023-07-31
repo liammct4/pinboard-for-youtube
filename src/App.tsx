@@ -8,12 +8,12 @@ import { Video, generateTimestamp } from "./lib/video/video.ts"
 import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo, clearVideos, setVideos } from "./features/videos/videoSlice.ts"
 import * as YTUtil from "./lib/youtube-util.ts"
-import * as Dialog from "@radix-ui/react-dialog"
 import { SubmitHandler } from "react-hook-form"
 import { FormField } from "./components/forms/FormField/FormField.tsx"
 import { IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
 import { getActiveVideoInfo, setTimestampButtons } from "./lib/browser/youtube.ts"
 import { ActionMessageDialog } from "./components/dialogs/ActionDialogMessage.tsx"
+import { FormDialog } from "./components/dialogs/FormDialog.tsx"
 import "./styles/dialog.css"
 import "./App.css"
 
@@ -120,38 +120,20 @@ function App(): JSX.Element {
 				<SplitHeading text="My video timestamps"></SplitHeading>
 				<div className="button-bar regular-vmargin">
 					{/* Add video dialog. */}
-					<Dialog.Root>
-						<Dialog.Trigger asChild>
-							<button className="button-small">Add video</button>
-						</Dialog.Trigger>
-						<Dialog.Portal>
-							<Dialog.Overlay className="dialog-overlay" />
-							<Dialog.Content className="pfy-style-context dialog-body">
-								<Dialog.Title className="dialog-header">Add video</Dialog.Title>
-								<div className="dialog-content">
-									<form className="dialog-form add-video-form" id="edit-form" onSubmit={handleSubmit(handler)}>
-										{/* Link */}
-										<FormField<IAddVideoForm> register={register}
-											label="Link:"
-											name="link"
-											size="max"
-											submitEvent={submit.current}
-											validationMethod={validateVideo}
-											selector={(data: IAddVideoForm) => data.link}/>
-										<Dialog.Close asChild>
-											<button type="button" className="circle-button close-button" aria-label="Close">&times;</button>
-										</Dialog.Close>
-									</form>
-								</div>
-								<div className="dialog-footer">
-									<input type="submit" value="Add" form="edit-form" className="button-small"></input>
-									<Dialog.Close asChild>
-										<button type="button" className="button-small">Close</button>
-									</Dialog.Close>
-								</div>
-							</Dialog.Content>
-						</Dialog.Portal>
-					</Dialog.Root>
+					<FormDialog
+						formID="add-video-form"
+						formTitle="Add video"
+						submitText="Add"
+						trigger={<button className="button-small">Add video</button>}
+						handleSubmit={handleSubmit(handler)}>
+							<FormField<IAddVideoForm> register={register}
+								label="Link:"
+								name="link"
+								size="max"
+								submitEvent={submit.current}
+								validationMethod={validateVideo}
+								selector={(data: IAddVideoForm) => data.link}/>
+					</FormDialog>
 					<ActionMessageDialog
 						title="Clear all videos"
 						body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
