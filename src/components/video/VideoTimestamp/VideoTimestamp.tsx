@@ -1,18 +1,16 @@
-import { useCallback } from "react"
-import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
+import { useCallback, useContext } from "react"
+import { VideoListContext } from "../../../context/video.ts";
 import * as YTUtil from "./../../../lib/youtube-util.js" 
-import * as Dialog from "@radix-ui/react-dialog";
-import { Timestamp, generateTimestamp, cloneModifyTimestamp } from "../../../lib/video/video.ts";
-import Bin from "src/../assets/icons/bin.svg"
-import { FormField } from "../../forms/FormField/FormField.tsx";
-import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store.ts";
-import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
-import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
 import { setCurrentVideoTime } from "../../../lib/browser/youtube.ts";
+import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
+import { Timestamp, cloneModifyTimestamp } from "../../../lib/video/video.ts";
+import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
+import { FormField } from "../../forms/FormField/FormField.tsx";
 import { Reorder } from "framer-motion";
 import { FormDialog } from "../../dialogs/FormDialog.tsx";
+import Bin from "src/../assets/icons/bin.svg"
+import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
+import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
 import "src/styles/dialog.css"
 import "./VideoTimestamp.css"
 
@@ -44,23 +42,24 @@ function validateTimestamp(value: string): string | null {
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestampProperties): React.ReactNode {
-	let activeID = useSelector((state: RootState) => state.video.activeVideoID);
+	const { activeVideoID } = useContext(VideoListContext);
+	
 	let onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
 		onChange(timestamp, cloneModifyTimestamp(timestamp, inputTime, data.message));
 	}, []);
-	let { register, handleSubmit, handler, submit } = useValidatedForm<IEditTimestampForm>(onSave);
 
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
 	}
-
+	
 	const onJumpToTimestamp: () => void = () => {
 		setCurrentVideoTime(timestamp.time);
 	}
+	let { register, handleSubmit, handler, submit } = useValidatedForm<IEditTimestampForm>(onSave);
 
-	let isActiveId = activeID == videoID;
+	let isActiveId = activeVideoID == videoID;
 	let stringTime: string = getTimestampFromSeconds(timestamp.time);
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
 

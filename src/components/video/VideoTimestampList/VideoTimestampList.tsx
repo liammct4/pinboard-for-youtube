@@ -1,28 +1,23 @@
-import { useState, useRef } from "react";
+import { useContext } from "react";
+import { useDispatch } from "react-redux"
+import { VideoContext, VideoListContext } from "../../../context/video.ts";
+import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
+import { generateUniqueFrom } from "./../../../lib/util/random-util.ts"
+import { Reorder, useDragControls } from "framer-motion";
 import SubtleExpander from "./../../SubtleExpander/SubtleExpander.jsx"
 import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
-import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
-import { useSelector, useDispatch } from "react-redux"
-import { addVideo, updateVideo } from "./../../../features/videos/videoSlice.js"
-import { generateUniqueFrom } from "./../../../lib/util/random-util.ts"
-import { RootState, store } from "../../../app/store.ts";
 import Plus from "src/../assets/symbols/plus.svg"
-import { Reorder, useDragControls } from "framer-motion";
-import { addExpandedID, removeExpandedID } from "../../../features/state/tempStateSlice.ts";
 import "./VideoTimestampList.css"
 
-export interface IVideoTimestampListProperties {
-	video: Video;
-}
-
-export function VideoTimestampList({ video }: IVideoTimestampListProperties): React.ReactNode {
+export function VideoTimestampList(): React.ReactNode {
 	const dispatch = useDispatch();
+	const topLevelVideos = useContext(VideoListContext);
+	const video = useContext(VideoContext);
 	let dragControls = useDragControls();
-	let openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 
 	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		let videoTimestamps = store.getState().video.currentVideos.find(x => x.videoID == video.videoID)?.timestamps;
+		let videoTimestamps = topLevelVideos.videos.find(x => x.videoID == video.videoID)?.timestamps;
 		let updatedTimestamps: Array<Timestamp> = [ ...videoTimestamps! ];
 
 		if (newTimestamp == null) {
@@ -44,7 +39,7 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 			"timestamps": updatedTimestamps
 		}
 		
-		dispatch(updateVideo(updatedVideo));
+		dispatch(topLevelVideos.actions.updateVideo(updatedVideo));
 	}
 
 	const onAddTimestamp: () => void = () => {
@@ -57,16 +52,16 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 			]
 		}
 		
-		dispatch(updateVideo(updatedVideo));
+		dispatch(topLevelVideos.actions.updateVideo(updatedVideo));
 	}
 
 	const handleExpanded = (open: boolean) => {
 		if (open) {
-			dispatch(addExpandedID(video.videoID));
+			dispatch(topLevelVideos.actions.addExpandedID(video.videoID));
 			return;
 		}
 
-		dispatch(removeExpandedID(video.videoID));
+		dispatch(topLevelVideos.actions.removeExpandedID(video.videoID));
 	}
 
 	const handleTimestampReorder = (newTimestamps: Array<Timestamp>) => {
@@ -78,14 +73,14 @@ export function VideoTimestampList({ video }: IVideoTimestampListProperties): Re
 					timestamps: newTimestamps
 				}
 
-				dispatch(updateVideo(newVideo));
+				dispatch(topLevelVideos.actions.updateVideo(newVideo));
 			}, 100);
 		}
 
 		document.addEventListener("mouseup", listener);
 	};
 
-	let isOpen = openVideos.includes(video.videoID);
+	let isOpen = topLevelVideos.openVideos.includes(video.videoID);
 
 	return (
 		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>

@@ -1,19 +1,20 @@
-import { useState, useRef, useEffect, useCallback, MutableRefObject } from "react"
-import logo from "./../assets/logo/logo.png"
-import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
-import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
-import VideoCollection from "./components/video/VideoCollection/VideoCollection.tsx"
+import { useEffect, useCallback, createContext } from "react"
+import { VideoListContext } from "./context/video.ts"
 import { store, RootState } from "./app/store.ts"
+import * as YTUtil from "./lib/youtube-util.ts"
 import { Video, generateTimestamp } from "./lib/video/video.ts"
 import { useSelector, useDispatch } from "react-redux"
 import { addVideo, updateVideo, clearVideos, setVideos } from "./features/videos/videoSlice.ts"
-import * as YTUtil from "./lib/youtube-util.ts"
 import { SubmitHandler } from "react-hook-form"
 import { FormField } from "./components/forms/FormField/FormField.tsx"
 import { IErrorFieldValues, useValidatedForm } from "./components/forms/validated-form.ts"
-import { getActiveVideoInfo, setTimestampButtons } from "./lib/browser/youtube.ts"
-import { ActionMessageDialog } from "./components/dialogs/ActionDialogMessage.tsx"
-import { FormDialog } from "./components/dialogs/FormDialog.tsx"
+import { getActiveVideoInfo } from "./lib/browser/youtube.ts"
+import { addExpandedID, removeExpandedID } from "./features/state/tempStateSlice.ts"
+import ActionMessageDialog from "./components/dialogs/ActionDialogMessage.tsx"
+import FormDialog from "./components/dialogs/FormDialog.tsx"
+import SplitHeading from "./components/SplitHeading/SplitHeading.tsx"
+import VideoCard from "./components/video/VideoCard/VideoCard.tsx"
+import VideoCollection from "./components/video/VideoCollection/VideoCollection.tsx"
 import "./styles/dialog.css"
 import "./App.css"
 
@@ -22,11 +23,12 @@ interface IAddVideoForm extends IErrorFieldValues {
 	error: boolean
 }
 
+
 function validateVideo(value: string): string | null {
 	// Don't use 'videos' with useSelector at the top as it will not be updated
 	// if the videos in the store changes.
 	let currentVideos = store.getState().video.currentVideos;
-
+	
 	if (value.length == 0) {
 		return "This field is required."
 	}
@@ -39,13 +41,14 @@ function validateVideo(value: string): string | null {
 	else if (currentVideos.findIndex(x => x.videoID == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
 		return "Video has already been added.";
 	}
-
+	
 	return null;
 }
 
 function App(): JSX.Element {
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
+	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const dispatch = useDispatch();
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
@@ -147,7 +150,21 @@ function App(): JSX.Element {
 					</ActionMessageDialog>
 				</div>
 				<div id="timestamp-scrollbox">
-					<VideoCollection videos={videos} onReorder={handleReorderedItems}></VideoCollection>
+					<VideoListContext.Provider value={{
+						activeVideoID,
+						videos,
+						openVideos,
+						actions: {
+							addVideo,
+							updateVideo,
+							clearVideos,
+							setVideos,
+							addExpandedID,
+							removeExpandedID
+						}
+					}}>
+						<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
+					</VideoListContext.Provider>
 				</div>
 			</div>
 			<div className="outer-section-area bottom-area">

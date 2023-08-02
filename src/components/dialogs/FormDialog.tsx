@@ -38,3 +38,5 @@ export function FormDialog({ formID, formTitle, submitText, description, trigger
 		</DialogBox>
 	);
 }
+
+export default FormDialog;
