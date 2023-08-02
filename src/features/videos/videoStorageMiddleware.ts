@@ -1,7 +1,7 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addVideo, clearVideos, setVideos, updateVideo } from "./videoSlice";
 import { RootState } from "../../app/store";
-import { setStoredVideos } from "../../lib/storage/user-data";
+import { setStoredVideos } from "../../lib/storage/userData/userData";
 
 const videoStorageMiddleware = createListenerMiddleware();
 

@@ -1,6 +1,6 @@
-import { sampleVideoData } from "../../data/testDataSet";
+import { sampleVideoData } from "../../../../testData/testDataSet";
 import { IConfig, getUserConfig } from "./config";
-import { IStorage } from "./storage";
+import { IStorage } from "../storage";
 
 let storageTemplate: IStorage = {
 	user_data: {

@@ -1,7 +1,7 @@
-import * as userData from "./user-data.ts"
-import { Video, Timestamp, generateTimestamp } from "../video/video.ts";
-import { sampleVideoData } from "../../data/testDataSet.ts"
-import { IStorage, ensureInitialized } from "./storage.ts";
+import * as userData from "./userData.ts"
+import { Video, Timestamp, generateTimestamp } from "../../video/video.ts";
+import { sampleVideoData } from "../../../../testData/testDataSet.ts"
+import { IStorage, ensureInitialized } from "../storage.ts";
 
 let storageTemplate: IStorage = {
 	user_data: {

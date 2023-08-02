@@ -1,4 +1,4 @@
-import * as youtubeUtil from "./youtube-util.ts"
+import * as youtubeUtil from "./youtubeUtil.ts"
 
 describe("Extracting a video ID from provided link 'getVideoIdFromYouTubeLink()'", () => {
 	test("extracts the video ID LXb3EKWsInQ from the link 'https://www.youtube.com/watch?v=LXb3EKWsInQ'", () => {

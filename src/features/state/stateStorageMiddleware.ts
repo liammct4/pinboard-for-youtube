@@ -1,6 +1,6 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { addExpandedID, removeExpandedID } from "./tempStateSlice";
-import * as storageState from "./../../lib/storage/tempState.ts"
+import * as storageState from "../../lib/storage/tempState/tempState.ts"
 
 const addIDMiddleware = createListenerMiddleware();
 const removeIDMiddleware = createListenerMiddleware()

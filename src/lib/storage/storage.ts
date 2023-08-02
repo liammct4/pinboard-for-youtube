@@ -1,7 +1,7 @@
-import { IConfig } from "./config"
-import { IVideoArrayJsonSchema, VIDEO_ARRAY_JSON_SCHEMA } from "./user-data"
-import { Video } from "../video/video"
-import { ITempState } from "./tempState"
+import { IConfig } from "./config/config"
+import { IVideoArrayJsonSchema, VIDEO_ARRAY_JSON_SCHEMA } from "./userData/userData"
+import { Video } from "./../video/video.ts"
+import { ITempState } from "./tempState/tempState"
 
 export interface IStorage {
 	user_data: {

@@ -1,4 +1,4 @@
-import { generateUniqueFrom } from "./random-util.ts"
+import { generateUniqueFrom } from "./randomUtil.ts"
 
 describe("Generating a random value from a unique dataset. 'generateUniqueFrom()'", () => {
 	it("generates an entirely unique value from an empty dataset.", () => {

@@ -1,16 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import React from "react"
+import ReactDOM from "react-dom/client"
+import App from "./App.tsx"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
-import { getActiveTabURL } from './lib/browser/page.ts'
-import { IVideoSlice, setVideoState } from './features/videos/videoSlice.ts'
-import { getVideoIdFromYouTubeLink, videoExists } from './lib/youtube-util.ts'
-import { getStoredVideos } from './lib/storage/user-data.ts'
-import { ensureInitialized } from './lib/storage/storage.ts'
-import { IStateSlice, setTempState } from './features/state/tempStateSlice.ts'
-import { getExpandedVideos } from './lib/storage/tempState.ts'
-import './main.css'
+import { getActiveTabURL } from "./lib/browser/page.ts"
+import { IVideoSlice, setVideoState } from "./features/videos/videoSlice.ts"
+import { getStoredVideos } from "./lib/storage/userData/userData.ts"
+import { ensureInitialized } from "./lib/storage/storage.ts"
+import { getVideoIdFromYouTubeLink, videoExists } from "./lib/util/youtube/youtubeUtil.ts"
+import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
+import { getExpandedVideos } from "./lib/storage/tempState/tempState.ts"
+import "./main.css"
 
 async function setupState() {
 	await ensureInitialized();
@@ -41,7 +41,7 @@ async function setupState() {
 	store.dispatch(setVideoState(videoState));
 	store.dispatch(setTempState(tempState));
 	
-	ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
 				<App/>

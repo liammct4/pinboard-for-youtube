@@ -1,4 +1,4 @@
-import { getNestedStorageData } from "./storage";
+import { getNestedStorageData } from "../storage";
 
 // TODO: Add config options.
 export interface IConfig { }

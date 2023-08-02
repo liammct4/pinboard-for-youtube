@@ -1,5 +1,5 @@
-import { sampleVideoData } from "../../data/testDataSet";
-import { IStorage } from "./storage";
+import { sampleVideoData } from "../../../../testData/testDataSet";
+import { IStorage } from "../storage";
 import { addExpandedID, getExpandedVideos, removeExpandedID } from "./tempState";
 
 let storageTemplate: IStorage = {

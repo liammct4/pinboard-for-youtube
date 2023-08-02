@@ -1,4 +1,4 @@
-import { Video, generateTimestamp } from "../lib/video/video.ts";
+import { Video, generateTimestamp } from "../src/lib/video/video";
 
 /* This files contains all of the testing/sample data needed. */
 

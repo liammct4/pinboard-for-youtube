@@ -1,5 +1,5 @@
-import * as TimeUtil from "./util/time-util.ts"
-import * as request from "./../lib/request.ts"
+import * as TimeUtil from "./../generic/timeUtil.ts"
+import * as request from "./../request.ts"
 
 export class DoesNotExistError extends Error {
 	public requested: string;

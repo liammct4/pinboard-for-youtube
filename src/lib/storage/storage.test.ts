@@ -1,4 +1,4 @@
-import { sampleVideoData } from "../../data/testDataSet";
+import { sampleVideoData } from "../../../testData/testDataSet";
 import { IStorage, ensureInitialized } from "./storage";
 
 let storageTemplate: IStorage = {

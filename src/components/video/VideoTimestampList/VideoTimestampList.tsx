@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { useDispatch } from "react-redux"
 import { VideoContext, VideoListContext } from "../../../context/video.ts";
 import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
-import { generateUniqueFrom } from "./../../../lib/util/random-util.ts"
+import { generateUniqueFrom } from "../../../lib/util/generic/randomUtil.ts";
 import { Reorder, useDragControls } from "framer-motion";
-import SubtleExpander from "./../../SubtleExpander/SubtleExpander.jsx"
+import SubtleExpander from "../../presentation/SubtleExpander/SubtleExpander.js"
 import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
 import Plus from "src/../assets/symbols/plus.svg"

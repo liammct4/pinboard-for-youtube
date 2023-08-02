@@ -1,4 +1,4 @@
-import * as YTUtil from "./../../../lib/youtube-util.js"
+import * as YTUtil from "./../../../lib/util/youtube/youtubeUtil.ts"
 import ThumbMissing from "./../../../../assets/thumb_missing.svg"
 import "./VideoCard.css"
 

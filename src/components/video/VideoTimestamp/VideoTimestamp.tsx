@@ -1,8 +1,8 @@
 import { useCallback, useContext } from "react"
 import { VideoListContext } from "../../../context/video.ts";
-import * as YTUtil from "./../../../lib/youtube-util.js" 
+import * as YTUtil from "./../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../lib/browser/youtube.ts";
-import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../../../lib/util/time-util.js"
+import { getSecondsFromTimestamp, getTimestampFromSeconds } from "./../.../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp, cloneModifyTimestamp } from "../../../lib/video/video.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.ts";
 import { FormField } from "../../forms/FormField/FormField.tsx";

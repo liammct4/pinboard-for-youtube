@@ -1,7 +1,6 @@
 import { validate } from "jsonschema"
-import { Video } from "../video/video"
-import { getNestedStorageData } from "./storage"
-import { IConfig } from "./config"
+import { Video } from "../../video/video"
+import { getNestedStorageData } from "../storage"
 
 export interface IVideoJsonSchema {
 	type: string,
