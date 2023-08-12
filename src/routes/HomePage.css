@@ -1,6 +1,3 @@
-@import "./../public/globals.css";
-@import "./../public/common-definitions.css";
-
 /* Outer areas */
 .outer-body {
 	display: grid;
@@ -58,7 +55,7 @@
 	margin: 2px 5px 3px 0;
 }
 
-#bottom-section-inner-wrap > button {
+#bottom-section-inner-wrap > .button-small {
 	margin-left: 10px;
 }
 
@@ -68,41 +65,4 @@
 	font-weight: bold;
 	color: var(--dim-accent);
 	font-size: 9pt;
-}
-
-/* Inner body */
-.inner-body {
-	background: var(--subtle-background);
-	grid-row: 2;
-	display: flex;
-	flex-direction: column;
-	padding: 10px;
-}
-
-#current-video-card {
-	margin: 5px 0 5px 0;
-}
-
-.button-bar {
-	display: flex;
-	flex-direction: row;
-	margin-bottom: 5px;
-	gap: 5px;
-}
-
-.regular-vmargin {
-	margin: 5px 0;
-}
-
-#timestamp-scrollbox {
-	background: var(--raised-background);
-	border: 1px solid var(--light-accent);
-	border-radius: 12px;
-	flex-grow: 1;
-	overflow-y: scroll;
-	height: 0px;
-}
-
-#timestamp-scrollbox::-webkit-scrollbar-track {
-	margin: 5px 0 5px 0;
 }

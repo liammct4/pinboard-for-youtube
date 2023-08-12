@@ -10,6 +10,7 @@ export let store = configureStore({
 		video: videoReducer,
 		tempState: tempStateReducer
 	},
+	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
 		.prepend(videoStorageMiddleware.middleware)
 		.prepend(videoTimelineMiddleware.middleware)

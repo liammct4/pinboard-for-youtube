@@ -1,0 +1,164 @@
+import { useCallback, useEffect } from "react";
+import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage.tsx";
+import FormDialog from "../../components/dialogs/FormDialog.tsx";
+import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading.tsx";
+import VideoCard from "../../components/video/VideoCard/VideoCard.tsx";
+import VideoCollection from "../../components/video/VideoCollection/VideoCollection.tsx";
+import { VideoListContext } from "../../context/video.ts";
+import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
+import { addVideo, clearVideos, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
+import { addExpandedID, removeExpandedID } from "../../features/state/tempStateSlice.ts";
+import { Video, generateTimestamp } from "../../lib/video/video.ts";
+import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
+import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
+import { FormField } from "../../components/forms/FormField/FormField.tsx";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, store } from "../../app/store.ts";
+import { SubmitHandler } from "react-hook-form";
+import "./VideosPage.css"
+import "./../../styles/dialog.css"
+
+interface IAddVideoForm extends IErrorFieldValues {
+	link: string;
+	error: boolean
+}
+
+function validateVideo(value: string): string | null {
+	// Don't use 'videos' with useSelector at the top as it will not be updated
+	// if the videos in the store changes.
+	let currentVideos = store.getState().video.currentVideos;
+	
+	if (value.length == 0) {
+		return "This field is required."
+	}
+	else if (!YTUtil.YOUTUBE_EXTRACT_VIDEO_ID_REGEX.test(value)) {
+		return "The link entered was invalid."
+	}
+	else if (!YTUtil.videoExists(value)) {
+		return "Video does not exist.";
+	}
+	else if (currentVideos.findIndex(x => x.videoID == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
+		return "Video has already been added.";
+	}
+	
+	return null;
+}
+
+export function VideosPage(): React.ReactNode {
+	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
+	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
+	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
+	const dispatch = useDispatch();
+	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
+		let newVideo: Video = {
+			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
+			timestamps: []
+		};
+
+		dispatch(addVideo(newVideo));
+	}, [videos]);
+	const onSaveActiveVideo: () => void = () => {
+		if (videos.find(x => x.videoID == activeVideoID) != undefined) {
+			return;
+		}
+
+		let video: Video = {
+			videoID: activeVideoID!,
+			timestamps: []
+		};
+		dispatch(addVideo(video));
+	};
+	const onPinCurrentTimestamp = async () => {
+		let result = await getActiveVideoInfo();
+		
+		let activeVideo: Video = {
+			videoID: activeVideoID!,
+			timestamps: [
+				...(videos.find(x => x.videoID == activeVideoID)!).timestamps,
+				generateTimestamp(Math.floor(result!.currentTime), "Current time")
+			]
+		}
+		
+		dispatch(updateVideo(activeVideo));
+	};
+	const handleReorderedItems = (reordered: Array<Video>) => {
+		// To mitigate lag from store dispatching.
+		let listener = (_event: any) => {
+			document.removeEventListener("mouseup", listener);
+			setTimeout(() => {
+				dispatch(setVideos(reordered));
+			}, 100);
+		}
+
+		document.addEventListener("mouseup", listener);
+	}
+
+	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
+	useEffect(() => {
+		reset();
+	}, [reset, videos]);
+
+	return (
+		<>
+			{/* Current video */}
+			<SplitHeading text="Current video"></SplitHeading>
+			<div id="current-video-card">
+				<VideoCard videoID={activeVideoID} placeholderTitle="No video found!"></VideoCard>
+			</div>
+			{/* Current video controls */}
+			<div className="button-bar">
+				<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
+				<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
+			</div>
+			{/* My timestamps */}
+			<SplitHeading text="My video timestamps"></SplitHeading>
+			<div className="button-bar regular-vmargin">
+				{/* Add video dialog. */}
+				<FormDialog
+					formID="add-video-form"
+					formTitle="Add video"
+					submitText="Add"
+					trigger={<button className="button-small">Add video</button>}
+					handleSubmit={handleSubmit(handler)}>
+						<FormField<IAddVideoForm> register={register}
+							label="Link:"
+							name="link"
+							size="max"
+							submitEvent={submit.current}
+							validationMethod={validateVideo}
+							selector={(data: IAddVideoForm) => data.link}/>
+				</FormDialog>
+				<ActionMessageDialog
+					title="Clear all videos"
+					body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
+					buttons={[ "Continue", "Cancel" ]}
+					onButtonPressed={(action: string) => {
+						if (action == "Continue") {
+							dispatch(clearVideos());
+						}
+					}}>
+					<button className="button-small">Clear videos</button>
+				</ActionMessageDialog>
+			</div>
+			<div id="timestamp-scrollbox">
+				<VideoListContext.Provider value={{
+					activeVideoID,
+					videos,
+					openVideos,
+					actions: {
+						addVideo,
+						updateVideo,
+						clearVideos,
+						setVideos,
+						addExpandedID,
+						removeExpandedID
+					}
+				}}>
+					<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
+				</VideoListContext.Provider>
+			</div>
+		</>
+	);
+}
+
+export default VideosPage;
