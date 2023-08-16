@@ -17,15 +17,15 @@ export function SubtleExpander({ expanded, onExpanded, openMessage, closeMessage
 
 	return (
 		<Collapsible.Root open={onExpanded == null ? isExpanded : expanded} onOpenChange={onExpanded ?? setExpanded}>
-			<div className="subtle-expander-inner">
+			<div className="expander-inner">
 				<Collapsible.Trigger asChild>
-					<button type="button" className="circle-button subtle-expander-button">
-						<img className="subtle-expander-arrow" data-state={expanded} src="./../../../assets/symbols/arrow.svg"/>
+					<button type="button" className="circle-button expander-control-button">
+						<img className="indicator-arrow" data-state={expanded} src="./../../../assets/symbols/arrow.svg"/>
 					</button>
 				</Collapsible.Trigger>
-				<h3 className="subtle-expander-text">{expanded ? openMessage : closeMessage}</h3>
+				<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>
 			</div>
-			<Collapsible.Content className="subtle-expander-content">
+			<Collapsible.Content className="expander-content">
 				{children}
 			</Collapsible.Content>
 		</Collapsible.Root>

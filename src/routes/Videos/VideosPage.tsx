@@ -99,20 +99,18 @@ export function VideosPage(): React.ReactNode {
 	}, [reset, videos]);
 
 	return (
-		<>
+		<div className="video-page-inner">
 			{/* Current video */}
-			<SplitHeading text="Current video"></SplitHeading>
-			<div id="current-video-card">
-				<VideoCard videoID={activeVideoID} placeholderTitle="No video found!"></VideoCard>
-			</div>
+			<SplitHeading text="Current video"/>
+			<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
 			{/* Current video controls */}
-			<div className="button-bar">
+			<div className="current-video-buttons">
 				<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
 				<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
 			</div>
 			{/* My timestamps */}
-			<SplitHeading text="My video timestamps"></SplitHeading>
-			<div className="button-bar regular-vmargin">
+			<SplitHeading className="video-collection-section-heading" text="My video timestamps"></SplitHeading>
+			<div className="video-collection-buttons">
 				{/* Add video dialog. */}
 				<FormDialog
 					formID="add-video-form"
@@ -140,7 +138,7 @@ export function VideosPage(): React.ReactNode {
 					<button className="button-small">Clear videos</button>
 				</ActionMessageDialog>
 			</div>
-			<div id="timestamp-scrollbox">
+			<div className="video-collection-scrollbox">
 				<VideoListContext.Provider value={{
 					activeVideoID,
 					videos,
@@ -157,7 +155,7 @@ export function VideosPage(): React.ReactNode {
 					<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
 				</VideoListContext.Provider>
 			</div>
-		</>
+		</div>
 	);
 }
 

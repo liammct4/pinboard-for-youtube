@@ -1,14 +1,14 @@
 import "./SplitHeading.css"
 
 export interface ISplitHeadingProperties {
-	text: string
+	className?: string;
+	text: string;
 }
 
-export function SplitHeading({ text }: ISplitHeadingProperties): React.ReactNode {
+export function SplitHeading({ className = "", text }: ISplitHeadingProperties): React.ReactNode {
 	return (
-		<div className="outer-heading">
-			<div className="split-heading-left-highlight"></div>
-			<h2 className="split-heading-text">{text}</h2>
+		<div className={`outer-heading-box ${className.trim()}`}>
+			<h2 className="heading-text">{text}</h2>
 		</div>
 	);
 }

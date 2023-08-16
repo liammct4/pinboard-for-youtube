@@ -1,90 +1,107 @@
 /* To prevent any styling conflicts, all provided styles have to be within a pfy-style-context class. */
 
-.pfy-style-context hr {
-	border: initial !important;
-	background-color: var(--light-accent);
-	height: 1px;
-}
+.pfy-style-context {
+	font-family: "Open Sans", sans-serif;
 
-/* Small button */
-.pfy-style-context .button-small {
-	height: 16px;
-	border: 1px solid var(--light-accent);
-	background: var(--very-bright-light-shade);
-	color: var(--dark-accent);
-	font-weight: bold;
-	text-align: center;
-	font-size: 9pt;
-	border-radius: 3px;
-	padding: 0px 10px 0px 10px;
-	transition: background 0.2s, border 0.1s, outline 0.05s;
-	line-height: 0px;
-}
+	.regular-separator {
+		width: 100%;
+		border-left: 0;
+		border-right: 0;
+		border-top: 1px;
+		border-color: var(--pfy-primary-faded);
+	}
 
-.pfy-style-context .button-small:focus {
-	outline: 1px solid var(--dark-accent);
-}
+	.bold-separator {
+		width: 100%;
+		border-left: 0;
+		border-right: 0;
+		border-top: 1px;
+		border-color: var(--pfy-primary-dark);
+	}
 
-.pfy-style-context .button-small:hover {
-	background: var(--bright-light-shade);
-	border: 1px solid var(--dark-accent);
-}
+	/* Small button */
+	.button-small {
+		height: var(--pfy-element-button-size-regular);
+		padding: 0;
+		padding-left: var(--pfy-spacing-large);;
+		padding-right: var(--pfy-spacing-large);
+		border: 1px solid var(--pfy-primary-dark);
+		border-radius: var(--pfy-spacing-standard-compact);
+		box-shadow: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+		background: var(--pfy-shade-06);
+		color: var(--pfy-text-light);
+		font-weight: bold;
+		font-size: var(--pfy-font-text-standard);
+		line-height: 0px;
+		text-align: center;
+		transition: background var(--pfy-timing-fast), border var(--pfy-timing-snappy), outline var(--pfy-timing-snappy);
+	
+		&:focus {
+			outline: 1px solid var(--pfy-primary-ultradark);
+		}
 
-.pfy-style-context .button-small:active {
-	background: var(--regular-light-shade);
-}
+		&:hover {
+			background: var(--pfy-shade-05);
+			border-color: var(--pfy-primary-ultradark);
+		}
 
-.pfy-style-context .button-small:disabled {
-	background-color: var(--regular-light-shade);
-	color: var(--dim-accent);
-	border: 1px solid var(--outer-solid);
-}
+		&:active {
+			background: var(--pfy-shade-04);
+		}
 
-.pfy-style-context .square-button {
-	aspect-ratio: 1 / 1;
-	padding: initial !important;
-	align-content: right;
-}
+		&:disabled {
+			background-color: var(--pfy-empty-02-raised);
+			box-shadow: 0px 0px 1px 1px var(--pfy-shade-06);
+			color: var(--pfy-shade-03);
+			border: 1px solid var(--pfy-primary-faded);
+			cursor: not-allowed;
+		}
+	}
 
-/* Circle button */
-.pfy-style-context .circle-button {
-	width: 16px;
-	height: 16px;
-	border-radius: 8px;
-	background: var(--light-accent);
-	border: 1px solid var(--dark-accent);
-	color: white;
-	margin: auto 0 auto 0;
-	transition: background 0.2s;
-	font-size: 15pt;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+	/* Circle button */
+	.circle-button {
+		width: var(--pfy-element-button-size-regular);
+		height: var(--pfy-element-button-size-regular);
+		border-radius: 8px;
+		background: var(--pfy-shade-06);
+		border: 1px solid var(--pfy-primary-dark);
+		color: white;
+		margin: auto 0 auto 0;
+		transition: background 0.2s;
+		font-size: 15pt;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	
+		&:hover {
+			background: var(--pfy-shade-05);
+		}
 
-.pfy-style-context .circle-button:hover {
-	background: var(--dark-accent);
-}
+		&:active {
+			background: var(--pfy-shade-04);
+		}
 
-/* Scrollbars */
-.pfy-style-context ::-webkit-scrollbar {
-	width: 12px;
-	margin-top: 10px;
-}
+		&:focus {
+			outline: 1px solid var(--pfy-primary-ultradark);
+		}
+	}
 
-.pfy-style-context ::-webkit-scrollbar-thumb {
-	background: var(--bright-accent);
-	border-radius: 6px;
-}
-
-.pfy-style-context ::-webkit-scrollbar-thumb:hover {
-	background: var(--light-accent);
-}
-
-.pfy-style-context ::-webkit-scrollbar-thumb:active {
-	background: var(--dark-accent);
-}
-
-.pfy-style-context :is(h1, h2, h3, h4, h5, h6) {
-	margin: initial;
+	/* Scrollbars */
+	::-webkit-scrollbar {
+		width: var(--pfy-spanning-scroll-element);
+		margin-top: 10px;
+	}
+		
+	::-webkit-scrollbar-thumb {
+		background: var(--pfy-empty-02-depth);
+		border-radius: calc(var(--pfy-spanning-scroll-element) / 2);
+		
+		&:hover {
+			background: var(--pfy-shade-05);
+		}
+		
+		&:active {
+			background: var(--pfy-shade-04);
+		}
+	}
 }

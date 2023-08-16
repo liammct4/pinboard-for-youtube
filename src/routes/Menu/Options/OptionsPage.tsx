@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom"
 
 export function OptionsPage(): React.ReactNode {
 	const setTitle: (title: string) => void = useOutletContext();
-	setTitle("Options");
+	
+	useEffect(() => setTitle("Options"), []);
 	
 	return (
 		<>

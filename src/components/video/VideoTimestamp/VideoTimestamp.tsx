@@ -65,22 +65,22 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 
 	return (
 		<Reorder.Item value={timestamp} id={timestamp.id}>
-			<div className="video-timestamp-inner">
-				<button type="button" className="button-small square-button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+			<div className="timestamp-inner">
+				<button className="square-button button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
 					<img src={isActiveId ? JumpVideoIcon : JumpVideoIconOff} alt="Play button icon."></img>
 				</button>
-				<a className="video-timestamp-time" href={timeLink}>{stringTime}</a>
-				<p className="video-timestamp-message">{timestamp.message}</p>
-				<div className="video-timestamp-filler"></div>
-				<button className="button-small square-button delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
-					<img className="delete-timestamp-icon" src={Bin} alt="Delete icon."/>
+				<a className="timestamp-text" href={timeLink}>{stringTime}</a>
+				<p className="message-text">{timestamp.message}</p>
+				<div style={{ flexGrow: "1" }}></div>
+				<button className="square-button button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
+					<img className="bin-icon" src={Bin} alt="Delete icon."/>
 				</button>
 				{/* Edit dialog */}
 				<FormDialog
 					formID="edit-timestamp-form"
 					formTitle="Edit timestamp"
 					submitText="Save"
-					trigger={<button className="button-small" style={{ marginRight: "1px" }}>Edit</button>}
+					trigger={<button className="edit-button button-small">Edit</button>}
 					handleSubmit={handleSubmit(handler)}>
 						{/* Time */}
 						<FormField<IEditTimestampForm> register={register} registerOptions={null}

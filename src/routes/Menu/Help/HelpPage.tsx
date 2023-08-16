@@ -1,8 +1,10 @@
-import { useOutletContext } from "react-router-dom";
+import { useEffect } from "react"
+import { useOutletContext } from "react-router-dom"
 
 export function HelpPage(): React.ReactNode {
 	const setTitle: (title: string) => void = useOutletContext();
-	setTitle("Help");
+	
+	useEffect(() => setTitle("Help"), []);
 
 	return (
 		<>

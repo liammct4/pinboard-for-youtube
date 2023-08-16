@@ -1,37 +1,40 @@
-.subtle-expander-inner {
+.expander-inner {
 	display: flex;
 	flex-direction: row;
-}
 
-.subtle-expander-text {
-	font-weight: bold;
-	font-size: 9pt;
-	color: var(--dark-accent);
-	margin-left: 3px !important;
-}
+	.expander-control-button {
+		.indicator-arrow {
+			transition: transform var(--pfy-timing-fast);
+			margin-left: 1px;
 
-.subtle-expander-arrow {
-	transition: transform 300ms;
-	margin-bottom: 1px;
-}
+			&[data-state="true"] {
+				transform: rotate(180deg);
+			}
 
-.subtle-expander-content {
+			&[data-state="false"] {
+				transform: rotate(0deg);
+			}
+		}
+	}
+
+	.message-text {
+		margin: 0;
+		margin-left: var(--pfy-spacing-standard-compact);
+		font-size: var(--pfy-font-text-standard);
+	}
+
+}
+.expander-content {
 	overflow-y: hidden;
-}
 
-.subtle-expander-arrow[data-state='true'] {
-	transform: rotate(180deg);
-}
-.subtle-expander-arrow[data-state='false'] {
-	transform: rotate(0deg);
-}
+	&[data-state="open"] {
+		animation: slideDown var(--pfy-timing-fast) ease-out;
+	}
+	
+	&[data-state="closed"] {
+		animation: slideUp var(--pfy-timing-fast) ease-out;
+	}
 
-.subtle-expander-content[data-state='open'] {
-	animation: slideDown 280ms ease-out;
-}
-
-.subtle-expander-content[data-state='closed'] {
-	animation: slideUp 280ms ease-out;
 }
 
 @keyframes slideDown {

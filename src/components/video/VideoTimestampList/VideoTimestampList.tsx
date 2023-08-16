@@ -84,30 +84,30 @@ export function VideoTimestampList(): React.ReactNode {
 
 	return (
 		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>
-			<div className="video-timestamp-list">
-				<div className="video-timestamp-list-card">
+			<div className="video-list-outer">
+				<div className="video-card">
 					<VideoCard videoID={video.videoID}/>
 					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}/>
 				</div>
-				<hr className="video-timestamp-list-margin"></hr>
+				<hr className="regular-separator"></hr>
 				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
-					<Reorder.Group values={video.timestamps} onReorder={handleTimestampReorder} className="video-timestamp-list-container">
+					<Reorder.Group className="timestamp-list" values={video.timestamps} onReorder={handleTimestampReorder}>
 						{video.timestamps.map((x) => 
 							<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
 					</Reorder.Group>
-					<div className="add-timestamp-button-outer">
-						<p className="add-timestamp-fake-time">00:00</p>
+					<div className="add-timestamp-row">
+						<p className="fake-timestamp">00:00</p>
 						<div style={{ flexGrow: "1" }}></div>
 						<button
 							className="add-timestamp-button circle-button"
 							onClick={onAddTimestamp}>
 							<img src={Plus}></img>
 						</button>
-						<p className="add-timestamp-text">Add new timestamp</p>
+						<p className="info-text">Add new timestamp</p>
 					</div>
 				</SubtleExpander>
 			</div>
-			<hr className="video-timestamp-list-separator"></hr>
+			<hr className="bold-separator"></hr>
 		</Reorder.Item>
 	)
 }

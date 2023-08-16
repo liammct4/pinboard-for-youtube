@@ -1,70 +1,49 @@
-.add-timestamp-button-outer {
-	overflow-y: hidden;
+.video-list-outer {
 	display: flex;
-	flex-direction: row;
-	justify-content: right;
-}
-
-.add-timestamp-button-outer * {
-	margin: 2px 0;
-}
-
-.add-timestamp-text {
-	color: var(--dim-accent);
-	font-size: 9pt;
-	margin: auto 0 auto 3px;
-}
-
-.add-timestamp-button {
-	margin-left: 100px;
-	padding-top: 3px !important;
-	width: 14px !important;
-	height: 14px !important;
-}
-
-.add-timestamp-button > img {
-	margin-bottom: 3px;
-}
-
-.add-timestamp-fake-time {
-	opacity: 0.6;
-	font-style: italic;
-	color: var(--dim-accent);
-	font-size: 9pt;
-	margin-left: 10px;
-}
-
-.video-timestamp-list {
-	display: flex;
-	background: var(--regular-background);
 	flex-direction: column;
-}
 
-.video-timestamp-list-margin {
-	margin: 4px 0;
-	height: 0;
-}
+	.video-card {
+		display: flex;
+		flex-direction: row;
 
-.video-timestamp-list-separator {
-	width: 100%;
-	margin: 5px -6px 8px -6px;
-	padding: 0px 6px;
-	background: var(--light-accent);
-}
+		.drag-handle {
+			min-width: 20px;
+			height: 34px;
+			margin-top: auto;
+			margin-bottom: auto;
+			background-image: url("/assets/icons/drag_vrect.svg");
+		}
+	}
 
-.video-card {
-	margin: 100px;
-}
+	.timestamp-list {
+		list-style-type: none;
+		padding-left: calc(var(--pfy-spacing-large) * 2);
+		margin-top: var(--pfy-spacing-standard-compact);
+		margin-bottom: var(--pfy-spacing-standard-compact);
+	}
 
-.video-timestamp-list-card {
-	display: flex;
-	flex-direction: row;
-	flex-grow: 1;
-}
+	.add-timestamp-row {
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 1px;
 
-.drag-handle {
-	min-width: 20px;
-	height: 34px;
-	margin: auto 0 auto auto;
-	background-image: url("/assets/icons/drag_vrect.svg");
+		.fake-timestamp {
+			color: var(--pfy-text-lighter);
+			font-size: var(--pfy-font-text-standard);
+			text-decoration: underline;
+			opacity: 0.5;
+			margin: 0;
+		}
+
+		.add-timestamp-button {
+			margin: 0;
+		}
+
+		.info-text {
+			color: var(--pfy-text-light);
+			font-size: var(--pfy-font-text-standard);
+			margin: 0;
+			margin-left: var(--pfy-spacing-standard-compact);
+		}
+	}
 }

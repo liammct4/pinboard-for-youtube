@@ -1,0 +1,312 @@
+{
+  "Colours": [
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 255,
+        "G": 30,
+        "B": 74,
+        "ScA": 1,
+        "ScR": 1,
+        "ScG": 0.0129830325,
+        "ScB": 0.068478175
+      },
+      "Name": "pfy-primary-common"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 255,
+        "G": 135,
+        "B": 135,
+        "ScA": 1,
+        "ScR": 1,
+        "ScG": 0.24228115,
+        "ScB": 0.24228115
+      },
+      "Name": "pfy-primary-faded"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 197,
+        "G": 36,
+        "B": 56,
+        "ScA": 1,
+        "ScR": 0.55834043,
+        "ScG": 0.017641956,
+        "ScB": 0.039546236
+      },
+      "Name": "pfy-primary-dark"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 146,
+        "G": 26,
+        "B": 40,
+        "ScA": 1,
+        "ScR": 0.28744087,
+        "ScG": 0.010329823,
+        "ScB": 0.021219011
+      },
+      "Name": "pfy-primary-ultradark"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 247,
+        "G": 228,
+        "B": 224,
+        "ScA": 1,
+        "ScR": 0.9301109,
+        "ScG": 0.7758222,
+        "ScB": 0.74540424
+      },
+      "Name": "pfy-empty-01-normal"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 253,
+        "G": 233,
+        "B": 229,
+        "ScA": 1,
+        "ScR": 0.9822506,
+        "ScG": 0.8148466,
+        "ScB": 0.7835378
+      },
+      "Name": "pfy-empty-01-raised"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 244,
+        "G": 225,
+        "B": 222,
+        "ScA": 1,
+        "ScR": 0.9046612,
+        "ScG": 0.7529422,
+        "ScB": 0.73046076
+      },
+      "Name": "pfy-empty-01-depth"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 177,
+        "G": 165,
+        "B": 163,
+        "ScA": 1,
+        "ScR": 0.4396572,
+        "ScG": 0.37626216,
+        "ScB": 0.36625263
+      },
+      "Name": "pfy-empty-01-shadow"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 242,
+        "G": 211,
+        "B": 197,
+        "ScA": 1,
+        "ScR": 0.8879231,
+        "ScG": 0.65140563,
+        "ScB": 0.55834043
+      },
+      "Name": "pfy-empty-02-normal"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 251,
+        "G": 220,
+        "B": 207,
+        "ScA": 1,
+        "ScR": 0.9646863,
+        "ScG": 0.71569353,
+        "ScB": 0.62396044
+      },
+      "Name": "pfy-empty-02-raised"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 209,
+        "G": 184,
+        "B": 173,
+        "ScA": 1,
+        "ScR": 0.6375969,
+        "ScG": 0.4793202,
+        "ScB": 0.4178851
+      },
+      "Name": "pfy-empty-02-depth"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 192,
+        "G": 169,
+        "B": 159,
+        "ScA": 1,
+        "ScR": 0.52711517,
+        "ScG": 0.39675525,
+        "ScB": 0.3467041
+      },
+      "Name": "pfy-empty-02-shadow"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 15,
+        "G": 15,
+        "B": 15,
+        "ScA": 1,
+        "ScR": 0.0047769537,
+        "ScG": 0.0047769537,
+        "ScB": 0.0047769537
+      },
+      "Name": "pfy-text-strong"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 47,
+        "G": 47,
+        "B": 47,
+        "ScA": 1,
+        "ScR": 0.02842604,
+        "ScG": 0.02842604,
+        "ScB": 0.02842604
+      },
+      "Name": "pfy-text-normal"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 68,
+        "G": 68,
+        "B": 68,
+        "ScA": 1,
+        "ScR": 0.057805438,
+        "ScG": 0.057805438,
+        "ScB": 0.057805438
+      },
+      "Name": "pfy-text-light"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 88,
+        "G": 88,
+        "B": 88,
+        "ScA": 1,
+        "ScR": 0.097587354,
+        "ScG": 0.097587354,
+        "ScB": 0.097587354
+      },
+      "Name": "pfy-text-lighter"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 40,
+        "G": 40,
+        "B": 40,
+        "ScA": 1,
+        "ScR": 0.021219011,
+        "ScG": 0.021219011,
+        "ScB": 0.021219011
+      },
+      "Name": "pfy-shade-01"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 107,
+        "G": 107,
+        "B": 107,
+        "ScA": 1,
+        "ScR": 0.14702727,
+        "ScG": 0.14702727,
+        "ScB": 0.14702727
+      },
+      "Name": "pfy-shade-02"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 136,
+        "G": 136,
+        "B": 136,
+        "ScA": 1,
+        "ScR": 0.24620135,
+        "ScG": 0.24620135,
+        "ScB": 0.24620135
+      },
+      "Name": "pfy-shade-03"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 189,
+        "G": 189,
+        "B": 189,
+        "ScA": 1,
+        "ScR": 0.50888133,
+        "ScG": 0.50888133,
+        "ScB": 0.50888133
+      },
+      "Name": "pfy-shade-04"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 230,
+        "G": 230,
+        "B": 230,
+        "ScA": 1,
+        "ScR": 0.791298,
+        "ScG": 0.791298,
+        "ScB": 0.791298
+      },
+      "Name": "pfy-shade-05"
+    },
+    {
+      "Colour": {
+        "ColorContext": null,
+        "A": 255,
+        "R": 250,
+        "G": 250,
+        "B": 250,
+        "ScA": 1,
+        "ScR": 0.9559733,
+        "ScG": 0.9559733,
+        "ScB": 0.9559733
+      },
+      "Name": "pfy-shade-06"
+    }
+  ]
+}

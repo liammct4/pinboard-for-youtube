@@ -1,16 +1,49 @@
-.pfy-style-context {
-	font-family: "Open Sans", sans-serif;
-}
-
 :root {
-	--outer-solid: #F8B295;
-	--bright-accent: #FFB596;
-	--light-accent: #FF824D;
-	--dark-accent: #C64A15;
-	--dim-accent: #C28B74;
-	--subtle-background: #FBDECD;
-	--raised-background: #FFD5BD;
-	--regular-light-shade: #c7c7c7;
-	--bright-light-shade: #e7e7e7;
-	--very-bright-light-shade: #ffffff;
+	/* Colour Scheme */
+	--pfy-primary-common: rgb(255, 30, 74);
+	--pfy-primary-faded: rgb(255, 135, 135);
+	--pfy-primary-dark: rgb(197, 36, 56);
+	--pfy-primary-ultradark: rgb(146, 26, 40);
+	--pfy-accent: rgb(36, 125, 197);
+	--pfy-empty-01-normal: rgb(247, 228, 224);
+	--pfy-empty-01-raised: rgb(253, 233, 229);
+	--pfy-empty-01-depth: rgb(244, 225, 222);
+	--pfy-empty-01-shadow: rgb(177, 165, 163);
+	--pfy-empty-02-normal: rgb(242, 211, 197);
+	--pfy-empty-02-raised: rgb(251, 220, 207);
+	--pfy-empty-02-depth: rgb(209, 184, 173);
+	--pfy-empty-02-shadow: rgb(192, 169, 159);
+	--pfy-text-strong: rgb(15, 15, 15);
+	--pfy-text-normal: rgb(47, 47, 47);
+	--pfy-text-light: rgb(68, 68, 68);
+	--pfy-text-lighter: rgb(88, 88, 88);
+	--pfy-shade-01: rgb(40, 40, 40);
+	--pfy-shade-02: rgb(107, 107, 107);
+	--pfy-shade-03: rgb(136, 136, 136);
+	--pfy-shade-04: rgb(189, 189, 189);
+	--pfy-shade-05: rgb(230, 230, 230);
+	--pfy-shade-06: rgb(250, 250, 250);
+
+	/* Sizes */
+	--pfy-logo-standard: 50px;
+	--pfy-font-heading-large: 16pt;
+	--pfy-font-heading-medium: 14pt;
+	--pfy-font-heading-small: 12pt;
+	--pfy-font-heading-tiny: 11pt;
+	--pfy-font-text-standard: 9pt;
+
+	/* Element Sizes */
+	--pfy-element-button-size-regular: 16px;
+
+	/* Whitespace, margins or padding. */
+	--pfy-spacing-standard: 6px;
+	--pfy-spacing-standard-compact: 3px;
+	--pfy-spacing-large: 9px;
+	--pfy-spanning-scroll-element: 12px;
+
+	/* Animations */
+	--pfy-timing-snappy: 100ms;
+	--pfy-timing-fast: 200ms;
+	--pfy-timing-normal: 240ms;
+	--pfy-timing-long: 340ms;
 }
