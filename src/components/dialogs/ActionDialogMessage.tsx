@@ -29,18 +29,20 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 				{children}
 			</AlertDialog.Trigger>
 			<AlertDialog.Portal>
-				<AlertDialog.Overlay className="dialog-overlay" />
-				<AlertDialog.Content className="pfy-style-context dialog-body">
-					<AlertDialog.Title className="dialog-header">{title}</AlertDialog.Title>
-					<AlertDialog.Description className="dialog-content dialog-description">
-						{body}
-					</AlertDialog.Description>
-					<AlertDialog.Action asChild>
-						<button type="button" className="circle-button close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
-							<img src={Cross}/>
-						</button>
-					</AlertDialog.Action>
-					<div className="dialog-footer">
+				<AlertDialog.Overlay className="dialog-background-overlay"/>
+				<AlertDialog.Content className="dialog-body pfy-style-context">
+					<div className="top-header">
+						<AlertDialog.Title className="title">{title}</AlertDialog.Title>
+						<AlertDialog.Action asChild>
+							<button type="button" className="circle-button close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
+								<img src={Cross}/>
+							</button>
+						</AlertDialog.Action>
+					</div>
+					<div className="inner-content-area">
+						<AlertDialog.Description className="description">{body}</AlertDialog.Description>
+					</div>
+					<div className="bottom-footer">
 						{buttons.map(x =>
 							<AlertDialog.Action key={x} asChild>
 								<button type="button" className="button-small" onClick={() => onButtonPressed(x)}>{x}</button>

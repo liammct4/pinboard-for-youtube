@@ -22,19 +22,23 @@ export function DialogBox({ title, trigger, description, footer, children }: IDi
 		<Dialog.Root>
 			<Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
 			<Dialog.Portal>
-				<Dialog.Overlay className="dialog-overlay" />
-				<Dialog.Content className="pfy-style-context dialog-body">
-					<Dialog.Title className="dialog-header">{title}</Dialog.Title>
-					{description != "" && description != null ? <Dialog.Description className="dialog-description">{description}</Dialog.Description> : <></>}
-					<div className="dialog-content">
-						{children}
+				<Dialog.Overlay className="dialog-background-overlay"/>
+				<Dialog.Content className="dialog-body pfy-style-context">
+					<div className="top-header">
+						<Dialog.Title className="title">{title}</Dialog.Title>
+						<Dialog.Close asChild>
+							<button type="button" className="circle-button close-button" aria-label="Close">
+								<img src={Cross} alt="Cancel and close popup."/>
+							</button>
+						</Dialog.Close>
 					</div>
-					<Dialog.Close asChild>
-						<button type="button" className="circle-button close-button" aria-label="Close">
-							<img src={Cross} alt="Cancel and close popup."/>
-						</button>
-					</Dialog.Close>
-					<div className="dialog-footer">{footer}</div>
+					<div className="inner-content-area">
+						{description != "" && description != null ? <Dialog.Description className="description">{description}</Dialog.Description> : <></>}
+						<div className="content">
+							{children}
+						</div>
+					</div>
+					<div className="bottom-footer">{footer}</div>
 				</Dialog.Content>
 			</Dialog.Portal>
 		</Dialog.Root>

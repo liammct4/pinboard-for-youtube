@@ -24,6 +24,12 @@
 	--pfy-shade-05: rgb(230, 230, 230);
 	--pfy-shade-06: rgb(250, 250, 250);
 
+	/* Other theming options */
+	--pfy-main-font: "Open Sans";
+	--pfy-fallback-font: sans-serif;
+	/* Never use the main or fallback fonts individually, always use the font collection below. */
+	--pfy-font-scheme-standard: var(--pfy-main-font), var(--pfy-fallback-font);
+
 	/* Sizes */
 	--pfy-logo-standard: 50px;
 	--pfy-font-heading-large: 16pt;
@@ -46,4 +52,11 @@
 	--pfy-timing-fast: 200ms;
 	--pfy-timing-normal: 240ms;
 	--pfy-timing-long: 340ms;
+
+	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
+
+	/* Definitions for common things like dialogs. */
+	--pfy-dialog-max-width: 500px;
+	--pfy-dialog-min-margin: 10px;
+	--pfy-dialog-margin-multiplier: 3;
 }

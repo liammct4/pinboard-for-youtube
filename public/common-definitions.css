@@ -1,7 +1,7 @@
 /* To prevent any styling conflicts, all provided styles have to be within a pfy-style-context class. */
 
 .pfy-style-context {
-	font-family: "Open Sans", sans-serif;
+	font-family: var(--pfy-font-scheme-standard);
 
 	.regular-separator {
 		width: 100%;

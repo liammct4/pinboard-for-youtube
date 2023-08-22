@@ -1,101 +1,68 @@
-:root {
-	--dialog-margin: 10px;
-	--dialog-margin-multiplier: 3;
-}
-
-.dialog-overlay {
-	background-color: #23232385;
+.dialog-background-overlay {
+	background: var(--pfy-shade-01);
+	opacity: 0.5;
 	position: fixed;
 	inset: 0;
-	animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dialog-body {
-	background-color: var(--subtle-background);
-	border-radius: 15px;
-	box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
-	position: fixed;
+	top: 0;
 	left: 0;
 	right: 0;
-	top: 0;
-	width: calc(100% - var(--dialog-margin) * 2);
-	max-width: 500px;
+	position: fixed;
+	margin-top: calc(var(--pfy-dialog-min-margin) * var(--pfy-dialog-margin-multiplier));
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: calc(var(--dialog-margin) * var(--dialog-margin-multiplier));
-	animation: contentShow 350ms cubic-bezier(0.26, 1, 0.5, 1);
+	width: calc(100% - var(--pfy-dialog-min-margin) * 2);
+	max-width: var(--pfy-dialog-max-width);
+	outline: 0;
+	border-radius: var(--pfy-spacing-large);
+	/* Prevents the header and footer overlapping the rounded corners. */
+	overflow: hidden;
+	font-family: var(--pfy-font-scheme-standard);
+	animation: dialogSlideIn var(--pfy-timing-long) var(--pfy-easing-out-standard);
+
+	.top-header {
+		display: flex;
+		padding: var(--pfy-spacing-standard);
+		background-color: var(--pfy-empty-02-normal);
+		
+		.title {
+			margin: 0;
+			color: var(--pfy-text-strong);
+			font-size: var(--pfy-font-heading-medium);
+			font-weight: bold;
+		}
+
+		.close-button {
+			margin-left: auto;
+		}
+	}
+
+	.inner-content-area {
+		display: flex;
+		flex-direction: column;
+		gap: var(--pfy-spacing-standard-compact);
+		padding: var(--pfy-spacing-standard);
+		background-color: var(--pfy-empty-01-raised);
+		color: var(--pfy-text-normal);
+		font-size: var(--pfy-font-text-standard);
+
+		.description {
+			margin: 0;
+		}
+	}
+
+	.bottom-footer {
+		display: flex;
+		gap: var(--pfy-spacing-standard-compact);
+		justify-content: end;
+		padding: var(--pfy-spacing-standard);
+		background: var(--pfy-empty-02-normal);
+	}
 }
 
-.dialog-body:focus {
-	outline: none;
-}
-
-.dialog-content {
-	margin: 10px;
-	color: var(--dark-accent);
-}
-
-.dialog-header {
-	background-color: var(--outer-solid);
-	padding: 6px 6px;
-	border-radius: 15px 15px 0 0;
-	font-weight: bold;
-	color: var(--dark-accent);
-	font-size: 15pt;
-}
-
-.dialog-footer {
-	background-color: var(--outer-solid);
-	padding: 10px;
-	border-radius: 0 0 15px 15px;
-	display: flex;
-	flex-direction: row;
-	justify-content: right;
-	gap: 10px;
-}
-
-.dialog-description {
-	margin: 10px;
-	color: var(--dark-accent);
-	font-size: 10pt;
-}
-
-.close-button {
-	border-radius: 100%;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	color: white;
-}
-
-.dialog-form {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-
-.dialog-content input {
-	border: 1px solid var(--dark-accent);
-	border-radius: 3px;
-	transition: outline 0.05s;
-	padding: 0 5px;
-}
-
-.dialog-content input:hover {
-	outline: 2px solid var(--dim-accent);
-}
-
-.dialog-content input:focus {
-	outline: 1px solid var(--dark-accent);
-}
-
-.dialog-content label {
-	margin: auto 0;
-	font-size: 10pt;
-	font-weight: bold;
-}
-
-@keyframes overlayShow {
+@keyframes overlayFadeIn {
 	from {
 		opacity: 0;
 	}
@@ -104,15 +71,15 @@
 	}
 }
 
-@keyframes contentShow {
+@keyframes dialogSlideIn {
 	from {
 		opacity: 0;
-		margin-top: 6px;
+		margin-top: var(--pfy-spacing-standard);
 		transform: scale(0.9);
 	}
 	to {
 		opacity: 1;
-		margin-top: calc(var(--dialog-margin) * var(--dialog-margin-multiplier));
+		margin-top: calc(var(--pfy-dialog-min-margin) * var(--pfy-dialog-margin-multiplier));
 		transform: scale(1);
 	}
 }
