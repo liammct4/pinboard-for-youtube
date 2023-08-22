@@ -86,6 +86,29 @@
 		}
 	}
 
+	/* Small form text input */
+	.small-text-input {
+		padding: 0;
+		padding-left: var(--pfy-spacing-standard-compact);
+		padding-right: var(--pfy-spacing-standard-compact);
+		background: var(--pfy-shade-06);
+		color: var(--pfy-text-lighter);
+		height: var(--pfy-element-button-size-regular);
+		outline: 0;
+		border: 1px solid var(--pfy-primary-ultradark);
+		border-radius: var(--pfy-element-button-size-regular);
+		font-size: var(--pfy-field-font-size);
+		transition: border var(--pfy-timing-snappy), outline var(--pfy-timing-snappy);
+
+		&:hover {
+			border-color: var(--pfy-primary-dark);
+		}
+
+		&:focus {
+			outline: 1px solid var(--pfy-primary-dark);
+		}
+	}
+
 	/* Scrollbars */
 	::-webkit-scrollbar {
 		width: var(--pfy-spanning-scroll-element);

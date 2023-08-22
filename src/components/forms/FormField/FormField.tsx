@@ -20,32 +20,32 @@ interface IFormFieldProperties<T extends IErrorFieldValues> {
 
 export function FormField<T extends IErrorFieldValues>({ register, label, name, registerOptions, size, validationMethod = () => null, submitEvent, selector, defaultValue = "" }: IFormFieldProperties<T>): React.ReactNode {
 	let [error, setError] = useState<string | null>();
-	let errorRef = useRef<HTMLDivElement | null>(null);
+	let [errorVisible, setErrorVisible] = useState<boolean>();
 
 	useEffect(() => {
 		submitEvent.subscribe((data: T) => {
 			let result = validationMethod(selector(data));
-			setError(result);
-
+			
 			if (result != null) {
 				data.error = true;
 				
-				if (errorRef.current != null) {
-					errorRef.current!.setAttribute("data-visible", "visible");
-				}
+				setError(result);
+				setErrorVisible(true);
 			}
 		});
 	}, []);
 
 	return (
 		<div className="field-outer">
-			<label className="form-field-label">{label}</label>
-			<input data-size={size} className="field-input" {...register(name, registerOptions ?? {})} defaultValue={defaultValue}></input>
-			{error != null ? 
-				<div ref={errorRef} className="form-error-message" data-visible="visible">
-					<img className="form-error-message-image" src={Error}/>
-					<p>{error}</p>
-					<button className="circle-button form-error-close-button" type="button" onClick={() => errorRef.current!.setAttribute("data-visible", "hidden")}>
+			<div className="input-row">
+				<label className="label">{label}</label>
+				<input data-size={size} className="small-text-input field-input" {...register(name, registerOptions ?? {})} defaultValue={defaultValue}></input>
+			</div>
+			{errorVisible ? 
+				<div className="error-message">
+					<img className="warning-image" src={Error}/>
+					<p className="error-text">{error}</p>
+					<button className="circle-button close-button" type="button" onClick={() => setErrorVisible(false)}>
 						<img src={Cross}/>
 					</button>
 				</div>

@@ -55,7 +55,14 @@
 
 	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
 
-	/* Definitions for common things like dialogs. */
+	/* Forms */
+	--pfy-label-width-standard: 60px;
+	--pfy-field-width-small: 80px;
+	--pfy-field-width-medium: 180px;
+	--pfy-field-width-large: 240px;
+	--pfy-field-font-size: 8.5pt;
+
+	/* Dialogs */
 	--pfy-dialog-max-width: 500px;
 	--pfy-dialog-min-margin: 10px;
 	--pfy-dialog-margin-multiplier: 3;

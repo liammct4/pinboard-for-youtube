@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import { DialogBox } from "./DialogBox";
+import "./FormDialog.css"
 
 export interface IFormDialogProperties {
 	formID: string;
