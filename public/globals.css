@@ -56,7 +56,8 @@
 	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
 
 	/* Forms */
-	--pfy-label-width-standard: 60px;
+	--pfy-label-width-compact: 60px;
+	--pfy-label-width-standard: 30%;
 	--pfy-field-width-small: 80px;
 	--pfy-field-width-medium: 180px;
 	--pfy-field-width-large: 240px;

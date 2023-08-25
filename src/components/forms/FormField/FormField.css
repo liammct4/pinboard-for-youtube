@@ -4,37 +4,6 @@
 	gap: var(--pfy-spacing-standard);
 	width: 100%;
 
-	.input-row {
-		display: flex;
-		flex-direction: row;
-
-		.label {
-			width: var(--pfy-label-width-standard);
-		}
-		
-		.field-input {
-			width: var(--pfy-field-width-small);
-			font-size: var(--pfy-field-font-size);
-			grid-column: 2;
-			
-			&[data-size="small"] {
-				width: var(--pfy-field-width-small);
-			}
-			
-			&[data-size="medium"] {
-				width: var(--pfy-field-width-medium);
-			}
-			
-			&[data-size="large"] {
-				width: var(--pfy-field-width-large);
-			}
-			
-			&[data-size="max"] {
-				width: 100%;
-			}
-		}
-	}
-
 	.error-message {
 		display: flex;
 		gap: var(--pfy-spacing-standard-compact);

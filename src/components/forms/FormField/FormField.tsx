@@ -5,20 +5,23 @@ import Error from "./../../../../assets/icons/error.svg"
 import Cross from "./../../../../assets/symbols/cross.svg"
 import { FormValidator, IErrorFieldValues } from "../validated-form";
 import "./FormField.css"
+import { InputMethodType } from "../../../lib/config/configurationOption";
+import { getInputComponent } from "../../input/componentLocator";
 
-interface IFormFieldProperties<T extends IErrorFieldValues> {
-	register: UseFormRegister<T>;
-	registerOptions?: RegisterOptions<T> | null;
+interface IFormFieldProperties<TFormType extends IErrorFieldValues> {
+	register: UseFormRegister<TFormType>;
+	registerOptions?: RegisterOptions<TFormType> | null;
 	label: string;
-	name: Path<T>;
-	size: "small" | "medium" | "large" | "max" ;
+	name: Path<TFormType>;
+	size: "small" | "medium" | "large" | "max";
+	inputType?: InputMethodType;
 	validationMethod?: FormValidator;
-	submitEvent: MultiEvent<T>;
-	selector: (data: T) => string;
+	submitEvent: MultiEvent<TFormType>;
+	selector: (data: TFormType) => string;
 	defaultValue?: string;
 }
 
-export function FormField<T extends IErrorFieldValues>({ register, label, name, registerOptions, size, validationMethod = () => null, submitEvent, selector, defaultValue = "" }: IFormFieldProperties<T>): React.ReactNode {
+export function FormField<T extends IErrorFieldValues>({ register, label, name, registerOptions, size, validationMethod = () => null, submitEvent, selector, inputType = InputMethodType.Text, defaultValue = "" }: IFormFieldProperties<T>): React.ReactNode {
 	let [error, setError] = useState<string | null>();
 	let [errorVisible, setErrorVisible] = useState<boolean>();
 
@@ -32,15 +35,24 @@ export function FormField<T extends IErrorFieldValues>({ register, label, name, 
 				setError(result);
 				setErrorVisible(true);
 			}
+			else {
+				setErrorVisible(false);
+			}
 		});
 	}, []);
 
+	const FieldInputElement = getInputComponent<T>(inputType);
+
 	return (
 		<div className="field-outer">
-			<div className="input-row">
-				<label className="label">{label}</label>
-				<input data-size={size} className="small-text-input field-input" {...register(name, registerOptions ?? {})} defaultValue={defaultValue}></input>
-			</div>
+			<FieldInputElement
+				label={label}
+				name={name}
+				fieldSize={size}
+				register={register}
+				registerOptions={registerOptions ?? {}}
+				startValue={defaultValue}
+			/>
 			{errorVisible ? 
 				<div className="error-message">
 					<img className="warning-image" src={Error}/>
