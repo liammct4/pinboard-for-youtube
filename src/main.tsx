@@ -15,6 +15,10 @@ import VideosPage from "./routes/Videos/VideosPage.tsx"
 import MenuPage from "./routes/Menu/MenuPage.tsx"
 import OptionsPage from "./routes/Menu/Options/OptionsPage.tsx"
 import HelpPage from "./routes/Menu/Help/HelpPage.tsx"
+import { GeneralPage } from "./routes/Menu/Options/General/GeneralPage.tsx"
+import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.tsx"
+import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
+import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -55,7 +59,12 @@ async function setupState() {
 					<Route path="/*" element={<HomePage/>}>
 						<Route path="videos" element={<VideosPage/>}/>
 						<Route path="menu" element={<MenuPage/>}>
-							<Route path="options" element={<OptionsPage/>}/>
+							<Route path="options/*" element={<OptionsPage/>}>
+								<Route path="general" element={<GeneralPage/>}/>
+								<Route path="accounts" element={<AccountsPage/>}/>
+								<Route path="appearance/*" element={<AppearancePage/>}/>
+								<Route path="*" element={<OptionsNavigator/>}/>
+							</Route>
 							<Route path="help" element={<HelpPage/>}/>				
 						</Route>
 						<Route path="*" element={<Navigate to="/videos" replace/>}/>

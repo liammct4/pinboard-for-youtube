@@ -3,9 +3,52 @@
 	grid-template-columns: 1fr auto;
 	grid-template-rows: auto auto 1fr;
 
-	.title-heading {
+	.path-links {
+		display: flex;
+		flex-direction: row;
+		font-weight: bold;
 		margin: 0;
+		padding-left: 0;
 		font-size: var(--pfy-font-heading-medium);
+		list-style-type: none;
+		align-items: center;
+	
+		.path-item {
+			padding: 0;
+			display: flex;
+			align-items: center;
+			height: 100%;
+		
+			/* The slash separators between each link. */
+			&::after {
+				content: "/";
+				font-weight: normal;
+				color: var(--pfy-primary-dark);
+				margin-left: var(--pfy-spacing-standard-compact);
+				margin-right: var(--pfy-spacing-standard-compact);
+			}
+
+			&:last-child::after {
+				content: "";
+			}
+			
+			.current-link {
+				margin: 0;
+				font-size: var(--pfy-font-heading-small);
+				padding-top: var(--pfy-spacing-standard-compact);
+				padding-bottom: var(--pfy-spacing-standard-compact);
+				padding-left: var(--pfy-spacing-standard);
+				padding-right: var(--pfy-spacing-standard);
+				color: var(--pfy-text-light);
+			}
+			
+			.path-history {
+				font-size: var(--pfy-font-heading-small);
+				font-weight: bold;
+				height: 100%;
+				color: var(--pfy-text-light);
+			}
+		}
 	}
 	
 	.bold-separator {

@@ -28,6 +28,7 @@
 		border: 1px solid var(--pfy-primary-dark);
 		border-radius: var(--pfy-spacing-standard-compact);
 		box-shadow: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+		font-family: var(--pfy-font-scheme-standard);
 		background: var(--pfy-shade-06);
 		color: var(--pfy-text-light);
 		font-weight: bold;
@@ -83,6 +84,24 @@
 
 		&:focus {
 			outline: 1px solid var(--pfy-primary-ultradark);
+		}
+	}
+
+	/* A button with no strong outline or background, useful for links. */
+	.button-subtle {
+		background: none;
+		padding-left: var(--pfy-spacing-standard);
+		padding-right: var(--pfy-spacing-standard);
+		padding-top: var(--pfy-spacing-standard-compact);
+		padding-bottom: var(--pfy-spacing-standard-compact);
+		border-radius: var(--pfy-spacing-standard-compact);
+		font-family: var(--pfy-font-scheme-standard);
+		outline: 0;
+		border: 0;
+		transition: background var(--pfy-timing-very-long);
+
+		&:hover {
+			background: var(--pfy-empty-02-normal);
 		}
 	}
 

@@ -52,6 +52,7 @@
 	--pfy-timing-fast: 200ms;
 	--pfy-timing-normal: 240ms;
 	--pfy-timing-long: 340ms;
+	--pfy-timing-very-long: 630ms;
 
 	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
 
