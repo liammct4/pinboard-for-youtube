@@ -15,8 +15,8 @@ import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "../../app/store.ts";
 import { SubmitHandler } from "react-hook-form";
+import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import "./../../styles/dialog.css"
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;

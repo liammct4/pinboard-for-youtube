@@ -1,14 +1,12 @@
-import { getNestedStorageData } from "../storage";
+import { AppTheme } from "../../config/theming/colourTheme";
+import { IStorage } from "../storage";
 
-// TODO: Add config options.
-export interface IConfig { }
+export interface IConfig {
+	theme: AppTheme
+}
 
 export async function getUserConfig(): Promise<IConfig> {
-	let config: IConfig = await getNestedStorageData("user_data/config");
+	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-	if (config == undefined) {
-		throw new Error("Invalid operation, the user config data does not exist.");
-	}
-
-	return config;
+	return storage.user_data.config;
 }

@@ -22,6 +22,9 @@ import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { swapAppTheme } from "./lib/browser/extension/theme.ts"
+import { getCurrentTheme } from "./lib/storage/config/theme/theme.ts"
+import { setCurrentTheme } from "./features/theme/themeSlice.ts"
 
 async function setupState() {
 	await ensureInitialized();
@@ -73,6 +76,9 @@ async function setupState() {
 			</Provider>
 		</React.StrictMode>
 	);
+	
+	// Retrieve the current theme from storage since it cannot be loaded in initial state.
+	store.dispatch(setCurrentTheme(await getCurrentTheme()));
 }
 
 await setupState();

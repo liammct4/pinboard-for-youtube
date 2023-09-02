@@ -1,10 +1,9 @@
 :root {
-	/* Colour Scheme */
+	/* Colour Scheme, only set as fallback scheme. */
 	--pfy-primary-common: rgb(255, 30, 74);
 	--pfy-primary-faded: rgb(255, 135, 135);
 	--pfy-primary-dark: rgb(197, 36, 56);
 	--pfy-primary-ultradark: rgb(146, 26, 40);
-	--pfy-accent: rgb(36, 125, 197);
 	--pfy-empty-01-normal: rgb(247, 228, 224);
 	--pfy-empty-01-raised: rgb(253, 233, 229);
 	--pfy-empty-01-depth: rgb(244, 225, 222);
@@ -17,16 +16,27 @@
 	--pfy-text-normal: rgb(47, 47, 47);
 	--pfy-text-light: rgb(68, 68, 68);
 	--pfy-text-lighter: rgb(88, 88, 88);
+	/* Dependent on the current theme. */
 	--pfy-shade-01: rgb(40, 40, 40);
 	--pfy-shade-02: rgb(107, 107, 107);
 	--pfy-shade-03: rgb(136, 136, 136);
 	--pfy-shade-04: rgb(189, 189, 189);
 	--pfy-shade-05: rgb(230, 230, 230);
 	--pfy-shade-06: rgb(250, 250, 250);
+	/* These are dark no matter what theme is selected. */
+	--pfy-shade-dark-01: rgb(20, 20, 20);
+	--pfy-shade-dark-02: rgb(43, 43, 43);
+	--pfy-shade-dark-03: rgb(65, 65, 65);
+	/* These are light no matter what theme is selected. */
+	--pfy-shade-light-01: rgb(250, 250, 250);
+	--pfy-shade-light-02: rgb(232, 232, 232);
+	--pfy-shade-light-03: rgb(210, 210, 210);
 
 	/* Other theming options */
 	--pfy-main-font: "Open Sans";
 	--pfy-fallback-font: sans-serif;
+	--pfy-box-shadow-standard: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+
 	/* Never use the main or fallback fonts individually, always use the font collection below. */
 	--pfy-font-scheme-standard: var(--pfy-main-font), var(--pfy-fallback-font);
 
@@ -40,11 +50,13 @@
 
 	/* Element Sizes */
 	--pfy-element-button-size-regular: 16px;
+	--pfy-element-button-size-large: 26px;
 
 	/* Whitespace, margins or padding. */
 	--pfy-spacing-standard: 6px;
 	--pfy-spacing-standard-compact: 3px;
 	--pfy-spacing-large: 9px;
+	--pfy-spacing-very-large: 12px;
 	--pfy-spanning-scroll-element: 12px;
 
 	/* Animations */

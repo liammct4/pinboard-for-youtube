@@ -1,14 +1,12 @@
 import * as userData from "./userData.ts"
-import { Video, Timestamp, generateTimestamp } from "../../video/video.ts";
-import { sampleVideoData } from "../../../../testData/testDataSet.ts"
-import { IStorage, ensureInitialized } from "../storage.ts";
+import { Video, generateTimestamp } from "../../video/video.ts";
+import { sampleConfigData, sampleVideoData } from "../../../../testData/testDataSet.ts"
+import { IStorage } from "../storage.ts";
 
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: {
-
-		}
+		config: sampleConfigData
 	},
 	temp_state: {
 		expandedVideos: []
@@ -155,20 +153,6 @@ describe("Modifying user data in local storage.", () => {
 
 			expect(await userData.getVideoFromVideoID(existingVideoID)).toEqual(newVideo);
 			expect(await userData.getIndexOfVideo(existingVideoID)).toEqual(0);
-		});
-		it("throws an error when invalid data is provied.", async () => {
-			await prepareStorage();
-
-			let invalidVideo: any = {
-				"videoID": "y9n6HkftavM",
-				"timestamps": [
-					{ "time": "Important point!", "message": 10 }
-				]
-			};
-
-			await expect(async () => await userData.pushVideo(invalidVideo))
-				.rejects
-				.toThrowError(Error);
 		});
 	});
 	describe("Adding a set of videos 'pushVideoBatch()'.", () => {

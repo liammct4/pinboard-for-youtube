@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-// @ts-ignore comment
+// @ts-ignore
 import StorageArea from 'mem-storage-area/StorageArea'
 import { Video } from "../../lib/video/video.ts";
 
@@ -10,7 +10,7 @@ export interface IVideoSlice {
 
 // Runs if in dev build.
 if (chrome.storage == undefined) {
-	// @ts-ignore comment
+	// @ts-ignore This runs first.
 	chrome.storage = {
 		local: new StorageArea()
 	}

@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import Cross from "./../../../assets/symbols/cross.svg"
-import "./../../styles/dialog.css"
+import "./../../styling/dialog.css"
 
 export interface IDialogBoxProperties {
 	title: string;

@@ -2,7 +2,7 @@ import { createContext, Context } from "react"
 import { Video } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 
-export type VideoContext = {
+export interface IVideoContext {
 	activeVideoID: string | undefined,
 	videos: Array<Video>,
 	openVideos: Array<string>,
@@ -16,5 +16,5 @@ export type VideoContext = {
 	}
 }
 
-export const VideoListContext: Context<VideoContext> = createContext<VideoContext>(null!);
+export const VideoListContext: Context<IVideoContext> = createContext<IVideoContext>(null!);
 export const VideoContext: Context<Video> = createContext<Video>(null!);

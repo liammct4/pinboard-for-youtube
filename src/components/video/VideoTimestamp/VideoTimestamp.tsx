@@ -11,7 +11,7 @@ import { FormDialog } from "../../dialogs/FormDialog.tsx";
 import Bin from "src/../assets/icons/bin.svg"
 import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
 import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
-import "src/styles/dialog.css"
+import "src/styling/dialog.css"
 import "./VideoTimestamp.css"
 
 interface IEditTimestampForm extends IErrorFieldValues {

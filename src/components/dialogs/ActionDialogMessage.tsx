@@ -1,6 +1,6 @@
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import Cross from "./../../../assets/symbols/cross.svg"
-import "./../../styles/dialog.css"
+import "./../../styling/dialog.css"
 
 export type DialogClosedHandler = (result: string) => void;
 

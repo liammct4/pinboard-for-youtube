@@ -1,74 +1,5 @@
-import { validate } from "jsonschema"
 import { Video } from "../../video/video"
 import { getNestedStorageData } from "../storage"
-
-export interface IVideoJsonSchema {
-	type: string,
-	properties: {
-		videoID: {
-			type: string
-		},
-		timestamps: {
-			type: string,
-			items: {
-				type: string,
-				properties: {
-					id: {
-						type: string
-					},
-					time: {
-						type: string
-					},
-					message: {
-						type: string
-					}
-				},
-				required: Array<string>
-			}
-		}
-	},
-	required: Array<string>	
-}
-
-export interface IVideoArrayJsonSchema {
-	$schema: string,
-	type: string,
-	items: IVideoJsonSchema
-}
-
-export var VIDEO_JSON_SCHEMA: IVideoJsonSchema = {
-	"type": "object",
-	"properties": {
-		"videoID": {
-			"type": "string"
-		},
-		"timestamps": {
-			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"time": {
-						"type": "integer"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [ "id", "time", "message" ]
-			}
-		}
-	},
-	"required": [ "videoID", "timestamps" ]
-}
-
-export var VIDEO_ARRAY_JSON_SCHEMA: IVideoArrayJsonSchema = {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"type": "array",
-	"items": VIDEO_JSON_SCHEMA
-}
 
 export async function getStoredVideos(): Promise<Array<Video>> {
 	let videos: Array<Video> = await getNestedStorageData("user_data/videos");
@@ -136,10 +67,6 @@ export async function clearStoredVideos() {
 export async function pushVideoBatch(newVideos: Array<Video>): Promise<void> {
 	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
 
-	if (!validate(newVideos, VIDEO_ARRAY_JSON_SCHEMA).valid) {
-		throw new Error("Invalid argument provided, newVideos was in an invalid format.");
-	}
-
 	// Replace any existing videos with new ones in the argument "newVideos".
 	for (let i: number = 0; i < storageVideos.length; i++) {
 		let video: Video = storageVideos[i];
@@ -159,18 +86,10 @@ export async function pushVideoBatch(newVideos: Array<Video>): Promise<void> {
 }
 
 export async function pushVideo(video: Video): Promise<void> {
-	if (!validate(video, VIDEO_JSON_SCHEMA).valid) {
-		throw new Error("Invalid argument provided, attempted to add a video which was not in the correct format.");
-	}
-
 	await pushVideoBatch([ video ]);
 }
 
 export async function insertVideoBatch(index: number, videos: Array<Video>): Promise<void> {
-	if (!validate(videos, VIDEO_ARRAY_JSON_SCHEMA).valid) {
-		throw new Error("Invalid argument provided, attempted to insert a set of videos which were not in the correct format.");
-	}
-
 	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
 
 	if (index == undefined || index < 0 || index > storageVideos.length) {
@@ -184,10 +103,6 @@ export async function insertVideoBatch(index: number, videos: Array<Video>): Pro
 
 
 export async function insertVideo(index: number, video: Video): Promise<void> {
-	if (!validate(video, VIDEO_JSON_SCHEMA).valid) {
-		throw new Error("Invalid argument provided, attempted to insert a video which was not in the correct format.");
-	}
-
 	await insertVideoBatch(index, [ video ]);
 }
 

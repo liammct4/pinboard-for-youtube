@@ -1,8 +1,11 @@
 /* To prevent any styling conflicts, all provided styles have to be within a pfy-style-context class. */
 
-.pfy-style-context {
+.pfy-style-context * {
 	font-family: var(--pfy-font-scheme-standard);
+	transition: background var(--pfy-timing-fast);
+}
 
+.pfy-style-context {
 	.regular-separator {
 		width: 100%;
 		border-left: 0;
@@ -27,7 +30,7 @@
 		padding-right: var(--pfy-spacing-large);
 		border: 1px solid var(--pfy-primary-dark);
 		border-radius: var(--pfy-spacing-standard-compact);
-		box-shadow: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+		box-shadow: var(--pfy-box-shadow-standard);
 		font-family: var(--pfy-font-scheme-standard);
 		background: var(--pfy-shade-06);
 		color: var(--pfy-text-light);
@@ -110,8 +113,8 @@
 		padding: 0;
 		padding-left: var(--pfy-spacing-standard-compact);
 		padding-right: var(--pfy-spacing-standard-compact);
-		background: var(--pfy-shade-06);
-		color: var(--pfy-text-lighter);
+		background: var(--pfy-shade-light-02);
+		color: var(--pfy-shade-dark-02);
 		height: var(--pfy-element-button-size-regular);
 		outline: 0;
 		border: 1px solid var(--pfy-primary-ultradark);

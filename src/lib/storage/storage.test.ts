@@ -1,12 +1,10 @@
-import { sampleVideoData } from "../../../testData/testDataSet";
+import { sampleConfigData, sampleVideoData } from "../../../testData/testDataSet";
 import { IStorage, ensureInitialized } from "./storage";
 
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: {
-
-		}
+		config: sampleConfigData
 	},
 	temp_state: {
 		expandedVideos: []
@@ -36,7 +34,7 @@ describe("Local storage operations.", () => {
 			user_data: {
 				videos: [],
 				config: {
-
+					theme: sampleConfigData.theme
 				}
 			},
 			temp_state: {

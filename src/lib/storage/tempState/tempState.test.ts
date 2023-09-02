@@ -1,13 +1,11 @@
-import { sampleVideoData } from "../../../../testData/testDataSet";
+import { sampleConfigData, sampleVideoData } from "../../../../testData/testDataSet";
 import { IStorage } from "../storage";
 import { addExpandedID, getExpandedVideos, removeExpandedID } from "./tempState";
 
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: {
-
-		}
+		config: sampleConfigData
 	},
 	temp_state: {
 		expandedVideos: ["ERYG3NE1DO8", "ZjVAsJOl8SM", "AKeUssuu3Is"]
