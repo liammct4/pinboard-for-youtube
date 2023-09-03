@@ -1,3 +1,4 @@
+import { AppTheme } from "../config/theming/colourTheme";
 import { Timestamp } from "../video/video";
 
 export interface IVideoInfo {
@@ -38,5 +39,15 @@ export function setCurrentVideoTime(seconds: number): void {
 export function setTimestampButtons(timestamps: Array<Timestamp>): void {
 	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
 		chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_set_timestamp_buttons", data: timestamps });
-	})
+	});
+}
+
+/**
+ * Changes the theme of the timeline buttons on the currently playing video.
+ * @param theme The theme to change to.
+ */
+export function changeYouTubeTimestampTheme(theme: AppTheme): void {
+	chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
+		chrome.tabs.sendMessage(currentTab.id!, { type: "pfy_change_theme", data: theme });
+	});
 }

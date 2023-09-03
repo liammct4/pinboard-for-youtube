@@ -3,6 +3,7 @@
 // ----------------------------------
 
 var init = false;
+var timelineOuterContainer = null;
 var timelineContainer = null;
 var mainVideo = null;
 var tabID = null;
@@ -67,7 +68,45 @@ class TimestampTimelineButton extends HTMLElement {
 				<button class="timestamp-box-inner">
 					<p class="timestamp-inner-text"></p>
 				</button>
-				<img class="timestamp-pointer-arrow" src="${chrome.runtime.getURL('arrow_down_timeline.svg')}">
+
+				<svg
+					class="timestamp-pointer-arrow"
+					width="8"
+					height="6"
+					viewBox="0 0 2.1166667 1.5874999"
+					version="1.1"
+					id="svg5"
+					inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+					sodipodi:docname="arrow_down_timeline.svg"
+					xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+					xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+					xmlns="http://www.w3.org/2000/svg"
+					xmlns:svg="http://www.w3.org/2000/svg">
+						<sodipodi:namedview
+						id="namedview7"
+						pagecolor="#505050"
+						bordercolor="#eeeeee"
+						borderopacity="1"
+						showgrid="false"
+						units="px"/>
+						<defs
+						id="defs2" />
+						<g
+							id="layer1">
+							<path
+								class="arrow-fill"
+								id="rect2294"
+								style="fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+								d="M 0,0.26467518 V 0 h 2.1166666 l 1e-7,0.26467518 -1.0583333,1.32291662 z"
+								sodipodi:nodetypes="cccccc" />
+							<path
+								class="arrow-border"
+								style="fill:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+								d="M 0,0.26467518 1.0583334,1.5875918 2.1166667,0.26467518"
+								id="path1006"
+								sodipodi:nodetypes="ccc" />
+						</g>
+				</svg>
 			</div>
 		`;
 
@@ -279,6 +318,12 @@ function getActiveInfo() {
 	};
 }
 
+function changeTheme(theme) {
+	Object.keys(theme.palette).forEach(key => {
+		timelineContainer.style.setProperty(`--pfy-${key}`, theme.palette[key]);
+	});
+}
+
 async function initialize() {
 	init = true;
 	let progressBar = document.querySelector(".ytp-chrome-bottom");
@@ -288,7 +333,7 @@ async function initialize() {
 		return;
 	}
 
-	let timelineOuterContainer = document.createElement("div");
+	timelineOuterContainer = document.createElement("div");
 	timelineOuterContainer.classList.add("pfy-timeline-container");
 	timelineOuterContainer.classList.add("pfy-style-context");
 
@@ -309,9 +354,9 @@ async function initialize() {
 				width: 40px;
 				height: 22px;
 				padding: 0;
-				background: var(--subtle-background);
-				border: 1px solid var(--dark-accent);
-				border-radius: 6px;
+				background: var(--pfy-empty-01-raised);
+				border: 1px solid var(--pfy-primary-dark);
+				border-radius: var(--pfy-spacing-standard);
 				flex-grow: 1;
 				cursor: pointer;
 				position: absolute;
@@ -353,11 +398,19 @@ async function initialize() {
 				transform: translate(0px, -95.5px);
 			}
 
+			.arrow-fill {
+				fill: var(--pfy-empty-01-raised)
+			}
+
+			.arrow-border {
+				stroke: var(--pfy-primary-dark);
+			}
+
 			.timestamp-inner-text {
 				text-align: center;
 				text-wrap: nowrap;
-				font-size: 9pt;
-				color: var(--dark-accent);
+				font-size: var(--pfy-font-text-standard);
+				color: var(--pfy-text-normal);
 				overflow: hidden;
 				margin: auto 0;
 				margin-top: 1px;
@@ -376,14 +429,23 @@ async function initialize() {
 	progressBar.appendChild(timelineOuterContainer);
 	timelineContainer = timelineOuterContainer.querySelector(".pfy-timeline-inner");
 	
-	let videos = (await chrome.storage.local.get("user_data"))?.user_data?.videos;
+	// Fetch videos from storage.
+	let userData = (await chrome.storage.local.get("user_data")).user_data;
+	let videos = userData?.videos;
 
 	if (videos != undefined) {
 		let video = videos.find(x => x.videoID == currentVideoID);
 		setTimelineTimestamps(video.timestamps);
 	}
-	
+
 	videoTimelineSizeObserver.observe(timelineContainer);
+
+	// Fetch current theme from storage.
+	let currentTheme = userData?.config?.theme;
+
+	if (currentTheme != undefined) {
+		changeTheme(currentTheme);
+	}
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
@@ -393,6 +455,9 @@ chrome.runtime.onMessage.addListener(async (request, _sender, response) => {
 			break;
 		case "pfy_set_timestamp_buttons":
 			response(setTimelineTimestamps(request.data));
+			break;
+		case "pfy_change_theme":
+			response(changeTheme(request.data));
 			break;
 	}
 });
