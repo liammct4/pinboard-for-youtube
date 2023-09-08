@@ -6,6 +6,7 @@ import { DropdownOptionsContext } from "../../../../../components/input/Dropdown
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { AppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
 import { InputMethodType } from "../../../../../lib/config/configurationOption";
+import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import FormDialog from "../../../../../components/dialogs/FormDialog";
 import SplitHeading from "../../../../../components/presentation/SplitHeading/SplitHeading";
@@ -22,28 +23,30 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 	const navigate = useNavigate();
 
 	return (
-		<div className="theme-row">
-			<button
-				className="select-button"
-				onClick={() => setCurrentTheme(theme)}
-				data-selected={currentTheme.name == theme.name ? "" : null}>
-				<h3 className="name">{theme.name}</h3>
-				<div className="preview-grid">
-					<div style={{ background: theme.palette["primary-common"] }}/>
-					<div style={{ background: theme.palette["primary-ultradark"] }}/>
-					<div style={{ background: theme.palette["empty-02-raised"] }}/>
-					<div style={{ background: theme.palette["empty-01-normal"] }}/>
-				</div>
-			</button>
-			{ theme.modifiable ?
-			<div className="modify-buttons">
-				<button className="square-button button-small" onClick={() => deleteCustomTheme(theme.name)}>
-					<img src={DeleteIcon}/>
+		<Reorder.Item value={theme}>
+			<div className="theme-row">
+				<button
+					className="select-button"
+					onClick={() => setCurrentTheme(theme)}
+					data-selected={currentTheme.name == theme.name ? "" : null}>
+					<h3 className="name">{theme.name}</h3>
+					<div className="preview-grid">
+						<div style={{ background: theme.palette["primary-common"] }}/>
+						<div style={{ background: theme.palette["primary-ultradark"] }}/>
+						<div style={{ background: theme.palette["empty-02-raised"] }}/>
+						<div style={{ background: theme.palette["empty-01-normal"] }}/>
+					</div>
 				</button>
-				<button className="button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
+				{ theme.modifiable ?
+				<div className="modify-buttons">
+					<button className="square-button button-small" onClick={() => deleteCustomTheme(theme.name)}>
+						<img src={DeleteIcon}/>
+					</button>
+					<button className="button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
+				</div>
+				: <></>}
 			</div>
-			: <></>}
-		</div>
+		</Reorder.Item>
 	);
 }
 
@@ -69,12 +72,15 @@ export function AppearancePresets(): React.ReactNode {
 		addCustomTheme(newTheme);
 	}
 	let { register, handleSubmit, handler, submit } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
+	const onReorder = (newCustomThemes: Array<AppTheme>) => {
+		setCustomThemes(newCustomThemes);
+	};
 
 	return (
 		<>
-			<ul className="theme-list">
+			<Reorder.Group className="theme-list" values={themes} onReorder={() => null}>
 				{themes.map(x => <li key={x.name}><ThemePreset theme={x}/></li>)}
-			</ul>
+			</Reorder.Group>
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>
 			<div className="custom-theme-controls">
@@ -141,9 +147,9 @@ export function AppearancePresets(): React.ReactNode {
 			</div>
 			<hr className="regular-separator"/>
 			{customThemes.length != 0 ?
-			<ul className="theme-list">
-				{customThemes.map(x => <li key={x.name}><ThemePreset theme={x}/></li>)}
-			</ul>
+			<Reorder.Group layoutScroll className="theme-list" values={customThemes} onReorder={onReorder}>
+				{customThemes.map(x => <ThemePreset key={x.name} theme={x}/>)}
+			</Reorder.Group>
 			: <span className="empty-theme-list-text">Nothing to display...</span>}
 		</>
 	);
