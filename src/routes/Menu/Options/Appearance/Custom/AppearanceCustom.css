@@ -1,7 +1,17 @@
 .custom-page-outer {
-	.theme-title {
-		margin: 0;
-		font-size: var(--pfy-font-heading-tiny);
+	.title-bar {
+		display: flex;
+		flex-direction: row;
+		gap: var(--pfy-spacing-standard);
+
+		.arrow-icon {
+			transform: rotate(90deg);	
+		}
+
+		.theme-title {
+			margin: 0;
+			font-size: var(--pfy-font-heading-tiny);
+		}
 	}
 
 	.edit-theme-form {
@@ -16,5 +26,28 @@
 		text-align: center;
 		color: var(--pfy-text-lighter);
 		margin-top: var(--pfy-spacing-very-large);
+	}
+
+	.save-changes-bar {
+		display: flex;
+		flex-direction: row;
+		gap: var(--pfy-spacing-large);
+		
+		.confirmation-text {
+			font-size: var(--pfy-font-text-standard);
+			height: var(--pfy-element-button-size-regular);
+			color: var(--pfy-primary-common);
+			animation: fadeOut 1100ms ease-in;
+			animation-delay: 5s;
+		}
+	}
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
 	}
 }

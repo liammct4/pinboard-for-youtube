@@ -15,7 +15,7 @@ import "./AppearancePresets.css"
 
 interface IThemePresetProperties {
 	theme: AppTheme;
-} 
+}
 
 function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 	const { currentTheme, actions: { setCurrentTheme, deleteCustomTheme } } = useContext(ThemeContext);
@@ -68,7 +68,7 @@ export function AppearancePresets(): React.ReactNode {
 		
 		addCustomTheme(newTheme);
 	}
-	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
+	let { register, handleSubmit, handler, submit } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
 
 	return (
 		<>

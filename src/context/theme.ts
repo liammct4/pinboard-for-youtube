@@ -8,7 +8,7 @@ export interface IThemeContext {
 	actions: {
 		setCurrentTheme: (theme: AppTheme) => void;
 		addCustomTheme: (theme: AppTheme) => void;
-		deleteCustomTheme: (theme: string) => void;
+		deleteCustomTheme: (themeName: string) => void;
 		setCustomThemes: (themes: Array<AppTheme>) => void;
 	}
 }
