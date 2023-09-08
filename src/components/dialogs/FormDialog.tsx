@@ -8,7 +8,7 @@ export interface IFormDialogProperties {
 	formTitle: string;
 	submitText: string;
 	labelSize: SizeOption;
-	description?: string;
+	description?: React.ReactNode;
 	trigger: React.ReactNode;
 	children: React.ReactNode
 	handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void

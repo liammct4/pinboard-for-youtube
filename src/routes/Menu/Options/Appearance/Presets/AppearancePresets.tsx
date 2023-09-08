@@ -81,7 +81,7 @@ export function AppearancePresets(): React.ReactNode {
 				<FormDialog
 					formID="add-custom-theme-form"
 					formTitle="Add Custom Theme"
-					description="Choose a name for your custom theme. This <b>Cannot</b> already exist or be a default theme."
+					description={<>Choose a name for your custom theme. This <b>Cannot</b> already exist or be a default theme.</>}
 					trigger={<button className="button-small">New theme</button>}
 					labelSize="medium"
 					submitText="Add"

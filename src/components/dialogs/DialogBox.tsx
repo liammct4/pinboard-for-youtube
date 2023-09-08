@@ -5,7 +5,7 @@ import "./../../styling/dialog.css"
 export interface IDialogBoxProperties {
 	title: string;
 	trigger: React.ReactNode;
-	description?: string;
+	description?: React.ReactNode;
 	footer: React.ReactNode
 	children: React.ReactNode;
 }
