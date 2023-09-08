@@ -1,11 +1,13 @@
-import { createListenerMiddleware } from "@reduxjs/toolkit";
-import { setCurrentTheme } from "./themeSlice.ts";
-import { setStorageTheme } from "../../lib/storage/config/theme/theme.ts";
+import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
+import { addCustomTheme, deleteCustomTheme, setCurrentTheme, setCustomThemes } from "./themeSlice.ts";
+import { setStorageCustomThemes, setStorageTheme } from "../../lib/storage/config/theme/theme.ts";
 import { swapAppTheme as changeAppTheme } from "../../lib/browser/extension/theme.ts";
 import { changeYouTubeTimestampTheme } from "../../lib/browser/youtube.ts";
+import { RootState } from "../../app/store.ts";
 
 const updateThemeMiddleware = createListenerMiddleware();
 const updateStorageMiddleware = createListenerMiddleware();
+const updateCustomThemeStorageMiddleware = createListenerMiddleware();
 
 updateThemeMiddleware.startListening({
 	actionCreator: setCurrentTheme,
@@ -24,4 +26,13 @@ updateStorageMiddleware.startListening({
 	}
 });
 
-export default { updateThemeMiddleware, updateStorageMiddleware };
+updateCustomThemeStorageMiddleware.startListening({
+	matcher: isAnyOf(addCustomTheme, deleteCustomTheme, setCustomThemes),
+	effect: (_action, listenerApi) => {
+		let state = listenerApi.getState() as RootState;
+
+		setStorageCustomThemes(state.theme.customThemes);
+	}
+});
+
+export default { updateThemeMiddleware, updateStorageMiddleware, updateCustomThemeStorageMiddleware };

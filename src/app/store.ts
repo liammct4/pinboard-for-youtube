@@ -21,6 +21,7 @@ export let store = configureStore({
 		.prepend(tempStateMiddleware.removeIDMiddleware.middleware)
 		.prepend(themeMiddleware.updateThemeMiddleware.middleware)
 		.prepend(themeMiddleware.updateStorageMiddleware.middleware)
+		.prepend(themeMiddleware.updateCustomThemeStorageMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;
