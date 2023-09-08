@@ -55,7 +55,8 @@ export async function ensureInitialized(): Promise<void> {
 		user_data: {
 			videos: [],
 			config: {
-				theme: theme
+				theme: theme,
+				customThemes: []
 			},
 		},
 		temp_state: {

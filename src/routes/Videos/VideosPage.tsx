@@ -115,13 +115,14 @@ export function VideosPage(): React.ReactNode {
 				<FormDialog
 					formID="add-video-form"
 					formTitle="Add video"
+					labelSize="small"
 					submitText="Add"
 					trigger={<button className="button-small">Add video</button>}
 					handleSubmit={handleSubmit(handler)}>
 						<FormField<IAddVideoForm> register={register}
 							label="Link:"
 							name="link"
-							size="max"
+							fieldSize="max"
 							submitEvent={submit.current}
 							validationMethod={validateVideo}
 							selector={(data: IAddVideoForm) => data.link}/>

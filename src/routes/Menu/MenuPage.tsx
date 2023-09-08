@@ -7,12 +7,12 @@ export function MenuPage(): React.ReactNode {
 	const navigate = useNavigate();
 	const location = useLocation();
 	
-	const currentPath: Array<string> = location.pathname.split("/");
+	const currentPath: Array<string> = decodeURI(location.pathname).split("/");
 	// Remove everything before options page.
 	currentPath.splice(0, 2);
 
 	return (
-		<div className="menu-outer">
+		<div className="menu-outer scrollbar-small">
 			<ul className="path-links">
 				{currentPath.map(x =>
 					<li className="path-item" key={x}>
@@ -21,9 +21,10 @@ export function MenuPage(): React.ReactNode {
 								<span className="current-link">{toTitleCase(x)}</span>
 							:
 								<button className="button-subtle path-history" onClick={() => {
-									let fullPath: string = currentPath
+									let fullPath: string = encodeURI(currentPath
 										.slice(0, currentPath.indexOf(x) + 1)
 										.join("/")
+									);
 									navigate(fullPath)
 								}}>
 									<span>{toTitleCase(x)}</span>

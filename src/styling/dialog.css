@@ -55,7 +55,7 @@
 
 	.bottom-footer {
 		display: flex;
-		gap: var(--pfy-spacing-standard-compact);
+		gap: var(--pfy-spacing-standard);
 		justify-content: end;
 		padding: var(--pfy-spacing-standard);
 		background: var(--pfy-empty-02-normal);

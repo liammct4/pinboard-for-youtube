@@ -1,4 +1,4 @@
-import { AppTheme } from "../../config/theming/colourTheme";
+import { AppTheme } from "../../config/theming/appTheme";
 
 /**
  * Sets the current active app theme according to the provided palette.

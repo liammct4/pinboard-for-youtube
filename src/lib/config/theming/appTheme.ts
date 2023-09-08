@@ -1,6 +1,7 @@
 export type AppTheme = {
 	name: string;
 	palette: ColourPalette;
+	modifiable: boolean;
 }
 
 export type ColourPalette = {

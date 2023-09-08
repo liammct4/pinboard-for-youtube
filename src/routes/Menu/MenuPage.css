@@ -2,6 +2,7 @@
 	display: grid;
 	grid-template-columns: 1fr auto;
 	grid-template-rows: auto auto 1fr;
+	column-gap: var(--pfy-spacing-standard);
 
 	.path-links {
 		display: flex;
@@ -12,12 +13,14 @@
 		font-size: var(--pfy-font-heading-medium);
 		list-style-type: none;
 		align-items: center;
+		overflow-x: auto;
 	
 		.path-item {
 			padding: 0;
 			display: flex;
 			align-items: center;
 			height: 100%;
+			white-space: nowrap;
 		
 			/* The slash separators between each link. */
 			&::after {

@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Path, RegisterOptions, UseFormRegister } from "react-hook-form";
 import { MultiEvent } from "../../../lib/events/Event"
-import Error from "./../../../../assets/icons/error.svg"
-import Cross from "./../../../../assets/symbols/cross.svg"
+import { SizeOption } from "../../input/formStyleContext";
 import { FormValidator, IErrorFieldValues } from "../validated-form";
-import "./FormField.css"
 import { InputMethodType } from "../../../lib/config/configurationOption";
 import { getInputComponent } from "../../input/componentLocator";
+import Error from "./../../../../assets/icons/error.svg"
+import Cross from "./../../../../assets/symbols/cross.svg"
+import "./FormField.css"
 
 interface IFormFieldProperties<TFormType extends IErrorFieldValues> {
 	register: UseFormRegister<TFormType>;
 	registerOptions?: RegisterOptions<TFormType> | null;
 	label: string;
 	name: Path<TFormType>;
-	size: "small" | "medium" | "large" | "max";
+	fieldSize: SizeOption;
 	inputType?: InputMethodType;
 	validationMethod?: FormValidator;
 	submitEvent: MultiEvent<TFormType>;
@@ -21,7 +22,18 @@ interface IFormFieldProperties<TFormType extends IErrorFieldValues> {
 	defaultValue?: string;
 }
 
-export function FormField<T extends IErrorFieldValues>({ register, label, name, registerOptions, size, validationMethod = () => null, submitEvent, selector, inputType = InputMethodType.Text, defaultValue = "" }: IFormFieldProperties<T>): React.ReactNode {
+export function FormField<T extends IErrorFieldValues>({
+		register,
+		label,
+		name,
+		registerOptions,
+		fieldSize,
+		validationMethod = () => null,
+		submitEvent,
+		selector,
+		inputType = InputMethodType.Text,
+		defaultValue = ""
+	}: IFormFieldProperties<T>): React.ReactNode {
 	let [error, setError] = useState<string | null>();
 	let [errorVisible, setErrorVisible] = useState<boolean>();
 
@@ -48,7 +60,7 @@ export function FormField<T extends IErrorFieldValues>({ register, label, name, 
 			<FieldInputElement
 				label={label}
 				name={name}
-				fieldSize={size}
+				fieldSize={fieldSize}
 				register={register}
 				registerOptions={registerOptions ?? {}}
 				startValue={defaultValue}

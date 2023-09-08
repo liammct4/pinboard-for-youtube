@@ -11,7 +11,7 @@ export let store = configureStore({
 	reducer: {
 		video: videoReducer,
 		tempState: tempStateReducer,
-		theme: themeReducer
+		theme: themeReducer,
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()

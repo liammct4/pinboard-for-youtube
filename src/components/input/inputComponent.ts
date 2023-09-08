@@ -1,4 +1,5 @@
 import { FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-form";
+import { SizeOption } from "./formStyleContext";
 
 /**
  * All the generic properties of an input element component
@@ -7,7 +8,7 @@ import { FieldValues, Path, RegisterOptions, UseFormRegister } from "react-hook-
 export interface IInputComponentProperties<T extends FieldValues> {
 	label: string;
 	name: Path<T>;
-	fieldSize: string;
+	fieldSize: SizeOption;
 	register: UseFormRegister<T>;
 	registerOptions: RegisterOptions<T>;
 	startValue: string;

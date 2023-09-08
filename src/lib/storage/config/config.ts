@@ -1,8 +1,9 @@
-import { AppTheme } from "../../config/theming/colourTheme";
+import { AppTheme } from "../../config/theming/appTheme";
 import { IStorage } from "../storage";
 
 export interface IConfig {
-	theme: AppTheme
+	theme: AppTheme;
+	customThemes: Array<AppTheme>;
 }
 
 export async function getUserConfig(): Promise<IConfig> {

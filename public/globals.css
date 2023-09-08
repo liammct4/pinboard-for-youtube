@@ -36,6 +36,7 @@
 	--pfy-main-font: "Open Sans";
 	--pfy-fallback-font: sans-serif;
 	--pfy-box-shadow-standard: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+	--pfy-box-shadow-gentle-glow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
 
 	/* Never use the main or fallback fonts individually, always use the font collection below. */
 	--pfy-font-scheme-standard: var(--pfy-main-font), var(--pfy-fallback-font);
@@ -69,9 +70,12 @@
 	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
 
 	/* Forms */
-	--pfy-label-width-compact: 60px;
-	--pfy-label-width-standard: 30%;
-	--pfy-field-width-small: 80px;
+	--pfy-label-width-small: 70px;
+	--pfy-label-width-medium: 100px;
+	--pfy-label-width-large: 120px;
+	--pfy-label-width-max: 140px;
+
+	--pfy-field-width-small: 120px;
 	--pfy-field-width-medium: 180px;
 	--pfy-field-width-large: 240px;
 	--pfy-field-font-size: 8.5pt;

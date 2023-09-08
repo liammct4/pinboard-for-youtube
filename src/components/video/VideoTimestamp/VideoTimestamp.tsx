@@ -80,13 +80,14 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 					formID="edit-timestamp-form"
 					formTitle="Edit timestamp"
 					submitText="Save"
+					labelSize="small"
 					trigger={<button className="edit-button button-small">Edit</button>}
 					handleSubmit={handleSubmit(handler)}>
 						{/* Time */}
 						<FormField<IEditTimestampForm> register={register} registerOptions={null}
 							label="Time:"
 							name="time"
-							size="small"
+							fieldSize="small"
 							selector={(data) => data.time}
 							submitEvent={submit.current}
 							validationMethod={validateTimestamp}
@@ -95,7 +96,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 						<FormField<IEditTimestampForm> register={register} registerOptions={null}
 							label="Message:"
 							name="message"
-							size="large"
+							fieldSize="large"
 							selector={(data) => data.message}
 							submitEvent={submit.current}
 							defaultValue={timestamp.message}/>

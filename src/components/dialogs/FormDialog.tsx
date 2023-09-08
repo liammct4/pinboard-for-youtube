@@ -1,11 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import { DialogBox } from "./DialogBox";
+import { FormStyleContext, SizeOption } from "../input/formStyleContext";
 import "./FormDialog.css"
 
 export interface IFormDialogProperties {
 	formID: string;
 	formTitle: string;
 	submitText: string;
+	labelSize: SizeOption;
 	description?: string;
 	trigger: React.ReactNode;
 	children: React.ReactNode
@@ -21,7 +23,17 @@ export interface IFormDialogProperties {
  * @param trigger A JSX snippet containing a button, when pressed, the dialog will open.
  * @param handleSubmit Handler which is triggered when the form is submitted.
  */
-export function FormDialog({ formID, formTitle, submitText, description, trigger, handleSubmit, children }: IFormDialogProperties): React.ReactNode {
+export function FormDialog({
+		formID,
+		formTitle,
+		submitText,
+		description,
+		labelSize,
+		trigger,
+		handleSubmit,
+		children
+	}: IFormDialogProperties): React.ReactNode {
+
 	return (
 		<DialogBox
 			title={formTitle}
@@ -34,7 +46,9 @@ export function FormDialog({ formID, formTitle, submitText, description, trigger
 				</>
 			}>
 			<form className="dialog-form" id={formID} onSubmit={handleSubmit}>
-				{children}
+				<FormStyleContext.Provider value={{ labelSize: labelSize }}>
+					{children}
+				</FormStyleContext.Provider>
 			</form>
 		</DialogBox>
 	);

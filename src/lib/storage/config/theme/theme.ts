@@ -1,4 +1,4 @@
-import { AppTheme } from "../../../config/theming/colourTheme";
+import { AppTheme } from "../../../config/theming/appTheme";
 import { IStorage } from "../../storage";
 
 /**
@@ -9,6 +9,12 @@ export async function getCurrentTheme(): Promise<AppTheme> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
 	return storage.user_data.config.theme;
+}
+
+export async function getCustomThemes(): Promise<Array<AppTheme>> {
+	let storage: IStorage = await chrome.storage.local.get() as IStorage;
+
+	return storage.user_data.config.customThemes;
 }
 
 /**

@@ -1,4 +1,4 @@
-export enum InputMethodType { Text, Numeric, Colour }
+export enum InputMethodType { Text, Numeric, Colour, Dropdown }
 export type ConfigurationOption<T> = {
 	displayName: string;
 	dataName: string;
