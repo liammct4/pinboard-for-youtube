@@ -77,6 +77,8 @@ export const sampleConfigData: IConfig = {
 			"shade-light-01": "rgb(250, 250, 250)",
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)"
-		}
-	}
+		},
+		modifiable: true
+	},
+	customThemes: []
 }

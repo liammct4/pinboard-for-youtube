@@ -34,7 +34,8 @@ describe("Local storage operations.", () => {
 			user_data: {
 				videos: [],
 				config: {
-					theme: sampleConfigData.theme
+					theme: sampleConfigData.theme,
+					customThemes: []
 				}
 			},
 			temp_state: {

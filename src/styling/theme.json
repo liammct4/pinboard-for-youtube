@@ -76,7 +76,7 @@
 			"primary-ultradark": "rgb(5, 14, 25)",
 			"empty-01-normal": "rgb(106, 121, 137)",
 			"empty-01-raised": "rgb(133, 148, 164)",
-			"empty-01-depth": "rgb(111 121 133)",
+			"empty-01-depth": "rgb(111, 121, 133)",
 			"empty-01-shadow": "rgb(79, 86, 94)",
 			"empty-02-normal": "rgb(116, 132, 150)",
 			"empty-02-raised": "rgb(127, 143, 161)",

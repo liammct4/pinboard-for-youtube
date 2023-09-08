@@ -1,0 +1,20 @@
+.custom-page-outer {
+	.theme-title {
+		margin: 0;
+		font-size: var(--pfy-font-heading-tiny);
+	}
+
+	.edit-theme-form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--pfy-spacing-standard);
+		margin-bottom: var(--pfy-spacing-standard);
+	}
+
+	.doesnt-exist-error-message {
+		display: block;
+		text-align: center;
+		color: var(--pfy-text-lighter);
+		margin-top: var(--pfy-spacing-very-large);
+	}
+}

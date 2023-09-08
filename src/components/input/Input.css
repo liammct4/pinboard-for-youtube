@@ -27,6 +27,28 @@
 		width: var(--pfy-field-width-small);
 		font-size: var(--pfy-field-font-size);
 		grid-column: 2;
+
+		/* Colour Picker */
+		&[type="color"] {
+			background: 0;
+			border: none;
+			width: calc(100% + var(--pfy-spacing-standard));
+			box-sizing: content-box;
+			margin-left: calc(var(--pfy-spacing-standard) * -1);
+			
+			/* Remove default styling, such as padding and expand colour preview to full field bar. */
+			&::-webkit-color-swatch-wrapper {
+				padding: 0;
+				border: 0;
+			}
+			
+			&::-webkit-color-swatch {
+				border: none;
+				margin: 0;
+				width: 100%;
+				border-radius: var(--pfy-spacing-large);
+			}
+		}
 		
 		&[data-size="small"] {
 			width: var(--pfy-field-width-small);

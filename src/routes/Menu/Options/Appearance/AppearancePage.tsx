@@ -12,7 +12,7 @@ export function AppearancePage() {
 	const dispatch = useDispatch();
 	const currentTheme: AppTheme = useSelector((state: RootState) => state.theme.currentTheme) as AppTheme;
 	const customThemes: Array<AppTheme> = useSelector((state: RootState) => state.theme.customThemes);
-	
+
 	return (
 		<>
 			<ThemeContext.Provider value={{
