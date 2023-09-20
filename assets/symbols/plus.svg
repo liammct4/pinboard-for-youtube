@@ -46,11 +46,11 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;stroke:#c52438;stroke-width:0.3175;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       style="stroke-width:0.3175;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
        d="M 1.3229167,0 V 2.6458334"
        id="path353" />
     <path
-       style="fill:none;stroke:#c52438;stroke-width:0.3175;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       style="stroke-width:0.3175;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
        d="M 2.6458333,1.3232317 5.0000001e-8,1.3226017"
        id="path353-2" />
   </g>

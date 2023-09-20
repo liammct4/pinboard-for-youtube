@@ -29,7 +29,9 @@
 			"shade-dark-03": "rgb(65, 65, 65)",
 			"shade-light-01": "rgb(250, 250, 250)",
 			"shade-light-02": "rgb(232, 232, 232)",
-			"shade-light-03": "rgb(210, 210, 210)"
+			"shade-light-03": "rgb(210, 210, 210)",
+			"content-shade-standard": "rgb(197, 36, 56)",
+			"content-shade-faded": "rgb(227, 126, 156)"
 		},
 		"modifiable": false
 	},
@@ -63,7 +65,9 @@
 			"shade-dark-03": "rgb(65, 65, 65)",
 			"shade-light-01": "rgb(250, 250, 250)",
 			"shade-light-02": "rgb(232, 232, 232)",
-			"shade-light-03": "rgb(210, 210, 210)"
+			"shade-light-03": "rgb(210, 210, 210)",
+			"content-shade-standard": "rgb(197, 87, 71)",
+			"content-shade-faded": "rgb(227, 160, 156)"
 		},
 		"modifiable": false
 	},
@@ -97,7 +101,9 @@
 			"shade-dark-03": "rgb(65, 65, 65)",
 			"shade-light-01": "rgb(250, 250, 250)",
 			"shade-light-02": "rgb(232, 232, 232)",
-			"shade-light-03": "rgb(210, 210, 210)"
+			"shade-light-03": "rgb(210, 210, 210)",
+			"content-shade-standard": "rgb(212, 222, 255)",
+			"content-shade-faded": "rgb(187, 192, 233)"
 		},
 		"modifiable": false
 	}

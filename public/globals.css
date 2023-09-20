@@ -31,6 +31,13 @@
 	--pfy-shade-light-01: rgb(250, 250, 250);
 	--pfy-shade-light-02: rgb(232, 232, 232);
 	--pfy-shade-light-03: rgb(210, 210, 210);
+	/* Content, similar to text colours but for things like icons which need colour.
+	* Needed because depending on the theme, primary colours might not be visible,
+	* E.g. Dark primary colour on a black/grey button.
+	*/
+	--pfy-content-shade-standard: rgb(140, 30, 40);
+	--pfy-content-shade-faded: rgb(200, 60, 100);
+
 
 	/* Other theming options */
 	--pfy-main-font: "Open Sans";

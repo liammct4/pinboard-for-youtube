@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog"
-import Cross from "./../../../assets/symbols/cross.svg"
+import { ReactComponent as CrossIcon } from "./../../../assets/symbols/cross.svg"
+import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 
 export interface IDialogBoxProperties {
@@ -28,7 +29,10 @@ export function DialogBox({ title, trigger, description, footer, children }: IDi
 						<Dialog.Title className="title">{title}</Dialog.Title>
 						<Dialog.Close asChild>
 							<button type="button" className="circle-button close-button" aria-label="Close">
-								<img src={Cross} alt="Cancel and close popup."/>
+								<IconContainer
+									className="icon-colour-standard"
+									asset={CrossIcon}
+									use-stroke/>
 							</button>
 						</Dialog.Close>
 					</div>

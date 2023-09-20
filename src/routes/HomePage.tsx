@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import PfyLogo from "./../../assets/logo/logo.svg"
+import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
 import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {
@@ -8,7 +8,7 @@ export function HomePage(): React.ReactNode {
 	return (
 		<div className="pfy-style-context outer-body">
 			<div className="header-area">
-				<img className="extension-logo" src={PfyLogo}/>
+				<PfyLogo className="extension-logo"/>
 				<h1 className="extension-title">Pinboard for YouTube</h1>
 				<hr className="bold-separator"></hr>
 			</div>

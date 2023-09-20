@@ -50,11 +50,11 @@
        transform="matrix(0.7151331,0.71497312,-0.7151331,0.71497312,1.0583244,-0.83341006)"
        style="stroke-width:0.988887">
       <path
-         style="fill:none;stroke:#c52438;stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         style="stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
          d="M 1.3229167,0 V 2.6458334"
          id="path353" />
       <path
-         style="fill:none;stroke:#c52438;stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+         style="stroke-width:0.31397;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
          d="M 2.6458333,1.3232317 5.0000001e-8,1.3226017"
          id="path353-2" />
     </g>

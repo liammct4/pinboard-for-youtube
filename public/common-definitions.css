@@ -55,7 +55,6 @@
 
 		&:disabled {
 			background-color: var(--pfy-empty-02-raised);
-			box-shadow: 0px 0px 1px 1px var(--pfy-shade-06);
 			color: var(--pfy-shade-03);
 			border: 1px solid var(--pfy-primary-faded);
 			cursor: not-allowed;
@@ -77,6 +76,7 @@
 		border-radius: 8px;
 		background: var(--pfy-shade-06);
 		border: 1px solid var(--pfy-primary-dark);
+		padding: 0;
 		color: white;
 		margin: auto 0 auto 0;
 		transition: background 0.2s;
@@ -176,6 +176,33 @@
 			border-radius: 16px;
 			background: var(--pfy-empty-02-depth); 
 			border: 1px solid var(--pfy-empty-02-shadow);
+		}
+	}
+
+	/* Icons, use these to provide colours for simple SVG icons. */
+	.icon-colour-standard {
+		fill: none;
+		stroke: none;
+
+		&[data-use-fill] {
+			fill: var(--pfy-content-shade-standard);
+		}
+
+		&[data-use-stroke] {
+			stroke: var(--pfy-content-shade-standard);
+		}
+	}
+
+	.icon-colour-field {
+		fill: none;
+		stroke: none;
+
+		&[data-use-fill] {
+			fill: var(--pfy-shade-dark-02);
+		}
+
+		&[data-use-stroke] {
+			stroke: var(--pfy-shade-dark-02);
 		}
 	}
 }

@@ -5,8 +5,9 @@ import { SizeOption } from "../../input/formStyleContext";
 import { FormValidator, IErrorFieldValues } from "../validated-form";
 import { InputMethodType } from "../../../lib/config/configurationOption";
 import { getInputComponent } from "../../input/componentLocator";
-import Error from "./../../../../assets/icons/error.svg"
-import Cross from "./../../../../assets/symbols/cross.svg"
+import { ReactComponent as ErrorIcon } from "./../../../../assets/icons/error.svg"
+import { ReactComponent as CrossIcon } from "./../../../../assets/symbols/cross.svg"
+import { IconContainer } from "../../images/svgAsset";
 import "./FormField.css"
 
 interface IFormFieldProperties<TFormType extends IErrorFieldValues> {
@@ -67,10 +68,16 @@ export function FormField<T extends IErrorFieldValues>({
 			/>
 			{errorVisible ? 
 				<div className="error-message">
-					<img className="warning-image" src={Error}/>
+					<IconContainer
+						className="icon-colour-standard warning-image"
+						asset={ErrorIcon}
+						use-fill/>
 					<p className="error-text">{error}</p>
 					<button className="circle-button close-button" type="button" onClick={() => setErrorVisible(false)}>
-						<img src={Cross}/>
+						<IconContainer
+							className="icon-colour-standard"
+							asset={CrossIcon}
+							use-stroke/>
 					</button>
 				</div>
 			: <></>}

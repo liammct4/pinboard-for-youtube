@@ -8,9 +8,9 @@ import { IErrorFieldValues, useValidatedForm } from "../../forms/validated-form.
 import { FormField } from "../../forms/FormField/FormField.tsx";
 import { Reorder } from "framer-motion";
 import { FormDialog } from "../../dialogs/FormDialog.tsx";
-import Bin from "src/../assets/icons/bin.svg"
-import JumpVideoIcon from "./../../../../assets/icons/jump_icon.svg"
-import JumpVideoIconOff from "./../../../../assets/icons/jump_icon_off.svg"
+import { ReactComponent as BinIcon } from "src/../assets/icons/bin.svg"
+import { ReactComponent as JumpVideoIcon } from "./../../../../assets/icons/jump_icon.svg"
+import { IconContainer } from "../../images/svgAsset.tsx";
 import "src/styling/dialog.css"
 import "./VideoTimestamp.css"
 
@@ -67,13 +67,16 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 		<Reorder.Item value={timestamp} id={timestamp.id}>
 			<div className="timestamp-inner">
 				<button className="square-button button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
-					<img src={isActiveId ? JumpVideoIcon : JumpVideoIconOff} alt="Play button icon."></img>
+					<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
 				</button>
 				<a className="timestamp-text" href={timeLink}>{stringTime}</a>
 				<p className="message-text">{timestamp.message}</p>
 				<div style={{ flexGrow: "1" }}></div>
 				<button className="square-button button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
-					<img className="bin-icon" src={Bin} alt="Delete icon."/>
+					<IconContainer
+						className="bin-icon icon-colour-standard"
+						asset={BinIcon}
+						use-stroke/>
 				</button>
 				{/* Edit dialog */}
 				<FormDialog

@@ -3,9 +3,11 @@
 	flex-direction: row;
 
 	.expander-control-button {
-		.indicator-arrow {
+		.indicator-arrow-wrapper {
+			display: flex;
+			height: 100%;
+			align-items: center;
 			transition: transform var(--pfy-timing-fast);
-			margin-left: 1px;
 
 			&[data-state="true"] {
 				transform: rotate(180deg);
@@ -24,6 +26,7 @@
 	}
 
 }
+
 .expander-content {
 	overflow-y: hidden;
 

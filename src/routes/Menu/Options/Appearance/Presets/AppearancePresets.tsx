@@ -10,7 +10,8 @@ import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import FormDialog from "../../../../../components/dialogs/FormDialog";
 import SplitHeading from "../../../../../components/presentation/SplitHeading/SplitHeading";
-import DeleteIcon from "./../../../../../../assets/icons/bin.svg"
+import { ReactComponent as DeleteIcon } from "./../../../../../../assets/icons/bin.svg"
+import { IconContainer } from "../../../../../components/images/svgAsset";
 import ActionMessageDialog from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearancePresets.css"
 
@@ -40,7 +41,11 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 				{ theme.modifiable ?
 				<div className="modify-buttons">
 					<button className="square-button button-small" onClick={() => deleteCustomTheme(theme.name)}>
-						<img src={DeleteIcon}/>
+						<IconContainer
+							className="icon-colour-standard"
+							asset={DeleteIcon}
+							use-stroke
+							use-fill/>
 					</button>
 					<button className="button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
 				</div>

@@ -4,9 +4,10 @@ import { IInputComponentProperties } from "../inputComponent";
 import { DropdownOptionsContext } from "./context";
 import { FormStyleContext } from "../formStyleContext";
 import * as Select from "@radix-ui/react-select"
-import ArrowIcon from "./../../../../assets/symbols/arrow.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrow.svg"
 import "./../../../styling/elements/select.css"
 import "./../Input.css"
+import { IconContainer } from "../../images/svgAsset";
 
 function SelectItem({ value, children }: { value: string, children: React.ReactNode }): React.ReactNode {
 	return (
@@ -33,7 +34,11 @@ export function DropdownInput<T extends FieldValues>({ label, name, fieldSize, r
 						{/* So the button is at a constant size and to fill in space... */}
 						<span style={{ opacity: 0, flexGrow: 1 }}>.</span>
 						<Select.Icon className="open-icon">
-							<img className="arrow" src={ArrowIcon}/>
+							<IconContainer
+								className="icon-colour-field"
+								asset={ArrowIcon}
+								use-stroke
+							/>
 						</Select.Icon>
 					</Select.Trigger>
 					<Select.Portal>

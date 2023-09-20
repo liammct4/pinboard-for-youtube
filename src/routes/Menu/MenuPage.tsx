@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Close from "./../../../assets/symbols/cross.svg"
+import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg"
+import { IconContainer } from "../../components/images/svgAsset";
 import { toTitleCase } from "../../lib/util/generic/stringUtil";
 import "./MenuPage.css"
 
@@ -34,7 +35,10 @@ export function MenuPage(): React.ReactNode {
 				)}
 			</ul>
 			<button className="close-button circle-button" onClick={() => navigate("..")}>
-				<img src={Close}/>
+				<IconContainer
+					className="icon-colour-standard"
+					asset={CloseIcon}
+					use-stroke/>
 			</button>
 			<hr className="bold-separator"></hr>
 			<div className="page-content">

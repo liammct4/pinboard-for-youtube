@@ -7,7 +7,8 @@ import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { InputMethodType } from "../../../../../lib/config/configurationOption";
-import ArrowIcon from "./../../../../../../assets/symbols/arrow.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../../../assets/symbols/arrow.svg"
+import { IconContainer } from "../../../../../components/images/svgAsset";
 import ActionMessageDialog from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearanceCustom.css"
 
@@ -77,7 +78,10 @@ export function AppearanceCustom(): React.ReactNode {
 							setTimeout(() => navigate(".."), 10);
 						}}>
 							<button className="circle-button">
-								<img className="arrow-icon" src={ArrowIcon}/>
+								<IconContainer
+									asset={ArrowIcon}
+									className="icon-colour-standard arrow-icon"
+									use-stroke/>
 							</button>
 					</ActionMessageDialog>
 					<h3 className="theme-title">{id}</h3>

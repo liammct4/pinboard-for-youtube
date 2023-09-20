@@ -2,6 +2,7 @@
 	background: var(--pfy-empty-01-depth);
 	padding: var(--pfy-spacing-standard-compact);
 	padding-left: var(--pfy-spacing-standard);
+	border-radius: var(--pfy-spacing-standard-compact);
 
 	.heading-text {
 		font-size: var(--pfy-font-heading-small);

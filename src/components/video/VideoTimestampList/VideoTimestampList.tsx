@@ -7,7 +7,9 @@ import { Reorder, useDragControls } from "framer-motion";
 import SubtleExpander from "../../presentation/SubtleExpander/SubtleExpander.js"
 import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
-import Plus from "src/../assets/symbols/plus.svg"
+import { ReactComponent as PlusIcon } from "src/../assets/symbols/plus.svg"
+import { ReactComponent as DragHandle } from "src/../assets/icons/drag_vrect.svg"
+import { IconContainer } from "../../images/svgAsset.tsx";
 import "./VideoTimestampList.css"
 
 export function VideoTimestampList(): React.ReactNode {
@@ -87,7 +89,12 @@ export function VideoTimestampList(): React.ReactNode {
 			<div className="video-list-outer">
 				<div className="video-card">
 					<VideoCard videoID={video.videoID}/>
-					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}/>
+					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
+						<IconContainer
+							className="icon-colour-standard drag-handle"
+							asset={DragHandle}
+							use-fill/>
+					</div>
 				</div>
 				<hr className="regular-separator"></hr>
 				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
@@ -101,7 +108,10 @@ export function VideoTimestampList(): React.ReactNode {
 						<button
 							className="add-timestamp-button circle-button"
 							onClick={onAddTimestamp}>
-							<img src={Plus}></img>
+							<IconContainer
+								className="icon-colour-standard"
+								asset={PlusIcon}
+								use-stroke/>
 						</button>
 						<p className="info-text">Add new timestamp</p>
 					</div>

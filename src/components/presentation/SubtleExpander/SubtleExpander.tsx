@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, MutableRefObject } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
+import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrow.svg"
+import { IconContainer } from "../../images/svgAsset";
 import "./SubtleExpander.css"
 
 export interface ISubtleExpanderProperties {
@@ -20,7 +22,13 @@ export function SubtleExpander({ expanded, onExpanded, openMessage, closeMessage
 			<div className="expander-inner">
 				<Collapsible.Trigger asChild>
 					<button type="button" className="circle-button expander-control-button">
-						<img className="indicator-arrow" data-state={expanded} src="./../../../assets/symbols/arrow.svg"/>
+						<div className="indicator-arrow-wrapper" data-state={expanded}>
+							<IconContainer
+								asset={ArrowIcon}
+								className="icon-colour-standard"
+								data-state={expanded}
+								use-stroke/>
+						</div>
 					</button>
 				</Collapsible.Trigger>
 				<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>

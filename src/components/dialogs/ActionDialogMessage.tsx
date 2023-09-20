@@ -1,5 +1,6 @@
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import Cross from "./../../../assets/symbols/cross.svg"
+import { ReactComponent as CrossIcon } from "./../../../assets/symbols/cross.svg"
+import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 
 export type DialogClosedHandler = (result: string) => void;
@@ -35,7 +36,10 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 						<AlertDialog.Title className="title">{title}</AlertDialog.Title>
 						<AlertDialog.Action asChild>
 							<button type="button" className="circle-button close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
-								<img src={Cross}/>
+								<IconContainer
+									className="icon-colour-standard"
+									asset={CrossIcon}
+									use-stroke/>
 							</button>
 						</AlertDialog.Action>
 					</div>

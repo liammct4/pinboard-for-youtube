@@ -1,5 +1,5 @@
 import * as YTUtil from "./../../../lib/util/youtube/youtubeUtil.ts"
-import ThumbMissing from "./../../../../assets/thumb_missing.svg"
+import { ReactComponent as ThumbnailMissingImage } from "./../../../../assets/thumb_missing.svg"
 import "./VideoCard.css"
 
 export interface IVideoCardProperties {
@@ -31,7 +31,7 @@ export function VideoCard({ className = "", videoID, placeholderTitle = "" }: IV
 				</>
 				:
 				<>
-					<img className="thumbnail-image" src={ThumbMissing} alt="Placeholder thumbnail with a grey YouTube button as the video does not exist."/>
+					<ThumbnailMissingImage className="thumbnail-image"/>
 					<h2 className="video-title">{placeholderTitle}</h2>
 				</>
 			}
