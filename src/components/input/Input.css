@@ -5,6 +5,7 @@
 	.label {
 		width: var(--pfy-label-width-medium);
 		font-size: var(--pfy-font-text-standard);
+		margin-right: var(--pfy-spacing-standard);
 
 		&[data-size="small"] {
 			width: var(--pfy-label-width-small);

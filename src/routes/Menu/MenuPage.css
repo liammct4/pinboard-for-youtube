@@ -26,7 +26,7 @@
 			&::after {
 				content: "/";
 				font-weight: normal;
-				color: var(--pfy-primary-dark);
+				color: var(--pfy-content-shade-faded);
 				margin-left: var(--pfy-spacing-standard-compact);
 				margin-right: var(--pfy-spacing-standard-compact);
 			}
