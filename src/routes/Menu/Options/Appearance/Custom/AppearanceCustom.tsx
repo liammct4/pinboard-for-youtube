@@ -17,7 +17,7 @@ interface IEditThemeForm extends ColourPalette, IErrorFieldValues {
 }
 
 export function AppearanceCustom(): React.ReactNode {
-	const { themes, customThemes, actions: { addCustomTheme, deleteCustomTheme } } = useContext(ThemeContext);
+	const { themes, customThemes, currentTheme, actions: { addCustomTheme, deleteCustomTheme, setCurrentTheme } } = useContext(ThemeContext);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const editingTheme: AppTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
@@ -40,6 +40,11 @@ export function AppearanceCustom(): React.ReactNode {
 		}
 		
 		addCustomTheme(updatedTheme);
+
+		// Update interface if the current theme selected is being edited.
+		if (name == currentTheme.name) {
+			setCurrentTheme(updatedTheme);
+		}
 
 		// Move the location to the new name.
 		navigate(`../custom/${name}`);
