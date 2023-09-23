@@ -22,6 +22,14 @@
 		border-color: var(--pfy-primary-dark);
 	}
 
+	.link-text {
+		color: var(--pfy-content-link);
+	
+		&:visited {
+			color: var(--pfy-content-link-visited);
+		}
+	}
+
 	/* Small button */
 	.button-small {
 		height: var(--pfy-element-button-size-regular);

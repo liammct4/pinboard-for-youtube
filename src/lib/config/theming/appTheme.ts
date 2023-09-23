@@ -35,4 +35,6 @@ export type ColourPalette = {
 	"shade-light-03": string;
 	"content-shade-standard": string;
 	"content-shade-faded": string;
+	"content-link": string;
+	"content-link-visited": string;
 };

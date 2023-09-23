@@ -44,7 +44,7 @@ function validateTimestamp(value: string): string | null {
 export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestampProperties): React.ReactNode {
 	const { activeVideoID } = useContext(VideoListContext);
 	
-	let onSave = useCallback((data: IEditTimestampForm) => {
+	const onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
 		onChange(timestamp, cloneModifyTimestamp(timestamp, inputTime, data.message));
@@ -69,7 +69,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 				<button className="square-button button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
 					<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
 				</button>
-				<a className="timestamp-text" href={timeLink}>{stringTime}</a>
+				<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
 				<p className="message-text">{timestamp.message}</p>
 				<div style={{ flexGrow: "1" }}></div>
 				<button className="square-button button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">

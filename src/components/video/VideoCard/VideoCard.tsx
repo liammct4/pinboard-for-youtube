@@ -27,7 +27,7 @@ export function VideoCard({ className = "", videoID, placeholderTitle = "" }: IV
 				<>
 					<img className="thumbnail-image" src={`https://img.youtube.com/vi/${videoID}/default.jpg`} alt={`The thumbnail for the video titled '${info["title"]}'.`}/>
 					<h2 className="video-title">{info["title"]}</h2>
-					<a className="video-link" href={url!}>{url}</a>
+					<a className="link-text video-link" href={url!}>{url}</a>
 				</>
 				:
 				<>

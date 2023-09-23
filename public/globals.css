@@ -37,6 +37,8 @@
 	*/
 	--pfy-content-shade-standard: rgb(140, 30, 40);
 	--pfy-content-shade-faded: rgb(200, 60, 100);
+	--pfy-content-link: rgb(218, 28, 132);
+	--pfy-content-link-visited: rgb(116, 51, 177);
 
 
 	/* Other theming options */

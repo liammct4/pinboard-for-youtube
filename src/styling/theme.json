@@ -31,7 +31,9 @@
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)",
 			"content-shade-standard": "rgb(197, 36, 56)",
-			"content-shade-faded": "rgb(227, 126, 156)"
+			"content-shade-faded": "rgb(227, 126, 156)",
+			"content-link": "rgb(218, 28, 132)",
+			"content-link-visited": "rgb(116, 51, 177)"
 		},
 		"modifiable": false
 	},
@@ -67,7 +69,9 @@
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)",
 			"content-shade-standard": "rgb(197, 87, 71)",
-			"content-shade-faded": "rgb(227, 160, 156)"
+			"content-shade-faded": "rgb(227, 160, 156)",
+			"content-link": "rgb(223, 86, 149)",
+			"content-link-visited": "rgb(138, 82, 177)"
 		},
 		"modifiable": false
 	},
@@ -103,7 +107,9 @@
 			"shade-light-02": "rgb(242, 242, 242)",
 			"shade-light-03": "rgb(230, 230, 230)",
 			"content-shade-standard": "rgb(212, 222, 255)",
-			"content-shade-faded": "rgb(187, 192, 233)"
+			"content-shade-faded": "rgb(187, 192, 233)",
+			"content-link": "rgb(51, 108, 255)",
+			"content-link-visited": "rgb(107, 73, 226)"
 		},
 		"modifiable": false
 	},
@@ -139,7 +145,9 @@
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)",
 			"content-shade-standard": "rgb(212, 222, 255)",
-			"content-shade-faded": "rgb(187, 192, 233)"
+			"content-shade-faded": "rgb(187, 192, 233)",
+			"content-link": "rgb(184, 224, 255)",
+			"content-link-visited": "rgb(202, 190, 230)"
 		},
 		"modifiable": false
 	},
@@ -174,8 +182,10 @@
 			"shade-light-01": "rgb(250, 250, 250)",
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)",
-			"content-shade-standard": "rgb(235, 243, 248)",
-			"content-shade-faded": "rgb(65, 77, 58"
+			"content-shade-standard": "rgb(13, 31, 53)",
+			"content-shade-faded": "rgb(59, 78, 101)",
+			"content-link": "rgb(130, 230, 174)",
+			"content-link-visited": "rgb(51, 98, 68)"
 		},
 		"modifiable": false
 	},
@@ -188,14 +198,14 @@
 			"primary-ultradark": "rgb(110, 112, 97)",
 			"empty-01-normal": "rgb(160, 170, 147)",
 			"empty-01-raised": "rgb(182, 192, 168)",
-			"empty-01-depth": "rgb(144, 154, 134)",
+			"empty-01-depth": "rgb(154, 164, 144)",
 			"empty-01-shadow": "rgb(119, 124, 111)",
 			"empty-02-normal": "rgb(157, 179, 152)",
 			"empty-02-raised": "rgb(180, 203, 175)",
 			"empty-02-depth": "rgb(144, 160, 139)",
 			"empty-02-shadow": "rgb(122, 134, 118)",
-			"text-strong": "rgb(20, 53, 11)",
-			"text-normal": "rgb(26, 62, 14)",
+			"text-strong": "rgb(10, 33, 8)",
+			"text-normal": "rgb(18, 42, 11)",
 			"text-light": "rgb(32, 73, 20)",
 			"text-lighter": "rgb(40, 90, 27)",
 			"shade-01": "rgb(40, 40, 40)",
@@ -211,7 +221,9 @@
 			"shade-light-02": "rgb(232, 232, 232)",
 			"shade-light-03": "rgb(210, 210, 210)",
 			"content-shade-standard": "rgb(48, 60, 41)",
-			"content-shade-faded": "rgb(65, 77, 58)"
+			"content-shade-faded": "rgb(65, 77, 58)",
+			"content-link": "rgb(48, 92, 237)",
+			"content-link-visited": "rgb(96, 78, 175)"
 		},
 		"modifiable": false
 	}
