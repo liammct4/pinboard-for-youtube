@@ -1,15 +1,16 @@
 import { IConfig } from "./config/config"
-import { Video } from "./../video/video.ts"
+import { TagDefinition, Video } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
 import AppThemes from "./../../styling/theme.json"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
 
 export interface IStorage {
 	user_data: {
-		videos: Array<Video>,
-		config: IConfig
+		videos: Array<Video>;
+		tagDefinitions: Array<TagDefinition>;
+		config: IConfig;
 	},
-	temp_state: ITempState
+	temp_state: ITempState;
 }
 
 export async function getNestedStorageData(path: string): Promise<any> {
@@ -58,6 +59,7 @@ export async function ensureInitialized(): Promise<void> {
 				theme: theme,
 				customThemes: []
 			},
+			tagDefinitions: []
 		},
 		temp_state: {
 			expandedVideos: []

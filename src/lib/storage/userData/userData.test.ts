@@ -6,7 +6,8 @@ import { IStorage } from "../storage.ts";
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: sampleConfigData
+		config: sampleConfigData,
+		tagDefinitions: []
 	},
 	temp_state: {
 		expandedVideos: []
@@ -64,7 +65,8 @@ describe("Extracting video data from local storage.", () => {
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later.")
-					]
+					],
+					"appliedTags": []
 				};
 
 				await userData.insertVideo(4, newVideo);
@@ -126,7 +128,8 @@ describe("Modifying user data in local storage.", () => {
 				"timestamps": [
 					generateTimestamp(372, "Important point!"),
 					generateTimestamp(625, "Watch later."),
-				]
+				],
+				"appliedTags": []
 			};
 
 			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"], newVideo ];
@@ -146,7 +149,8 @@ describe("Modifying user data in local storage.", () => {
 					generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
 					generateTimestamp(3964, "At dignissim ligula dui vel erat."),
 					generateTimestamp(129, "Nulla felis ligula.")
-				]
+				],
+				"appliedTags": []
 			};
 
 			await userData.pushVideo(newVideo);
@@ -164,7 +168,8 @@ describe("Modifying user data in local storage.", () => {
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
 						generateTimestamp(419, "Extra important point!")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "QJ792KIE82Q",
@@ -172,14 +177,16 @@ describe("Modifying user data in local storage.", () => {
 						generateTimestamp(816, "Check the background."),
 						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
 						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later.")
-					]
+					],
+					"appliedTags": []
 				}
 			];
 
@@ -201,7 +208,8 @@ describe("Modifying user data in local storage.", () => {
 						generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
 						generateTimestamp(3964, "At dignissim ligula dui vel erat."),
 						generateTimestamp(129, "Nulla felis ligula.")
-					]
+					],
+					"appliedTags": []
 				},
 				// Unique, added to end.
 				{
@@ -209,14 +217,16 @@ describe("Modifying user data in local storage.", () => {
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later."),
-					]
+					],
+					"appliedTags": []
 				},
 				// Already exists.
 				{
 					"videoID": "njX2bu-_Vw4",
 					"timestamps": [
 						generateTimestamp(10, "Morbi efficitur."),
-					]
+					],
+					"appliedTags": []
 				}
 			];
 
@@ -228,43 +238,50 @@ describe("Modifying user data in local storage.", () => {
 						generateTimestamp(1921, "In vulputate non odio vitae iaculis."),
 						generateTimestamp(3964, "At dignissim ligula dui vel erat."),
 						generateTimestamp(129, "Nulla felis ligula.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "njX2bu-_Vw4",
 					"timestamps": [
 						generateTimestamp(10, "Morbi efficitur."),
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "AKeUssuu3Is",
 					"timestamps": [
 						generateTimestamp(16, "Maecenas lectus nisl, pretium.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "ZjVAsJOl8SM",
 					"timestamps": [
 						generateTimestamp(1063, "Another timestamp.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "PnvkrBXmLSI",
 					"timestamps": [
 						generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
 						generateTimestamp(0, "Maximus quis purus."),
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "ERYG3NE1DO8",
-					"timestamps": []
+					"timestamps": [],
+					"appliedTags": []
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later."),
-					]
+					],
+					"appliedTags": []
 				}
 			];
 
@@ -287,7 +304,8 @@ describe("Modifying user data in local storage.", () => {
 				"timestamps": [
 					generateTimestamp(372, "Important point!"),
 					generateTimestamp(625, "Watch later."),
-				]
+				],
+				"appliedTags": []
 			};
 
 			let expected: Array<Video> = [ ...storageTemplate["user_data"]["videos"] ];
@@ -305,7 +323,8 @@ describe("Modifying user data in local storage.", () => {
 				"timestamps": [
 					generateTimestamp(372, "Important point!"),
 					generateTimestamp(625, "Watch later."),
-				]
+				],
+				"appliedTags": []
 			};
 
 			await expect(async () => await userData.insertVideo(-2, newVideo))
@@ -322,7 +341,8 @@ describe("Modifying user data in local storage.", () => {
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
 						generateTimestamp(419, "Extra important point!")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "QJ792KIE82Q",
@@ -330,14 +350,16 @@ describe("Modifying user data in local storage.", () => {
 						generateTimestamp(816, "Check the background."),
 						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
 						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later.")
-					]
+					],
+					"appliedTags": []
 				}
 			];
 
@@ -382,7 +404,8 @@ describe("Modifying user data in local storage.", () => {
 					"videoID": "Sx-QWXNjjyk",
 					"timestamps": [
 						generateTimestamp(419, "Extra important point!")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "QJ792KIE82Q",
@@ -390,14 +413,16 @@ describe("Modifying user data in local storage.", () => {
 						generateTimestamp(816, "Check the background."),
 						generateTimestamp(625, "Lorem ipsum dolor sit amet."),
 						generateTimestamp(1062, "Nunc magna enim, consequat non sagittis ut.")
-					]
+					],
+					"appliedTags": []
 				},
 				{
 					"videoID": "y9n6HkftavM",
 					"timestamps": [
 						generateTimestamp(372, "Important point!"),
 						generateTimestamp(625, "Watch later.")
-					]
+					],
+					"appliedTags": []
 				}
 			];
 

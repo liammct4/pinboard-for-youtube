@@ -9,7 +9,8 @@ export const sampleVideoData: Array<Video> = [
 		"timestamps": [
 			generateTimestamp(63, "Timestamp expands to this end margin." ),
 			generateTimestamp(4351, "Timestamp in the middle..."),
-		]
+		],
+		"appliedTags": []
 	},
 	{
 		"videoID": "njX2bu-_Vw4",
@@ -18,30 +19,35 @@ export const sampleVideoData: Array<Video> = [
 			generateTimestamp(1200, "Nunc dui dolor, feugiat id eros feugiat."),
 			generateTimestamp(354, "Nulla ornare arcu tellus."),
 			generateTimestamp(1354, "Praesent eu nulla lacus."),
-		]
+		],
+		"appliedTags": []
 	},
 	{
 		"videoID": "AKeUssuu3Is",
 		"timestamps": [
 			generateTimestamp(16, "Maecenas lectus nisl, pretium.")
-		]
+		],
+		"appliedTags": []
 	},
 	{
 		"videoID": "ZjVAsJOl8SM",
 		"timestamps": [
 			generateTimestamp(1063, "Another timestamp.")
-		]
+		],
+		"appliedTags": []
 	},
 	{
 		"videoID": "PnvkrBXmLSI",
 		"timestamps": [
 			generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
 			generateTimestamp(0, "Maximus quis purus."),
-		]
+		],
+		"appliedTags": []
 	},
 	{
 		"videoID": "ERYG3NE1DO8",
-		"timestamps": []
+		"timestamps": [],
+		"appliedTags": []
 	}
 ];
 

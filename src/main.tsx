@@ -4,7 +4,7 @@ import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
 import { IVideoSlice, setVideoState } from "./features/videos/videoSlice.ts"
-import { getStoredVideos } from "./lib/storage/userData/userData.ts"
+import { getStorageTagDefinitions, getStoredVideos } from "./lib/storage/userData/userData.ts"
 import { ensureInitialized } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, videoExists } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
@@ -42,9 +42,12 @@ async function setupState() {
 		activeID = "xcJtL7QggTI";
 	}
 
+	let tagDefinitions = await getStorageTagDefinitions();
+
 	let videoState: IVideoSlice = {
 		activeVideoID: activeID,
-		currentVideos: await getStoredVideos()
+		currentVideos: await getStoredVideos(),
+		tagDefinitions: tagDefinitions
 	}
 
 	let tempState: IStateSlice = {

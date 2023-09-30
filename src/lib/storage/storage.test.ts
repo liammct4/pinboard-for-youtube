@@ -4,7 +4,8 @@ import { IStorage, ensureInitialized } from "./storage";
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: sampleConfigData
+		config: sampleConfigData,
+		tagDefinitions: []
 	},
 	temp_state: {
 		expandedVideos: []
@@ -36,7 +37,8 @@ describe("Local storage operations.", () => {
 				config: {
 					theme: sampleConfigData.theme,
 					customThemes: []
-				}
+				},
+				tagDefinitions: []
 			},
 			temp_state: {
 				expandedVideos: []

@@ -1,5 +1,6 @@
-import { Video } from "../../video/video"
-import { getNestedStorageData } from "../storage"
+import { convertArrayToMap } from "../../util/json/map";
+import { TagDefinition, Video } from "../../video/video"
+import { IStorage, getNestedStorageData } from "../storage"
 
 export async function getStoredVideos(): Promise<Array<Video>> {
 	let videos: Array<Video> = await getNestedStorageData("user_data/videos");
@@ -119,4 +120,31 @@ export async function removeVideoByVideoID(videoID: string): Promise<boolean> {
 	await chrome.storage.local.set(userData);
 
 	return true;
+}
+
+/**
+ * Retrieves the user defined tag definitions from storage.
+ */
+export async function getStorageTagDefinitions(): Promise<Map<string, TagDefinition>> {
+	let storage: IStorage = await chrome.storage.local.get() as IStorage;
+
+	return convertArrayToMap(storage.user_data.tagDefinitions, (item) => item.name);
+}
+
+/**
+ * Sets the tag definitions in storage.
+ */
+export async function setStorageTagDefinitions(tags: Map<string, TagDefinition>): Promise<void> {
+	let storage = await chrome.storage.local.get() as IStorage;
+
+	let serializedArray: Array<TagDefinition> = [];
+	let keys = tags.keys();
+
+	for (let key of keys) {
+		serializedArray.push(tags.get(key)!);
+	}
+	
+	storage.user_data.tagDefinitions = serializedArray;
+
+	await chrome.storage.local.set({ "user_data": storage.user_data });
 }

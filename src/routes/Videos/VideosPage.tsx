@@ -52,7 +52,8 @@ export function VideosPage(): React.ReactNode {
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
-			timestamps: []
+			timestamps: [],
+			appliedTags: []
 		};
 
 		dispatch(addVideo(newVideo));
@@ -64,19 +65,22 @@ export function VideosPage(): React.ReactNode {
 
 		let video: Video = {
 			videoID: activeVideoID!,
-			timestamps: []
+			timestamps: [],
+			appliedTags: []
 		};
 		dispatch(addVideo(video));
 	};
 	const onPinCurrentTimestamp = async () => {
 		let result = await getActiveVideoInfo();
+		let video = videos.find(x => x.videoID == activeVideoID)!;
 		
 		let activeVideo: Video = {
 			videoID: activeVideoID!,
 			timestamps: [
-				...(videos.find(x => x.videoID == activeVideoID)!).timestamps,
+				...video.timestamps,
 				generateTimestamp(Math.floor(result!.currentTime), "Current time")
-			]
+			],
+			appliedTags: video.appliedTags
 		}
 		
 		dispatch(updateVideo(activeVideo));

@@ -6,9 +6,18 @@ export type Timestamp = {
 	message: string;
 };
 
+export type TagDefinition = {
+	name: string;
+	colour: string;
+}
+
 export type Video = {
 	videoID: string;
 	timestamps: Array<Timestamp>;
+	/**
+	 * Array of tag definition names.
+	 */
+	appliedTags: Array<string>;
 };
 
 /**

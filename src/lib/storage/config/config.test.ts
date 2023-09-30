@@ -6,7 +6,8 @@ import { getCurrentTheme } from "./theme/theme";
 let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
-		config: sampleConfigData
+		config: sampleConfigData,
+		tagDefinitions: []
 	},
 	temp_state: {
 		expandedVideos: []

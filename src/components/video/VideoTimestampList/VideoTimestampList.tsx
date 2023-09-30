@@ -37,8 +37,9 @@ export function VideoTimestampList(): React.ReactNode {
 		}
 
 		let updatedVideo: Video = {
-			"videoID": video.videoID,
-			"timestamps": updatedTimestamps
+			videoID: video.videoID,
+			timestamps: updatedTimestamps,
+			appliedTags: video.appliedTags
 		}
 		
 		dispatch(topLevelVideos.actions.updateVideo(updatedVideo));
@@ -47,11 +48,12 @@ export function VideoTimestampList(): React.ReactNode {
 	const onAddTimestamp: () => void = () => {
 		let newTime = generateUniqueFrom(video.timestamps, (x) => x.time, 86400);
 		let updatedVideo: Video = {
-			"videoID": video.videoID,
-			"timestamps": [
+			videoID: video.videoID,
+			timestamps: [
 				...video.timestamps,
 				generateTimestamp(newTime!, "New Timestamp")
-			]
+			],
+			appliedTags: video.appliedTags
 		}
 		
 		dispatch(topLevelVideos.actions.updateVideo(updatedVideo));
