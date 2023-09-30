@@ -31,7 +31,7 @@ export function VideoCard({ className = "", videoID, placeholderTitle = "" }: IV
 				</>
 				:
 				<>
-					<ThumbnailMissingImage className="thumbnail-image"/>
+					<ThumbnailMissingImage className="thumbnail-image" preserveAspectRatio="none" width={undefined} height={undefined}/>
 					<h2 className="video-title">{placeholderTitle}</h2>
 				</>
 			}
