@@ -19,11 +19,12 @@ import { GeneralPage } from "./routes/Menu/Options/General/GeneralPage.tsx"
 import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.tsx"
 import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
 import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
+import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/theme.ts"
+import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
+import { TagsPage } from "./routes/Tags/TagsPage.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
-import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/theme.ts"
-import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 
 async function setupState() {
 	await ensureInitialized();
@@ -63,6 +64,7 @@ async function setupState() {
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<HomePage/>}>
 						<Route path="videos" element={<VideosPage/>}/>
+						<Route path="tags" element={<TagsPage/>}/>
 						<Route path="menu" element={<MenuPage/>}>
 							<Route path="options/*" element={<OptionsPage/>}>
 								<Route path="general" element={<GeneralPage/>}/>

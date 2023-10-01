@@ -1,0 +1,13 @@
+
+.button-row {
+	display: flex;
+	flex-direction: row;
+
+	.go-back-arrow {
+		transform: rotate(90deg);
+	}
+
+	.go-back-text {
+		margin-left: var(--pfy-spacing-standard-compact);
+	}
+}

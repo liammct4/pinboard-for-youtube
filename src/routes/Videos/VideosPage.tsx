@@ -15,6 +15,9 @@ import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "../../app/store.ts";
 import { SubmitHandler } from "react-hook-form";
+import { ReactComponent as TagIcon} from "./../../../assets/icons/tag.svg"
+import { IconContainer } from "../../components/images/svgAsset.tsx";
+import { useNavigate } from "react-router-dom";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 
@@ -49,6 +52,7 @@ export function VideosPage(): React.ReactNode {
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
@@ -142,6 +146,10 @@ export function VideosPage(): React.ReactNode {
 					}}>
 					<button className="button-small">Clear videos</button>
 				</ActionMessageDialog>
+				<div style={{ flexGrow: "1" }}/>
+				<button className="button-small square-button" onClick={() => navigate("../tags")}>
+					<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
+				</button>
 			</div>
 			<div className="video-collection-scrollbox">
 				<VideoListContext.Provider value={{
