@@ -7,7 +7,7 @@ import { convertArrayToMap } from "../../lib/util/json/map.ts";
 export interface IVideoSlice {
 	activeVideoID?: string;
 	currentVideos: Array<Video>;
-	tagDefinitions: Map<string, TagDefinition>;
+	tagDefinitions: Array<TagDefinition>;
 }
 
 // Runs if in dev build.
@@ -21,7 +21,7 @@ if (chrome.storage == undefined) {
 const initialState: IVideoSlice = {
 	activeVideoID: undefined,
 	currentVideos: [],
-	tagDefinitions: new Map()
+	tagDefinitions: []
 }
 
 export const videoSlice = createSlice({
@@ -49,22 +49,43 @@ export const videoSlice = createSlice({
 			state.currentVideos = action.payload;
 		},
 		addTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
-			let keys = state.tagDefinitions.keys();
+			for (let i = 0; i < state.tagDefinitions.length; i++) {
+				let tag = state.tagDefinitions[i];
 
-			// Avoid duplicates.
-			for (let key of keys) {
-				if (state.tagDefinitions.get(key)?.name == action.payload.name) {
+				// E.g. has been updated.
+				if (tag.id == action.payload.id) {
+					state.tagDefinitions[i] = action.payload;
+					return;
+				}
+				else if (tag.name == action.payload.name) {
+					// Duplicate name, so don't add.
 					return;
 				}
 			}
 
-			state.tagDefinitions.set(action.payload.id, action.payload);
+			// Insert the tag into the correct position. Because tags have to be alphabetically sorted by name.
+			let inserted = false;
+
+			for (let i = 0; i < state.tagDefinitions.length; i++) {
+				if (state.tagDefinitions[i].name < action.payload.name) {
+					state.tagDefinitions.splice(i, 0, action.payload);
+					inserted = true;
+					
+					break;
+				}
+			}
+
+			if (!inserted) {
+				state.tagDefinitions.push(action.payload);
+			}
 		},
-		removeTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
-			state.tagDefinitions.delete(action.payload.id);
+		removeTagDefinition: (state, action: PayloadAction<string>) => {
+			let index = state.tagDefinitions.findIndex(x => x.id == action.payload);
+
+			state.tagDefinitions.splice(index, 1);
 		},
 		setTagDefinitions: (state, action: PayloadAction<Array<TagDefinition>>) => {
-			state.tagDefinitions = convertArrayToMap(action.payload, (item) => item.id);
+			state.tagDefinitions = action.payload;
 		}
 	}
 })

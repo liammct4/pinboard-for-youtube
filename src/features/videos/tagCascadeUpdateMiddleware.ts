@@ -11,7 +11,7 @@ tagCascadeUpdateMiddleware.startListening({
 
 		// Remove deleted tags for example.
 		for (let video of state.video.currentVideos) {
-			let newTags = video.appliedTags.filter(x => state.video.tagDefinitions.has(x));
+			let newTags = video.appliedTags.filter(x => state.video.tagDefinitions.find(y => x == y.id));
 
 			listenerApi.dispatch(updateVideo({
 				videoID: video.videoID,

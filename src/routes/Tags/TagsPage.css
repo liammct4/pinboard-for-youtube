@@ -1,4 +1,3 @@
-
 .button-row {
 	display: flex;
 	flex-direction: row;
@@ -9,5 +8,44 @@
 
 	.go-back-text {
 		margin-left: var(--pfy-spacing-standard-compact);
+	}
+}
+
+.tag-description {
+	margin: var(--pfy-spacing-standard);
+	font-size: var(--pfy-font-text-standard);
+}
+
+.tag-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	padding-left: 0;
+	gap: var(--pfy-spacing-standard);
+	list-style-type: none;
+	
+	.tag-bubble {
+		display: flex;
+		flex-direction: row;
+		gap: var(--pfy-spacing-standard);
+		height: var(--pfy-element-button-size-regular);
+		border-radius: var(--pfy-element-button-size-large);
+		border: 1px solid var(--pfy-primary-ultradark);
+		background: var(--pfy-empty-02-raised);
+		padding-left: var(--pfy-spacing-standard);
+		padding-right: var(--pfy-spacing-standard);
+		
+		.delete-button {
+			padding: 0;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			background: none;
+			border: none;
+		}
+	
+		.tag-name {
+			font-size: var(--pfy-font-text-standard);
+		}
 	}
 }

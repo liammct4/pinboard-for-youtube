@@ -125,26 +125,18 @@ export async function removeVideoByVideoID(videoID: string): Promise<boolean> {
 /**
  * Retrieves the user defined tag definitions from storage.
  */
-export async function getStorageTagDefinitions(): Promise<Map<string, TagDefinition>> {
+export async function getStorageTagDefinitions(): Promise<Array<TagDefinition>> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-	return convertArrayToMap(storage.user_data.tagDefinitions, (item) => item.id);
+	return storage.user_data.tagDefinitions;
 }
 
 /**
  * Sets the tag definitions in storage.
  */
-export async function setStorageTagDefinitions(tags: Map<string, TagDefinition>): Promise<void> {
+export async function setStorageTagDefinitions(tags: Array<TagDefinition>): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
-
-	let serializedArray: Array<TagDefinition> = [];
-	let keys = tags.keys();
-
-	for (let key of keys) {
-		serializedArray.push(tags.get(key)!);
-	}
-	
-	storage.user_data.tagDefinitions = serializedArray;
+	storage.user_data.tagDefinitions = tags;
 
 	await chrome.storage.local.set({ "user_data": storage.user_data });
 }
