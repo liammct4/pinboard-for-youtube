@@ -54,8 +54,9 @@ export const videoSlice = createSlice({
 
 				// E.g. has been updated.
 				if (tag.id == action.payload.id) {
-					state.tagDefinitions[i] = action.payload;
-					return;
+					// Need to reinsert it into the correct place. So delete and let the code below handle it.
+					state.tagDefinitions.splice(i, 1);
+					break;
 				}
 				else if (tag.name == action.payload.name) {
 					// Duplicate name, so don't add.
@@ -67,7 +68,7 @@ export const videoSlice = createSlice({
 			let inserted = false;
 
 			for (let i = 0; i < state.tagDefinitions.length; i++) {
-				if (state.tagDefinitions[i].name < action.payload.name) {
+				if (state.tagDefinitions[i].name > action.payload.name) {
 					state.tagDefinitions.splice(i, 0, action.payload);
 					inserted = true;
 					

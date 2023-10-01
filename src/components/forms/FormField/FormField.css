@@ -23,6 +23,7 @@
 			margin: 0;
 			font-weight: bold;
 			color: var(--pfy-text-light);
+			font-size: var(--pfy-font-text-standard);
 		}
 
 		.close-button {

@@ -1,7 +1,7 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { addTagDefinition, removeTagDefinition } from "../../features/videos/videoSlice";
 import { TagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
@@ -14,6 +14,7 @@ import "./TagsPage.css"
 
 interface ITagItemProperties {
 	tagDefinition: TagDefinition;
+	selected?: boolean
 }
 
 function resolveNewTag(tagDefinitions: Array<TagDefinition>): string {
@@ -32,13 +33,13 @@ function resolveNewTag(tagDefinitions: Array<TagDefinition>): string {
 	return "New Tag";
 }
 
-function TagItem({ tagDefinition }: ITagItemProperties): React.ReactNode {
+function TagItem({ tagDefinition, selected }: ITagItemProperties): React.ReactNode {
 	const { crossButtonPress, tagButtonPress } = useContext(TagItemContext);
 
 	return (
-		<div className="tag-bubble">
+		<div className="tag-bubble" onClick={() => tagButtonPress(tagDefinition)} data-selected={selected}>
 			<button className="delete-button" onClick={() => crossButtonPress(tagDefinition)}>
-				<IconContainer className="icon-colour-standard" asset={CrossIcon} use-stroke/>
+				<IconContainer className="icon-colour-standard delete-icon" asset={CrossIcon} use-stroke/>
 			</button>
 			<span className="tag-name">{tagDefinition.name}</span>
 		</div>
@@ -49,6 +50,7 @@ export function TagsPage(): React.ReactNode {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
+	const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
 	return (
 		<>
@@ -63,18 +65,37 @@ export function TagsPage(): React.ReactNode {
 			<p className="tag-description">You can use tags to organize videos, use the dropdown in the main dashboard to filter videos by tag.</p>
 			<TagItemContext.Provider value={{
 				crossButtonPress: (tag: TagDefinition) => dispatch(removeTagDefinition(tag.id)),
-				tagButtonPress: (tag: TagDefinition) => null // Used to edit.
+				tagButtonPress: (tag: TagDefinition) => {
+					if (selectedTag == tag.id) {
+						setSelectedTag(null);
+						navigate(".");
+						return;
+					}
+
+					setSelectedTag(tag.id);
+
+					navigate(".");
+
+					// Completely reset the form with updated values.
+					setTimeout(() => navigate(`edit/${tag.id}`), 1);
+				}
 			}}>
-				<ul className="tag-list">
-					{tagDefinitions.map(x => <TagItem key={x.id} tagDefinition={x}/>)}
-				</ul>
+				{tagDefinitions.length > 0 ?
+					<ul className="tag-list">
+						{tagDefinitions.map(x => <TagItem key={x.id} tagDefinition={x} selected={selectedTag == x.id ? true : undefined}/>)}
+					</ul>
+					: <span className="empty-tag-message">Nothing to show...</span>
+				}
 			</TagItemContext.Provider>
 			<hr className="regular-separator"/>
-			<button className="button-small" onClick={() => dispatch(addTagDefinition({
-				id: uuid(),
-				name: resolveNewTag(tagDefinitions),
-				colour: "10"
-			}))}>Create tag</button>
+			<div className="tag-button-bar">
+				<button className="button-small" onClick={() => dispatch(addTagDefinition({
+					id: uuid(),
+					name: resolveNewTag(tagDefinitions),
+					colour: "10"
+				}))}>Create tag</button>
+			</div>
+			<Outlet/>
 		</>
 	);
 }

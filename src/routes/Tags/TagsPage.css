@@ -34,6 +34,7 @@
 		background: var(--pfy-empty-02-raised);
 		padding-left: var(--pfy-spacing-standard);
 		padding-right: var(--pfy-spacing-standard);
+		user-select: none;
 		
 		.delete-button {
 			padding: 0;
@@ -47,5 +48,31 @@
 		.tag-name {
 			font-size: var(--pfy-font-text-standard);
 		}
+
+		&[data-selected] {
+			background: var(--pfy-primary-dark);
+			color: var(--pfy-shade-light-01);
+
+			.delete-button {
+				.delete-icon {
+					stroke: var(--pfy-shade-light-01);
+				}
+			}
+		}
 	}
+}
+
+.empty-tag-message {
+	display: block;
+	color: var(--pfy-text-lighter);
+	font-size: var(--pfy-font-text-standard);
+	text-align: center;
+	width: 100%;
+}
+
+.tag-button-bar {
+	display: flex;
+	flex-direction: row;
+	grid-area: var(--pfy-spacing-standard);
+	margin-bottom: var(--pfy-spacing-standard);
 }

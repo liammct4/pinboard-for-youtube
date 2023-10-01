@@ -22,6 +22,7 @@ import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/theme.ts"
 import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 import { TagsPage } from "./routes/Tags/TagsPage.tsx"
+import { EditTagPage } from "./routes/Tags/EdItTagPage/EditTagPage.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -64,7 +65,9 @@ async function setupState() {
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<HomePage/>}>
 						<Route path="videos" element={<VideosPage/>}/>
-						<Route path="tags" element={<TagsPage/>}/>
+						<Route path="tags" element={<TagsPage/>}>
+							<Route path="edit/:tagId" element={<EditTagPage/>}/>
+						</Route>
 						<Route path="menu" element={<MenuPage/>}>
 							<Route path="options/*" element={<OptionsPage/>}>
 								<Route path="general" element={<GeneralPage/>}/>
