@@ -7,6 +7,7 @@ export type Timestamp = {
 };
 
 export type TagDefinition = {
+	id: string;
 	name: string;
 	colour: string;
 }
@@ -15,7 +16,7 @@ export type Video = {
 	videoID: string;
 	timestamps: Array<Timestamp>;
 	/**
-	 * Array of tag definition names.
+	 * Array of tag definition ids.
 	 */
 	appliedTags: Array<string>;
 };

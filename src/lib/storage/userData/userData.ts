@@ -128,7 +128,7 @@ export async function removeVideoByVideoID(videoID: string): Promise<boolean> {
 export async function getStorageTagDefinitions(): Promise<Map<string, TagDefinition>> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-	return convertArrayToMap(storage.user_data.tagDefinitions, (item) => item.name);
+	return convertArrayToMap(storage.user_data.tagDefinitions, (item) => item.id);
 }
 
 /**

@@ -49,13 +49,22 @@ export const videoSlice = createSlice({
 			state.currentVideos = action.payload;
 		},
 		addTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
-			state.tagDefinitions.set(action.payload.name, action.payload);
+			let keys = state.tagDefinitions.keys();
+
+			// Avoid duplicates.
+			for (let key of keys) {
+				if (state.tagDefinitions.get(key)?.name == action.payload.name) {
+					return;
+				}
+			}
+
+			state.tagDefinitions.set(action.payload.id, action.payload);
 		},
 		removeTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
-			state.tagDefinitions.delete(action.payload.name);
+			state.tagDefinitions.delete(action.payload.id);
 		},
 		setTagDefinitions: (state, action: PayloadAction<Array<TagDefinition>>) => {
-			state.tagDefinitions = convertArrayToMap(action.payload, (item) => item.name);
+			state.tagDefinitions = convertArrayToMap(action.payload, (item) => item.id);
 		}
 	}
 })
