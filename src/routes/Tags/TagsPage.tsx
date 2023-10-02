@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { addTagDefinition, removeTagDefinition } from "../../features/videos/videoSlice";
+import { addTagDefinition, removeTagDefinition, setTagDefinitions } from "../../features/videos/videoSlice";
 import { TagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
 import { IconContainer } from "../../components/images/svgAsset";
@@ -10,6 +10,7 @@ import { ReactComponent as CrossIcon } from "./../../../assets/symbols/cross.svg
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
 import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading";
 import { TagItemContext } from "../../context/tag";
+import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage";
 import "./TagsPage.css"
 
 interface ITagItemProperties {
@@ -94,6 +95,18 @@ export function TagsPage(): React.ReactNode {
 					name: resolveNewTag(tagDefinitions),
 					colour: "10"
 				}))}>Create tag</button>
+				<ActionMessageDialog
+					title="Clear All Tags"
+					buttons={["Yes", "Cancel"]}
+					body="Are you sure you want to clear all tags, all applied tags will be removed, this cannot be undone!"
+					defaultMessage="Cancel"
+					onButtonPressed={(action: string) => {
+						if (action == "Yes") {
+							dispatch(setTagDefinitions([]))
+						}
+					}}>
+					<button className="button-small">Clear all tags</button>
+				</ActionMessageDialog>
 			</div>
 			<Outlet/>
 		</>

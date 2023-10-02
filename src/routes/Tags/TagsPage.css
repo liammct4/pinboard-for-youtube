@@ -73,6 +73,7 @@
 .tag-button-bar {
 	display: flex;
 	flex-direction: row;
+	gap: var(--pfy-spacing-standard);
 	grid-area: var(--pfy-spacing-standard);
 	margin-bottom: var(--pfy-spacing-standard);
 }
