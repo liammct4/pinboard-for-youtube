@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { useDispatch } from "react-redux"
 import { VideoContext, VideoListContext } from "../../../context/video.ts";
 import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
@@ -10,6 +10,12 @@ import VideoCard from "./../VideoCard/VideoCard.jsx"
 import { ReactComponent as PlusIcon } from "src/../assets/symbols/plus.svg"
 import { ReactComponent as DragHandle } from "src/../assets/icons/drag_vrect.svg"
 import { IconContainer } from "../../images/svgAsset.tsx";
+import { TagItem } from "../tags/TagItem/TagItem.tsx";
+import { TagItemContext } from "../../../context/tag.ts";
+import * as Select from "@radix-ui/react-select"
+import { updateVideo } from "../../../features/videos/videoSlice.ts";
+import { SelectItem } from "../../input/DropdownInput/dropdown.tsx";
+import "./../../../styling/elements/select.css"
 import "./VideoTimestampList.css"
 
 export function VideoTimestampList(): React.ReactNode {
@@ -83,6 +89,12 @@ export function VideoTimestampList(): React.ReactNode {
 
 		document.addEventListener("mouseup", listener);
 	};
+	// Removes tags which have already been applied.
+	const applicableTags = useMemo(() =>
+		topLevelVideos
+		.tagDefinitions
+		.filter(x => video.appliedTags.find(y => y == x.id) == undefined)
+	, [topLevelVideos.tagDefinitions, video.appliedTags]);
 
 	let isOpen = topLevelVideos.openVideos.includes(video.videoID);
 
@@ -118,6 +130,69 @@ export function VideoTimestampList(): React.ReactNode {
 						<p className="info-text">Add new timestamp</p>
 					</div>
 				</SubtleExpander>
+				<ul className="applied-tag-list">
+					<TagItemContext.Provider value={{
+						tagButtonPress: () => null,
+						crossButtonPress: (tag) => {
+							let index = video.appliedTags.findIndex(x => x == tag.id);
+
+							if (index == -1) {
+								return;
+							}
+
+							let updatedVideo: Video = {
+								...video,
+								appliedTags: [ ...video.appliedTags ]
+							}
+
+							updatedVideo.appliedTags.splice(index);
+
+							dispatch(updateVideo(updatedVideo));
+						}
+					}}>
+						{video.appliedTags.map(x => 
+							<li key={x}>
+								<TagItem tagDefinition={topLevelVideos.tagDefinitions.find(y => y.id == x)!}/>
+							</li>)}
+					</TagItemContext.Provider>
+					<li>
+						<Select.Root
+							value=""
+							onValueChange={(value) => {
+								let updatedVideo: Video = {
+									...video,
+									appliedTags: [
+										...video.appliedTags,
+										value
+									]
+								}
+
+								dispatch(updateVideo(updatedVideo));
+							}}> 
+							<Select.Trigger className="select-button field-input circle-button add-tag-dropdown-button" aria-label="Theme" disabled={applicableTags.length == 0}>
+								<div className="value-outer" >
+									<Select.Value/>
+								</div>
+								<Select.Icon className="open-icon">
+									<IconContainer
+										className="icon-colour-standard"
+										asset={PlusIcon}
+										use-stroke
+									/>
+								</Select.Icon>
+							</Select.Trigger>
+							<Select.Portal>
+								<Select.Content className="select-dropdown-content">
+									<Select.Viewport className="select-viewport">
+										<Select.Group className="select-group">
+											{applicableTags.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}
+										</Select.Group>
+									</Select.Viewport>
+								</Select.Content>
+							</Select.Portal>
+						</Select.Root>
+					</li>
+				</ul>
 			</div>
 			<hr className="bold-separator"></hr>
 		</Reorder.Item>

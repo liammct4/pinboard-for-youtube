@@ -5,17 +5,10 @@ import { DropdownOptionsContext } from "./context";
 import { FormStyleContext } from "../formStyleContext";
 import * as Select from "@radix-ui/react-select"
 import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrow.svg"
+import { IconContainer } from "../../images/svgAsset";
+import { SelectItem } from "./dropdown";
 import "./../../../styling/elements/select.css"
 import "./../Input.css"
-import { IconContainer } from "../../images/svgAsset";
-
-function SelectItem({ value, children }: { value: string, children: React.ReactNode }): React.ReactNode {
-	return (
-		<Select.Item className="select-item" value={value}>
-			<Select.ItemText>{children}</Select.ItemText>
-		</Select.Item>
-	);
-}
 
 export function DropdownInput<T extends FieldValues>({ label, name, fieldSize, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
 	const { onChange } = register(name, registerOptions ?? { });

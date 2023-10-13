@@ -1,11 +1,12 @@
 import { createContext, Context } from "react"
-import { Video } from "../lib/video/video";
+import { TagDefinition, Video } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 
 export interface IVideoContext {
 	activeVideoID: string | undefined,
 	videos: Array<Video>,
 	openVideos: Array<string>,
+	tagDefinitions: Array<TagDefinition>,
 	actions: {
 		addVideo: ActionCreatorWithPayload<Video, "video/addVideo">,
 		updateVideo: ActionCreatorWithPayload<Video, "video/updateVideo">,

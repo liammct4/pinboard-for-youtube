@@ -1,0 +1,36 @@
+.tag-bubble {
+	display: flex;
+	flex-direction: row;
+	gap: var(--pfy-spacing-standard);
+	height: var(--pfy-element-button-size-regular);
+	border-radius: var(--pfy-element-button-size-large);
+	border: 1px solid var(--pfy-primary-ultradark);
+	background: var(--pfy-empty-02-raised);
+	padding-left: var(--pfy-spacing-standard);
+	padding-right: var(--pfy-spacing-standard);
+	user-select: none;
+	
+	.delete-button {
+		padding: 0;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		background: none;
+		border: none;
+	}
+
+	.tag-name {
+		font-size: var(--pfy-font-text-standard);
+	}
+
+	&[data-selected] {
+		background: var(--pfy-primary-dark);
+		color: var(--pfy-shade-light-01);
+
+		.delete-button {
+			.delete-icon {
+				stroke: var(--pfy-shade-light-01);
+			}
+		}
+	}
+}

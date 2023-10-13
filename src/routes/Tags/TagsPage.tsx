@@ -6,17 +6,12 @@ import { addTagDefinition, removeTagDefinition, setTagDefinitions } from "../../
 import { TagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
 import { IconContainer } from "../../components/images/svgAsset";
-import { ReactComponent as CrossIcon } from "./../../../assets/symbols/cross.svg"
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
 import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading";
 import { TagItemContext } from "../../context/tag";
 import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage";
+import { TagItem } from "../../components/video/tags/TagItem/TagItem";
 import "./TagsPage.css"
-
-interface ITagItemProperties {
-	tagDefinition: TagDefinition;
-	selected?: boolean
-}
 
 function resolveNewTag(tagDefinitions: Array<TagDefinition>): string {
 	let resolved = false;
@@ -32,19 +27,6 @@ function resolveNewTag(tagDefinitions: Array<TagDefinition>): string {
 
 	// This should never be reached...
 	return "New Tag";
-}
-
-function TagItem({ tagDefinition, selected }: ITagItemProperties): React.ReactNode {
-	const { crossButtonPress, tagButtonPress } = useContext(TagItemContext);
-
-	return (
-		<div className="tag-bubble" onClick={() => tagButtonPress(tagDefinition)} data-selected={selected}>
-			<button className="delete-button" onClick={() => crossButtonPress(tagDefinition)}>
-				<IconContainer className="icon-colour-standard delete-icon" asset={CrossIcon} use-stroke/>
-			</button>
-			<span className="tag-name">{tagDefinition.name}</span>
-		</div>
-	);
 }
 
 export function TagsPage(): React.ReactNode {

@@ -45,4 +45,24 @@
 			margin-left: var(--pfy-spacing-standard-compact);
 		}
 	}
+
+	.applied-tag-list {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		padding-left: 0;
+		list-style-type: none;
+		gap: var(--pfy-spacing-standard-compact);
+		margin-top: var(--pfy-spacing-standard);
+	}
+
+	.add-tag-dropdown-button {
+		display: flex;
+		align-items: center;
+
+		/* Workaround because Select.Value takes up space and cannot be removed. */
+		.value-outer {
+			display: none;
+		}
+	}
 }

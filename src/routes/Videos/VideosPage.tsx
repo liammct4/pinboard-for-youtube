@@ -51,6 +51,7 @@ export function VideosPage(): React.ReactNode {
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
+	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
@@ -156,6 +157,7 @@ export function VideosPage(): React.ReactNode {
 					activeVideoID,
 					videos,
 					openVideos,
+					tagDefinitions,
 					actions: {
 						addVideo,
 						updateVideo,

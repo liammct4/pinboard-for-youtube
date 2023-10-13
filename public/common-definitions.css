@@ -104,6 +104,13 @@
 		&:focus {
 			outline: 1px solid var(--pfy-primary-ultradark);
 		}
+
+		&:disabled {
+			background-color: var(--pfy-empty-02-raised);
+			color: var(--pfy-shade-03);
+			border: 1px solid var(--pfy-primary-faded);
+			cursor: not-allowed;
+		}
 	}
 
 	/* A button with no strong outline or background, useful for links. */
