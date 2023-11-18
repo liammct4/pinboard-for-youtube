@@ -18,6 +18,18 @@
 		display: flex;
 		flex-direction: row;
 		gap: var(--pfy-spacing-standard);
+
+		.open-filter-dropdown {
+			min-width: 136px;
+
+			.dropdown-arrow {
+				margin-left: auto;
+			}
+			
+			.open-filter-placeholder {
+				font-style: italic;
+			}
+		}
 	}
 
 	.video-collection-section-heading {

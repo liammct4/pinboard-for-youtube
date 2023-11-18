@@ -11,7 +11,7 @@ import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
 import { getExpandedVideos } from "./lib/storage/tempState/tempState.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import HomePage from "./routes/HomePage.tsx"
-import VideosPage from "./routes/Videos/VideosPage.tsx"
+import { VideosPage } from "./routes/Videos/VideosPage.tsx"
 import MenuPage from "./routes/Menu/MenuPage.tsx"
 import OptionsPage from "./routes/Menu/Options/OptionsPage.tsx"
 import HelpPage from "./routes/Menu/Help/HelpPage.tsx"

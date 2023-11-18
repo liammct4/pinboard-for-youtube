@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage.tsx";
 import FormDialog from "../../components/dialogs/FormDialog.tsx";
 import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading.tsx";
@@ -18,6 +18,9 @@ import { SubmitHandler } from "react-hook-form";
 import { ReactComponent as TagIcon} from "./../../../assets/icons/tag.svg"
 import { IconContainer } from "../../components/images/svgAsset.tsx";
 import { useNavigate } from "react-router-dom";
+import * as Select from "@radix-ui/react-select";
+import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
+import { SelectItem } from "../../components/input/DropdownInput/dropdown.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 
@@ -54,6 +57,8 @@ export function VideosPage(): React.ReactNode {
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [ tagFilter, setTagFilter ] = useState<string>("");
+	const filteredVideos = useMemo(() => videos.filter(x => tagFilter != "" ? x.appliedTags.includes(tagFilter) : videos), [tagDefinitions, tagFilter, videos]);
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
@@ -101,7 +106,6 @@ export function VideosPage(): React.ReactNode {
 
 		document.addEventListener("mouseup", listener);
 	}
-
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(onAddVideo);
 	useEffect(() => {
 		reset();
@@ -148,6 +152,24 @@ export function VideosPage(): React.ReactNode {
 					<button className="button-small">Clear videos</button>
 				</ActionMessageDialog>
 				<div style={{ flexGrow: "1" }}/>
+				<Select.Root onValueChange={(value) => setTagFilter(value)}> 
+					<Select.Trigger className="open-filter-dropdown select-button">
+						<Select.Value placeholder={<span className="open-filter-placeholder">Tag Filter...</span>}/>
+						<IconContainer
+							className="icon-colour-standard dropdown-arrow"
+							asset={ArrowIcon}
+							use-stroke/>
+					</Select.Trigger>
+					<Select.Portal>
+						<Select.Content className="select-dropdown-content">
+							<Select.Viewport className="select-viewport">
+								<Select.Group className="select-group">
+									{[<SelectItem key="placeholder" value="Filter"><span className="open-filter-placeholder">None</span></SelectItem>, ...tagDefinitions.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)]}
+								</Select.Group>
+							</Select.Viewport>
+						</Select.Content>
+					</Select.Portal>
+				</Select.Root>
 				<button className="button-small square-button" onClick={() => navigate("../tags")}>
 					<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
 				</button>
@@ -155,7 +177,7 @@ export function VideosPage(): React.ReactNode {
 			<div className="video-collection-scrollbox">
 				<VideoListContext.Provider value={{
 					activeVideoID,
-					videos,
+					videos: filteredVideos,
 					openVideos,
 					tagDefinitions,
 					actions: {
@@ -173,5 +195,3 @@ export function VideosPage(): React.ReactNode {
 		</div>
 	);
 }
-
-export default VideosPage;
