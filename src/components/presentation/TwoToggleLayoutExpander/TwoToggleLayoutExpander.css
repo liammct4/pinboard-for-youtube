@@ -1,0 +1,31 @@
+.expander-inner {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: var(--pfy-spacing-standard);
+	
+	.layout-option-button {
+		width: var(--pfy-element-button-size-large) !important;
+		height: var(--pfy-element-button-size-large) !important;
+		
+		&[data-active="true"] {
+			background: var(--pfy-shade-04) !important;
+		}
+	}
+
+	.message-text {
+		color: var(--pfy-text-normal);
+	}
+
+	&[data-align="left"] {
+		justify-content: left;
+	}
+
+	&[data-align="middle"] {
+		justify-content: center;
+	}
+
+	&[data-align="right"] {
+		justify-content: right;
+	}
+}

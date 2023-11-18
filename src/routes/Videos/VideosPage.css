@@ -3,6 +3,10 @@
 	flex-direction: column;
 	height: 100%;
 
+	.current-video-heading {
+		margin-top: var(--pfy-spacing-standard);
+	}
+	
 	.current-video-card {
 		margin-top: var(--pfy-spacing-standard);
 		margin-bottom: var(--pfy-spacing-standard-compact);

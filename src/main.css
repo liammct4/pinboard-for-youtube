@@ -1,6 +1,6 @@
 #root {
-	width: 390px;
-	height: 445px;
+	width: var(--pfy-window-width);
+	height: var(--pfy-window-height);
 }
 
 body {

@@ -19,8 +19,11 @@ import { ReactComponent as TagIcon} from "./../../../assets/icons/tag.svg"
 import { IconContainer } from "../../components/images/svgAsset.tsx";
 import { useNavigate } from "react-router-dom";
 import * as Select from "@radix-ui/react-select";
-import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
 import { SelectItem } from "../../components/input/DropdownInput/dropdown.tsx";
+import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggleLayoutExpander/TwoToggleLayoutExpander.tsx";
+import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
+import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
+import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 
@@ -113,14 +116,22 @@ export function VideosPage(): React.ReactNode {
 
 	return (
 		<div className="video-page-inner">
-			{/* Current video */}
-			<SplitHeading text="Current video"/>
-			<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
-			{/* Current video controls */}
-			<div className="current-video-buttons">
-				<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-				<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
-			</div>
+			<TwoToggleLayoutExpander
+				expanded={true}
+				openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
+				closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
+				openTooltip="Show current video controls and saved timestamps."
+				closeTooltip="Only show saved timestamps."
+				align="right">
+					{/* Current video */}
+					<SplitHeading className="current-video-heading" text="Current video"/>
+					<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
+					{/* Current video controls */}
+					<div className="current-video-buttons">
+						<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
+						<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
+					</div>
+			</TwoToggleLayoutExpander>
 			{/* My timestamps */}
 			<SplitHeading className="video-collection-section-heading" text="My video timestamps"></SplitHeading>
 			<div className="video-collection-buttons">

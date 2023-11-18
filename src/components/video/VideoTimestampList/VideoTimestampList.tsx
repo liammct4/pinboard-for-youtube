@@ -4,7 +4,7 @@ import { VideoContext, VideoListContext } from "../../../context/video.ts";
 import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
 import { generateUniqueFrom } from "../../../lib/util/generic/randomUtil.ts";
 import { Reorder, useDragControls } from "framer-motion";
-import SubtleExpander from "../../presentation/SubtleExpander/SubtleExpander.js"
+import { LabeledArrowExpander } from "../../presentation/LabeledArrowExpander/LabeledArrowExpander.js"
 import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
 import { ReactComponent as PlusIcon } from "src/../assets/symbols/plus.svg"
@@ -111,7 +111,7 @@ export function VideoTimestampList(): React.ReactNode {
 					</div>
 				</div>
 				<hr className="regular-separator"></hr>
-				<SubtleExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
+				<LabeledArrowExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
 					<Reorder.Group className="timestamp-list" values={video.timestamps} onReorder={handleTimestampReorder}>
 						{video.timestamps.map((x) => 
 							<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
@@ -129,7 +129,7 @@ export function VideoTimestampList(): React.ReactNode {
 						</button>
 						<p className="info-text">Add new timestamp</p>
 					</div>
-				</SubtleExpander>
+				</LabeledArrowExpander>
 				<ul className="applied-tag-list">
 					<TagItemContext.Provider value={{
 						tagButtonPress: () => null,
