@@ -1,5 +1,17 @@
 export function getSecondsFromTimestamp(time: string): number {
-	if (!/^\s*(\d+:)?\d{2}:\d{2}\s*$/.test(time)) {
+	/* Validates the timestamp according to the format: H:MM:SS. E.g.
+	* Good cases:
+	* 	1:02:03
+	*	1:23:45
+	*	123:45:60
+	*	10:20
+	* Bad cases:
+	*	:12:34
+	*	12:34:56:78
+	*	1:2:34
+	*	10:2
+	*/
+	if (!/^(\d+:)(\d{2}(:|$)){1,2}$/.test(time)) {
 		throw new TypeError(`Invalid argument provided, the timestamp was an invalid value. Value proivded: '${time}'.`);
 	}
 
