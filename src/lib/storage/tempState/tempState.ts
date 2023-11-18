@@ -1,5 +1,8 @@
+import { LayoutState } from "./layoutState";
+
 export interface ITempState {
 	expandedVideos: Array<string>,
+	layout: LayoutState;
 }
 
 type StorageTemp = { temp_state: ITempState };
@@ -55,4 +58,24 @@ export async function removeExpandedID(videoID: string): Promise<void> {
 		
 		await chrome.storage.local.set(tempState);
 	}
+}
+
+/**
+ * Returns the single saved layout state located in storage.
+ */
+export async function getLayoutState(): Promise<LayoutState> {
+	let tempState: ITempState = await getTempState();
+	
+	return tempState.layout; 
+}
+
+/**
+ * Sets the layout state object in storage.
+ * @param layout The layout to save to storage. Will replace the existing saved state.
+ */
+export async function setLayoutState(layout: LayoutState): Promise<void> {
+	let tempState: StorageTemp = await chrome.storage.local.get("temp_state") as StorageTemp;
+	tempState.temp_state.layout = layout;
+
+	await chrome.storage.local.set(tempState);
 }

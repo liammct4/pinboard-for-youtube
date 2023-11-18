@@ -62,7 +62,10 @@ export async function ensureInitialized(): Promise<void> {
 			tagDefinitions: []
 		},
 		temp_state: {
-			expandedVideos: []
+			expandedVideos: [],
+			layout: {
+				isCurrentVideosSectionExpanded: true
+			}
 		}
 	};
 

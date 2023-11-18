@@ -23,6 +23,7 @@ export let store = configureStore({
 		.prepend(videoTimelineMiddleware.middleware)
 		.prepend(tempStateMiddleware.addIDMiddleware.middleware)
 		.prepend(tempStateMiddleware.removeIDMiddleware.middleware)
+		.prepend(tempStateMiddleware.layoutStateUpdateMiddleware.middleware)
 		.prepend(themeMiddleware.updateThemeMiddleware.middleware)
 		.prepend(themeMiddleware.updateStorageMiddleware.middleware)
 		.prepend(themeMiddleware.updateCustomThemeStorageMiddleware.middleware)

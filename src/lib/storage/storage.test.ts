@@ -8,7 +8,10 @@ let storageTemplate: IStorage = {
 		tagDefinitions: []
 	},
 	temp_state: {
-		expandedVideos: []
+		expandedVideos: [],
+		layout: {
+			isCurrentVideosSectionExpanded: true
+		}
 	}
 }
 
@@ -41,7 +44,10 @@ describe("Local storage operations.", () => {
 				tagDefinitions: []
 			},
 			temp_state: {
-				expandedVideos: []
+				expandedVideos: [],
+				layout: {
+					isCurrentVideosSectionExpanded: true
+				}
 			}
 		};
 

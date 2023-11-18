@@ -9,7 +9,10 @@ let storageTemplate: IStorage = {
 		tagDefinitions: []
 	},
 	temp_state: {
-		expandedVideos: ["ERYG3NE1DO8", "ZjVAsJOl8SM", "AKeUssuu3Is"]
+		expandedVideos: ["ERYG3NE1DO8", "ZjVAsJOl8SM", "AKeUssuu3Is"],
+		layout: {
+			isCurrentVideosSectionExpanded: true
+		}
 	}
 }
 

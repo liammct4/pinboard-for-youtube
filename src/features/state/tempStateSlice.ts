@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { LayoutState } from "../../lib/storage/tempState/layoutState";
 
 export interface IStateSlice {
-	expandedVideoIDs: Array<string>
+	expandedVideoIDs: Array<string>;
+	layout: LayoutState
 }
 
 const initialState: IStateSlice = {
-	expandedVideoIDs: []
+	expandedVideoIDs: [],
+	layout: {
+		isCurrentVideosSectionExpanded: true
+	}
 }
 
 export const tempStateSlice = createSlice({
@@ -14,6 +19,7 @@ export const tempStateSlice = createSlice({
 	reducers: {
 		setTempState: (state, action: PayloadAction<IStateSlice>) => {
 			state.expandedVideoIDs = action.payload.expandedVideoIDs;
+			state.layout = action.payload.layout;
 		},
 		addExpandedID: (state, action: PayloadAction<string>) => {
 			if (!state.expandedVideoIDs.includes(action.payload)) {
@@ -26,9 +32,12 @@ export const tempStateSlice = createSlice({
 			if (index != -1) {
 				state.expandedVideoIDs.splice(index, 1);
 			}
+		},
+		setLayoutState: (state, action: PayloadAction<LayoutState>) => {
+			state.layout = action.payload;
 		}
 	}
 })
 
-export const { setTempState, addExpandedID, removeExpandedID } = tempStateSlice.actions;
+export const { setTempState, addExpandedID, removeExpandedID, setLayoutState } = tempStateSlice.actions;
 export default tempStateSlice.reducer;

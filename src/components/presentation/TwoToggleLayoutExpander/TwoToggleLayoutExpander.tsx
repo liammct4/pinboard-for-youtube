@@ -5,7 +5,7 @@ import "./TwoToggleLayoutExpander.css"
 
 export interface ITwoToggleLayoutExpanderProperties {
 	expanded: boolean;
-	onExpanded?: (open: boolean) => void;
+	onExpandedEvent?: (open: boolean) => void;
 	openMessage?: string;
 	closeMessage?: string;
 	openTooltip?: string;
@@ -18,7 +18,7 @@ export interface ITwoToggleLayoutExpanderProperties {
 
 export function TwoToggleLayoutExpander({
 		expanded,
-		onExpanded,
+		onExpandedEvent,
 		openMessage,
 		closeMessage,
 		openTooltip,
@@ -31,14 +31,20 @@ export function TwoToggleLayoutExpander({
 	let [isExpanded, setExpanded] = useState(expanded);
 
 	return (
-		<Collapsible.Root open={onExpanded == null ? isExpanded : expanded} onOpenChange={onExpanded ?? (() => isExpanded)}>
+		<Collapsible.Root open={isExpanded} onOpenChange={(() => isExpanded)}>
 			<div className="expander-inner" data-align={align ?? "left"}>
 				<Collapsible.Trigger asChild>
 					<button
 						className="layout-option-button button-small square-button"
 						type="button"
 						title={openTooltip}
-						onClick={() => setExpanded(true)}
+						onClick={() => {
+							setExpanded(true)
+
+							if (onExpandedEvent != null) {
+								onExpandedEvent(true);
+							}
+						}}
 						data-active={isExpanded}>
 							{openButtonContent}
 					</button>
@@ -48,7 +54,13 @@ export function TwoToggleLayoutExpander({
 						className="layout-option-button button-small square-button"
 						type="button"
 						title={closeTooltip}
-						onClick={() => setExpanded(false)}
+						onClick={() => {
+							setExpanded(false);
+						
+							if (onExpandedEvent != null) {
+								onExpandedEvent(false);
+							}
+						}}
 						data-active={!isExpanded}>
 							{closeButtonContent}
 					</button>

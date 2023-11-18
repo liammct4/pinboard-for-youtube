@@ -8,7 +8,7 @@ import { getStorageTagDefinitions, getStoredVideos } from "./lib/storage/userDat
 import { ensureInitialized } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, videoExists } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
-import { getExpandedVideos } from "./lib/storage/tempState/tempState.ts"
+import { getExpandedVideos, getLayoutState } from "./lib/storage/tempState/tempState.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import HomePage from "./routes/HomePage.tsx"
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
@@ -53,7 +53,8 @@ async function setupState() {
 	}
 
 	let tempState: IStateSlice = {
-		expandedVideoIDs: await getExpandedVideos()
+		expandedVideoIDs: await getExpandedVideos(),
+		layout: await getLayoutState()
 	}
 
 	store.dispatch(setVideoState(videoState));

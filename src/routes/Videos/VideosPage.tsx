@@ -7,7 +7,7 @@ import VideoCollection from "../../components/video/VideoCollection/VideoCollect
 import { VideoListContext } from "../../context/video.ts";
 import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
 import { addVideo, clearVideos, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
-import { addExpandedID, removeExpandedID } from "../../features/state/tempStateSlice.ts";
+import { addExpandedID, removeExpandedID, setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { Video, generateTimestamp } from "../../lib/video/video.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
@@ -58,6 +58,7 @@ export function VideosPage(): React.ReactNode {
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
+	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [ tagFilter, setTagFilter ] = useState<string>("");
@@ -117,7 +118,10 @@ export function VideosPage(): React.ReactNode {
 	return (
 		<div className="video-page-inner">
 			<TwoToggleLayoutExpander
-				expanded={true}
+				expanded={layoutState.isCurrentVideosSectionExpanded}
+				onExpandedEvent={(value: boolean) => {
+					dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
+				}}
 				openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 				closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 				openTooltip="Show current video controls and saved timestamps."
