@@ -140,3 +140,24 @@ export async function setStorageTagDefinitions(tags: Array<TagDefinition>): Prom
 
 	await chrome.storage.local.set({ "user_data": storage.user_data });
 }
+
+/**
+ * Retrieves the currently selected tag filter ID from storage.
+ * @returns The tag filter ID in storage.
+ */
+export async function getStorageTagFilter(): Promise<string> {
+	let storage: IStorage = await chrome.storage.local.get() as IStorage;
+
+	return storage.user_data.tagFilter;
+}
+
+/**
+ * Sets the single tag filter in storage.
+ * @param tagFilterID The selected tag filter, this is ID's only, not names.
+ */
+export async function setStorageTagFilter(tagFilterID: string): Promise<void> {
+	let storage = await chrome.storage.local.get() as IStorage;
+	storage.user_data.tagFilter = tagFilterID;
+
+	await chrome.storage.local.set({ "user_data": storage.user_data });
+}

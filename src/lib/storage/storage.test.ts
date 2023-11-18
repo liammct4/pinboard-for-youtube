@@ -5,7 +5,8 @@ let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
 		config: sampleConfigData,
-		tagDefinitions: []
+		tagDefinitions: [],
+		tagFilter: ""
 	},
 	temp_state: {
 		expandedVideos: [],
@@ -41,7 +42,8 @@ describe("Local storage operations.", () => {
 					theme: sampleConfigData.theme,
 					customThemes: []
 				},
-				tagDefinitions: []
+				tagDefinitions: [],
+				tagFilter: ""
 			},
 			temp_state: {
 				expandedVideos: [],

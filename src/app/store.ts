@@ -17,7 +17,8 @@ export let store = configureStore({
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-		.prepend(tagStorageMiddleware.middleware)
+		.prepend(tagStorageMiddleware.tagStorageUpdateUpdateMiddleware.middleware)
+		.prepend(tagStorageMiddleware.tagFilterUpdateMiddleware.middleware)
 		.prepend(tagCascadeUpdateMiddleware.middleware)
 		.prepend(videoStorageMiddleware.middleware)
 		.prepend(videoTimelineMiddleware.middleware)

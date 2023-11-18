@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 // @ts-ignore
 import StorageArea from 'mem-storage-area/StorageArea'
 import { TagDefinition, Video } from "../../lib/video/video.ts";
-import { convertArrayToMap } from "../../lib/util/json/map.ts";
 
 export interface IVideoSlice {
 	activeVideoID?: string;
 	currentVideos: Array<Video>;
 	tagDefinitions: Array<TagDefinition>;
+	currentSelectedTagFilter: string;
 }
 
 // Runs if in dev build.
@@ -20,6 +20,7 @@ if (chrome.storage == undefined) {
 
 const initialState: IVideoSlice = {
 	activeVideoID: undefined,
+	currentSelectedTagFilter: "",
 	currentVideos: [],
 	tagDefinitions: []
 }
@@ -31,6 +32,8 @@ export const videoSlice = createSlice({
 		setVideoState: (state, action: PayloadAction<IVideoSlice>) => {
 			state.activeVideoID = action.payload.activeVideoID;
 			state.currentVideos = action.payload.currentVideos;
+			state.currentSelectedTagFilter = action.payload.currentSelectedTagFilter;
+			state.tagDefinitions = action.payload.tagDefinitions;
 		},
 		addVideo: (state, action: PayloadAction<Video>) => {
 			state.currentVideos.push(action.payload);
@@ -87,6 +90,9 @@ export const videoSlice = createSlice({
 		},
 		setTagDefinitions: (state, action: PayloadAction<Array<TagDefinition>>) => {
 			state.tagDefinitions = action.payload;
+		},
+		setTagFilter: (state, action: PayloadAction<string>) => {
+			state.currentSelectedTagFilter = action.payload;
 		}
 	}
 })
@@ -99,6 +105,7 @@ export const {
 	setVideos,
 	addTagDefinition,
 	removeTagDefinition,
-	setTagDefinitions
+	setTagDefinitions,
+	setTagFilter
 } = videoSlice.actions;
 export default videoSlice.reducer;

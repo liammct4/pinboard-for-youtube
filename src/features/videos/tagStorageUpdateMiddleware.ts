@@ -1,9 +1,10 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import { addTagDefinition, removeTagDefinition, setTagDefinitions, updateVideo } from "./videoSlice";
+import { addTagDefinition, removeTagDefinition, setTagDefinitions, setTagFilter, updateVideo } from "./videoSlice";
 import { RootState } from "../../app/store";
-import { setStorageTagDefinitions } from "../../lib/storage/userData/userData";
+import { setStorageTagDefinitions, setStorageTagFilter } from "../../lib/storage/userData/userData";
 
 const tagStorageUpdateUpdateMiddleware = createListenerMiddleware();
+const tagFilterUpdateMiddleware = createListenerMiddleware();
 
 tagStorageUpdateUpdateMiddleware.startListening({
 	matcher: isAnyOf(addTagDefinition, removeTagDefinition, setTagDefinitions),
@@ -14,4 +15,11 @@ tagStorageUpdateUpdateMiddleware.startListening({
 	}
 });
 
-export default tagStorageUpdateUpdateMiddleware;
+tagFilterUpdateMiddleware.startListening({
+	actionCreator: setTagFilter,
+	effect: async (action, _listenerApi) => {
+		await setStorageTagFilter(action.payload);
+	}
+})
+
+export default { tagStorageUpdateUpdateMiddleware, tagFilterUpdateMiddleware };

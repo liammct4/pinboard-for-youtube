@@ -6,7 +6,8 @@ let storageTemplate: IStorage = {
 	user_data: {
 		videos: sampleVideoData,
 		config: sampleConfigData,
-		tagDefinitions: []
+		tagDefinitions: [],
+		tagFilter: ""
 	},
 	temp_state: {
 		expandedVideos: ["ERYG3NE1DO8", "ZjVAsJOl8SM", "AKeUssuu3Is"],

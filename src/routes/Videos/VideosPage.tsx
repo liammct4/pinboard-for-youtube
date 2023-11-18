@@ -6,7 +6,7 @@ import VideoCard from "../../components/video/VideoCard/VideoCard.tsx";
 import VideoCollection from "../../components/video/VideoCollection/VideoCollection.tsx";
 import { VideoListContext } from "../../context/video.ts";
 import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
-import { addVideo, clearVideos, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
+import { addVideo, clearVideos, setTagFilter, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
 import { addExpandedID, removeExpandedID, setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { Video, generateTimestamp } from "../../lib/video/video.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
@@ -59,9 +59,10 @@ export function VideosPage(): React.ReactNode {
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
+	const tagFilter = useSelector((state: RootState) => state.video.currentSelectedTagFilter);
+	const tagFilterDefinition = useMemo(() => tagDefinitions.find(x => x.id == tagFilter), [tagFilter]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [ tagFilter, setTagFilter ] = useState<string>("");
 	const filteredVideos = useMemo(() => videos.filter(x => tagFilter != "" ? x.appliedTags.includes(tagFilter) : videos), [tagDefinitions, tagFilter, videos]);
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
@@ -167,9 +168,9 @@ export function VideosPage(): React.ReactNode {
 					<button className="button-small">Clear videos</button>
 				</ActionMessageDialog>
 				<div style={{ flexGrow: "1" }}/>
-				<Select.Root onValueChange={(value) => setTagFilter(value)}> 
+				<Select.Root defaultValue={tagFilter} onValueChange={(value) => dispatch(setTagFilter(value))}> 
 					<Select.Trigger className="open-filter-dropdown select-button">
-						<Select.Value placeholder={<span className="open-filter-placeholder">Tag Filter...</span>}/>
+						<Select.Value defaultValue={tagFilter} placeholder={<span className="open-filter-placeholder">None</span>}>{tagFilterDefinition != null ? tagFilterDefinition?.name : <span className="open-filter-placeholder">Tag filter...</span>}</Select.Value>
 						<IconContainer
 							className="icon-colour-standard dropdown-arrow"
 							asset={ArrowIcon}

@@ -8,6 +8,7 @@ export interface IStorage {
 	user_data: {
 		videos: Array<Video>;
 		tagDefinitions: Array<TagDefinition>;
+		tagFilter: string;
 		config: IConfig;
 	},
 	temp_state: ITempState;
@@ -59,7 +60,8 @@ export async function ensureInitialized(): Promise<void> {
 				theme: theme,
 				customThemes: []
 			},
-			tagDefinitions: []
+			tagDefinitions: [],
+			tagFilter: ""
 		},
 		temp_state: {
 			expandedVideos: [],
