@@ -164,7 +164,7 @@ export function VideosPage(): React.ReactNode {
 						<Select.Content className="select-dropdown-content">
 							<Select.Viewport className="select-viewport">
 								<Select.Group className="select-group">
-									{[<SelectItem key="placeholder" value="Filter"><span className="open-filter-placeholder">None</span></SelectItem>, ...tagDefinitions.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)]}
+									{[<SelectItem key="placeholder" value=""><span className="open-filter-placeholder">None</span></SelectItem>, ...tagDefinitions.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)]}
 								</Select.Group>
 							</Select.Viewport>
 						</Select.Content>
