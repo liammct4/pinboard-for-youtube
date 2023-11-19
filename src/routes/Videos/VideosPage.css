@@ -20,8 +20,9 @@
 	}
 
 	.video-collection-buttons {
-		display: flex;
-		flex-direction: row;
+		display: grid;
+		grid-template-columns: auto auto 1fr auto auto;
+		grid-template-rows: 1fr 1fr;
 		gap: var(--pfy-spacing-standard);
 
 		.open-filter-dropdown {
@@ -33,6 +34,17 @@
 			
 			.open-filter-placeholder {
 				font-style: italic;
+			}
+		}
+
+		.search-bar-form {
+			display: flex;
+			flex-direction: row;
+			grid-column: 1 / 6;
+			gap: var(--pfy-spacing-standard-compact);
+
+			.small-text-input {
+				flex-grow: 1;
 			}
 		}
 	}

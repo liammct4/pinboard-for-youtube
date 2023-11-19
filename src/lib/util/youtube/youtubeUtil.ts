@@ -13,6 +13,23 @@ export class DoesNotExistError extends Error {
 	}
 }
 
+export interface IYoutubeVideoInfo {
+	thumbnail_width: number;
+	width: number;
+	provider_name: string;
+	author_name: string;
+	thumbnail_url: string;
+	author_url: string;
+	title: string;
+	provider_url: string;
+	height: number;
+	type: string;
+	html: string;
+	url: string;
+	thumbnail_height: number;
+	version: string;
+}
+
 export const YOUTUBE_EXTRACT_VIDEO_ID_REGEX: RegExp = /.*\?v=(?<VideoID>[\w\d\-\_]*)/
 
 export function getVideoIdFromYouTubeLink(url: string): string {
@@ -61,7 +78,7 @@ export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: s
 	return getTimestampVideoLinkFromSeconds(videoID, seconds);
 }
 
-export function getYoutubeVideoInfoFromLink(url: string): any {
+export function getYoutubeVideoInfoFromLink(url: string): IYoutubeVideoInfo {
 	let result = JSON.parse(request.requestGet(`https://noembed.com/embed?url=${url}`))
 
 	if (result.hasOwnProperty("error")) {
@@ -71,7 +88,7 @@ export function getYoutubeVideoInfoFromLink(url: string): any {
 	return result;
 }
 
-export function getYoutubeVideoInfoFromVideoID(videoID: string): any {
+export function getYoutubeVideoInfoFromVideoID(videoID: string): IYoutubeVideoInfo {
 	let link: string = getYouTubeLinkFromVideoID(videoID);
 	
 	return getYoutubeVideoInfoFromLink(link);

@@ -24,6 +24,7 @@ import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggle
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
 import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
+import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 
@@ -63,7 +64,19 @@ export function VideosPage(): React.ReactNode {
 	const tagFilterDefinition = useMemo(() => tagDefinitions.find(x => x.id == tagFilter), [tagFilter]);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const filteredVideos = useMemo(() => videos.filter(x => tagFilter != "" ? x.appliedTags.includes(tagFilter) : videos), [tagDefinitions, tagFilter, videos]);
+	const [ filterTitleText, setFilterTitleText ] = useState("");
+	const filteredVideos = useMemo(() => videos.filter(x => {
+		let tagFiltered = tagFilter == "" || x.appliedTags.includes(tagFilter);
+
+		// TODO: Cache retrieved information.
+		let title = (YTUtil.getYoutubeVideoInfoFromVideoID(x.videoID)).title.toLowerCase();
+
+		let filterWords = filterTitleText.split(' ');
+		let titleWords = title.split(' ');
+		let searchFiltered = filterTitleText == "" || title.includes(filterTitleText) || filterWords.every(val => titleWords.includes(val));
+
+		return tagFiltered && searchFiltered;
+	}), [tagDefinitions, tagFilter, videos, filterTitleText]);
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
@@ -167,7 +180,9 @@ export function VideosPage(): React.ReactNode {
 					}}>
 					<button className="button-small">Clear videos</button>
 				</ActionMessageDialog>
-				<div style={{ flexGrow: "1" }}/>
+				{/* Empty div to fill the horizontal space in the grid. */}
+				<div/>
+				{/* Tag filter & tag edit page. */}
 				<Select.Root defaultValue={tagFilter} onValueChange={(value) => dispatch(setTagFilter(value))}> 
 					<Select.Trigger className="open-filter-dropdown select-button">
 						<Select.Value defaultValue={tagFilter} placeholder={<span className="open-filter-placeholder">None</span>}>{tagFilterDefinition != null ? tagFilterDefinition?.name : <span className="open-filter-placeholder">Tag filter...</span>}</Select.Value>
@@ -189,6 +204,23 @@ export function VideosPage(): React.ReactNode {
 				<button className="button-small square-button" onClick={() => navigate("../tags")}>
 					<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
 				</button>
+				{/* Search bar. */}
+				<form className="search-bar-form" onSubmit={(e) => {
+						e.preventDefault();
+
+						// @ts-ignore Retrieves the text box value. e.target is an array of input elements.
+						let messageText = (e.target[0] as HTMLInputElement).value;
+
+						setFilterTitleText(messageText.toLowerCase());
+					}}>
+					<input className="small-text-input" type="text"/>
+					<button className="button-small circle-button" type="submit">
+						<IconContainer
+							asset={SearchIcon}
+							className="icon-colour-standard"
+							use-stroke/>
+					</button>
+				</form>
 			</div>
 			<div className="video-collection-scrollbox">
 				<VideoListContext.Provider value={{
