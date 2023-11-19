@@ -19,8 +19,13 @@
 		border: none;
 	}
 
-	.tag-name {
+	.tag-name-button {
 		font-size: var(--pfy-font-text-standard);
+		padding: 0;
+		margin-right: calc(var(--pfy-element-button-size-regular) * -0.5);
+		padding-right: calc(var(--pfy-element-button-size-regular) / 2);
+		margin-left: calc(var(--pfy-element-button-size-regular) * -0.25);
+		padding-left: calc(var(--pfy-element-button-size-regular) / 4);
 	}
 
 	&[data-selected] {
@@ -31,6 +36,10 @@
 			.delete-icon {
 				stroke: var(--pfy-shade-light-01);
 			}
+		}
+
+		.tag-name-button {
+			color: var(--pfy-shade-light-01);
 		}
 	}
 }

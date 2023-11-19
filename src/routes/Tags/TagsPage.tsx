@@ -47,7 +47,14 @@ export function TagsPage(): React.ReactNode {
 			<SplitHeading text="Custom Tags"/>
 			<p className="tag-description">You can use tags to organize videos, use the dropdown in the main dashboard to filter videos by tag.</p>
 			<TagItemContext.Provider value={{
-				crossButtonPress: (tag: TagDefinition) => dispatch(removeTagDefinition(tag.id)),
+				crossButtonPress: (tag: TagDefinition) => {
+					if (selectedTag == tag.id) {
+						navigate(".");
+						setSelectedTag(null);
+					}
+
+					dispatch(removeTagDefinition(tag.id))
+				},
 				tagButtonPress: (tag: TagDefinition) => {
 					if (selectedTag == tag.id) {
 						setSelectedTag(null);
@@ -85,6 +92,10 @@ export function TagsPage(): React.ReactNode {
 					onButtonPressed={(action: string) => {
 						if (action == "Yes") {
 							dispatch(setTagDefinitions([]))
+
+							if (selectedTag != null) {
+								navigate(".");
+							}
 						}
 					}}>
 					<button className="button-small">Clear all tags</button>

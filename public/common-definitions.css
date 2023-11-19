@@ -69,6 +69,11 @@
 		}
 	}
 
+	.button-invisible {
+		background: none;
+		border: 0px;
+	}
+
 	/* Square button (Only makes the button square, no additional styling) */
 	.square-button {
 		aspect-ratio: 1 / 1;

@@ -14,11 +14,11 @@ export function TagItem({ tagDefinition, selected }: ITagItemProperties): React.
 	const { crossButtonPress, tagButtonPress } = useContext(TagItemContext);
 
 	return (
-		<div className="tag-bubble" onClick={() => tagButtonPress(tagDefinition)} data-selected={selected}>
+		<div className="tag-bubble" data-selected={selected}>
 			<button className="delete-button" onClick={() => crossButtonPress(tagDefinition)}>
 				<IconContainer className="icon-colour-standard delete-icon" asset={CrossIcon} use-stroke/>
 			</button>
-			<span className="tag-name">{tagDefinition.name}</span>
+			<button className="button-invisible tag-name-button" onClick={() => tagButtonPress(tagDefinition)}>{tagDefinition.name}</button>
 		</div>
 	);
 }
