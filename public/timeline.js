@@ -289,12 +289,8 @@ async function handleTimestampChange(newTimestamp) {
 
 	video.timestamps[timestampIndex] = newTimestamp;
 
-	await chrome.storage.local.set({
-		user_data: {
-			config: userData.config,
-			videos: videos
-		}
-	});
+	// Save changes to storage.
+	await chrome.storage.local.set({ user_data: userData });
 }
 
 function setTimelineTimestamps(timestamps) {
