@@ -3,13 +3,22 @@
 // ----------------------------------
 
 var init = false;
-var timelineOuterContainer = null;
-var timelineContainer = null;
 var mainVideo = null;
 var tabID = null;
 var currentVideoID = null;
 
+// Due to tabs being discarded (Edge) after a tab is idle, accessing the timeline DOM should
+// be done through this function.
+function getTimelineContainers() {
+	var timelineOuterContainer = document.querySelector(".pfy-timeline-container");
+	var timelineContainer = timelineOuterContainer.querySelector(".pfy-timeline-inner");
+
+	return { timelineContainer, timelineOuterContainer };
+}
+
 function handleVideoTimelineResize() {
+	var { timelineContainer } = getTimelineContainers();
+
 	timelineContainer.querySelectorAll("pfy-timeline-button").forEach(timestamp => {
 		timestamp.updateOnTimelineBoundsResize();
 	});;
@@ -63,6 +72,8 @@ class TimestampTimelineButton extends HTMLElement {
 	}
 
 	connectedCallback() {
+		var { timelineContainer } = getTimelineContainers();
+
 		this.innerHTML = `
 			<div class="timestamp-box-outer">
 				<button class="timestamp-box-inner">
@@ -294,6 +305,7 @@ async function handleTimestampChange(newTimestamp) {
 }
 
 function setTimelineTimestamps(timestamps) {
+	var { timelineContainer } = getTimelineContainers();
 	timelineContainer.innerHTML = "";
 	
 	for (let timestamp of timestamps) {
@@ -315,6 +327,8 @@ function getActiveInfo() {
 }
 
 function changeTheme(theme) {
+	var { timelineContainer } = getTimelineContainers();
+	
 	Object.keys(theme.palette).forEach(key => {
 		timelineContainer.style.setProperty(`--pfy-${key}`, theme.palette[key]);
 	});
@@ -423,7 +437,6 @@ async function initialize() {
 
 	currentVideoID = document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
 	progressBar.appendChild(timelineOuterContainer);
-	timelineContainer = timelineOuterContainer.querySelector(".pfy-timeline-inner");
 	
 	// Fetch videos from storage.
 	let userData = (await chrome.storage.local.get("user_data")).user_data;
