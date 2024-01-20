@@ -71,7 +71,7 @@ async function setupState() {
 						<Route path="menu" element={<MenuPage/>}>
 							<Route path="options/*" element={<OptionsPage/>}>
 								<Route path="general" element={<GeneralPage/>}/>
-								<Route path="accounts" element={<AccountsPage/>}/>
+								<Route path="accounts/*" element={<AccountsPage/>}/>
 								<Route path="appearance/*" element={<AppearancePage/>}/>
 								<Route path="*" element={<OptionsNavigator/>}/>
 							</Route>

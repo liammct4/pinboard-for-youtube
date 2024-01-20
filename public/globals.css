@@ -59,10 +59,12 @@
 	--pfy-font-heading-small: 12pt;
 	--pfy-font-heading-tiny: 11pt;
 	--pfy-font-text-standard: 9pt;
+	--pfy-font-text-big: 10pt;
 
 	/* Element Sizes */
 	--pfy-element-button-size-regular: 16px;
-	--pfy-element-button-size-large: 26px;
+	--pfy-element-button-size-medium: 24px;
+	--pfy-element-button-size-large: 28px;
 
 	/* Whitespace, margins or padding. */
 	--pfy-spacing-standard: 6px;

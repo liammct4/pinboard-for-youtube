@@ -18,9 +18,9 @@ export function HomePage(): React.ReactNode {
 			<div className="footer-area">
 				<hr className="bold-separator"></hr>
 				<div className="button-options">
-					<button className="button-small"
+					<button className="button-base button-small"
 						onClick={() => navigate("menu/options")}>Options</button>
-					<button className="button-small"
+					<button className="button-base button-small"
 						onClick={() => navigate("menu/help")}>Help</button>
 				</div>
 				<h2 className="extension-version">Version 1.0.0</h2>

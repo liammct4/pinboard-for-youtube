@@ -52,7 +52,7 @@ export function EditTagPage(): React.ReactNode {
 						}}/>
 				</FormStyleContext.Provider>
 			</form>
-			<input className="button-small" type="submit" form="modify-tag-form" value="Save Changes"/>
+			<input className="button-base button-small" type="submit" form="modify-tag-form" value="Save Changes"/>
 		</>
 	);
 }

@@ -129,7 +129,7 @@ export function AppearanceCustom(): React.ReactNode {
 					</FormStyleContext.Provider>
 				</form>
 				<div className="save-changes-bar">
-					<input className="button-small" type="submit" value="Save Changes" form="edit-custom-theme-form"/>
+					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form"/>
 					{updateVisible ? <span className="confirmation-text">Changes Saved!</span> : <></>}
 				</div>
 			</>}

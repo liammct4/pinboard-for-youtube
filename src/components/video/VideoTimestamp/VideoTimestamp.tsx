@@ -66,13 +66,13 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	return (
 		<Reorder.Item value={timestamp} id={timestamp.id}>
 			<div className="timestamp-inner">
-				<button className="square-button button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+				<button className="square-button button-base button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
 					<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
 				</button>
 				<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
 				<p className="message-text">{timestamp.message}</p>
 				<div style={{ flexGrow: "1" }}></div>
-				<button className="square-button button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
+				<button className="square-button button-base button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
 					<IconContainer
 						className="bin-icon icon-colour-standard"
 						asset={BinIcon}
@@ -84,7 +84,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 					formTitle="Edit timestamp"
 					submitText="Save"
 					labelSize="small"
-					trigger={<button className="edit-button button-small">Edit</button>}
+					trigger={<button className="edit-button button-base button-small">Edit</button>}
 					handleSubmit={handleSubmit(handler)}>
 						{/* Time */}
 						<FormField<IEditTimestampForm> register={register} registerOptions={null}

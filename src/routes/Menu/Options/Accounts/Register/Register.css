@@ -1,0 +1,28 @@
+.register-account-page {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: var(--pfy-spacing-standard);
+	margin-right: var(--pfy-spacing-standard);
+
+	.account-heading {
+		width: 100%;
+		text-align: left;
+		font-size: var(--pfy-font-heading-medium);
+		margin-top: var(--pfy-spacing-standard);
+		margin-bottom: 0;
+	}
+
+	.register-account-form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--pfy-spacing-very-large);
+		margin-top: var(--pfy-spacing-standard);
+		margin-bottom: var(--pfy-spacing-very-large);
+	}
+
+	.register-account-button {
+		width: 40%;
+		margin-top: var(--pfy-spacing-very-large);
+	}
+}

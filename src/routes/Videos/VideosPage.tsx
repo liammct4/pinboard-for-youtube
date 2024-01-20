@@ -146,8 +146,8 @@ export function VideosPage(): React.ReactNode {
 					<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
 					{/* Current video controls */}
 					<div className="current-video-buttons">
-						<button className="button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-						<button className="button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
+						<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
+						<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
 					</div>
 			</TwoToggleLayoutExpander>
 			{/* My timestamps */}
@@ -159,7 +159,7 @@ export function VideosPage(): React.ReactNode {
 					formTitle="Add video"
 					labelSize="small"
 					submitText="Add"
-					trigger={<button className="button-small">Add video</button>}
+					trigger={<button className="button-base button-small">Add video</button>}
 					handleSubmit={handleSubmit(handler)}>
 						<FormField<IAddVideoForm> register={register}
 							label="Link:"
@@ -178,7 +178,7 @@ export function VideosPage(): React.ReactNode {
 							dispatch(clearVideos());
 						}
 					}}>
-					<button className="button-small">Clear videos</button>
+					<button className="button-base button-small">Clear videos</button>
 				</ActionMessageDialog>
 				{/* Empty div to fill the horizontal space in the grid. */}
 				<div/>
@@ -201,7 +201,7 @@ export function VideosPage(): React.ReactNode {
 						</Select.Content>
 					</Select.Portal>
 				</Select.Root>
-				<button className="button-small square-button" onClick={() => navigate("../tags")}>
+				<button className="button-base button-small square-button" onClick={() => navigate("../tags")}>
 					<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
 				</button>
 				{/* Search bar. */}
@@ -214,7 +214,7 @@ export function VideosPage(): React.ReactNode {
 						setFilterTitleText(messageText.toLowerCase());
 					}}>
 					<input className="small-text-input" type="text"/>
-					<button className="button-small circle-button" type="submit">
+					<button className="button-base button-small circle-button" type="submit">
 						<IconContainer
 							asset={SearchIcon}
 							className="icon-colour-standard"

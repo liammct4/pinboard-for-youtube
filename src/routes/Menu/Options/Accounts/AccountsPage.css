@@ -1,0 +1,16 @@
+.account-info-text {
+	text-align: center;
+	margin-left: var(--pfy-spacing-very-large);
+	margin-right: var(--pfy-spacing-very-large);
+}
+
+.account-button-option-bar {
+	display: flex;
+	flex-direction: row;
+	gap: var(--pfy-spacing-large);
+	justify-content: center;
+
+	.button-base {
+		width: 50%;
+	}
+}

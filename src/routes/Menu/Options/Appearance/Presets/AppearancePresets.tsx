@@ -40,14 +40,14 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 				</button>
 				{ theme.modifiable ?
 				<div className="modify-buttons">
-					<button className="square-button button-small" onClick={() => deleteCustomTheme(theme.name)}>
+					<button className="square-button button-base button-small" onClick={() => deleteCustomTheme(theme.name)}>
 						<IconContainer
 							className="icon-colour-standard"
 							asset={DeleteIcon}
 							use-stroke
 							use-fill/>
 					</button>
-					<button className="button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
+					<button className="button-base button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
 				</div>
 				: <></>}
 			</div>
@@ -93,7 +93,7 @@ export function AppearancePresets(): React.ReactNode {
 					formID="add-custom-theme-form"
 					formTitle="Add Custom Theme"
 					description={<>Choose a name for your custom theme. This <b>Cannot</b> already exist or be a default theme.</>}
-					trigger={<button className="button-small">New theme</button>}
+					trigger={<button className="button-base button-small">New theme</button>}
 					labelSize="medium"
 					submitText="Add"
 					handleSubmit={handleSubmit(handler)}>
@@ -147,7 +147,7 @@ export function AppearancePresets(): React.ReactNode {
 					}}
 					title="Clear Custom Themes"
 					defaultMessage="Cancel">
-					<button className="button-small">Clear All</button>
+					<button className="button-base button-small">Clear All</button>
 				</ActionMessageDialog>
 			</div>
 			<hr className="regular-separator"/>

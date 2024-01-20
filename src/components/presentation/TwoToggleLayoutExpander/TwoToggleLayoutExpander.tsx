@@ -35,7 +35,7 @@ export function TwoToggleLayoutExpander({
 			<div className="expander-inner" data-align={align ?? "left"}>
 				<Collapsible.Trigger asChild>
 					<button
-						className="layout-option-button button-small square-button"
+						className="layout-option-button button-base button-small square-button"
 						type="button"
 						title={openTooltip}
 						onClick={() => {
@@ -51,7 +51,7 @@ export function TwoToggleLayoutExpander({
 				</Collapsible.Trigger>
 				<Collapsible.Trigger asChild>
 					<button
-						className="layout-option-button button-small square-button"
+						className="layout-option-button button-base button-small square-button"
 						type="button"
 						title={closeTooltip}
 						onClick={() => {

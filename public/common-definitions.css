@@ -30,20 +30,15 @@
 		}
 	}
 
-	/* Small button */
-	.button-small {
-		height: var(--pfy-element-button-size-regular);
-		padding: 0;
-		padding-left: var(--pfy-spacing-large);;
-		padding-right: var(--pfy-spacing-large);
-		border: 1px solid var(--pfy-primary-dark);
-		border-radius: var(--pfy-spacing-standard-compact);
+	/* Button base, does not define size, only visuals. */
+	.button-base {
 		box-shadow: var(--pfy-box-shadow-standard);
 		font-family: var(--pfy-font-scheme-standard);
 		background: var(--pfy-shade-06);
 		color: var(--pfy-text-light);
+		border-style: solid;
+		border-color: var(--pfy-primary-dark);
 		font-weight: bold;
-		font-size: var(--pfy-font-text-standard);
 		line-height: 0px;
 		text-align: center;
 		transition: background var(--pfy-timing-fast), border var(--pfy-timing-snappy), outline var(--pfy-timing-snappy);
@@ -64,9 +59,40 @@
 		&:disabled {
 			background-color: var(--pfy-empty-02-raised);
 			color: var(--pfy-shade-03);
-			border: 1px solid var(--pfy-primary-faded);
+			border-style: solid;
+			border-color: var(--pfy-primary-faded);
 			cursor: not-allowed;
 		}
+	}
+
+	.button-small {
+		padding: 0;
+		height: var(--pfy-element-button-size-regular);
+		padding-left: var(--pfy-spacing-large);
+		padding-right: var(--pfy-spacing-large);
+		border-width: 1px;
+		border-radius: var(--pfy-spacing-standard-compact);
+		font-size: var(--pfy-font-text-standard);
+	}
+
+	.button-medium {
+		padding: 0;
+		height: var(--pfy-element-button-size-medium);
+		padding-left: var(--pfy-spacing-very-large);
+		padding-right: var(--pfy-spacing-very-large);
+		border-width: 1px;
+		border-radius: var(--pfy-spacing-standard);
+		font-size: var(--pfy-font-text-standard);
+	}
+
+	.button-large {
+		padding: 0;
+		height: var(--pfy-element-button-size-large);
+		padding-left: var(--pfy-spacing-very-large);
+		padding-right: var(--pfy-spacing-very-large);
+		border-width: 1px;
+		border-radius: var(--pfy-spacing-standard);
+		font-size: var(--pfy-font-text-standard);
 	}
 
 	.button-invisible {
@@ -224,5 +250,15 @@
 		&[data-use-stroke] {
 			stroke: var(--pfy-shade-dark-02);
 		}
+	}
+
+	/* Text */
+	.paragraph-regular {
+		font-size: var(--pfy-font-text-standard);
+		color: var(--pfy-text-normal);
+	}
+	
+	.paragraph-big {
+		font-size: var(--pfy-font-text-big);
 	}
 }

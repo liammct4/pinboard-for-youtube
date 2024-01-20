@@ -49,7 +49,7 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 					<div className="bottom-footer">
 						{buttons.map(x =>
 							<AlertDialog.Action key={x} asChild>
-								<button type="button" className="button-small" onClick={() => onButtonPressed(x)}>{x}</button>
+								<button type="button" className="button-base button-small" onClick={() => onButtonPressed(x)}>{x}</button>
 							</AlertDialog.Action>
 						)}
 					</div>

@@ -79,7 +79,7 @@ export function TagsPage(): React.ReactNode {
 			</TagItemContext.Provider>
 			<hr className="regular-separator"/>
 			<div className="tag-button-bar">
-				<button className="button-small" onClick={() => dispatch(addTagDefinition({
+				<button className="button-base button-small" onClick={() => dispatch(addTagDefinition({
 					id: uuid(),
 					name: resolveNewTag(tagDefinitions),
 					colour: "10"
@@ -98,7 +98,7 @@ export function TagsPage(): React.ReactNode {
 							}
 						}
 					}}>
-					<button className="button-small">Clear all tags</button>
+					<button className="button-base button-small">Clear all tags</button>
 				</ActionMessageDialog>
 			</div>
 			<Outlet/>

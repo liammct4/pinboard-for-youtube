@@ -41,8 +41,8 @@ export function FormDialog({
 			description={description}
 			footer={
 				<>
-					<input type="submit" value={submitText} form={formID} className="button-small"></input>
-					<Dialog.Close className="button-small">Close</Dialog.Close>
+					<input type="submit" value={submitText} form={formID} className="button-base button-small"></input>
+					<Dialog.Close className="button-base button-small">Close</Dialog.Close>
 				</>
 			}>
 			<form className="dialog-form" id={formID} onSubmit={handleSubmit}>
