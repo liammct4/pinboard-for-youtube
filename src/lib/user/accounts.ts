@@ -7,3 +7,8 @@ export function registerAccount(email: string, password: string): HttpResponse |
 		password: password
 	});
 }
+
+export function resendEmailVerificationLink(email: string): HttpResponse | undefined {
+	// TODO
+	return undefined;
+}

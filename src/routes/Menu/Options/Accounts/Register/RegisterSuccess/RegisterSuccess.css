@@ -1,0 +1,10 @@
+.title-area {
+	display: flex;
+	flex-direction: row;
+}
+
+.register-success-title {
+	text-align: center;
+	margin: 0;
+}
+

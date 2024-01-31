@@ -1,8 +1,10 @@
 import { AccountsInfo } from "./AccountsInfo/AccountsInfo";
-import "./AccountsPage.css"
 import { Login } from "./Login/Login";
 import { Register } from "./Register/Register";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { UserDetailsForm } from "./UserDetailsForm/UserDetailsForm";
+import { RegisterSuccess } from "./Register/RegisterSuccess/RegisterSuccess";
+import "./AccountsPage.css"
 
 
 export function AccountsPage() {
@@ -10,7 +12,10 @@ export function AccountsPage() {
 		<>
 			<Routes>
 				<Route path="login" element={<Login/>}/>
-				<Route path="register" element={<Register/>}/>
+				<Route path="register" element={<Register/>}>
+					<Route path="/register/" element={<UserDetailsForm/>}/>
+					<Route path="/register/success" element={<RegisterSuccess/>}/>
+				</Route>
 				<Route path="/" element={<AccountsInfo/>}/>
 			</Routes>
 		</>
