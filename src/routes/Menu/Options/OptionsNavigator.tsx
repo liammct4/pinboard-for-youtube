@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./OptionsNavigator.css"
 
 interface IOptionProperties {

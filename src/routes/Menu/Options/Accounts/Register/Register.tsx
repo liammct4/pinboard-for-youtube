@@ -1,6 +1,7 @@
-import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { registerAccount } from "../../../../../lib/user/accounts";
-import { IUserDetailsForm, UserDetailsForm } from "../UserDetailsForm/UserDetailsForm";
+import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsForm";
+import { HttpStatusCode } from "../../../../../lib/util/http";
 import "./Register.css"
 
 export function Register(): React.ReactNode {
@@ -22,7 +23,11 @@ export function Register(): React.ReactNode {
 		<div className="register-account-page">
 			<h2 className="account-heading">Create an account</h2>
 			<hr className="bold-separator"/>
-			<Outlet context={{ onRegisterSubmitted }}/>
+			<Outlet context={{
+				onSubmitted: onRegisterSubmitted,
+				formName: "register-account-form",
+				submitText: "Create account"
+			}}/>
 		</div>
 	);
 }

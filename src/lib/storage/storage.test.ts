@@ -13,6 +13,9 @@ let storageTemplate: IStorage = {
 		layout: {
 			isCurrentVideosSectionExpanded: true
 		}
+	},
+	auth: {
+		currentUser: undefined
 	}
 }
 
@@ -50,6 +53,9 @@ describe("Local storage operations.", () => {
 				layout: {
 					isCurrentVideosSectionExpanded: true
 				}
+			},
+			auth: {
+				currentUser: undefined
 			}
 		};
 

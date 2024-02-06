@@ -16,15 +16,15 @@ export function sendRequest(
 	
 	var request = new XMLHttpRequest();
 	
-	request.open(method, url, true);
+	request.open(method, url, false);
 
 	if (headers) {
-		headers.forEach((key: string, value: string) => {
+		headers.forEach((value: string, key: string) => {
 			request.setRequestHeader(key, value);
 		});
 	}
 
-	request.send(JSON.stringify(body));
+	request.send(body != null ? JSON.stringify(body) : body);
 
 	return {
 		status: request.status,

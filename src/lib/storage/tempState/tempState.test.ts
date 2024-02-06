@@ -14,6 +14,9 @@ let storageTemplate: IStorage = {
 		layout: {
 			isCurrentVideosSectionExpanded: true
 		}
+	},
+	auth: {
+		currentUser: undefined
 	}
 }
 

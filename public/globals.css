@@ -78,6 +78,7 @@
 	--pfy-timing-fast: 200ms;
 	--pfy-timing-normal: 240ms;
 	--pfy-timing-long: 340ms;
+	--pfy-timing-longer: 430ms;
 	--pfy-timing-very-long: 630ms;
 
 	--pfy-easing-out-standard: cubic-bezier(0.26, 1, 0.5, 1);
@@ -97,4 +98,48 @@
 	--pfy-dialog-max-width: 500px;
 	--pfy-dialog-min-margin: 10px;
 	--pfy-dialog-margin-multiplier: 3;
+
+	/* Colour types. */
+	--pfy-important-success: rgb(117, 250, 36);
+	--pfy-important-info: rgb(0, 120, 255);
+	--pfy-important-warning: rgb(231, 89, 0);
+	--pfy-important-error: rgb(205, 39, 0);
+
+	--shake-animation-range: 55px;
+}
+
+@keyframes shakeBounceLeftRightAnimation {
+
+	0% {
+		transform: translateX(calc(1 * var(--shake-animation-range)));
+	}
+
+	20% {
+		transform: translateX(calc(-0.5 * var(--shake-animation-range)));
+	}
+
+	40% {
+		transform: translateX(calc(0.5 * var(--shake-animation-range)));
+	}
+
+	50% {
+		transform: translateX(calc(-0.3 * var(--shake-animation-range)));
+	}
+
+	50% {
+		transform: translateX(calc(0.3 * var(--shake-animation-range)));
+	}
+
+	70% {
+		transform: translateX(calc(-0.15 * var(--shake-animation-range)));
+	}
+
+	90% {
+		transform: translateX(calc(0.15 * var(--shake-animation-range)));
+	}
+
+	100% {
+		transform: translateX(calc(0 * var(--shake-animation-range)));
+	}
+
 }

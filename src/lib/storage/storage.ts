@@ -1,8 +1,9 @@
 import { IConfig } from "./config/config"
 import { TagDefinition, Video } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
-import AppThemes from "./../../styling/theme.json"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
+import { IAuthenticatedUser } from "../user/accounts.ts"
+import AppThemes from "./../../styling/theme.json"
 
 export interface IStorage {
 	user_data: {
@@ -12,6 +13,10 @@ export interface IStorage {
 		config: IConfig;
 	},
 	temp_state: ITempState;
+	auth: {
+		// This field indicates whether the user has logged in. If not logged in, this is null.
+		currentUser: IAuthenticatedUser | undefined;
+	}
 }
 
 export async function getNestedStorageData(path: string): Promise<any> {
@@ -68,6 +73,9 @@ export async function ensureInitialized(): Promise<void> {
 			layout: {
 				isCurrentVideosSectionExpanded: true
 			}
+		},
+		auth: {
+			currentUser: undefined
 		}
 	};
 
