@@ -25,8 +25,7 @@ export function HomePage(): React.ReactNode {
 
 		// Remove notification after expiry.
 		setTimeout(() => {
-			setNotificationOpen(false);
-			setCurrentNotification(undefined);
+			cancelNotification();
 		}, duration);
 
 	}, [currentNotification]);

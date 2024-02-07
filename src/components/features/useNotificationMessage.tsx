@@ -1,4 +1,9 @@
 import { createContext, useContext } from "react";
+import { ReactComponent as ErrorIcon } from "./../../../assets/icons/status/error.svg"
+import { ReactComponent as InfoIcon } from "./../../../assets/icons/status/info.svg"
+import { ReactComponent as TickIcon } from "./../../../assets/icons/status/tick.svg"
+import { ReactComponent as WarningIcon } from "./../../../assets/icons/status/warning.svg"
+import { Asset } from "../images/svgAsset";
 
 export type ColourType = "Success" | "Warning" | "Info" | "Error";
 export type ImageName = "Tick" | "Warning" | "Error" | "Info";
@@ -45,6 +50,19 @@ export function useNotificationMessage() {
 	}
 
 	return { activateMessage, cancelMessage: cancelNotification }
+}
+
+export function useMappedAssetIcon(image: ImageName): Asset {
+	switch (image) {
+		case "Error":
+			return ErrorIcon;
+		case "Info":
+			return InfoIcon;
+		case "Tick":
+			return TickIcon;
+		case "Warning":
+			return WarningIcon;
+	}
 }
 
 export const GlobalNotificationContext = createContext<IGlobalNotificationContext>({

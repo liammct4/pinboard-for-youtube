@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { AnimationName, ColourType, GlobalNotificationContext, IGlobalNotificationContext, ImageName } from "../features/useNotificationMessage";
-import { IconContainer } from "../images/svgAsset";
-import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg" 
+import { AnimationName, ColourType, GlobalNotificationContext, IGlobalNotificationContext, ImageName, useMappedAssetIcon } from "../features/useNotificationMessage";
+import { Asset, IconContainer } from "../images/svgAsset";
+import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg"
 import * as Toast from "@radix-ui/react-toast";
 import "./NotificationToast.css"
 
@@ -15,14 +15,18 @@ export interface INotificationToastProperties {
 }
 
 export function NotificationToast({ isOpen, title, message, colour, image, animationType = "Slide" }: INotificationToastProperties): React.ReactNode {
+	const icon: Asset = useMappedAssetIcon(image);
 	const { cancelNotification } = useContext<IGlobalNotificationContext>(GlobalNotificationContext);
 
 	return (
 		<>
 			<Toast.Root className="notification-root" open={isOpen} data-colour={colour} data-animation={animationType}>
 				<hr className="notification-separator"/>
-				<div className="notification-interior">
-					{/* TODO: <img/> */}
+				<div className="notification-interior" data-image-name={image}>
+					<IconContainer
+						asset={icon}
+						className="notification-icon"
+						use-stroke/>
 					<Toast.Title className="toast-title">{title}</Toast.Title>
 					<Toast.Description asChild>
 						<p className="toast-message">{message}</p>

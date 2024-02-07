@@ -5,7 +5,7 @@ import { SizeOption } from "../../input/formStyleContext";
 import { FormValidator, IErrorFieldValues } from "../validated-form";
 import { InputMethodType } from "../../../lib/config/configurationOption";
 import { getInputComponent } from "../../input/componentLocator";
-import { ReactComponent as ErrorIcon } from "./../../../../assets/icons/error.svg"
+import { ReactComponent as WarningIcon } from "./../../../../assets/icons/status/warning.svg"
 import { ReactComponent as CrossIcon } from "./../../../../assets/symbols/cross.svg"
 import { IconContainer } from "../../images/svgAsset";
 import "./FormField.css"
@@ -70,7 +70,7 @@ export function FormField<T extends IErrorFieldValues>({
 				<div className="error-message">
 					<IconContainer
 						className="icon-colour-standard warning-image"
-						asset={ErrorIcon}
+						asset={WarningIcon}
 						use-fill/>
 					<p className="error-text">{error}</p>
 					<button className="circle-button close-button" type="button" onClick={() => setErrorVisible(false)}>
