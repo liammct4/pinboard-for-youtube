@@ -1,0 +1,9 @@
+.debug-title {
+	font-size: var(--pfy-font-heading-medium);
+}
+
+.debug-tools {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pfy-spacing-standard);
+}

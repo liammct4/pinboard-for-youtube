@@ -23,6 +23,7 @@ import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/the
 import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 import { TagsPage } from "./routes/Tags/TagsPage.tsx"
 import { EditTagPage } from "./routes/Tags/EdItTagPage/EditTagPage.tsx"
+import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { setCurrentUser } from "./features/auth/authSlice.ts"
 import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
 import "./../public/common-definitions.css"
@@ -81,6 +82,7 @@ async function setupState() {
 								<Route path="general" element={<GeneralPage/>}/>
 								<Route path="accounts/*" element={<AccountsPage/>}/>
 								<Route path="appearance/*" element={<AppearancePage/>}/>
+								<Route path="debug/*" element={<DebugPage/>}/>
 								<Route path="*" element={<OptionsNavigator/>}/>
 							</Route>
 							<Route path="help" element={<HelpPage/>}/>				

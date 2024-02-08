@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useHotkeys } from 'react-hotkeys-hook'
 import "./OptionsNavigator.css"
 
 interface IOptionProperties {
@@ -20,6 +21,10 @@ function Option({ name, path }: IOptionProperties): React.ReactNode {
 }
 
 export function OptionsNavigator(): React.ReactNode {
+	const navigate = useNavigate();
+	// Keep the debug menu hidden from the user.
+	useHotkeys('shift+d', () => navigate("debug"))
+	
 	return (
 		<ul className="options-list">
 			<Option name="General" path="general"/>
