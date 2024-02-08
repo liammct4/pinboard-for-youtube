@@ -21,6 +21,7 @@ interface IFormFieldProperties<TFormType extends IErrorFieldValues> {
 	submitEvent: MultiEvent<TFormType>;
 	selector: (data: TFormType) => string;
 	defaultValue?: string;
+	visible?: boolean;
 }
 
 export function FormField<T extends IErrorFieldValues>({
@@ -33,7 +34,8 @@ export function FormField<T extends IErrorFieldValues>({
 		submitEvent,
 		selector,
 		inputType = InputMethodType.Text,
-		defaultValue = ""
+		defaultValue = "",
+		visible = true
 	}: IFormFieldProperties<T>): React.ReactNode {
 	let [error, setError] = useState<string | null>();
 	let [errorVisible, setErrorVisible] = useState<boolean>();
@@ -57,7 +59,7 @@ export function FormField<T extends IErrorFieldValues>({
 	const FieldInputElement = getInputComponent<T>(inputType);
 
 	return (
-		<div className="field-outer">
+		<div className="field-outer" data-visible={visible}>
 			<FieldInputElement
 				label={label}
 				name={name}

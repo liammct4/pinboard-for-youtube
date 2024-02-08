@@ -1,18 +1,19 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsForm";
-import { AuthenticationError, loginSaveUser } from "../../../../../lib/user/accounts";
+import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
+import { AuthenticationError, useLogin } from "../../../../../lib/user/accounts";
 import { useNotificationMessage } from "../../../../../components/features/useNotificationMessage";
 import "./Login.css"
 
 export function Login(): React.ReactNode {
 	const { activateMessage, cancelMessage } = useNotificationMessage();
+	const { attemptLogin } = useLogin();
 	const navigate = useNavigate();
 
 	const onLoginSubmitted = async (value: IUserDetailsForm) => {
 		activateMessage(undefined, "Logging you in...", "Info", "Info", -1);
 		setTimeout(async () => {
 			try {
-				await loginSaveUser(value.email, value.password);
+				await attemptLogin(value.email, value.password);
 
 				// Cancel the previous "logging you in..." message.
 				cancelMessage();

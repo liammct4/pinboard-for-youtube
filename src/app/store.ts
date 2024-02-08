@@ -8,12 +8,15 @@ import tagStorageMiddleware from "../features/videos/tagStorageUpdateMiddleware.
 import tagCascadeUpdateMiddleware from "../features/videos/tagCascadeUpdateMiddleware.ts"
 import themeMiddleware from "../features/theme/themeMiddleware.ts"
 import themeReducer from "../features/theme/themeSlice.ts"
+import authStorageMiddleware from "../features/auth/authStorageMiddleware.ts"
+import authSlice from "../features/auth/authSlice.ts"
 
 export let store = configureStore({
 	reducer: {
 		video: videoReducer,
 		tempState: tempStateReducer,
 		theme: themeReducer,
+		auth: authSlice
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
@@ -28,6 +31,7 @@ export let store = configureStore({
 		.prepend(themeMiddleware.updateThemeMiddleware.middleware)
 		.prepend(themeMiddleware.updateStorageMiddleware.middleware)
 		.prepend(themeMiddleware.updateCustomThemeStorageMiddleware.middleware)
+		.prepend(authStorageMiddleware.authStorageMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

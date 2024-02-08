@@ -2,20 +2,35 @@ import { accountsEndpoint, sessionEndpoint } from "../api/pinboardApi";
 import { HttpStatusCode } from "../util/http";
 import { HttpResponse, sendRequest } from "../util/request"
 import { IStorage } from "../storage/storage";
+import { loginSaveUser } from "./storage";
+import { setCurrentUser } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 export class AuthenticationError extends Error {
 
 }
 
 export type AuthenticationObject = {
-	accessToken: string;
-	refreshToken: string;
-	identityToken: string;
+	AccessToken: string;
+	RefreshToken: string;
+	IdToken: string;
 }
 
 export interface IAuthenticatedUser  {
 	email: string;
 	tokens: AuthenticationObject;
+}
+
+export function useLogin() {
+	const dispatch = useDispatch();
+
+	const attemptLogin = async (email: string, password: string) => {
+		let newlyAuthenticatedUser: IAuthenticatedUser | undefined = await loginSaveUser(email, password);
+
+		dispatch(setCurrentUser(newlyAuthenticatedUser));
+	}
+
+	return { attemptLogin };
 }
 
 /**
@@ -29,6 +44,19 @@ export function registerAccount(email: string, password: string): HttpResponse |
 		email: email,
 		password: password
 	});
+}
+
+export function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): HttpResponse | undefined {
+	const headers = new Map<string, string>();
+	headers.set("Authorization", tokens.IdToken);
+
+	return sendRequest("DELETE", accountsEndpoint, {
+		userDetails: {
+			email: email,
+			password: password
+		},
+		accessToken: tokens.AccessToken
+	}, headers);
 }
 
 /**
@@ -54,60 +82,13 @@ export function loginGetTokens(email: string, password: string): AuthenticationO
 	return JSON.parse(response.body) as AuthenticationObject;
 }
 
-export function resendEmailVerificationLink(email: string): HttpResponse | undefined {
+export function resendEmailVerificationLink(_email: string): HttpResponse | undefined {
 	// TODO
 	return undefined;
 }
 
-/**
- * Logs in a user using their email/password and saves it to local storage. (/auth/currentUser/).
- * @param email The inputted user email. 
- * @param password The inputted user password.
- */
-export async function loginSaveUser(email: string, password: string): Promise<void> {
-	let tokens: AuthenticationObject | undefined = loginGetTokens(email, password);
-
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-	
-	if (tokens == undefined) {
-		throw new AuthenticationError("Email/password was not valid.");
-	}
-
-	storage.auth.currentUser = {
-		email: email,
-		tokens: tokens
-	};
-
-	await chrome.storage.local.set(storage);
-}
-
-export async function logoutUser(): Promise<void> {
+export async function userIsLoggedIn(): Promise<boolean> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-	if (storage.auth.currentUser != undefined) {
-		storage.auth.currentUser = undefined;
-
-		await chrome.storage.local.set(storage);
-	}
-}
-
-export async function getStoredAuthTokens(): Promise<AuthenticationObject | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.auth.currentUser?.tokens;
-}
-
-/**
- * DO NOT USE WHEN LOGGING IN, USE loginSaveUser(). This is just for refreshing the tokens.
- */
-export async function setStoredAuthTokens(tokens: AuthenticationObject): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	if (storage.auth.currentUser == undefined) {
-		throw new Error("No user is logged in.");
-	}
-
-	storage.auth.currentUser.tokens = tokens;
-
-	await chrome.storage.local.set(storage);
-}
+	return storage.auth.currentUser != undefined;
+} 

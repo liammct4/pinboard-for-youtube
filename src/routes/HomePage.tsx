@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
 import { GlobalNotificationContext, IGlobalNotification, useNotificationMessage } from "../components/features/useNotificationMessage";
 import * as Toast from "@radix-ui/react-toast"
 import { NotificationToast } from "../components/events/NotificationToast";
+import { UserAuthContext } from "../context/auth";
+import { RootState } from "../app/store";
 import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {
@@ -33,42 +36,45 @@ export function HomePage(): React.ReactNode {
 		setCurrentNotification(undefined);
 		setNotificationOpen(false);
 	}
+	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 
 	return (
 		<div className="pfy-style-context outer-body">
-			<GlobalNotificationContext.Provider value={{
+			<UserAuthContext.Provider value={{ currentUser }}>
+				<GlobalNotificationContext.Provider value={{
 					currentNotification: currentNotification,
 					setGlobalNotification: setCurrentNotification,
 					cancelNotification: cancelNotification
 				}}>
-				<Toast.Provider>
-					<NotificationToast
-						isOpen={notificationOpen}
-						title={currentNotification?.title ?? ""}
-						message={currentNotification?.message ?? ""}
-						colour={currentNotification?.colour ?? "Info"}
-						image={currentNotification?.image ?? "Info"}
-						animationType={currentNotification?.animation ?? "Slide"}/>
-				</Toast.Provider>
-				<div className="header-area">
-					<PfyLogo className="extension-logo"/>
-					<h1 className="extension-title">Pinboard for YouTube</h1>
-					<hr className="bold-separator"></hr>
-				</div>
-				<div className="inner-body-content">
-					<Outlet/>
-				</div>
-				<div className="footer-area">
-					<hr className="bold-separator"></hr>
-					<div className="button-options">
-						<button className="button-base button-small"
-							onClick={() => navigate("menu/options")}>Options</button>
-						<button className="button-base button-small"
-							onClick={() => navigate("menu/help")}>Help</button>
+					<Toast.Provider>
+						<NotificationToast
+							isOpen={notificationOpen}
+							title={currentNotification?.title ?? ""}
+							message={currentNotification?.message ?? ""}
+							colour={currentNotification?.colour ?? "Info"}
+							image={currentNotification?.image ?? "Info"}
+							animationType={currentNotification?.animation ?? "Slide"}/>
+					</Toast.Provider>
+					<div className="header-area">
+						<PfyLogo className="extension-logo"/>
+						<h1 className="extension-title">Pinboard for YouTube</h1>
+						<hr className="bold-separator"></hr>
 					</div>
-					<h2 className="extension-version">Version 1.0.0</h2>
-				</div>
-			</GlobalNotificationContext.Provider>
+					<div className="inner-body-content">
+						<Outlet/>
+					</div>
+					<div className="footer-area">
+						<hr className="bold-separator"></hr>
+						<div className="button-options">
+							<button className="button-base button-small"
+								onClick={() => navigate("menu/options")}>Options</button>
+							<button className="button-base button-small"
+								onClick={() => navigate("menu/help")}>Help</button>
+						</div>
+						<h2 className="extension-version">Version 1.0.0</h2>
+					</div>
+				</GlobalNotificationContext.Provider>
+			</UserAuthContext.Provider>
 		</div>
 	);
 }

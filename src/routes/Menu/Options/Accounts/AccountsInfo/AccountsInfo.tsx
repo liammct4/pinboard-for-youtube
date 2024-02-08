@@ -1,8 +1,20 @@
+import { useEffect } from "react";
+import { userIsLoggedIn } from "../../../../../lib/user/accounts";
 import { useNavigate } from "react-router-dom";
 
-export function AccountsInfo() : React.ReactNode {
+export function AccountsInfo(): React.ReactNode {
 	const navigate = useNavigate();
-	
+
+	useEffect(() => {
+		async function checkRedirectOnLoggedIn() {
+			if (await userIsLoggedIn()) {
+				navigate("./account");
+			}
+		}
+
+		checkRedirectOnLoggedIn();
+	}, [])
+
 	return (
 		<>
 			<p className="paragraph-big account-info-text">

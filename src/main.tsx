@@ -23,6 +23,8 @@ import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/the
 import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 import { TagsPage } from "./routes/Tags/TagsPage.tsx"
 import { EditTagPage } from "./routes/Tags/EdItTagPage/EditTagPage.tsx"
+import { setCurrentUser } from "./features/auth/authSlice.ts"
+import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -58,6 +60,12 @@ async function setupState() {
 
 	store.dispatch(setVideoState(videoState));
 	store.dispatch(setTempState(tempState));
+
+	const currentUser = await getCurrentAuthenticatedUser();
+
+	if (currentUser != undefined) {
+		store.dispatch(setCurrentUser(currentUser));
+	}
 	
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>

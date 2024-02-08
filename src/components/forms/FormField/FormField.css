@@ -3,6 +3,8 @@
 	flex-direction: column;
 	gap: var(--pfy-spacing-standard);
 	width: 100%;
+	visibility: collapse;
+	display: none;
 
 	.error-message {
 		display: flex;
@@ -29,6 +31,11 @@
 		.close-button {
 			margin-left: auto;
 		}
+	}
+
+	&[data-visible="true"] {
+		visibility: visible;
+		display: initial;
 	}
 }
 

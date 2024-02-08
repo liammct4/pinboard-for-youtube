@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { registerAccount } from "../../../../../lib/user/accounts";
-import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsForm";
+import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import "./Register.css"
 
