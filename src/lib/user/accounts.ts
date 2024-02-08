@@ -59,6 +59,40 @@ export function deleteUserAccount(email: string, password: string, tokens: Authe
 	}, headers);
 }
 
+export function changeUserEmail(currentEmail: string, newEmail: string, tokens: AuthenticationObject): HttpResponse | undefined {
+	const headers = new Map<string, string>();
+	headers.set("Authorization", tokens.IdToken);
+
+	return sendRequest("POST", accountsEndpoint, {
+		userDetails: {
+			email: currentEmail,
+			password: null
+		},
+		updatedDetails: {
+			email: newEmail,
+			password: null
+		},
+		accessToken: tokens.AccessToken
+	}, headers);
+}
+
+export function changeUserPassword(email: string, previousPassword: string, newPassword: string, tokens: AuthenticationObject): HttpResponse | undefined {
+	const headers = new Map<string, string>();
+	headers.set("Authorization", tokens.IdToken);
+
+	return sendRequest("POST", accountsEndpoint, {
+		userDetails: {
+			email: email,
+			password: previousPassword
+		},
+		updatedDetails: {
+			email: null,
+			password: newPassword
+		},
+		accessToken: tokens.AccessToken
+	}, headers);
+}
+
 /**
  * Authenticates a user via their email/password. Used when logging in, provides refresh, id and access tokens.
  * @param email The provided user email.

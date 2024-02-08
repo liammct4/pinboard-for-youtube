@@ -5,14 +5,16 @@ import { FormStyleContext } from "../../../../../components/input/formStyleConte
 import { InputMethodType } from "../../../../../lib/config/configurationOption";
 import { IUserDetailsForm } from "./UserDetailsFormPage";
 import { MultiEvent } from "../../../../../lib/events/Event";
+import { validatePasswordInputField } from "../../../../../lib/user/details/password";
 
 export interface IUserDetailsFormPrimitiveProperties {
 	register: UseFormRegister<IUserDetailsForm>
 	submit: MultiEvent<IUserDetailsForm>,
 	showEmail?: boolean;
+	showPassword?: boolean;
 }
 
-export function UserDetailsFormPrimitive({ register, submit, showEmail = true }: IUserDetailsFormPrimitiveProperties): React.ReactNode {
+export function UserDetailsFormPrimitive({ register, submit, showEmail = true, showPassword = true }: IUserDetailsFormPrimitiveProperties): React.ReactNode {
 	const emailValidationActive = (value: string) => {
 		if (!value.includes("@")) {
 			return "That email address is not valid.";
@@ -44,13 +46,8 @@ export function UserDetailsFormPrimitive({ register, submit, showEmail = true }:
 					inputType={InputMethodType.Text}
 					submitEvent={submit}
 					fieldSize="large"
-					validationMethod={(value: string) => {
-						if (value.length < 10) {
-							return "Password must have a minimum of 10 characters.";
-						}
-
-						return null;
-					}}/>
+					validationMethod={showPassword ? validatePasswordInputField : () => null}
+					visible={showPassword}/>
 			</TextInputContext.Provider>
 		</FormStyleContext.Provider>
 	)

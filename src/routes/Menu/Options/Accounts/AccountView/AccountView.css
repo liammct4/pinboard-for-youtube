@@ -4,6 +4,24 @@
 	gap: var(--pfy-spacing-standard-compact);
 	margin-top: var(--pfy-spacing-standard-compact);
 	margin-bottom: var(--pfy-spacing-standard);
+
+	.account-card {
+		width: 80%;
+		background-color: var(--pfy-empty-01-depth);
+
+		.account-field-name {
+			width: 65px;
+		}
+
+		.account-field-value {
+			width: 100%;
+		}
+	}
+}
+
+.details-actions {
+	display: flex;
+	flex-direction: column;
 }
 
 .details-actions-list {

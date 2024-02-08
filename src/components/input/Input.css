@@ -18,6 +18,10 @@
 		&[data-size="large"] {
 			width: var(--pfy-label-width-large);
 		}
+
+		&[data-size="very large"] {
+			width: var(--pfy-label-width-very-large);
+		}
 		
 		&[data-size="max"] {
 			width: var(--pfy-label-width-max);
@@ -61,6 +65,10 @@
 		
 		&[data-size="large"] {
 			width: var(--pfy-field-width-large);
+		}
+
+		&[data-size="very large"] {
+			width: var(--pfy-field-width-very-large);
 		}
 		
 		&[data-size="max"] {

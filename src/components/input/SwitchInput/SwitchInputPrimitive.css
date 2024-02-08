@@ -15,6 +15,10 @@
 	&[data-size="large"] {
 		gap: var(--pfy-element-button-size-large)
 	}
+
+	&[data-size="very large"] {
+		gap: var(--pfy-element-button-size-very-large)
+	}
 	
 	&[data-size="max"] {
 		.switch-text {
@@ -49,7 +53,7 @@
 		background-color: var(--pfy-shade-dark-02);
 		width: calc(var(--pfy-element-button-size-regular) - 4px);
 		height: calc(var(--pfy-element-button-size-regular) - 4px);
-		margin-left: 1px;
+		margin-left: -1px;
 		border-radius: var(--pfy-element-button-size-regular);
 		transition: transform var(--pfy-timing-snappy);
 

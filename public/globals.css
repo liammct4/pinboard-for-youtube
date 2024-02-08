@@ -87,11 +87,13 @@
 	--pfy-label-width-small: 70px;
 	--pfy-label-width-medium: 100px;
 	--pfy-label-width-large: 120px;
-	--pfy-label-width-max: 140px;
+	--pfy-label-width-very-large: 180px;
+	--pfy-label-width-max: 220px;
 
 	--pfy-field-width-small: 120px;
 	--pfy-field-width-medium: 180px;
 	--pfy-field-width-large: 240px;
+	--pfy-field-width-very-large: 300px;
 	--pfy-field-font-size: 8.5pt;
 
 	/* Dialogs */
