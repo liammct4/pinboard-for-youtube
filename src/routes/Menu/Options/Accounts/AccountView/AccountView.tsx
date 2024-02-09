@@ -43,10 +43,10 @@ function useAccountDelete() {
 			else if (response!.status == HttpStatusCode.UNAUTHORIZED) {
 				// Meaning token was invalid.
 				if (response?.body == "Unauthorized") {
-					activateMessage(undefined, "Something went wrong, please log in and try again.", "Error", "Error", 6000);
+					activateMessage(undefined, "Something went wrong, please log in and try again.", "Error", "Error", 6000, "Shake");
 				}
 				else {
-					activateMessage(undefined, response?.body, "Error", "Error", 4000);
+					activateMessage(undefined, response?.body, "Error", "Error", 4000, "Shake");
 				}
 			}
 			
@@ -83,7 +83,8 @@ function useEmailChange() {
 					"Something went wrong, please try again later.",
 					"Error",
 					"Error",
-					6000
+					6000,
+					"Shake"
 				);
 			}
 		}, 10);
@@ -124,7 +125,8 @@ function usePasswordChange() {
 						"Something went wrong, please login and try again.",
 						"Error",
 						"Error",
-						6000
+						6000,
+						"Shake"
 					);
 				}
 				else {
@@ -133,7 +135,8 @@ function usePasswordChange() {
 						response.body,
 						"Error",
 						"Error",
-						6000
+						6000,
+						"Shake"
 					);
 				}
 			}
@@ -191,7 +194,7 @@ export function AccountView(): React.ReactNode {
 						{/* Password field. */}
 						<tr>
 							<td className="account-field-name"><b>Password: </b></td>
-							<td className="account-field-value">**********</td>
+							<td className="account-field-value" title="This is not your actual password, so don't worry.">**********</td>
 							<td>
 								<FormDialog
 									formID="change-password-form"

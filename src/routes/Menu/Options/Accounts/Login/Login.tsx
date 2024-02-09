@@ -22,8 +22,8 @@ export function Login(): React.ReactNode {
 				activateMessage("Success!", "You have now been logged in.", "Success", "Tick", 4000, "Slide");
 
 				setTimeout(() => {
-					navigate("/videos");
-				}, 4000);
+					navigate("..");
+				}, 10);
 			}
 			catch (error) {
 				// Don't suppress other errors. Only when not authenticated.
