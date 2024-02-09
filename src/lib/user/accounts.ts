@@ -46,6 +46,15 @@ export function registerAccount(email: string, password: string): HttpResponse |
 	});
 }
 
+export function invalidateRefreshToken(refreshToken: string, idToken: string): HttpResponse | undefined {
+	const headers = new Map<string, string>();
+	headers.set("Authorization", idToken);
+
+	return sendRequest("DELETE", sessionEndpoint, {
+		refreshToken: refreshToken
+	}, headers);
+}
+
 export function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): HttpResponse | undefined {
 	const headers = new Map<string, string>();
 	headers.set("Authorization", tokens.IdToken);

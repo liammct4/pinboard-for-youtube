@@ -31,23 +31,12 @@ export async function getCurrentAuthenticatedUser(): Promise<IAuthenticatedUser 
 	return storage.auth.currentUser;
 }
 
-export async function setCurrentAuthenticatedUser(user: IAuthenticatedUser): Promise<void> {
+export async function setCurrentAuthenticatedUser(user: IAuthenticatedUser | undefined): Promise<void> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
 	storage.auth.currentUser = user;
 
 	await chrome.storage.local.set(storage);
-}
-
-
-export async function saveLogoutUser(): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	if (storage.auth.currentUser != undefined) {
-		storage.auth.currentUser = undefined;
-
-		await chrome.storage.local.set(storage);
-	}
 }
 
 export async function getStoredAuthTokens(): Promise<AuthenticationObject | undefined> {

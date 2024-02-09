@@ -145,12 +145,24 @@ function usePasswordChange() {
 
 export function AccountView(): React.ReactNode {
 	const { currentUser } = useContext<IUserAuthContext>(UserAuthContext);
+	const { activateMessage } = useNotificationMessage();
 	const { onDeleteSubmit } = useAccountDelete();
 	const { onChangeEmailSubmit } = useEmailChange();
 	const { onChangePasswordSubmit } = usePasswordChange();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const deleteForm = useValidatedForm<IUserDetailsForm>(onDeleteSubmit);
 	const changeEmailForm = useValidatedForm<IUserDetailsForm>(onChangeEmailSubmit);
 	const changePasswordForm = useValidatedForm<IUpdatePasswordForm>(onChangePasswordSubmit);
+
+	const onSignout = () => {
+		dispatch(logoutCurrentUser());
+
+		activateMessage(undefined, "You have now been logged out.", "Info", "Info", 6500);
+		setTimeout(() => {
+			navigate("/menu/options/accounts");
+		}, 10);
+	};
 
 	// Because this page is only shown when authenticated. 'currentUser' should never be null, but may be null when deleting/logging out before redirecting.
 	return (
@@ -221,7 +233,7 @@ export function AccountView(): React.ReactNode {
 				<div className="details-actions">
 					<ul className="details-actions-list">
 						<li>
-							<button className="button-small button-base">Sign out</button>
+							<button className="button-small button-base" onClick={onSignout}>Sign out</button>
 						</li>
 					</ul>
 					<hr className="bold-separator"/>
