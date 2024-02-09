@@ -1,7 +1,6 @@
 import { sampleConfigData, sampleVideoData } from "../../../../testData/testDataSet";
-import { IConfig, getUserConfig } from "./config";
+import { getUserConfig } from "./config";
 import { IStorage } from "../storage";
-import { getCurrentTheme } from "./theme/theme";
 
 let storageTemplate: IStorage = {
 	user_data: {
@@ -18,6 +17,10 @@ let storageTemplate: IStorage = {
 	},
 	auth: {
 		currentUser: undefined
+	},
+	persistentState: {
+		path: undefined,
+		resetPasswordState: undefined
 	}
 }
 

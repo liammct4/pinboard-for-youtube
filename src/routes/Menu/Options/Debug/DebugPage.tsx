@@ -40,6 +40,9 @@ export function DebugPage(): React.ReactNode {
 							
 							activateMessage(undefined, "Copied to clipboard and console.", "Success", "Tick", -1);
 						}}>Get storage</button>
+						<button className="button-small button-base" onClick={async () => {
+							await chrome.storage.local.clear();
+						}}>Wipe storage</button>
 					</div>
 				: <></>}
 		</>

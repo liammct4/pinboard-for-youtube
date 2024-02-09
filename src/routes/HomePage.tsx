@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, To, useNavigate } from "react-router-dom";
 import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
 import { GlobalNotificationContext, IGlobalNotification, useNotificationMessage } from "../components/features/useNotificationMessage";
 import * as Toast from "@radix-ui/react-toast"
 import { NotificationToast } from "../components/events/NotificationToast";
 import { UserAuthContext } from "../context/auth";
 import { RootState } from "../app/store";
+import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {
@@ -32,6 +33,18 @@ export function HomePage(): React.ReactNode {
 		}, duration);
 
 	}, [currentNotification]);
+	// When the extension initializes, the first thing to check if theres any persistent state and redirect.
+	useEffect(() => {
+		const checkPersistentState = async () => {
+			let path: string | undefined = await getSavedPath();
+
+			if (path != undefined) {
+				navigate(path as To)
+			}
+		}
+
+		checkPersistentState();
+	}, []);
 	const cancelNotification = () => {
 		setCurrentNotification(undefined);
 		setNotificationOpen(false);

@@ -72,7 +72,7 @@ export function changeUserEmail(currentEmail: string, newEmail: string, tokens: 
 	const headers = new Map<string, string>();
 	headers.set("Authorization", tokens.IdToken);
 
-	return sendRequest("POST", accountsEndpoint, {
+	return sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
 			email: currentEmail,
 			password: null
@@ -89,7 +89,7 @@ export function changeUserPassword(email: string, previousPassword: string, newP
 	const headers = new Map<string, string>();
 	headers.set("Authorization", tokens.IdToken);
 
-	return sendRequest("POST", accountsEndpoint, {
+	return sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
 			email: email,
 			password: previousPassword
@@ -100,6 +100,40 @@ export function changeUserPassword(email: string, previousPassword: string, newP
 		},
 		accessToken: tokens.AccessToken
 	}, headers);
+}
+
+/**
+ * Initiates a reset password request, an email will be sent to the users email (after matching the account's email)
+ * which contains a reset code. This is then used with the `confirmResetPassword()` function to reset a user's password.
+ * @param email The account email to reset.
+ * @returns The response from the server.
+ */
+export function startResetPassword(email: string): HttpResponse | undefined {
+	return sendRequest("POST", accountsEndpoint, {
+		getCode: {
+			email: email
+		},
+		setPassword: null
+	});
+}
+
+/**
+ * Changes a user's password with a provided code sent to the users email. `startResetPassword()` is used to initiate
+ * a reset password request and get the code.
+ * @param email The email address for the user.
+ * @param newPassword The new password.
+ * @param code The verification code from the users email.
+ * @returns The response from the server.
+ */
+export function confirmResetPassword(email: string, newPassword: string, code: string): HttpResponse | undefined {
+	return sendRequest("POST", accountsEndpoint, {
+		getCode: null,
+		setPassword: {
+			code: code,
+			email: email,
+			password: newPassword
+		}
+	});
 }
 
 /**

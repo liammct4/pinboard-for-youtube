@@ -13,3 +13,7 @@
 	margin-top: var(--pfy-spacing-standard);
 	margin-bottom: var(--pfy-spacing-very-large);
 }
+
+.forgot-password-text {
+	margin-top: var(--pfy-spacing-standard);
+}

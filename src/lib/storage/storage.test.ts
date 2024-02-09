@@ -16,6 +16,10 @@ let storageTemplate: IStorage = {
 	},
 	auth: {
 		currentUser: undefined
+	},
+	persistentState: {
+		path: undefined,
+		resetPasswordState: undefined
 	}
 }
 
@@ -56,6 +60,10 @@ describe("Local storage operations.", () => {
 			},
 			auth: {
 				currentUser: undefined
+			},
+			persistentState: {
+				path: undefined,
+				resetPasswordState: undefined
 			}
 		};
 

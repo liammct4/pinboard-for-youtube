@@ -5,6 +5,8 @@ import { Route, Routes } from "react-router-dom";
 import { RegisterSuccess } from "./Register/RegisterSuccess/RegisterSuccess";
 import { UserDetailsFormPage } from "./UserDetailsForm/UserDetailsFormPage";
 import { AccountView } from "./AccountView/AccountView";
+import { ForgotPassword } from "./Login/ForgotPassword/ForgotPassword";
+import { EnterLoginDetails } from "./Login/EnterLoginDetails/EnterLoginDetails";
 import "./AccountsPage.css"
 
 export function AccountsPage() {
@@ -12,7 +14,10 @@ export function AccountsPage() {
 		<>
 			<Routes>
 				<Route path="login" element={<Login/>}>
-					<Route path="/login/" element={<UserDetailsFormPage/>}/>
+					<Route path="/login/" element={<EnterLoginDetails/>}>
+						<Route path="/login/" element={<UserDetailsFormPage/>}/>
+					</Route>
+					<Route path="forgot password" element={<ForgotPassword/>}/>
 				</Route>
 				<Route path="register" element={<Register/>}>
 					<Route path="/register/" element={<UserDetailsFormPage/>}/>

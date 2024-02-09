@@ -3,6 +3,7 @@ import { TagDefinition, Video } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
+import { IPersistentState } from "./persistentState/persistentState.ts"
 import AppThemes from "./../../styling/theme.json"
 
 export interface IStorage {
@@ -16,7 +17,8 @@ export interface IStorage {
 	auth: {
 		// This field indicates whether the user has logged in. If not logged in, this is null.
 		currentUser: IAuthenticatedUser | undefined;
-	}
+	},
+	persistentState: IPersistentState;
 }
 
 export async function getNestedStorageData(path: string): Promise<any> {
@@ -76,6 +78,10 @@ export async function ensureInitialized(): Promise<void> {
 		},
 		auth: {
 			currentUser: undefined
+		},
+		persistentState: {
+			path: undefined,
+			resetPasswordState: undefined
 		}
 	};
 
