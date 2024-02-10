@@ -1,10 +1,10 @@
+import { useDispatch } from "react-redux";
 import { accountsEndpoint, sessionEndpoint } from "../api/pinboardApi";
 import { HttpStatusCode } from "../util/http";
-import { HttpResponse, sendRequest } from "../util/request"
+import { HeaderArray, HttpResponse, sendRequest } from "../util/request"
 import { IStorage } from "../storage/storage";
 import { loginSaveUser } from "./storage";
 import { setCurrentUser } from "../../features/auth/authSlice";
-import { useDispatch } from "react-redux";
 
 export class AuthenticationError extends Error {
 
@@ -28,6 +28,7 @@ export function useLogin() {
 		let newlyAuthenticatedUser: IAuthenticatedUser | undefined = await loginSaveUser(email, password);
 
 		dispatch(setCurrentUser(newlyAuthenticatedUser));
+		return newlyAuthenticatedUser != undefined;
 	}
 
 	return { attemptLogin };
@@ -39,25 +40,23 @@ export function useLogin() {
  * @param password The user password.
  * @returns Response from API.
  */
-export function registerAccount(email: string, password: string): HttpResponse | undefined {
+export async function registerAccount(email: string, password: string): Promise<HttpResponse | undefined> {
 	return sendRequest("PUT", accountsEndpoint, {
 		email: email,
 		password: password
 	});
 }
 
-export function invalidateRefreshToken(refreshToken: string, idToken: string): HttpResponse | undefined {
-	const headers = new Map<string, string>();
-	headers.set("Authorization", idToken);
+export async function invalidateRefreshToken(refreshToken: string, idToken: string): Promise<HttpResponse | undefined> {
+	const headers: HeaderArray = [["Authorization", idToken]];
 
 	return sendRequest("DELETE", sessionEndpoint, {
 		refreshToken: refreshToken
 	}, headers);
 }
 
-export function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): HttpResponse | undefined {
-	const headers = new Map<string, string>();
-	headers.set("Authorization", tokens.IdToken);
+export async function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
+	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
 	return sendRequest("DELETE", accountsEndpoint, {
 		userDetails: {
@@ -68,9 +67,8 @@ export function deleteUserAccount(email: string, password: string, tokens: Authe
 	}, headers);
 }
 
-export function changeUserEmail(currentEmail: string, newEmail: string, tokens: AuthenticationObject): HttpResponse | undefined {
-	const headers = new Map<string, string>();
-	headers.set("Authorization", tokens.IdToken);
+export async function changeUserEmail(currentEmail: string, newEmail: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
+	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
 	return sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
@@ -85,9 +83,8 @@ export function changeUserEmail(currentEmail: string, newEmail: string, tokens: 
 	}, headers);
 }
 
-export function changeUserPassword(email: string, previousPassword: string, newPassword: string, tokens: AuthenticationObject): HttpResponse | undefined {
-	const headers = new Map<string, string>();
-	headers.set("Authorization", tokens.IdToken);
+export async function changeUserPassword(email: string, previousPassword: string, newPassword: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
+	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
 	return sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
@@ -108,7 +105,7 @@ export function changeUserPassword(email: string, previousPassword: string, newP
  * @param email The account email to reset.
  * @returns The response from the server.
  */
-export function startResetPassword(email: string): HttpResponse | undefined {
+export async function startResetPassword(email: string): Promise<HttpResponse | undefined> {
 	return sendRequest("POST", accountsEndpoint, {
 		getCode: {
 			email: email
@@ -125,7 +122,7 @@ export function startResetPassword(email: string): HttpResponse | undefined {
  * @param code The verification code from the users email.
  * @returns The response from the server.
  */
-export function confirmResetPassword(email: string, newPassword: string, code: string): HttpResponse | undefined {
+export async function confirmResetPassword(email: string, newPassword: string, code: string): Promise<HttpResponse | undefined> {
 	return sendRequest("POST", accountsEndpoint, {
 		getCode: null,
 		setPassword: {
@@ -142,15 +139,14 @@ export function confirmResetPassword(email: string, newPassword: string, code: s
  * @param password The provided user password.
  * @returns An object containing the tokens from the API. Or nothing if the authentication failed (e.g. invalid email/password).
  */
-export function loginGetTokens(email: string, password: string): AuthenticationObject | undefined {
-	let headers = new Map();
-
-	headers.set("Authorization", btoa(JSON.stringify({
+export async function loginGetTokens(email: string,password: string): Promise<AuthenticationObject | undefined> {
+	let details = btoa(JSON.stringify({
 		email: email,
 		password: password
-	})));
-	
-	let response: HttpResponse | undefined = sendRequest("GET", sessionEndpoint, undefined, headers);
+	}));
+
+	let headers: HeaderArray = [["Authorization", details]];
+	let response: HttpResponse | undefined = await sendRequest("GET", sessionEndpoint, undefined, headers);
 
 	if (response == undefined || response.status == HttpStatusCode.UNAUTHORIZED) {
 		return undefined;

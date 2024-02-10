@@ -1,33 +1,23 @@
 export type Method = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
+export type HeaderArray = [string, string][];
 
 export type HttpResponse = {
 	status: number,
 	body: any
 }
 
-export function sendRequest(
+export async function sendRequest(
 		method: Method,
 		url: string,
 		body: any = null,
-		headers: Map<string, string> | null = null): HttpResponse | undefined {
-	if (!navigator.onLine) {
-		return undefined;
-	}
+		headers: [string, string][] | null = null
+	): Promise<HttpResponse | undefined> {
+		
+	let response: Response = await fetch(url, {
+		method: method,
+		headers: new Headers(headers ?? []),
+		body: body == undefined ? undefined : JSON.stringify(body)
+	});
 	
-	var request = new XMLHttpRequest();
-	
-	request.open(method, url, false);
-
-	if (headers) {
-		headers.forEach((value: string, key: string) => {
-			request.setRequestHeader(key, value);
-		});
-	}
-
-	request.send(body != null ? JSON.stringify(body) : body);
-
-	return {
-		status: request.status,
-		body: request.responseText
-	};
+	return { status: response.status, body: await response.text() };
 }

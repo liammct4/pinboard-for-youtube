@@ -24,18 +24,16 @@ interface IUpdatePasswordForm extends IErrorFieldValues {
 
 function useAccountDelete() {
 	const { currentUser } = useContext<IUserAuthContext>(UserAuthContext);
-	const { activateMessage, cancelMessage } = useNotificationMessage();
+	const { activateMessage } = useNotificationMessage();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const onDeleteSubmit = (value: IUserDetailsForm) => {
 		activateMessage(undefined, "Deleting your account.", "Info", "Info", -1);
 
-		setTimeout(() => {
-			let response: HttpResponse | undefined = deleteUserAccount(currentUser!.email, value.password, currentUser!.tokens);
-			
-			cancelMessage();
-			
+		setTimeout(async () => {
+			let response: HttpResponse | undefined = await deleteUserAccount(currentUser!.email, value.password, currentUser!.tokens);
+					
 			if (response!.status == HttpStatusCode.OK) {
 				activateMessage("Account deleted.", "Your account has been successfully deleted, please log out of any other devices.", "Success", "Tick", 10000);
 				dispatch(logoutCurrentUser());
@@ -59,15 +57,14 @@ function useAccountDelete() {
 
 function useEmailChange() {
 	const { currentUser } = useContext<IUserAuthContext>(UserAuthContext);
-	const { activateMessage, cancelMessage } = useNotificationMessage();
+	const { activateMessage } = useNotificationMessage();
 
 	const onChangeEmailSubmit = (value: IUserDetailsForm) => {
 		activateMessage(undefined, "Updating your email address...", "Info", "Info", -1);
 		
-		setTimeout(() => {
-			let response: HttpResponse | undefined = changeUserEmail(currentUser!.email, value!.email, currentUser!.tokens);
-			cancelMessage();
-
+		setTimeout(async () => {
+			let response: HttpResponse | undefined = await changeUserEmail(currentUser!.email, value!.email, currentUser!.tokens);
+			
 			if (response?.status == HttpStatusCode.OK) {
 				activateMessage(
 					"Email address updated",
@@ -100,8 +97,8 @@ function usePasswordChange() {
 	const onChangePasswordSubmit = (value: IUpdatePasswordForm) => {
 		activateMessage(undefined, "Updating your password...", "Info", "Info", -1);
 		
-		setTimeout(() => {
-			let response: HttpResponse | undefined = changeUserPassword(
+		setTimeout(async () => {
+			let response: HttpResponse | undefined = await changeUserPassword(
 				currentUser!.email,
 				value.previousPassword,
 				value.newPassword,

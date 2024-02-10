@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useNotificationMessage } from "../../../../../../components/features/useNotificationMessage";
+import { useGenericErrorMessage, useNotificationMessage } from "../../../../../../components/features/useNotificationMessage";
 import { FormField } from "../../../../../../components/forms/FormField/FormField";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../../components/forms/validated-form";
 import { FormStyleContext } from "../../../../../../components/input/formStyleContext";
@@ -19,23 +19,27 @@ interface IResetPasswordForm extends IErrorFieldValues {
 	reenterNewPassword: string;
 }
 
-//const useRequest
-
 function useEmailSubmit() {
 	const { activateMessage } = useNotificationMessage();
+	const { activateError } = useGenericErrorMessage();
 
 	const onEmailSubmit = async (value: IUserDetailsForm) => {
-		let response = startResetPassword(value.email);
+		activateMessage(undefined, "Sending a link...", "Info", "Info", -1);
 
-		if (response?.status == HttpStatusCode.OK) {
-			activateMessage(
-				undefined,
-				"A verification code has been sent to your email address. Please make sure that you check your spam folder.",
-				"Info",
-				"Info",
-				5000
-			);
+		let response: HttpResponse | undefined = await startResetPassword(value.email);
+
+		if (response == undefined || response.status != HttpStatusCode.OK) {
+			activateError();
+			return;
 		}
+
+		activateMessage(
+			undefined,
+			"A verification code has been sent to your email address. Please make sure that you check your spam folder.",
+			"Info",
+			"Info",
+			8000
+		);
 
 		let state = await getResetPasswordPersistentState();
 
@@ -68,8 +72,8 @@ function useCodePasswordSubmit() {
 			return;
 		}
 
-		let response: HttpResponse | undefined = confirmResetPassword(state.email, value.newPassword, value.verificationCode);
-
+		let response: HttpResponse | undefined = await confirmResetPassword(state.email, value.newPassword, value.verificationCode);
+		
 		switch (response?.status) {
 			case HttpStatusCode.OK:
 				activateMessage("Password reset", "Your password has been successfully reset, please login.", "Success", "Tick", 7000);

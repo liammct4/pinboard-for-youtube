@@ -65,11 +65,11 @@ export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [ filterTitleText, setFilterTitleText ] = useState("");
-	const filteredVideos = useMemo(() => videos.filter(x => {
+	const filteredVideos = useMemo(() => videos.filter(async x => {
 		let tagFiltered = tagFilter == "" || x.appliedTags.includes(tagFilter);
 
 		// TODO: Cache retrieved information.
-		let title = (YTUtil.getYoutubeVideoInfoFromVideoID(x.videoID)).title.toLowerCase();
+		let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(x.videoID)).title.toLowerCase();
 
 		let filterWords = filterTitleText.split(' ');
 		let titleWords = title.split(' ');

@@ -2,18 +2,18 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { registerAccount } from "../../../../../lib/user/accounts";
 import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
+import { HttpResponse } from "../../../../../lib/util/request";
 import "./Register.css"
 
 export function Register(): React.ReactNode {
 	const navigate = useNavigate();
 
-	const onRegisterSubmitted = (value: IUserDetailsForm) => {
-		let response = registerAccount(value.email, value.password);
-
+	const onRegisterSubmitted = async (value: IUserDetailsForm) => {
+		let response: HttpResponse | undefined = await registerAccount(value.email, value.password);
 		if (response == undefined) {
 			return;
 		}
-
+		
 		if (response.status == HttpStatusCode.OK) {
 			navigate("success");
 		}

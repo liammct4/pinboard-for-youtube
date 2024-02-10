@@ -52,6 +52,25 @@ export function useNotificationMessage() {
 	return { activateMessage, cancelMessage: cancelNotification }
 }
 
+/*
+ * Displays a generic error notification.
+ */
+export function useGenericErrorMessage() {
+	const { activateMessage, cancelMessage } = useNotificationMessage();
+
+	const activateError = () => {
+		activateMessage(
+			"Something went wrong",
+			"Something went wrong when trying to contact the server. Please try again later.",
+			"Error",
+			"Error",
+			7000
+		);
+	}
+
+	return { activateError, cancelMessage }
+}
+
 export function useMappedAssetIcon(image: ImageName): Asset {
 	switch (image) {
 		case "Error":
