@@ -79,7 +79,7 @@ export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: s
 }
 
 export async function getYoutubeVideoInfoFromLink(url: string): Promise<IYoutubeVideoInfo> {
-	let result = JSON.parse((await request.sendRequest("GET", `https://noembed.com/embed?url=${url}`))?.body)
+	let result = JSON.parse((await request.GlobalRequestHandler.sendRequest("GET", `https://noembed.com/embed?url=${url}`))?.body)
 
 	if (result.hasOwnProperty("error")) {
 		throw new DoesNotExistError("The video requested does not exist.", url, result.error);

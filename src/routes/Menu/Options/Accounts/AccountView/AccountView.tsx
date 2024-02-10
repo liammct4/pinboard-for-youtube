@@ -33,7 +33,11 @@ function useAccountDelete() {
 
 		setTimeout(async () => {
 			let response: HttpResponse | undefined = await deleteUserAccount(currentUser!.email, value.password, currentUser!.tokens);
-					
+
+			if (response == undefined) {
+				return;
+			}
+
 			if (response!.status == HttpStatusCode.OK) {
 				activateMessage("Account deleted.", "Your account has been successfully deleted, please log out of any other devices.", "Success", "Tick", 10000);
 				dispatch(logoutCurrentUser());
@@ -65,6 +69,10 @@ function useEmailChange() {
 		setTimeout(async () => {
 			let response: HttpResponse | undefined = await changeUserEmail(currentUser!.email, value!.email, currentUser!.tokens);
 			
+			if (response == undefined) {
+				return;
+			}
+
 			if (response?.status == HttpStatusCode.OK) {
 				activateMessage(
 					"Email address updated",
@@ -92,7 +100,7 @@ function useEmailChange() {
 
 function usePasswordChange() {
 	const { currentUser } = useContext<IUserAuthContext>(UserAuthContext);
-	const { activateMessage, cancelMessage } = useNotificationMessage();
+	const { activateMessage } = useNotificationMessage();
 
 	const onChangePasswordSubmit = (value: IUpdatePasswordForm) => {
 		activateMessage(undefined, "Updating your password...", "Info", "Info", -1);
@@ -104,7 +112,10 @@ function usePasswordChange() {
 				value.newPassword,
 				currentUser!.tokens
 			);
-			cancelMessage();
+			
+			if (response == undefined) {
+				return undefined;
+			}
 
 			if (response?.status == HttpStatusCode.OK) {
 				activateMessage(

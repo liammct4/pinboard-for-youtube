@@ -1,93 +1,57 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Outlet, To, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
-import { GlobalNotificationContext, IGlobalNotification, useNotificationMessage } from "../components/features/useNotificationMessage";
-import * as Toast from "@radix-ui/react-toast"
-import { NotificationToast } from "../components/events/NotificationToast";
-import { UserAuthContext } from "../context/auth";
-import { RootState } from "../app/store";
-import { getSavedPath } from "../lib/storage/persistentState/persistentState";
-import "./HomePage.css"
+import { useNotificationMessage } from "../components/features/useNotificationMessage";
+import { GlobalRequestHandler, NetworkErrorType } from "../lib/util/request";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
-	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
-	const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
+	const { activateMessage } = useNotificationMessage();
+	// Setup offline network handler.
 	useEffect(() => {
-		if (currentNotification == undefined) {
-			return;
-		}
-
-		setNotificationOpen(true);
-
-		if (currentNotification.endDate == undefined) {
-			return;
-		}
-
-		const duration = Math.max(0, currentNotification.endDate.getTime() - Date.now());
-
-		// Remove notification after expiry.
-		setTimeout(() => {
-			cancelNotification();
-		}, duration);
-
-	}, [currentNotification]);
-	// When the extension initializes, the first thing to check if theres any persistent state and redirect.
-	useEffect(() => {
-		const checkPersistentState = async () => {
-			let path: string | undefined = await getSavedPath();
-
-			if (path != undefined) {
-				navigate(path as To)
+		// Setup handler.
+		GlobalRequestHandler.offlineHandler = (type: NetworkErrorType) => {
+			let error: string;
+			
+			switch (type) {
+				case "NoConnection":
+					error = "You appear to be offline, please check your internet connection.";
+					break;
+				case "TimedOut":
+					error = "There was a problem reaching the server, please try again later.";
+					break;
 			}
-		}
 
-		checkPersistentState();
+			setTimeout(() => activateMessage(
+				type == "TimedOut" ? "Something went wrong" : undefined,
+				error,
+				"Error",
+				"InternetGlobe",
+				-1), 100);
+			console.log()
+		}
 	}, []);
-	const cancelNotification = () => {
-		setCurrentNotification(undefined);
-		setNotificationOpen(false);
-	}
-	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 
 	return (
-		<div className="pfy-style-context outer-body">
-			<UserAuthContext.Provider value={{ currentUser }}>
-				<GlobalNotificationContext.Provider value={{
-					currentNotification: currentNotification,
-					setGlobalNotification: setCurrentNotification,
-					cancelNotification: cancelNotification
-				}}>
-					<Toast.Provider>
-						<NotificationToast
-							isOpen={notificationOpen}
-							title={currentNotification?.title ?? ""}
-							message={currentNotification?.message ?? ""}
-							colour={currentNotification?.colour ?? "Info"}
-							image={currentNotification?.image ?? "Info"}
-							animationType={currentNotification?.animation ?? "Slide"}/>
-					</Toast.Provider>
-					<div className="header-area">
-						<PfyLogo className="extension-logo"/>
-						<h1 className="extension-title">Pinboard for YouTube</h1>
-						<hr className="bold-separator"></hr>
-					</div>
-					<div className="inner-body-content">
-						<Outlet/>
-					</div>
-					<div className="footer-area">
-						<hr className="bold-separator"></hr>
-						<div className="button-options">
-							<button className="button-base button-small"
-								onClick={() => navigate("menu/options")}>Options</button>
-							<button className="button-base button-small"
-								onClick={() => navigate("menu/help")}>Help</button>
-						</div>
-						<h2 className="extension-version">Version 1.0.0</h2>
-					</div>
-				</GlobalNotificationContext.Provider>
-			</UserAuthContext.Provider>
+		<div className="outer-body">
+			<div className="header-area">
+				<PfyLogo className="extension-logo"/>
+				<h1 className="extension-title">Pinboard for YouTube</h1>
+				<hr className="bold-separator"></hr>
+			</div>
+			<div className="inner-body-content">
+				<Outlet/>
+			</div>
+			<div className="footer-area">
+				<hr className="bold-separator"></hr>
+				<div className="button-options">
+					<button className="button-base button-small"
+						onClick={() => navigate("menu/options")}>Options</button>
+					<button className="button-base button-small"
+						onClick={() => navigate("menu/help")}>Help</button>
+				</div>
+				<h2 className="extension-version">Version 1.0.0</h2>
+			</div>
 		</div>
 	);
 }

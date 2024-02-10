@@ -28,7 +28,11 @@ function useEmailSubmit() {
 
 		let response: HttpResponse | undefined = await startResetPassword(value.email);
 
-		if (response == undefined || response.status != HttpStatusCode.OK) {
+		if (response == undefined) {
+			return undefined;
+		}
+		
+		if (response.status != HttpStatusCode.OK) {
 			activateError();
 			return;
 		}

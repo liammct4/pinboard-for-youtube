@@ -1,3 +1,15 @@
+export class SyncTimer {
+	private _agreedTime: Date | undefined
+
+	get agreedTime(): Date | undefined {
+		return this._agreedTime;
+	}
+
+	set agreedTime(time: Date | undefined) {
+		this._agreedTime = time;
+	}
+}
+
 export function getSecondsFromTimestamp(time: string): number {
 	/* Validates the timestamp according to the format: H:MM:SS. E.g.
 	* Good cases:

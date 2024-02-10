@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { accountsEndpoint, sessionEndpoint } from "../api/pinboardApi";
 import { HttpStatusCode } from "../util/http";
-import { HeaderArray, HttpResponse, sendRequest } from "../util/request"
+import { HeaderArray, HttpResponse, GlobalRequestHandler } from "../util/request"
 import { IStorage } from "../storage/storage";
 import { loginSaveUser } from "./storage";
 import { setCurrentUser } from "../../features/auth/authSlice";
@@ -28,7 +28,7 @@ export function useLogin() {
 		let newlyAuthenticatedUser: IAuthenticatedUser | undefined = await loginSaveUser(email, password);
 
 		dispatch(setCurrentUser(newlyAuthenticatedUser));
-		return newlyAuthenticatedUser != undefined;
+		return newlyAuthenticatedUser;
 	}
 
 	return { attemptLogin };
@@ -41,7 +41,7 @@ export function useLogin() {
  * @returns Response from API.
  */
 export async function registerAccount(email: string, password: string): Promise<HttpResponse | undefined> {
-	return sendRequest("PUT", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PUT", accountsEndpoint, {
 		email: email,
 		password: password
 	});
@@ -50,7 +50,7 @@ export async function registerAccount(email: string, password: string): Promise<
 export async function invalidateRefreshToken(refreshToken: string, idToken: string): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", idToken]];
 
-	return sendRequest("DELETE", sessionEndpoint, {
+	return GlobalRequestHandler.sendRequest("DELETE", sessionEndpoint, {
 		refreshToken: refreshToken
 	}, headers);
 }
@@ -58,7 +58,7 @@ export async function invalidateRefreshToken(refreshToken: string, idToken: stri
 export async function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return sendRequest("DELETE", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("DELETE", accountsEndpoint, {
 		userDetails: {
 			email: email,
 			password: password
@@ -70,7 +70,7 @@ export async function deleteUserAccount(email: string, password: string, tokens:
 export async function changeUserEmail(currentEmail: string, newEmail: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return sendRequest("PATCH", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
 			email: currentEmail,
 			password: null
@@ -86,7 +86,7 @@ export async function changeUserEmail(currentEmail: string, newEmail: string, to
 export async function changeUserPassword(email: string, previousPassword: string, newPassword: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return sendRequest("PATCH", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, {
 		userDetails: {
 			email: email,
 			password: previousPassword
@@ -106,7 +106,7 @@ export async function changeUserPassword(email: string, previousPassword: string
  * @returns The response from the server.
  */
 export async function startResetPassword(email: string): Promise<HttpResponse | undefined> {
-	return sendRequest("POST", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
 		getCode: {
 			email: email
 		},
@@ -123,7 +123,7 @@ export async function startResetPassword(email: string): Promise<HttpResponse | 
  * @returns The response from the server.
  */
 export async function confirmResetPassword(email: string, newPassword: string, code: string): Promise<HttpResponse | undefined> {
-	return sendRequest("POST", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
 		getCode: null,
 		setPassword: {
 			code: code,
@@ -146,7 +146,7 @@ export async function loginGetTokens(email: string,password: string): Promise<Au
 	}));
 
 	let headers: HeaderArray = [["Authorization", details]];
-	let response: HttpResponse | undefined = await sendRequest("GET", sessionEndpoint, undefined, headers);
+	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("GET", sessionEndpoint, undefined, headers);
 
 	if (response == undefined || response.status == HttpStatusCode.UNAUTHORIZED) {
 		return undefined;

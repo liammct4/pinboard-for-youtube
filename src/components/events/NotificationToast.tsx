@@ -16,7 +16,7 @@ export interface INotificationToastProperties {
 
 export function NotificationToast({ isOpen, title, message, colour, image, animationType = "Slide" }: INotificationToastProperties): React.ReactNode {
 	const icon: Asset = useMappedAssetIcon(image);
-	const { cancelNotification } = useContext<IGlobalNotificationContext>(GlobalNotificationContext);
+	const { cancelCurrentNotification } = useContext<IGlobalNotificationContext>(GlobalNotificationContext);
 
 	return (
 		<>
@@ -34,7 +34,7 @@ export function NotificationToast({ isOpen, title, message, colour, image, anima
 					<Toast.Action className="close-button" asChild altText="Close">
 						<button
 							className="button-small circle-button"
-							onClick={() => cancelNotification()}>
+							onClick={() => cancelCurrentNotification()}>
 							<IconContainer
 								asset={CloseIcon}
 								className="icon-colour-standard"

@@ -26,6 +26,7 @@ import { EditTagPage } from "./routes/Tags/EdItTagPage/EditTagPage.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { setCurrentUser } from "./features/auth/authSlice.ts"
 import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
+import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -72,22 +73,24 @@ async function setupState() {
 		<React.StrictMode>
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-					<Route path="/*" element={<HomePage/>}>
-						<Route path="videos" element={<VideosPage/>}/>
-						<Route path="tags" element={<TagsPage/>}>
-							<Route path="edit/:tagId" element={<EditTagPage/>}/>
-						</Route>
-						<Route path="menu" element={<MenuPage/>}>
-							<Route path="options/*" element={<OptionsPage/>}>
-								<Route path="general" element={<GeneralPage/>}/>
-								<Route path="accounts/*" element={<AccountsPage/>}/>
-								<Route path="appearance/*" element={<AppearancePage/>}/>
-								<Route path="debug/*" element={<DebugPage/>}/>
-								<Route path="*" element={<OptionsNavigator/>}/>
+					<Route path="/*" element={<PfyWrapper/>}>
+						<Route path="" element={<HomePage/>}>
+							<Route path="videos" element={<VideosPage/>}/>
+							<Route path="tags" element={<TagsPage/>}>
+								<Route path="edit/:tagId" element={<EditTagPage/>}/>
 							</Route>
-							<Route path="help" element={<HelpPage/>}/>				
+							<Route path="menu" element={<MenuPage/>}>
+								<Route path="options/*" element={<OptionsPage/>}>
+									<Route path="general" element={<GeneralPage/>}/>
+									<Route path="accounts/*" element={<AccountsPage/>}/>
+									<Route path="appearance/*" element={<AppearancePage/>}/>
+									<Route path="debug/*" element={<DebugPage/>}/>
+									<Route path="*" element={<OptionsNavigator/>}/>
+								</Route>
+								<Route path="help" element={<HelpPage/>}/>				
+							</Route>
+							<Route path="" element={<Navigate to="/videos" replace/>}/>
 						</Route>
-						<Route path="*" element={<Navigate to="/videos" replace/>}/>
 					</Route>
 				))}/>
 			</Provider>

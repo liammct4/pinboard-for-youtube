@@ -3,10 +3,11 @@ import { ReactComponent as ErrorIcon } from "./../../../assets/icons/status/erro
 import { ReactComponent as InfoIcon } from "./../../../assets/icons/status/info.svg"
 import { ReactComponent as TickIcon } from "./../../../assets/icons/status/tick.svg"
 import { ReactComponent as WarningIcon } from "./../../../assets/icons/status/warning.svg"
+import { ReactComponent as InterentGlobeIcon } from "./../../../assets/icons/status/internet.svg"
 import { Asset } from "../images/svgAsset";
 
 export type ColourType = "Success" | "Warning" | "Info" | "Error";
-export type ImageName = "Tick" | "Warning" | "Error" | "Info";
+export type ImageName = "Tick" | "Warning" | "Error" | "Info" | "InternetGlobe";
 export type AnimationName = "Slide" | "Shake";
 
 export interface IGlobalNotification {
@@ -22,7 +23,7 @@ export interface IGlobalNotification {
 export interface IGlobalNotificationContext {
 	currentNotification: IGlobalNotification | undefined,
 	setGlobalNotification: (notification: IGlobalNotification) => void;
-	cancelNotification: () => void;
+	cancelCurrentNotification: () => void;
 }
 
 /**
@@ -30,7 +31,7 @@ export interface IGlobalNotificationContext {
  * @returns A function to activate the message.
  */
 export function useNotificationMessage() {
-	const { setGlobalNotification, cancelNotification } = useContext(GlobalNotificationContext);
+	const { setGlobalNotification, cancelCurrentNotification } = useContext(GlobalNotificationContext);
 
 	const activateMessage = (
 		title: string | undefined,
@@ -46,17 +47,18 @@ export function useNotificationMessage() {
 			endDate = new Date(Date.now() + duration)
 		}
 
-		setGlobalNotification({ title, message, colour, image, endDate, animation });
+		let newNotification: IGlobalNotification = { title, message, colour, image, endDate, animation };
+		setGlobalNotification(newNotification);
 	}
 
-	return { activateMessage, cancelMessage: cancelNotification }
+	return { activateMessage, cancelCurrentNotification }
 }
 
 /*
  * Displays a generic error notification.
  */
 export function useGenericErrorMessage() {
-	const { activateMessage, cancelMessage } = useNotificationMessage();
+	const { activateMessage } = useNotificationMessage();
 
 	const activateError = () => {
 		activateMessage(
@@ -68,7 +70,7 @@ export function useGenericErrorMessage() {
 		);
 	}
 
-	return { activateError, cancelMessage }
+	return { activateError }
 }
 
 export function useMappedAssetIcon(image: ImageName): Asset {
@@ -81,11 +83,13 @@ export function useMappedAssetIcon(image: ImageName): Asset {
 			return TickIcon;
 		case "Warning":
 			return WarningIcon;
+		case "InternetGlobe":
+			return InterentGlobeIcon;
 	}
 }
 
 export const GlobalNotificationContext = createContext<IGlobalNotificationContext>({
 	currentNotification: undefined,
 	setGlobalNotification: () => null,
-	cancelNotification: () => null
+	cancelCurrentNotification: () => null
 });
