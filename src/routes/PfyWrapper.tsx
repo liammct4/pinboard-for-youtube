@@ -76,8 +76,8 @@ export function PfyWrapper(): React.ReactNode {
 								isOpen={notificationOpen}
 								title={currentNotification?.title ?? ""}
 								message={currentNotification?.message ?? ""}
-								colour={currentNotification?.colour ?? "Info"}
-								image={currentNotification?.image ?? "Info"}
+								colour={currentNotification?.colour ?? "Blank"}
+								image={currentNotification?.image ?? "None"}
 								animationType={currentNotification?.animation ?? "Slide"}/>
 						</Toast.Provider>
 						<Outlet/>

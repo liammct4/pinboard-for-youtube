@@ -10,11 +10,7 @@ export type HttpResponse = {
 }
 
 export class RequestHandler {
-	private _offlineHandler: (error: NetworkErrorType) => void | Promise<void> = () => { console.log("offline") };
-
-	constructor() {
-		
-	}
+	private _offlineHandler: (error: NetworkErrorType) => void | Promise<void> = () => { };
 
 	set offlineHandler(handler: (error: NetworkErrorType) => void | Promise<void>) {
 		this._offlineHandler = handler;

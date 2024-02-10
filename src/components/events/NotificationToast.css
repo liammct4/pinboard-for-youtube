@@ -30,12 +30,6 @@
 			stroke-width: 1px;
 		}
 
-		&[data-image-name="Warning"] {
-			.notification-icon {
-				stroke: none;
-			}
-		}
-
 		.toast-title {
 			font-size: var(--pfy-font-heading-small);
 			font-weight: bold;
@@ -74,6 +68,12 @@
 		animation: slideOut var(--pfy-timing-long) ease-in;
 	}
 
+	&[data-image-name="Warning"] {
+		.notification-icon {
+			stroke: none;
+		}
+	}
+
 	/* Colour types */
 	&[data-colour="Info"] {
 		--notification-colour: var(--pfy-important-info);
@@ -92,6 +92,11 @@
 
 	&[data-colour="Success"] {
 		--notification-colour: var(--pfy-important-success);
+		--notification-content-colour: black;
+	}
+
+	&[data-colour="Blank"] {
+		--notification-colour: var(--pfy-shade-03);
 		--notification-content-colour: black;
 	}
 }

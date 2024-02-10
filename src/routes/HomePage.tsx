@@ -28,7 +28,6 @@ export function HomePage(): React.ReactNode {
 				"Error",
 				"InternetGlobe",
 				-1), 100);
-			console.log()
 		}
 	}, []);
 
