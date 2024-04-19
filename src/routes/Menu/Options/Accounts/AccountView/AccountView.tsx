@@ -52,7 +52,7 @@ function useAccountDelete() {
 				}
 			}
 			
-			navigate("/menu/options/accounts");
+			navigate("/app/menu/options/accounts");
 		}, 10);
 	};
 
@@ -171,7 +171,7 @@ export function AccountView(): React.ReactNode {
 
 		activateMessage(undefined, "You have now been logged out.", "Info", "Info", 6500);
 		setTimeout(() => {
-			navigate("/menu/options/accounts");
+			navigate("/app/menu/options/accounts");
 		}, 10);
 	};
 

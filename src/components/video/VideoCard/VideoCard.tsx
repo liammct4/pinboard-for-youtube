@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import * as YTUtil from "./../../../lib/util/youtube/youtubeUtil.ts"
 import { ReactComponent as ThumbnailMissingImage } from "./../../../../assets/thumb_missing.svg"
 import "./VideoCard.css"
@@ -9,17 +10,22 @@ export interface IVideoCardProperties {
 }
 
 export function VideoCard({ className = "", videoID, placeholderTitle = "" }: IVideoCardProperties): React.ReactNode {
-	let videoExists: boolean = true;
-	let url: string | null = null;
-	let info: any | null = null;
+	const [videoExists, setVideoExists] = useState<boolean>(false);
+	const [url, setUrl] = useState<string | null>(null);
+	const [info, setInfo] = useState<any | null>(null);
 
-	if (videoID == undefined || !YTUtil.videoExists(YTUtil.getYouTubeLinkFromVideoID(videoID))) {
-		videoExists = false;
-	}
-	else {
-		url = YTUtil.getYouTubeLinkFromVideoID(videoID);
-		info = YTUtil.getYoutubeVideoInfoFromVideoID(videoID);
-	}
+	useEffect(() => {
+		const getVideoInfo = async () => {
+			if (videoID != undefined && YTUtil.videoExists(YTUtil.getYouTubeLinkFromVideoID(videoID))) {
+				setUrl(YTUtil.getYouTubeLinkFromVideoID(videoID));
+				setInfo(await YTUtil.getYoutubeVideoInfoFromVideoID(videoID));
+
+				setVideoExists(true);
+			}
+		}
+
+		getVideoInfo();
+	}, [])
 
 	return (
 		<div className={`video-card-box ${className.trim()}`}>

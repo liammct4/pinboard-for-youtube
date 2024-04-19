@@ -40,7 +40,7 @@ export function EnterLoginDetails(): React.ReactNode {
 			}}/>
 			<button
 				className="forgot-password-text link-text embedded-link-button"
-				onClick={() => navigate("/menu/options/accounts/login/forgot password")}>Forgot your password?</button>
+				onClick={() => navigate("/app/menu/options/accounts/login/forgot password")}>Forgot your password?</button>
 		</>
 	);
 }

@@ -40,8 +40,10 @@ async function setupState() {
 		let currentUrl: string | undefined = await getActiveTabURL();
 
 		if (currentUrl != undefined && videoExists(currentUrl)) {
-			// Means that the current page is not a youtube video.
-			activeID = getVideoIdFromYouTubeLink(currentUrl);
+			// If an error happens, it means that the current page is not a youtube video.
+			try {
+				activeID = getVideoIdFromYouTubeLink(currentUrl);
+			} catch { }
 		}
 	}
 	else {
@@ -74,7 +76,7 @@ async function setupState() {
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<PfyWrapper/>}>
-						<Route path="" element={<HomePage/>}>
+						<Route path="app" element={<HomePage/>}>
 							<Route path="videos" element={<VideosPage/>}/>
 							<Route path="tags" element={<TagsPage/>}>
 								<Route path="edit/:tagId" element={<EditTagPage/>}/>
@@ -89,8 +91,9 @@ async function setupState() {
 								</Route>
 								<Route path="help" element={<HelpPage/>}/>				
 							</Route>
-							<Route path="" element={<Navigate to="/videos" replace/>}/>
+							<Route path="" element={<Navigate to="videos" replace/>}/>
 						</Route>
+						<Route path="*" element={<Navigate to="app" replace/>}/>
 					</Route>
 				))}/>
 			</Provider>
