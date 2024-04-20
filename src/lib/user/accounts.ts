@@ -107,6 +107,7 @@ export async function changeUserPassword(email: string, previousPassword: string
  */
 export async function startResetPassword(email: string): Promise<HttpResponse | undefined> {
 	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+		type: "RESET_PASSWORD",
 		getCode: {
 			email: email
 		},
@@ -124,6 +125,7 @@ export async function startResetPassword(email: string): Promise<HttpResponse | 
  */
 export async function confirmResetPassword(email: string, newPassword: string, code: string): Promise<HttpResponse | undefined> {
 	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+		type: "RESET_PASSWORD",
 		getCode: null,
 		setPassword: {
 			code: code,
@@ -155,9 +157,22 @@ export async function loginGetTokens(email: string,password: string): Promise<Au
 	return JSON.parse(response.body) as AuthenticationObject;
 }
 
-export function resendEmailVerificationLink(_email: string): HttpResponse | undefined {
-	// TODO
-	return undefined;
+/**
+ * Resends a verification link to a newly created user account.
+ * @param email The email to send a link to.
+ * @returns OK (200) if everything was successful.
+ */
+export async function resendEmailVerificationLink(email: string): Promise<HttpResponse | undefined> {
+	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+		type: "RESEND_VERIFY_EMAIL",
+		requestedEmail: email
+	});
+
+	if (response == undefined || response.status == HttpStatusCode.UNAUTHORIZED) {
+		return undefined;
+	}
+
+	return response;
 }
 
 export async function userIsLoggedIn(): Promise<boolean> {

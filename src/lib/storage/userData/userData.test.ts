@@ -21,7 +21,8 @@ let storageTemplate: IStorage = {
 	},
 	persistentState: {
 		path: undefined,
-		resetPasswordState: undefined
+		resetPasswordState: undefined,
+		resendVerificationEmailState: undefined
 	}
 }
 

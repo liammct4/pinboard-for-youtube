@@ -81,7 +81,8 @@ export async function ensureInitialized(): Promise<void> {
 		},
 		persistentState: {
 			path: undefined,
-			resetPasswordState: undefined
+			resetPasswordState: undefined,
+			resendVerificationEmailState: undefined
 		}
 	};
 

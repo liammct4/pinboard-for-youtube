@@ -9,13 +9,16 @@
  */
 
 import { IStorage } from "../storage";
+import { IResendVerificationEmailState } from "./resendVerificationEmail";
 import { IResetPasswordState } from "./resetPassword";
 
-export const RESET_PASSWORD_PATH: string = "menu/options/accounts/login/forgot password";
+export const RESET_PASSWORD_PATH: string = "/app/menu/options/accounts/login/forgot password";
+export const RESEND_VERIFICATION_EMAIL_PATH: string = "/app/menu/options/accounts/register/success";
 
 export interface IPersistentState {
 	path: string | undefined;
 	resetPasswordState: IResetPasswordState | undefined;
+	resendVerificationEmailState?: IResendVerificationEmailState | undefined;
 }
 
 export async function getSavedPath(): Promise<string | undefined> {

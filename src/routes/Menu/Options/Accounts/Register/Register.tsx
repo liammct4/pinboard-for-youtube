@@ -3,6 +3,7 @@ import { registerAccount } from "../../../../../lib/user/accounts";
 import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { HttpResponse } from "../../../../../lib/util/request";
+import { startResendVerfiyEmailState } from "../../../../../lib/storage/persistentState/resendVerificationEmail";
 import "./Register.css"
 
 export function Register(): React.ReactNode {
@@ -16,6 +17,7 @@ export function Register(): React.ReactNode {
 		
 		if (response.status == HttpStatusCode.OK) {
 			navigate("success");
+			startResendVerfiyEmailState({ email: value.email });
 		}
 	}
 

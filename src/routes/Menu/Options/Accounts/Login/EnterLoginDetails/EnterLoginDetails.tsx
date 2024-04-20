@@ -26,7 +26,7 @@ export function EnterLoginDetails(): React.ReactNode {
 			activateMessage("Success!", "You have now been logged in.", "Success", "Tick", 4000, "Slide");
 
 			setTimeout(() => {
-				navigate("/menu/options/accounts");
+				navigate("/app/menu/options/accounts");
 			}, 10);
 		}, 200);
 	}
