@@ -4,13 +4,18 @@ import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { startResendVerfiyEmailState } from "../../../../../lib/storage/persistentState/resendVerificationEmail";
+import { useNotificationMessage } from "../../../../../components/features/useNotificationMessage";
 import "./Register.css"
 
 export function Register(): React.ReactNode {
 	const navigate = useNavigate();
+	const { activateMessage } = useNotificationMessage();
 
 	const onRegisterSubmitted = async (value: IUserDetailsForm) => {
+		activateMessage(undefined, "Creating your account, please wait...", "Info", "Info", -1, "Slide");
+
 		let response: HttpResponse | undefined = await registerAccount(value.email, value.password);
+
 		if (response == undefined) {
 			return;
 		}
