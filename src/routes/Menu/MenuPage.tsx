@@ -10,7 +10,7 @@ export function MenuPage(): React.ReactNode {
 	
 	const currentPath: Array<string> = decodeURI(location.pathname).split("/");
 	// Remove everything before options page.
-	currentPath.splice(0, 2);
+	currentPath.splice(0, 3);
 
 	return (
 		<div className="menu-outer scrollbar-small">
@@ -26,7 +26,8 @@ export function MenuPage(): React.ReactNode {
 										.slice(0, currentPath.indexOf(x) + 1)
 										.join("/")
 									);
-									navigate(fullPath)
+
+									navigate("/app/menu/" + fullPath)
 								}}>
 									<span>{toTitleCase(x)}</span>
 								</button>
