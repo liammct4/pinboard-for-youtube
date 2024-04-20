@@ -6,6 +6,8 @@ export interface ISVGContainerProperties {
 	"manual-stroke"?: string;
 	"use-fill"?: boolean;
 	"use-stroke"?: boolean;
+	// This allows for any user specified arbitrary attributes to be added to the svg in the DOM.
+	"attached-attributes"?: any;
 }
 
 /**
@@ -26,7 +28,8 @@ export function IconContainer({
 		"manual-fill": fill,
 		"manual-stroke": stroke,
 		"use-fill": useFill,
-		"use-stroke": useStroke
+		"use-stroke": useStroke,
+		"attached-attributes": attachedAttributes
 	}: ISVGContainerProperties): React.ReactNode {
 
 	return (
@@ -38,6 +41,7 @@ export function IconContainer({
 				stroke: stroke?.startsWith("--") ? `var(${stroke})` : stroke
 			}}
 			data-use-fill={useFill}
-			data-use-stroke={useStroke}/>
+			data-use-stroke={useStroke}
+			{...attachedAttributes}/>
 		);
 }

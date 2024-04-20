@@ -1,68 +1,158 @@
 .video-list-outer {
-	display: flex;
-	flex-direction: column;
+	/* Use display grid so that the delete image can be placed in the exact centre. */
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	border-radius: 10px;
 
-	.video-card {
-		display: flex;
-		flex-direction: row;
+	.delete-image {
+		grid-row: 1;
+		grid-column: 1;
+		width: 20px;
+		height: 20px;
+		margin: auto;
+		transition: width var(--pfy-timing-long), height var(--pfy-timing-long), filter var(--pfy-timing-longer), transform var(--pfy-timing-longer);
+		filter: opacity(0);
+		transform: rotateY(-35deg);
+		z-index: 999;
+	}
 
-		.drag-handle {
-			min-width: 20px;
-			height: 34px;
-			margin-top: auto;
-			margin-bottom: auto;
+	&[data-is-delete="true"] {
+		border: var(--pfy-spacing-standard-compact) solid var(--pfy-primary-common);
+		border-radius: 10px;
+		border-style: dotted;
+		transition: border-style var(--pfy-timing-fast);
+		cursor: pointer;
+
+		&:hover {
+			animation: borderPulsingAnimation 1000ms;
+			animation-iteration-count: infinite;
+
+			.video-list-inner {
+				background: var(--pfy-empty-02-raised);
+				filter: blur(1px);
+			}
+
+			.delete-image {
+				width: 40px;
+				height: 40px;
+				filter: opacity(0.9);
+				transform: rotate(0deg);
+			}
 		}
 	}
 
-	.timestamp-list {
-		list-style-type: none;
-		padding-left: calc(var(--pfy-spacing-large) * 2);
-		margin-top: var(--pfy-spacing-standard-compact);
-		margin-bottom: var(--pfy-spacing-standard-compact);
+	.video-list-inner {
+		display: flex;
+		grid-row: 1;
+		grid-column: 1;
+		border-radius: 10px;
+		flex-direction: column;
+
+		&[data-is-delete="true"] {
+			padding: var(--pfy-spacing-standard-compact);
+			user-select: none;
+			transition:
+				padding var(--pfy-timing-long),
+				border var(--pfy-timing-snappy),
+				background var(--pfy-timing-longer),
+				filter var(--pfy-timing-longer);
+
+			/* Hide everything but the title, thumbnail and link. */
+			.video-details-expander, .drag-handle, .regular-separator {
+				visibility: collapse;
+				height: 0;
+				min-width: 0 !important;
+				width: 0;
+				margin: 0;
+				transition:
+					width var(--pfy-timing-fast),
+					min-width var(--pfy-timing-fast)
+					height var(--pfy-timing-fast),
+					margin var(--pfy-timing-fast);
+			}
+
+			.video-link {
+				pointer-events: none;
+			}
+		}
+
+		.video-card {
+			display: flex;
+			flex-direction: row;
+
+			.drag-handle {
+				min-width: 20px;
+				height: 34px;
+				margin-top: auto;
+				margin-bottom: auto;
+			}
+		}
+
+		.timestamp-list {
+			list-style-type: none;
+			padding-left: calc(var(--pfy-spacing-large) * 2);
+			margin-top: var(--pfy-spacing-standard-compact);
+			margin-bottom: var(--pfy-spacing-standard-compact);
+		}
+
+		.add-timestamp-row {
+			display: flex;
+			flex-direction: row;
+			margin-bottom: 1px;
+
+			.fake-timestamp {
+				color: var(--pfy-text-lighter);
+				font-size: var(--pfy-font-text-standard);
+				text-decoration: underline;
+				opacity: 0.5;
+				margin: 0;
+			}
+
+			.add-timestamp-button {
+				margin: 0;
+			}
+
+			.info-text {
+				color: var(--pfy-text-light);
+				font-size: var(--pfy-font-text-standard);
+				margin: 0;
+				margin-left: var(--pfy-spacing-standard-compact);
+			}
+		}
+
+		.applied-tag-list {
+			display: flex;
+			flex-direction: row;
+			flex-wrap: wrap;
+			padding-left: 0;
+			list-style-type: none;
+			gap: var(--pfy-spacing-standard-compact);
+			margin-top: var(--pfy-spacing-standard);
+		}
+
+		.add-tag-dropdown-button {
+			display: flex;
+			align-items: center;
+
+			/* Workaround because Select.Value takes up space and cannot be removed. */
+			.value-outer {
+				display: none;
+			}
+		}
+	}
+}
+
+@keyframes borderPulsingAnimation {
+	0% {
+		border-color: var(--pfy-primary-common);
 	}
 
-	.add-timestamp-row {
-		display: flex;
-		flex-direction: row;
-		margin-bottom: 1px;
-
-		.fake-timestamp {
-			color: var(--pfy-text-lighter);
-			font-size: var(--pfy-font-text-standard);
-			text-decoration: underline;
-			opacity: 0.5;
-			margin: 0;
-		}
-
-		.add-timestamp-button {
-			margin: 0;
-		}
-
-		.info-text {
-			color: var(--pfy-text-light);
-			font-size: var(--pfy-font-text-standard);
-			margin: 0;
-			margin-left: var(--pfy-spacing-standard-compact);
-		}
+	50% {
+		border-color: var(--pfy-primary-dark);
 	}
 
-	.applied-tag-list {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		padding-left: 0;
-		list-style-type: none;
-		gap: var(--pfy-spacing-standard-compact);
-		margin-top: var(--pfy-spacing-standard);
-	}
-
-	.add-tag-dropdown-button {
-		display: flex;
-		align-items: center;
-
-		/* Workaround because Select.Value takes up space and cannot be removed. */
-		.value-outer {
-			display: none;
-		}
+	100% {
+		border-color: var(--pfy-primary-common);
 	}
 }

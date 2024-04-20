@@ -38,6 +38,16 @@ export const videoSlice = createSlice({
 		addVideo: (state, action: PayloadAction<Video>) => {
 			state.currentVideos.push(action.payload);
 		},
+		// Accepts a video ID.
+		removeVideo: (state, action: PayloadAction<string>) => {
+			let index = state.currentVideos.findIndex(x => x.videoID == action.payload);
+
+			if (index == -1) {
+				return;
+			}
+
+			state.currentVideos.splice(index, 1);
+		},
 		updateVideo: (state, action: PayloadAction<Video>) => {
 			for (let i = 0; i < state.currentVideos.length; i++) {
 				if (state.currentVideos[i].videoID == action.payload.videoID) {
@@ -101,6 +111,7 @@ export const {
 	setVideoState,
 	addVideo,
 	updateVideo,
+	removeVideo,
 	clearVideos,
 	setVideos,
 	addTagDefinition,

@@ -21,7 +21,10 @@ export function DebugPage(): React.ReactNode {
 	return (
 		<>
 			<h1 className="debug-title">Debug page</h1>
-			<p>This page is intended solely for development and debugging, using this with your saved data can cause corruption or data loss!</p>
+			<p>
+				You probably didn't mean to open this page, this page is intended solely for development and
+				debugging, using this with your saved data can cause corruption or data loss!
+			</p>
 			<SwitchInputPrimtive
 				label="I understand the risks, and want to continue"
 				labelSize="medium"

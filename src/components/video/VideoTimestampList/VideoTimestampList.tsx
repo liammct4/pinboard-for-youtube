@@ -9,6 +9,7 @@ import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
 import VideoCard from "./../VideoCard/VideoCard.jsx"
 import { ReactComponent as PlusIcon } from "src/../assets/symbols/plus.svg"
 import { ReactComponent as DragHandle } from "src/../assets/icons/drag_vrect.svg"
+import { ReactComponent as CrossIcon } from "src/../assets/symbols/cross.svg"
 import { IconContainer } from "../../images/svgAsset.tsx";
 import { TagItem } from "../tags/TagItem/TagItem.tsx";
 import { TagItemContext } from "../../../context/tag.ts";
@@ -96,103 +97,116 @@ export function VideoTimestampList(): React.ReactNode {
 		.filter(x => video.appliedTags.find(y => y == x.id) == undefined)
 	, [topLevelVideos.tagDefinitions, video.appliedTags]);
 
+	// Handles delete mode.
+	const onVideoClicked = () => {
+		if (topLevelVideos.deleteMode) {
+			dispatch(topLevelVideos.actions.removeVideo(video.videoID));
+		}
+	}
+
 	let isOpen = topLevelVideos.openVideos.includes(video.videoID);
 
 	return (
 		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>
-			<div className="video-list-outer">
-				<div className="video-card">
-					<VideoCard videoID={video.videoID}/>
-					<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
-						<IconContainer
-							className="icon-colour-standard drag-handle"
-							asset={DragHandle}
-							use-fill/>
-					</div>
-				</div>
-				<hr className="regular-separator"></hr>
-				<LabeledArrowExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
-					<Reorder.Group className="timestamp-list" values={video.timestamps} onReorder={handleTimestampReorder}>
-						{video.timestamps.map((x) => 
-							<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
-					</Reorder.Group>
-					<div className="add-timestamp-row">
-						<p className="fake-timestamp">00:00</p>
-						<div style={{ flexGrow: "1" }}></div>
-						<button
-							className="add-timestamp-button circle-button"
-							onClick={onAddTimestamp}>
+			<div className="video-list-outer" onClick={onVideoClicked} data-is-delete={topLevelVideos.deleteMode}>
+				{/* The delete/cross image when hovering. */}
+				<IconContainer className="icon-colour-standard delete-image" asset={CrossIcon} use-stroke/>
+				<div className="video-list-inner" data-is-delete={topLevelVideos.deleteMode}>
+					<div className="video-card">
+						<VideoCard videoID={video.videoID}/>
+						<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
 							<IconContainer
-								className="icon-colour-standard"
-								asset={PlusIcon}
-								use-stroke/>
-						</button>
-						<p className="info-text">Add new timestamp</p>
+								className="icon-colour-standard drag-handle"
+								asset={DragHandle}
+								use-fill/>
+						</div>
 					</div>
-				</LabeledArrowExpander>
-				<ul className="applied-tag-list">
-					<TagItemContext.Provider value={{
-						tagButtonPress: () => null,
-						crossButtonPress: (tag) => {
-							let index = video.appliedTags.findIndex(x => x == tag.id);
-
-							if (index == -1) {
-								return;
-							}
-
-							let updatedVideo: Video = {
-								...video,
-								appliedTags: [ ...video.appliedTags ]
-							}
-
-							updatedVideo.appliedTags.splice(index);
-
-							dispatch(updateVideo(updatedVideo));
-						}
-					}}>
-						{video.appliedTags.map(x => 
-							<li key={x}>
-								<TagItem tagDefinition={topLevelVideos.tagDefinitions.find(y => y.id == x)!}/>
-							</li>)}
-					</TagItemContext.Provider>
-					<li>
-						<Select.Root
-							value=""
-							onValueChange={(value) => {
-								let updatedVideo: Video = {
-									...video,
-									appliedTags: [
-										...video.appliedTags,
-										value
-									]
-								}
-
-								dispatch(updateVideo(updatedVideo));
-							}}> 
-							<Select.Trigger className="select-button field-input circle-button add-tag-dropdown-button" aria-label="Theme" disabled={applicableTags.length == 0}>
-								<div className="value-outer" >
-									<Select.Value/>
-								</div>
-								<Select.Icon className="open-icon">
+					<hr className="regular-separator"></hr>
+					<div className="video-details-expander">
+						<LabeledArrowExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
+							<Reorder.Group className="timestamp-list" values={video.timestamps} onReorder={handleTimestampReorder}>
+								{video.timestamps.map((x) => 
+									<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
+							</Reorder.Group>
+							<div className="add-timestamp-row">
+								<p className="fake-timestamp">00:00</p>
+								<div style={{ flexGrow: "1" }}></div>
+								<button
+									className="add-timestamp-button circle-button"
+									onClick={onAddTimestamp}>
 									<IconContainer
 										className="icon-colour-standard"
 										asset={PlusIcon}
-										use-stroke
-									/>
-								</Select.Icon>
-							</Select.Trigger>
-							<Select.Portal>
-								<Select.Content className="select-dropdown-content">
-									<Select.Viewport className="select-viewport">
-										<Select.Group className="select-group">
-											{applicableTags.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}
-										</Select.Group>
-									</Select.Viewport>
-								</Select.Content>
-							</Select.Portal>
-						</Select.Root>
-					</li>
-				</ul>
+										use-stroke/>
+								</button>
+								<p className="info-text">Add new timestamp</p>
+							</div>
+						</LabeledArrowExpander>
+						<ul className="applied-tag-list">
+							<TagItemContext.Provider value={{
+								tagButtonPress: () => null,
+								crossButtonPress: (tag) => {
+									let index = video.appliedTags.findIndex(x => x == tag.id);
+
+									if (index == -1) {
+										return;
+									}
+
+									let updatedVideo: Video = {
+										...video,
+										appliedTags: [ ...video.appliedTags ]
+									}
+
+									updatedVideo.appliedTags.splice(index);
+
+									dispatch(updateVideo(updatedVideo));
+								}
+							}}>
+								{video.appliedTags.map(x => 
+									<li key={x}>
+										<TagItem tagDefinition={topLevelVideos.tagDefinitions.find(y => y.id == x)!}/>
+									</li>)}
+							</TagItemContext.Provider>
+							<li>
+								<Select.Root
+									value=""
+									onValueChange={(value) => {
+										let updatedVideo: Video = {
+											...video,
+											appliedTags: [
+												...video.appliedTags,
+												value
+											]
+										}
+
+										dispatch(updateVideo(updatedVideo));
+									}}> 
+									<Select.Trigger className="select-button field-input circle-button add-tag-dropdown-button" aria-label="Theme" disabled={applicableTags.length == 0}>
+										<div className="value-outer" >
+											<Select.Value/>
+										</div>
+										<Select.Icon className="open-icon">
+											<IconContainer
+												className="icon-colour-standard"
+												asset={PlusIcon}
+												use-stroke
+											/>
+										</Select.Icon>
+									</Select.Trigger>
+									<Select.Portal>
+										<Select.Content className="select-dropdown-content">
+											<Select.Viewport className="select-viewport">
+												<Select.Group className="select-group">
+													{applicableTags.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)}
+												</Select.Group>
+											</Select.Viewport>
+										</Select.Content>
+									</Select.Portal>
+								</Select.Root>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 			<hr className="bold-separator"></hr>
 		</Reorder.Item>

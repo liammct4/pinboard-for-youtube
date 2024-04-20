@@ -76,6 +76,10 @@
 			border-color: var(--pfy-primary-faded);
 			cursor: not-allowed;
 		}
+
+		&[data-active-toggle="true"] {
+			background-color: var(--pfy-primary-dark);
+		}
 	}
 
 	.button-small {
@@ -245,10 +249,19 @@
 
 		&[data-use-fill] {
 			fill: var(--pfy-content-shade-standard);
+
+			/* Invert the colour */
+			&[data-active-toggle="true"] {
+				fill: var(--pfy-shade-light-01);
+			}
 		}
 
 		&[data-use-stroke] {
 			stroke: var(--pfy-content-shade-standard);
+
+			&[data-active-toggle="true"] {
+				stroke: var(--pfy-shade-light-01);
+			}
 		}
 	}
 

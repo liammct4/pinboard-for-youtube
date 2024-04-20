@@ -6,7 +6,7 @@ import VideoCard from "../../components/video/VideoCard/VideoCard.tsx";
 import VideoCollection from "../../components/video/VideoCollection/VideoCollection.tsx";
 import { VideoListContext } from "../../context/video.ts";
 import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
-import { addVideo, clearVideos, setTagFilter, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
+import { addVideo, clearVideos, removeVideo, setTagFilter, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
 import { addExpandedID, removeExpandedID, setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { Video, generateTimestamp } from "../../lib/video/video.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
@@ -25,8 +25,10 @@ import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg
 import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
+import { ReactComponent as DeleteIcon } from "./../../../assets/icons/bin.svg"
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -55,15 +57,16 @@ function validateVideo(value: string): string | null {
 }
 
 export function VideosPage(): React.ReactNode {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const tagFilter = useSelector((state: RootState) => state.video.currentSelectedTagFilter);
+	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const tagFilterDefinition = useMemo(() => tagDefinitions.find(x => x.id == tagFilter), [tagFilter]);
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [ filterTitleText, setFilterTitleText ] = useState("");
 	const filteredVideos = useMemo(() => videos.filter(async x => {
 		let tagFiltered = tagFilter == "" || x.appliedTags.includes(tagFilter);
@@ -128,6 +131,7 @@ export function VideosPage(): React.ReactNode {
 	useEffect(() => {
 		reset();
 	}, [reset, videos]);
+	useHotkeys("delete", () => setInDeleteMode(!inDeleteMode));
 
 	return (
 		<div className="video-page-inner">
@@ -180,6 +184,10 @@ export function VideosPage(): React.ReactNode {
 					}}>
 					<button className="button-base button-small">Clear videos</button>
 				</ActionMessageDialog>
+				{/* Delete mode button */}
+				<button className="button-base button-small square-button" title="Delete mode" onClick={() => setInDeleteMode(!inDeleteMode)} data-active-toggle={inDeleteMode}>
+					<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke attached-attributes={{ "data-active-toggle": inDeleteMode }}/>
+				</button>
 				{/* Empty div to fill the horizontal space in the grid. */}
 				<div/>
 				{/* Tag filter & tag edit page. */}
@@ -228,14 +236,16 @@ export function VideosPage(): React.ReactNode {
 					videos: filteredVideos,
 					openVideos,
 					tagDefinitions,
+					deleteMode: inDeleteMode,
 					actions: {
 						addVideo,
 						updateVideo,
+						removeVideo,
 						clearVideos,
 						setVideos,
 						addExpandedID,
 						removeExpandedID
-					}
+					},
 				}}>
 					<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
 				</VideoListContext.Provider>

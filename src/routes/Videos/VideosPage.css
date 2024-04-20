@@ -21,7 +21,7 @@
 
 	.video-collection-buttons {
 		display: grid;
-		grid-template-columns: auto auto 1fr auto auto;
+		grid-template-columns: auto auto auto 1fr auto auto;
 		grid-template-rows: 1fr 1fr;
 		gap: var(--pfy-spacing-standard);
 
@@ -40,7 +40,7 @@
 		.search-bar-form {
 			display: flex;
 			flex-direction: row;
-			grid-column: 1 / 6;
+			grid-column: 1 / 7;
 			gap: var(--pfy-spacing-standard-compact);
 
 			.small-text-input {
