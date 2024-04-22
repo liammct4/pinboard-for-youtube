@@ -10,13 +10,16 @@ import themeMiddleware from "../features/theme/themeMiddleware.ts"
 import themeReducer from "../features/theme/themeSlice.ts"
 import authStorageMiddleware from "../features/auth/authStorageMiddleware.ts"
 import authSlice from "../features/auth/authSlice.ts"
+import videoQueueSyncVideoMiddleware from "../features/videos/videoQueueSyncVideoMiddleware.ts"
+import accountSlice from "../features/account/accountSlice.ts"
 
 export let store = configureStore({
 	reducer: {
 		video: videoReducer,
 		tempState: tempStateReducer,
 		theme: themeReducer,
-		auth: authSlice
+		auth: authSlice,
+		account: accountSlice
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
@@ -24,6 +27,7 @@ export let store = configureStore({
 		.prepend(tagStorageMiddleware.tagFilterUpdateMiddleware.middleware)
 		.prepend(tagCascadeUpdateMiddleware.middleware)
 		.prepend(videoStorageMiddleware.middleware)
+		.prepend(videoQueueSyncVideoMiddleware.middleware)
 		.prepend(videoTimelineMiddleware.middleware)
 		.prepend(tempStateMiddleware.addIDMiddleware.middleware)
 		.prepend(tempStateMiddleware.removeIDMiddleware.middleware)
