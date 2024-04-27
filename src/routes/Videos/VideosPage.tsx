@@ -68,18 +68,30 @@ export function VideosPage(): React.ReactNode {
 	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const tagFilterDefinition = useMemo(() => tagDefinitions.find(x => x.id == tagFilter), [tagFilter]);
 	const [ filterTitleText, setFilterTitleText ] = useState("");
-	const filteredVideos = useMemo(() => videos.filter(async x => {
-		let tagFiltered = tagFilter == "" || x.appliedTags.includes(tagFilter);
+	const [ filteredVideos, setFilteredVideos ] = useState<Video[]>([]);
+	// Filter the videos according to tags and search bar.
+	useEffect(() => {
+		const filterVideos = async () => {
+			let filtered: Video[] = [];
 
-		// TODO: Cache retrieved information.
-		let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(x.videoID)).title.toLowerCase();
+			for (let video of videos) {
+				let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(video.videoID)).title.toLowerCase();
+				let tagFiltered = video.appliedTags.findIndex(x => x == tagFilter) != -1 || tagFilter == "";
 
-		let filterWords = filterTitleText.split(' ');
-		let titleWords = title.split(' ');
-		let searchFiltered = filterTitleText == "" || title.includes(filterTitleText) || filterWords.every(val => titleWords.includes(val));
+				let filterWords = filterTitleText.split(' ');
+				let titleWords = title.split(' ');
+				let searchFiltered = filterTitleText == "" || title.includes(filterTitleText) || filterWords.every(val => titleWords.includes(val));
 
-		return tagFiltered && searchFiltered;
-	}), [tagDefinitions, tagFilter, videos, filterTitleText]);
+				if (tagFiltered && searchFiltered) {
+					filtered.push(video);
+				}
+			}
+
+			setFilteredVideos(filtered);
+		}
+
+		filterVideos();
+	}, [tagDefinitions, tagFilter, videos, filterTitleText])
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
 		let newVideo: Video = {
 			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
