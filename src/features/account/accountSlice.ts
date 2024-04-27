@@ -5,6 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 export type QueuedVideo = {
 	videoID: string;
 	timestamp: number;
+	position: number;
 }
 
 export type QueuedTag = {
@@ -22,13 +23,17 @@ const initialState: IAccountSlice = {
 	updatedTagIDsQueue: []
 }
 
+export type VideoQueueAppendInfo = {
+	videoID: string;
+	position: number;
+}
+
 export const accountSlice = createSlice({
 	name: "account",
 	initialState,
 	reducers: {
-		appendVideoToAccountQueue: (state, action: PayloadAction<string>) => {
-
-			let existingQueueIndex = state.updatedVideoIDsQueue.findIndex(x => x.videoID == action.payload);
+		appendVideoToAccountQueue: (state, action: PayloadAction<VideoQueueAppendInfo>) => {
+			let existingQueueIndex = state.updatedVideoIDsQueue.findIndex(x => x.videoID == action.payload.videoID);
 
 			// Only one video ID is allowed in the queue at any one time, so remove the same video ID's from before.
 			if (existingQueueIndex != -1) {
@@ -36,24 +41,31 @@ export const accountSlice = createSlice({
 			}
 
 			state.updatedVideoIDsQueue.push({
-				videoID: action.payload,
-				timestamp: Date.now()
+				videoID: action.payload.videoID,
+				timestamp: Date.now(),
+				position: action.payload.position
 			});
 		},
-		appendVideoBatchToAccountQueue: (state, action: PayloadAction<string[]>) => {
+		appendVideoBatchToAccountQueue: (state, action: PayloadAction<VideoQueueAppendInfo[]>) => {
 			// Same as the above comment, but for the whole array.
-
 			state.updatedVideoIDsQueue = state.updatedVideoIDsQueue
-				.filter(x => action.payload.findIndex(px => px == x.videoID) == -1)
+				.filter(x => action.payload.findIndex(px => px.videoID == x.videoID) == -1)
 				.concat(action.payload.map(x => {
 					return {
-						videoID: x,
-						timestamp: Date.now()
+						videoID: x.videoID,
+						timestamp: Date.now(),
+						position: x.position
 					};
 				}));
+		},
+		clearVideoAccountQueue: (state) => {
+			state.updatedVideoIDsQueue = [];
+		},
+		clearTagsAccountQueue: (state) => {
+			state.updatedTagIDsQueue = [];
 		}
 	}
 })
 
-export const { appendVideoToAccountQueue, appendVideoBatchToAccountQueue } = accountSlice.actions;
+export const { appendVideoToAccountQueue, appendVideoBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue } = accountSlice.actions;
 export default accountSlice.reducer;

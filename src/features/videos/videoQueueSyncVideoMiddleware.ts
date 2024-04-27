@@ -22,19 +22,35 @@ videoQueueSyncVideoMiddleware.startListening({
 
 		if (affectedVideos == undefined) {
 			// Means that all were affected.
-			listenerApi.dispatch(appendVideoBatchToAccountQueue(state.video.currentVideos.map(x => x.videoID)));
+			listenerApi.dispatch(appendVideoBatchToAccountQueue(state.video.currentVideos.map((item, index) => {
+				return {
+					videoID: item.videoID,
+					position: index
+				}
+			})));
 		}
 		else if (Array.isArray(affectedVideos)) {
 			// Means that e.g. a set of videos were added.
-			listenerApi.dispatch(appendVideoBatchToAccountQueue(affectedVideos.map(x => x.videoID)));
+			listenerApi.dispatch(appendVideoBatchToAccountQueue(affectedVideos.map((item, index) => {
+				return {
+					videoID: item.videoID,
+					position: index
+				}
+			})));
 		}
 		else if (typeof affectedVideos == "string") {
 			// Means that just an individual video was affected but only the ID was provided/necessary.
-			listenerApi.dispatch(appendVideoToAccountQueue(affectedVideos));
+			listenerApi.dispatch(appendVideoToAccountQueue({
+				videoID: affectedVideos,
+				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos)
+			}));
 		}
 		else {
 			// Means that just an individual video was affected.
-			listenerApi.dispatch(appendVideoToAccountQueue(affectedVideos.videoID));
+			listenerApi.dispatch(appendVideoToAccountQueue({
+				videoID: affectedVideos.videoID,
+				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos.videoID)
+			}));
 		}
 	}
 });
