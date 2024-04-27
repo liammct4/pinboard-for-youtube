@@ -9,7 +9,7 @@ import "./Register.css"
 
 export function Register(): React.ReactNode {
 	const navigate = useNavigate();
-	const { activateMessage } = useNotificationMessage();
+	const { activateMessage, cancelCurrentNotification } = useNotificationMessage();
 
 	const onRegisterSubmitted = async (value: IUserDetailsForm) => {
 		activateMessage(undefined, "Creating your account, please wait...", "Info", "Info", -1, "Slide");
@@ -22,6 +22,7 @@ export function Register(): React.ReactNode {
 		
 		if (response.status == HttpStatusCode.OK) {
 			navigate("success");
+			cancelCurrentNotification();
 			startResendVerfiyEmailState({ email: value.email });
 		}
 	}
