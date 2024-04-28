@@ -13,6 +13,7 @@ import authSlice from "../features/auth/authSlice.ts"
 import videoQueueSyncVideoMiddleware from "../features/videos/videoQueueSyncVideoMiddleware.ts"
 import accountSlice from "../features/account/accountSlice.ts"
 import accountCloudSyncMiddleware from "../features/account/accountCloudSyncMiddleware.ts"
+import authAccountDataMiddleware from "../features/auth/authAccountDataMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -38,6 +39,7 @@ export let store = configureStore({
 		.prepend(themeMiddleware.updateCustomThemeStorageMiddleware.middleware)
 		.prepend(authStorageMiddleware.authStorageMiddleware.middleware)
 		.prepend(accountCloudSyncMiddleware.middleware)
+		.prepend(authAccountDataMiddleware.authAccountDataMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;
