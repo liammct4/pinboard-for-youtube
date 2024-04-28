@@ -61,6 +61,9 @@ export const videoSlice = createSlice({
 		setVideos: (state, action: PayloadAction<Array<Video>>) => {
 			state.currentVideos = action.payload;
 		},
+		setVideosWithoutQueue: (state, action: PayloadAction<Array<Video>>) => {
+			state.currentVideos = action.payload;
+		},
 		addTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
 			for (let i = 0; i < state.tagDefinitions.length; i++) {
 				let tag = state.tagDefinitions[i];
@@ -114,6 +117,7 @@ export const {
 	removeVideo,
 	clearVideos,
 	setVideos,
+	setVideosWithoutQueue,
 	addTagDefinition,
 	removeTagDefinition,
 	setTagDefinitions,

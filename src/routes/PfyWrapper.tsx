@@ -1,20 +1,26 @@
 import { Outlet, To, useNavigate } from "react-router-dom";
 import { GlobalNotificationContext, IGlobalNotification } from "../components/features/useNotificationMessage";
 import { UserAuthContext } from "../context/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { useEffect, useRef, useState } from "react";
 import { NotificationToast } from "../components/events/NotificationToast";
 import * as Toast from "@radix-ui/react-toast";
 import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import { SyncTimer } from "../lib/util/generic/timeUtil";
+import { userIsLoggedIn } from "../lib/user/accounts";
+import { setVideosWithoutQueue } from "../features/videos/videoSlice";
+import { getAccountCloudVideos } from "../lib/user/data/videos";
+import { getCurrentAuthenticatedUser } from "../lib/user/storage";
 import "./HomePage.css"
 
 export function PfyWrapper(): React.ReactNode {
 	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
 	const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
 	const { current: notificationExpiryTimer } = useRef<SyncTimer>(new SyncTimer());
+	const videoSlice = useSelector((state: RootState) => state.video);
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -39,7 +45,9 @@ export function PfyWrapper(): React.ReactNode {
 
 	}, [currentNotification]);
 	// When the extension initializes, the first thing to check if theres any persistent state and redirect.
+	// There also needs to be a check to retrieve the videos from account storage.
 	useEffect(() => {
+		// Persistent state.
 		const checkPersistentState = async () => {
 			let path: string | undefined = await getSavedPath();
 
@@ -49,6 +57,24 @@ export function PfyWrapper(): React.ReactNode {
 		}
 
 		checkPersistentState();
+
+		// Account storage.
+		const getAccountVideos = async () => {
+			if (!await userIsLoggedIn()) {
+				return;
+			}
+
+			let token = currentUser!.tokens.IdToken;
+			let retrievedVideos = await getAccountCloudVideos(token);
+			
+			if (retrievedVideos == undefined) {
+				return;
+			}
+			
+			dispatch(setVideosWithoutQueue(retrievedVideos));
+		}
+
+		getAccountVideos();
 	}, []);
 	const cancelNotification = () => {
 		// Means that this was called by another requested notification, so ignore expiry.

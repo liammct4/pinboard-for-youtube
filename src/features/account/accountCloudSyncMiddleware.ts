@@ -10,7 +10,7 @@ const accountCloudSyncMiddleware = createListenerMiddleware();
 
 accountCloudSyncMiddleware.startListening({
 	matcher: isAnyOf(appendVideoToAccountQueue, appendVideoBatchToAccountQueue),
-	effect: async (action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		if (!userIsLoggedIn()) {
 			return;
 		}

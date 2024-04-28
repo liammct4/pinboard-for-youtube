@@ -46,10 +46,13 @@ videoQueueSyncVideoMiddleware.startListening({
 			}));
 		}
 		else {
+			// Weird TypeScript bug.
+			let castedVideo = affectedVideos as Video;
+
 			// Means that just an individual video was affected.
 			listenerApi.dispatch(appendVideoToAccountQueue({
-				videoID: affectedVideos.videoID,
-				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos.videoID)
+				videoID: castedVideo.videoID,
+				position: state.video.currentVideos.findIndex(x => x.videoID == castedVideo.videoID)
 			}));
 		}
 	}
