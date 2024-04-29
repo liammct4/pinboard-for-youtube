@@ -26,9 +26,10 @@ import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
 import { ReactComponent as DeleteIcon } from "./../../../assets/icons/bin.svg"
+import { useHotkeys } from "react-hotkeys-hook";
+import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { useHotkeys } from "react-hotkeys-hook";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -62,6 +63,7 @@ export function VideosPage(): React.ReactNode {
 	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
+	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const tagDefinitions = useSelector((state: RootState) => state.video.tagDefinitions);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const tagFilter = useSelector((state: RootState) => state.video.currentSelectedTagFilter);
@@ -144,123 +146,131 @@ export function VideosPage(): React.ReactNode {
 		reset();
 	}, [reset, videos]);
 	useHotkeys("delete", () => setInDeleteMode(!inDeleteMode));
-
+		
 	return (
-		<div className="video-page-inner">
-			<TwoToggleLayoutExpander
-				expanded={layoutState.isCurrentVideosSectionExpanded}
-				onExpandedEvent={(value: boolean) => {
-					dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
-				}}
-				openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
-				closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
-				openTooltip="Show current video controls and saved timestamps."
-				closeTooltip="Only show saved timestamps."
-				align="right">
-					{/* Current video */}
-					<SplitHeading className="current-video-heading" text="Current video"/>
-					<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
-					{/* Current video controls */}
-					<div className="current-video-buttons">
-						<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-						<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
-					</div>
-			</TwoToggleLayoutExpander>
-			{/* My timestamps */}
-			<SplitHeading className="video-collection-section-heading" text="My video timestamps"></SplitHeading>
-			<div className="video-collection-buttons">
-				{/* Add video dialog. */}
-				<FormDialog
-					formID="add-video-form"
-					formTitle="Add video"
-					labelSize="small"
-					submitText="Add"
-					trigger={<button className="button-base button-small">Add video</button>}
-					handleSubmit={handleSubmit(handler)}>
-						<FormField<IAddVideoForm> register={register}
-							label="Link:"
-							name="link"
-							fieldSize="max"
-							submitEvent={submit.current}
-							validationMethod={validateVideo}
-							selector={(data: IAddVideoForm) => data.link}/>
-				</FormDialog>
-				<ActionMessageDialog
-					title="Clear all videos"
-					body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
-					buttons={[ "Continue", "Cancel" ]}
-					onButtonPressed={(action: string) => {
-						if (action == "Continue") {
-							dispatch(clearVideos());
-						}
-					}}>
-					<button className="button-base button-small">Clear videos</button>
-				</ActionMessageDialog>
-				{/* Delete mode button */}
-				<button className="button-base button-small square-button" title="Delete mode" onClick={() => setInDeleteMode(!inDeleteMode)} data-active-toggle={inDeleteMode}>
-					<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke attached-attributes={{ "data-active-toggle": inDeleteMode }}/>
-				</button>
-				{/* Empty div to fill the horizontal space in the grid. */}
-				<div/>
-				{/* Tag filter & tag edit page. */}
-				<Select.Root defaultValue={tagFilter} onValueChange={(value) => dispatch(setTagFilter(value))}> 
-					<Select.Trigger className="open-filter-dropdown select-button">
-						<Select.Value defaultValue={tagFilter} placeholder={<span className="open-filter-placeholder">None</span>}>{tagFilterDefinition != null ? tagFilterDefinition?.name : <span className="open-filter-placeholder">Tag filter...</span>}</Select.Value>
-						<IconContainer
-							className="icon-colour-standard dropdown-arrow"
-							asset={ArrowIcon}
-							use-stroke/>
-					</Select.Trigger>
-					<Select.Portal>
-						<Select.Content className="select-dropdown-content">
-							<Select.Viewport className="select-viewport">
-								<Select.Group className="select-group">
-									{[<SelectItem key="placeholder" value=""><span className="open-filter-placeholder">None</span></SelectItem>, ...tagDefinitions.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)]}
-								</Select.Group>
-							</Select.Viewport>
-						</Select.Content>
-					</Select.Portal>
-				</Select.Root>
-				<button className="button-base button-small square-button" onClick={() => navigate("../tags")}>
-					<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
-				</button>
-				{/* Search bar. */}
-				<form className="search-bar-form" onSubmit={(e) => {
-						e.preventDefault();
-
-						// @ts-ignore Retrieves the text box value. e.target is an array of input elements.
-						let messageText = (e.target[0] as HTMLInputElement).value;
-
-						setFilterTitleText(messageText.toLowerCase());
-					}}>
-					<input className="small-text-input" type="text"/>
-					<button className="button-base button-small circle-button" type="submit">
-						<IconContainer
-							asset={SearchIcon}
-							className="icon-colour-standard"
-							use-stroke/>
+		<div className="video-page-outer">
+			{temporarySingleState.onRequestIsVideoControlLocked ?
+				<div className="lock-spinner-outer">
+					<Spinner className="lock-spinner" text="Fetching account data"/>
+				</div>
+				: <></>
+			}
+			<div className="video-page-inner" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
+				<TwoToggleLayoutExpander
+					expanded={layoutState.isCurrentVideosSectionExpanded}
+					onExpandedEvent={(value: boolean) => {
+						dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
+					}}
+					openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
+					closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
+					openTooltip="Show current video controls and saved timestamps."
+					closeTooltip="Only show saved timestamps."
+					align="right">
+						{/* Current video */}
+						<SplitHeading className="current-video-heading" text="Current video"/>
+						<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
+						{/* Current video controls */}
+						<div className="current-video-buttons">
+							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
+							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
+						</div>
+				</TwoToggleLayoutExpander>
+				{/* My timestamps */}
+				<SplitHeading className="video-collection-section-heading" text="My video timestamps"></SplitHeading>
+				<div className="video-collection-buttons">
+					{/* Add video dialog. */}
+					<FormDialog
+						formID="add-video-form"
+						formTitle="Add video"
+						labelSize="small"
+						submitText="Add"
+						trigger={<button className="button-base button-small">Add video</button>}
+						handleSubmit={handleSubmit(handler)}>
+							<FormField<IAddVideoForm> register={register}
+								label="Link:"
+								name="link"
+								fieldSize="max"
+								submitEvent={submit.current}
+								validationMethod={validateVideo}
+								selector={(data: IAddVideoForm) => data.link}/>
+					</FormDialog>
+					<ActionMessageDialog
+						title="Clear all videos"
+						body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
+						buttons={[ "Continue", "Cancel" ]}
+						onButtonPressed={(action: string) => {
+							if (action == "Continue") {
+								dispatch(clearVideos());
+							}
+						}}>
+						<button className="button-base button-small">Clear videos</button>
+					</ActionMessageDialog>
+					{/* Delete mode button */}
+					<button className="button-base button-small square-button" title="Delete mode" onClick={() => setInDeleteMode(!inDeleteMode)} data-active-toggle={inDeleteMode}>
+						<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke attached-attributes={{ "data-active-toggle": inDeleteMode }}/>
 					</button>
-				</form>
-			</div>
-			<div className="video-collection-scrollbox">
-				<VideoListContext.Provider value={{
-					activeVideoID,
-					videos: filteredVideos,
-					openVideos,
-					tagDefinitions,
-					deleteMode: inDeleteMode,
-					actions: {
-						addVideo,
-						updateVideo,
-						removeVideo,
-						clearVideos,
-						setVideos,
-						addExpandedID,
-						removeExpandedID
-					},
-				}}>
-					<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
-				</VideoListContext.Provider>
+					{/* Empty div to fill the horizontal space in the grid. */}
+					<div/>
+					{/* Tag filter & tag edit page. */}
+					<Select.Root defaultValue={tagFilter} onValueChange={(value) => dispatch(setTagFilter(value))}> 
+						<Select.Trigger className="open-filter-dropdown select-button">
+							<Select.Value defaultValue={tagFilter} placeholder={<span className="open-filter-placeholder">None</span>}>{tagFilterDefinition != null ? tagFilterDefinition?.name : <span className="open-filter-placeholder">Tag filter...</span>}</Select.Value>
+							<IconContainer
+								className="icon-colour-standard dropdown-arrow"
+								asset={ArrowIcon}
+								use-stroke/>
+						</Select.Trigger>
+						<Select.Portal>
+							<Select.Content className="select-dropdown-content">
+								<Select.Viewport className="select-viewport">
+									<Select.Group className="select-group">
+										{[<SelectItem key="placeholder" value=""><span className="open-filter-placeholder">None</span></SelectItem>, ...tagDefinitions.map(x => <SelectItem key={x.id} value={x.id}>{x.name}</SelectItem>)]}
+									</Select.Group>
+								</Select.Viewport>
+							</Select.Content>
+						</Select.Portal>
+					</Select.Root>
+					<button className="button-base button-small square-button" onClick={() => navigate("../tags")}>
+						<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
+					</button>
+					{/* Search bar. */}
+					<form className="search-bar-form" onSubmit={(e) => {
+							e.preventDefault();
+
+							// @ts-ignore Retrieves the text box value. e.target is an array of input elements.
+							let messageText = (e.target[0] as HTMLInputElement).value;
+
+							setFilterTitleText(messageText.toLowerCase());
+						}}>
+						<input className="small-text-input" type="text"/>
+						<button className="button-base button-small circle-button" type="submit">
+							<IconContainer
+								asset={SearchIcon}
+								className="icon-colour-standard"
+								use-stroke/>
+						</button>
+					</form>
+				</div>
+				<div className="video-collection-scrollbox">
+					<VideoListContext.Provider value={{
+						activeVideoID,
+						videos: filteredVideos,
+						openVideos,
+						tagDefinitions,
+						deleteMode: inDeleteMode,
+						actions: {
+							addVideo,
+							updateVideo,
+							removeVideo,
+							clearVideos,
+							setVideos,
+							addExpandedID,
+							removeExpandedID
+						},
+					}}>
+						<VideoCollection onReorder={handleReorderedItems}></VideoCollection>
+					</VideoListContext.Provider>
+				</div>
 			</div>
 		</div>
 	);

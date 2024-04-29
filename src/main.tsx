@@ -27,8 +27,6 @@ import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { setCurrentUser } from "./features/auth/authSlice.ts"
 import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
-import { Video } from "./lib/video/video.ts"
-import { getAccountCloudVideos } from "./lib/user/data/videos.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -61,7 +59,10 @@ async function setupState() {
 
 	let tempState: IStateSlice = {
 		expandedVideoIDs: await getExpandedVideos(),
-		layout: await getLayoutState()
+		layout: await getLayoutState(),
+		temporarySingleState: {
+			onRequestIsVideoControlLocked: false
+		}
 	}
 
 	store.dispatch(setVideoState(videoState));

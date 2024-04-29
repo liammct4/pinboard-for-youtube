@@ -288,3 +288,17 @@
 		font-size: var(--pfy-font-text-big);
 	}
 }
+
+@keyframes borderPulsingAnimation {
+	0% {
+		border-color: var(--pfy-primary-common);
+	}
+
+	50% {
+		border-color: var(--pfy-primary-dark);
+	}
+
+	100% {
+		border-color: var(--pfy-primary-common);
+	}
+}

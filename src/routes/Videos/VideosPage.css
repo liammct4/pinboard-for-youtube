@@ -1,65 +1,136 @@
-.video-page-inner {
-	display: flex;
-	flex-direction: column;
+.video-page-outer {
 	height: 100%;
 
-	.current-video-heading {
-		margin-top: var(--pfy-spacing-standard);
-	}
-	
-	.current-video-card {
-		margin-top: var(--pfy-spacing-standard);
-		margin-bottom: var(--pfy-spacing-standard-compact);
-	}
+	/* The outer spinner is a large div placed exactly in the corner
+	to precisely place the actual lock spinner due to "position: absolute". */
+	.lock-spinner-outer {
+		--spinner-corner-width: calc(var(--pfy-window-width) / 2);
+		--spinner-corner-height: calc(var(--pfy-window-width) / 4);
 
-	.current-video-buttons {
+		width: var(--spinner-corner-width);
+		height: var(--spinner-corner-height);
+		left: calc(var(--pfy-window-width) - var(--spinner-corner-width) - var(--pfy-spacing-large));
+		top: calc(var(--pfy-window-height) - var(--spinner-corner-height) - var(--pfy-spacing-large));
+		
+		position: absolute;
 		display: flex;
-		flex-direction: row;
-		gap: var(--pfy-spacing-standard);
-		margin-bottom: var(--pfy-spacing-standard-compact);
-	}
+		align-items: end;
+		justify-content: end;
 
-	.video-collection-buttons {
-		display: grid;
-		grid-template-columns: auto auto auto 1fr auto auto;
-		grid-template-rows: 1fr 1fr;
-		gap: var(--pfy-spacing-standard);
-
-		.open-filter-dropdown {
-			min-width: 136px;
-
-			.dropdown-arrow {
-				margin-left: auto;
+		.lock-spinner {
+			/* 51px for the bottom toolbar. */
+			margin-bottom: calc(51px + (var(--pfy-spacing-standard)));
+			margin-right: calc(var(--pfy-spacing-large) * 2);
+			z-index: 999;
+			
+			& svg {
+				width: 25px;
+				height: 25px;
+				filter: opacity(0.8);
+				animation: customSpinnerAnimation 1100ms;
+				animation-iteration-count: infinite;
 			}
 			
-			.open-filter-placeholder {
-				font-style: italic;
+			& p {
+				margin: 0;
 			}
 		}
+	}
+		
+		
+	.video-page-inner {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		transition: filter var(--pfy-timing-normal);
 
-		.search-bar-form {
+		&[data-locked="true"] {
+			user-select: none;
+			pointer-events: none;
+			filter: blur(2px);
+		}
+
+		.current-video-heading {
+			margin-top: var(--pfy-spacing-standard);
+		}
+		
+		.current-video-card {
+			margin-top: var(--pfy-spacing-standard);
+			margin-bottom: var(--pfy-spacing-standard-compact);
+		}
+
+		.current-video-buttons {
 			display: flex;
 			flex-direction: row;
-			grid-column: 1 / 7;
-			gap: var(--pfy-spacing-standard-compact);
+			gap: var(--pfy-spacing-standard);
+			margin-bottom: var(--pfy-spacing-standard-compact);
+		}
 
-			.small-text-input {
-				flex-grow: 1;
+		.video-collection-buttons {
+			display: grid;
+			grid-template-columns: auto auto auto 1fr auto auto;
+			grid-template-rows: 1fr 1fr;
+			gap: var(--pfy-spacing-standard);
+
+			.open-filter-dropdown {
+				min-width: 136px;
+
+				.dropdown-arrow {
+					margin-left: auto;
+				}
+				
+				.open-filter-placeholder {
+					font-style: italic;
+				}
+			}
+
+			.search-bar-form {
+				display: flex;
+				flex-direction: row;
+				grid-column: 1 / 7;
+				gap: var(--pfy-spacing-standard-compact);
+
+				.small-text-input {
+					flex-grow: 1;
+				}
 			}
 		}
+
+		.video-collection-section-heading {
+			margin-top: var(--pfy-spacing-standard);
+			margin-bottom: var(--pfy-spacing-standard);
+		}
+
+		.video-collection-scrollbox {
+			margin-top: var(--pfy-spacing-standard);
+			background: var(--pfy-empty-01-normal);
+			border: 1px solid var(--pfy-primary-dark);
+			border-radius: var(--pfy-spacing-large);
+			overflow-y: scroll;
+			flex-grow: 1;
+		}
+	}
+}
+
+@keyframes customSpinnerAnimation {
+	0% {
+		transform: rotate(0deg);
+		filter: brightness(105%);
 	}
 
-	.video-collection-section-heading {
-		margin-top: var(--pfy-spacing-standard);
-		margin-bottom: var(--pfy-spacing-standard);
+	20% { filter: brightness(108%); }
+	40% { filter: brightness(105%); }
+
+	50% {
+		filter: brightness(100%);
+		transform: rotate(180deg) scale(1.05);
 	}
 
-	.video-collection-scrollbox {
-		margin-top: var(--pfy-spacing-standard);
-		background: var(--pfy-empty-01-normal);
-		border: 1px solid var(--pfy-primary-dark);
-		border-radius: var(--pfy-spacing-large);
-		overflow-y: scroll;
-		flex-grow: 1;
+	60% { filter: brightness(105%); }
+	80% { filter: brightness(108%); }
+
+	100% {
+		transform: rotate(360deg);
+		filter: brightness(105%);
 	}
 }

@@ -3,13 +3,19 @@ import { LayoutState } from "../../lib/storage/tempState/layoutState";
 
 export interface IStateSlice {
 	expandedVideoIDs: Array<string>;
-	layout: LayoutState
+	layout: LayoutState;
+	temporarySingleState: {
+		onRequestIsVideoControlLocked: boolean;
+	};
 }
 
 const initialState: IStateSlice = {
 	expandedVideoIDs: [],
 	layout: {
 		isCurrentVideosSectionExpanded: true
+	},
+	temporarySingleState: {
+		onRequestIsVideoControlLocked: false
 	}
 }
 
@@ -35,9 +41,22 @@ export const tempStateSlice = createSlice({
 		},
 		setLayoutState: (state, action: PayloadAction<LayoutState>) => {
 			state.layout = action.payload;
+		},
+		enableControlsLock: (state) => {
+			state.temporarySingleState.onRequestIsVideoControlLocked = true;
+		},
+		disableControlsLock: (state) => {
+			state.temporarySingleState.onRequestIsVideoControlLocked = false;
 		}
 	}
 })
 
-export const { setTempState, addExpandedID, removeExpandedID, setLayoutState } = tempStateSlice.actions;
+export const {
+	setTempState,
+	addExpandedID,
+	removeExpandedID,
+	setLayoutState,
+	enableControlsLock,
+	disableControlsLock
+} = tempStateSlice.actions;
 export default tempStateSlice.reducer;
