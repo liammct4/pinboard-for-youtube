@@ -19,7 +19,7 @@ accountCloudSyncMiddleware.startListening({
 
 		// Filters the current videos by what has been requested in the queue.
 		let targetedVideos: Video[] = state.video.currentVideos
-			.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.videoID == x.videoID) != -1)
+			.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1)
 
 		let response = await pushAccountVideos(
 			state.auth.currentUser!.tokens.IdToken,
