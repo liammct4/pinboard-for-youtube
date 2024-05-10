@@ -3,13 +3,13 @@ import { RootState } from "../../app/store";
 import { pushAccountVideos } from "../../lib/user/data/videos.ts";
 import { Video } from "../../lib/video/video.ts";
 import { userIsLoggedIn } from "../../lib/user/accounts.ts";
-import { appendVideoBatchToAccountQueue, appendVideoToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue } from "./accountSlice.ts";
+import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue } from "./accountSlice.ts";
 import { HttpStatusCode } from "../../lib/util/http.ts";
 
 const accountCloudSyncMiddleware = createListenerMiddleware();
 
 accountCloudSyncMiddleware.startListening({
-	matcher: isAnyOf(appendVideoToAccountQueue, appendVideoBatchToAccountQueue),
+	matcher: isAnyOf(appendMutationToAccountQueue, appendMutationBatchToAccountQueue),
 	effect: async (_action, listenerApi) => {
 		if (!userIsLoggedIn()) {
 			return;

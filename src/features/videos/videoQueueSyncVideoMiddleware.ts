@@ -1,7 +1,7 @@
 import { RootState } from "../../app/store";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addVideo, clearVideos, removeVideo, setVideos, updateVideo } from "./videoSlice";
-import { appendVideoBatchToAccountQueue, appendVideoToAccountQueue } from "../account/accountSlice";
+import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from "../account/accountSlice";
 import { Video } from "../../lib/video/video";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 
@@ -22,37 +22,42 @@ videoQueueSyncVideoMiddleware.startListening({
 
 		if (affectedVideos == undefined) {
 			// Means that all were affected.
-			listenerApi.dispatch(appendVideoBatchToAccountQueue(state.video.currentVideos.map((item, index) => {
-				return {
-					videoID: item.videoID,
-					position: index
-				}
-			})));
+			listenerApi.dispatch(appendMutationBatchToAccountQueue({
+				dataMutationType: "TAG",
+				info: state.video.currentVideos.map((item, index) => {
+					return {
+						mutationDataID: item.videoID,
+						position: index
+					}
+				})
+			}));		
 		}
 		else if (Array.isArray(affectedVideos)) {
 			// Means that e.g. a set of videos were added.
-			listenerApi.dispatch(appendVideoBatchToAccountQueue(affectedVideos.map((item, index) => {
-				return {
-					videoID: item.videoID,
-					position: index
-				}
-			})));
+			listenerApi.dispatch(appendMutationBatchToAccountQueue({
+				dataMutationType: "VIDEO",
+				info: affectedVideos.map((item, index) => {
+					return {
+						mutationDataID: item.videoID,
+						position: index
+					}
+				})
+			}));
 		}
 		else if (typeof affectedVideos == "string") {
 			// Means that just an individual video was affected but only the ID was provided/necessary.
-			listenerApi.dispatch(appendVideoToAccountQueue({
-				videoID: affectedVideos,
+			listenerApi.dispatch(appendMutationToAccountQueue({
+				dataMutationType: "VIDEO",
+				mutationDataID: affectedVideos,
 				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos)
 			}));
 		}
 		else {
-			// Weird TypeScript bug.
-			let castedVideo = affectedVideos as Video;
-
 			// Means that just an individual video was affected.
-			listenerApi.dispatch(appendVideoToAccountQueue({
-				videoID: castedVideo.videoID,
-				position: state.video.currentVideos.findIndex(x => x.videoID == castedVideo.videoID)
+			listenerApi.dispatch(appendMutationToAccountQueue({
+				dataMutationType: "VIDEO",
+				mutationDataID: affectedVideos.videoID,
+				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos.videoID)
 			}));
 		}
 	}

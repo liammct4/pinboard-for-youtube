@@ -104,6 +104,9 @@ export const videoSlice = createSlice({
 		setTagDefinitions: (state, action: PayloadAction<Array<TagDefinition>>) => {
 			state.tagDefinitions = action.payload;
 		},
+		setTagDefinitionsWithoutQueue: (state, action: PayloadAction<Array<TagDefinition>>) => {
+			state.tagDefinitions = action.payload;
+		},
 		setTagFilter: (state, action: PayloadAction<string>) => {
 			state.currentSelectedTagFilter = action.payload;
 		}
@@ -121,6 +124,7 @@ export const {
 	addTagDefinition,
 	removeTagDefinition,
 	setTagDefinitions,
+	setTagDefinitionsWithoutQueue,
 	setTagFilter
 } = videoSlice.actions;
 export default videoSlice.reducer;

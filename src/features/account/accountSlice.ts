@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 // Timestamp in a queue (E.g. QueuedVideo.timestamp) is milliseconds from epoch for server compatibility.
 
+export type ServerResourceType = "VIDEO" | "TAG";
+
 export type DataMutation = {
 	dataID: string;
 	timestamp: number;
@@ -18,36 +20,70 @@ const initialState: IAccountSlice = {
 	updatedTagIDsQueue: []
 }
 
-export type VideoQueueAppendInfo = {
-	videoID: string;
+export interface IQueueAppendInfo {
+	mutationDataID: string;
 	position: number;
+}
+
+export interface ISingularQueueAppendInfo extends IQueueAppendInfo {
+	dataMutationType: ServerResourceType;
+}
+
+export interface IBatchQueueAppendInfo {
+	info: IQueueAppendInfo[],
+	dataMutationType: ServerResourceType
 }
 
 export const accountSlice = createSlice({
 	name: "account",
 	initialState,
 	reducers: {
-		appendVideoToAccountQueue: (state, action: PayloadAction<VideoQueueAppendInfo>) => {
-			let existingQueueIndex = state.updatedVideoIDsQueue.findIndex(x => x.dataID == action.payload.videoID);
+		appendMutationToAccountQueue: (state, action: PayloadAction<ISingularQueueAppendInfo>) => {
+			let source: DataMutation[];
 
-			// Only one video ID is allowed in the queue at any one time, so remove the same video ID's from before.
-			if (existingQueueIndex != -1) {
-				state.updatedVideoIDsQueue.splice(existingQueueIndex, 1);
+			switch (action.payload.dataMutationType) {
+				case "VIDEO":
+					source = state.updatedVideoIDsQueue;
+					break;
+				case "TAG":
+					source = state.updatedTagIDsQueue;
+					break;
 			}
 
-			state.updatedVideoIDsQueue.push({
-				dataID: action.payload.videoID,
+			let existingQueueIndex = source.findIndex(x => x.dataID == action.payload.mutationDataID);
+
+			// Only one video ID is allowed in the queue at any one time, so remove the same data ID's from before.
+			if (existingQueueIndex != -1) {
+				source.splice(existingQueueIndex, 1);
+			}
+
+			let newMutation = {
+				dataID: action.payload.mutationDataID,
 				timestamp: Date.now(),
 				position: action.payload.position
-			});
+			};
+
+			// Passed by reference, so no need to reference the original source array in the slice.
+			source.push(newMutation);
 		},
-		appendVideoBatchToAccountQueue: (state, action: PayloadAction<VideoQueueAppendInfo[]>) => {
+		appendMutationBatchToAccountQueue: (state, action: PayloadAction<IBatchQueueAppendInfo>) => {
 			// Same as the above comment, but for the whole array.
-			state.updatedVideoIDsQueue = state.updatedVideoIDsQueue
-				.filter(x => action.payload.findIndex(px => px.videoID == x.dataID) == -1)
-				.concat(action.payload.map(x => {
+			let source: DataMutation[];
+
+			switch (action.payload.dataMutationType) {
+				case "VIDEO":
+					source = state.updatedVideoIDsQueue;
+					break;
+				case "TAG":
+					source = state.updatedTagIDsQueue;
+					break;
+			}
+
+			source = source
+				.filter(x => action.payload.info.findIndex(px => px.mutationDataID == x.dataID) == -1)
+				.concat(action.payload.info.map(x => {
 					return {
-						dataID: x.videoID,
+						dataID: x.mutationDataID,
 						timestamp: Date.now(),
 						position: x.position
 					};
@@ -62,5 +98,5 @@ export const accountSlice = createSlice({
 	}
 })
 
-export const { appendVideoToAccountQueue, appendVideoBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue } = accountSlice.actions;
+export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue } = accountSlice.actions;
 export default accountSlice.reducer;

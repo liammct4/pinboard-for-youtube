@@ -9,7 +9,7 @@ import * as Toast from "@radix-ui/react-toast";
 import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import { SyncTimer } from "../lib/util/generic/timeUtil";
 import { userIsLoggedIn } from "../lib/user/accounts";
-import { setVideosWithoutQueue } from "../features/videos/videoSlice";
+import { setTagDefinitions, setVideosWithoutQueue } from "../features/videos/videoSlice";
 import { getAccountCloudVideos } from "../lib/user/data/videos";
 import { getCurrentAuthenticatedUser } from "../lib/user/storage";
 import "./HomePage.css"
@@ -67,11 +67,9 @@ export function PfyWrapper(): React.ReactNode {
 			let token = currentUser!.tokens.IdToken;
 			let retrievedVideos = await getAccountCloudVideos(token);
 			
-			if (retrievedVideos == undefined) {
-				return;
+			if (retrievedVideos != undefined) {
+				dispatch(setVideosWithoutQueue(retrievedVideos));	
 			}
-			
-			dispatch(setVideosWithoutQueue(retrievedVideos));
 		}
 
 		getAccountVideos();
