@@ -14,6 +14,7 @@ import videoQueueSyncVideoMiddleware from "../features/videos/videoQueueSyncVide
 import accountSlice from "../features/account/accountSlice.ts"
 import accountCloudSyncMiddleware from "../features/account/accountCloudSyncMiddleware.ts"
 import authAccountDataMiddleware from "../features/auth/authAccountDataMiddleware.ts"
+import tagQueueSyncMiddleware from "../features/videos/tagQueueSyncMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -25,12 +26,14 @@ export let store = configureStore({
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-		.prepend(tagStorageMiddleware.tagStorageUpdateUpdateMiddleware.middleware)
-		.prepend(tagStorageMiddleware.tagFilterUpdateMiddleware.middleware)
-		.prepend(tagCascadeUpdateMiddleware.middleware)
 		.prepend(videoStorageMiddleware.middleware)
 		.prepend(videoQueueSyncVideoMiddleware.middleware)
 		.prepend(videoTimelineMiddleware.middleware)
+		.prepend(tagQueueSyncMiddleware.middleware)
+		.prepend(tagCascadeUpdateMiddleware.middleware)
+		.prepend(tagStorageMiddleware.tagStorageUpdateUpdateMiddleware.middleware)
+		.prepend(tagStorageMiddleware.tagFilterUpdateMiddleware.middleware)
+		.prepend(tagCascadeUpdateMiddleware.middleware)
 		.prepend(tempStateMiddleware.addIDMiddleware.middleware)
 		.prepend(tempStateMiddleware.removeIDMiddleware.middleware)
 		.prepend(tempStateMiddleware.layoutStateUpdateMiddleware.middleware)

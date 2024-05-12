@@ -53,11 +53,13 @@ videoQueueSyncVideoMiddleware.startListening({
 			}));
 		}
 		else {
+			let casted = affectedVideos as Video;
+
 			// Means that just an individual video was affected.
 			listenerApi.dispatch(appendMutationToAccountQueue({
 				dataMutationType: "VIDEO",
-				mutationDataID: affectedVideos.videoID,
-				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos.videoID)
+				mutationDataID: casted.videoID,
+				position: state.video.currentVideos.findIndex(x => x.videoID == casted.videoID)
 			}));
 		}
 	}

@@ -9,16 +9,15 @@ import * as Toast from "@radix-ui/react-toast";
 import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import { SyncTimer } from "../lib/util/generic/timeUtil";
 import { userIsLoggedIn } from "../lib/user/accounts";
-import { setTagDefinitions, setVideosWithoutQueue } from "../features/videos/videoSlice";
+import { setTagDefinitionsWithoutQueue, setVideosWithoutQueue } from "../features/videos/videoSlice";
 import { getAccountCloudVideos } from "../lib/user/data/videos";
-import { getCurrentAuthenticatedUser } from "../lib/user/storage";
 import "./HomePage.css"
+import { getAccountCloudTags } from "../lib/user/data/tags";
 
 export function PfyWrapper(): React.ReactNode {
 	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
 	const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
 	const { current: notificationExpiryTimer } = useRef<SyncTimer>(new SyncTimer());
-	const videoSlice = useSelector((state: RootState) => state.video);
 	const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -66,9 +65,14 @@ export function PfyWrapper(): React.ReactNode {
 
 			let token = currentUser!.tokens.IdToken;
 			let retrievedVideos = await getAccountCloudVideos(token);
+			let retrievedTagDefinitions = await getAccountCloudTags(token);
 			
 			if (retrievedVideos != undefined) {
 				dispatch(setVideosWithoutQueue(retrievedVideos));	
+			}
+
+			if (retrievedTagDefinitions != undefined) {
+				dispatch(setTagDefinitionsWithoutQueue(retrievedTagDefinitions));
 			}
 		}
 

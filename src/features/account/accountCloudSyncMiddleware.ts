@@ -1,10 +1,11 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { pushAccountVideos } from "../../lib/user/data/videos.ts";
-import { Video } from "../../lib/video/video.ts";
+import { TagDefinition, Video } from "../../lib/video/video.ts";
 import { userIsLoggedIn } from "../../lib/user/accounts.ts";
 import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue } from "./accountSlice.ts";
 import { HttpStatusCode } from "../../lib/util/http.ts";
+import { pushAccountTagDefinitions } from "../../lib/user/data/tags.ts";
 
 const accountCloudSyncMiddleware = createListenerMiddleware();
 
@@ -19,16 +20,27 @@ accountCloudSyncMiddleware.startListening({
 
 		// Filters the current videos by what has been requested in the queue.
 		let targetedVideos: Video[] = state.video.currentVideos
-			.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1)
+			.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1);
+		let targetedTags: TagDefinition[] = state.video.tagDefinitions
+			.filter(x => state.account.updatedTagIDsQueue.findIndex(y => y.dataID == x.id) != -1);
 
-		let response = await pushAccountVideos(
+		let videosResponse = await pushAccountVideos(
 			state.auth.currentUser!.tokens.IdToken,
 			state.account.updatedVideoIDsQueue,
 			targetedVideos
 		);
 
-		if (response?.status == HttpStatusCode.OK) {
+		if (videosResponse?.status == HttpStatusCode.OK) {
 			listenerApi.dispatch(clearVideoAccountQueue());
+		}
+
+		let tagsResponse = await pushAccountTagDefinitions(
+			state.auth.currentUser!.tokens.IdToken,
+			state.account.updatedTagIDsQueue,
+			targetedTags
+		);
+
+		if (tagsResponse?.status == HttpStatusCode.OK) {
 			listenerApi.dispatch(clearTagsAccountQueue());
 		}
 	}
