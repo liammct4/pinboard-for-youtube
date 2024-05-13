@@ -2,10 +2,13 @@
 // 'timeline.js' content script for interacting with the active video timeline.
 // ----------------------------------
 
-var init = false;
-var mainVideo = null;
-var tabID = null;
-var currentVideoID = null;
+function getCurrentVideoID() {
+	return document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
+}
+
+function getMainVideo() {
+	return document.querySelector("video");
+}
 
 // Due to tabs being discarded (Edge) after a tab is idle, accessing the timeline DOM should
 // be done through this function.
@@ -210,7 +213,7 @@ class TimestampTimelineButton extends HTMLElement {
 				return;
 			}
 
-			mainVideo.currentTime = this.timestamp.time;
+			getMainVideo().currentTime = this.timestamp.time;
 		});
 	}
 
@@ -295,7 +298,7 @@ async function handleTimestampChange(newTimestamp) {
 		return;
 	}
 
-	let video = videos.find(v => v.videoID == currentVideoID);
+	let video = videos.find(v => v.videoID == getCurrentVideoID());
 	let timestampIndex = video.timestamps.findIndex(t => t.id == newTimestamp.id);
 
 	video.timestamps[timestampIndex] = newTimestamp;
@@ -320,9 +323,9 @@ function setTimelineTimestamps(timestamps) {
 
 function getActiveInfo() {
 	return {
-		paused: mainVideo.paused,
-		currentTime: mainVideo.currentTime,
-		length: mainVideo.duration
+		paused: getMainVideo().paused,
+		currentTime: getMainVideo().currentTime,
+		length: getMainVideo().duration
 	};
 }
 
@@ -335,9 +338,7 @@ function changeTheme(theme) {
 }
 
 async function initialize() {
-	init = true;
 	let progressBar = document.querySelector(".ytp-chrome-bottom");
-	mainVideo = document.querySelector("video");
 	
 	if (progressBar == undefined) {
 		return;
@@ -435,7 +436,6 @@ async function initialize() {
 		</div>
 	`;
 
-	currentVideoID = document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
 	progressBar.appendChild(timelineOuterContainer);
 	
 	// Fetch videos from storage.
@@ -443,7 +443,7 @@ async function initialize() {
 	let videos = userData?.videos;
 
 	if (videos != undefined) {
-		let video = videos.find(x => x.videoID == currentVideoID);
+		let video = videos.find(x => x.videoID == getCurrentVideoID());
 		setTimelineTimestamps(video.timestamps);
 	}
 
