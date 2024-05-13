@@ -16,6 +16,11 @@ export type AuthenticationObject = {
 	IdToken: string;
 }
 
+export type TemporaryTokens = {
+	idToken: string;
+	accessToken: string;
+}
+
 export interface IAuthenticatedUser  {
 	email: string;
 	tokens: AuthenticationObject;
@@ -155,6 +160,21 @@ export async function loginGetTokens(email: string,password: string): Promise<Au
 	}
 
 	return JSON.parse(response.body) as AuthenticationObject;
+}
+
+/**
+ * Generates new access and identity tokens from a refresh token.
+ * @param refreshToken A refresh token associated with an account.
+ * @returns A new set of id and access tokens.
+ */
+export async function regenerateTokensWithRefreshToken(refreshToken: string): Promise<TemporaryTokens | undefined> {
+	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", sessionEndpoint, { refreshToken });
+
+	if (response == undefined || response.status != HttpStatusCode.OK) {
+		return undefined;
+	}
+
+	return JSON.parse(response.body);
 }
 
 /**

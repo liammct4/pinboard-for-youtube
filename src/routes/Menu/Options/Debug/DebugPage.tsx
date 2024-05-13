@@ -31,23 +31,30 @@ export function DebugPage(): React.ReactNode {
 				reversed={false}
 				value={toolsActivated}
 				onChange={setToolsActivated}/>
-				{toolsActivated ?
-					<div className="debug-tools">
-						<button className="button-small button-base" onClick={async () => {
-							const storage: IStorage = await chrome.storage.local.get() as IStorage;
+			{toolsActivated ?
+				<div className="debug-tools">
+					{/* Print storage */}
+					<button className="button-small button-base" onClick={async () => {
+						const storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-							navigator.clipboard.writeText(JSON.stringify(storage, null, 4));
+						console.log("Printing storage:")
+						console.log(storage);
+						
+						activateMessage(undefined, "Sent to console.", "Success", "Tick", -1);
+					}}>Storage to console</button>
+					<button className="button-small button-base" onClick={async () => {
+						const storage: IStorage = await chrome.storage.local.get() as IStorage;
 
-							console.log("Printing storage:")
-							console.log(storage);
-							
-							activateMessage(undefined, "Copied to clipboard and console.", "Success", "Tick", -1);
-						}}>Get storage</button>
-						<button className="button-small button-base" onClick={async () => {
-							await chrome.storage.local.clear();
-						}}>Wipe storage</button>
-					</div>
-				: <></>}
+						navigator.clipboard.writeText(JSON.stringify(storage, null, 4));
+
+						activateMessage(undefined, "Copied to clipboard.", "Success", "Tick", -1);
+					}}>Copy storage to clipboard</button>
+					{/* Wipe storage. */}
+					<button className="button-small button-base" onClick={async () => {
+						await chrome.storage.local.clear();
+					}}>Wipe storage</button>
+				</div>
+			: <></>}
 		</>
 	);
 }

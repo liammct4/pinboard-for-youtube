@@ -1,11 +1,12 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
-import { setCurrentUserAndStorage, logoutCurrentUser, IAuthSlice } from "./authSlice.ts";
-import { getStoredAuthTokens, setCurrentAuthenticatedUser } from "../../lib/user/storage.ts";
+import { setCurrentUserAndStorage, logoutCurrentUser, IAuthSlice, setAccessAndIDTokens } from "./authSlice.ts";
+import { getCurrentAuthenticatedUser, getStoredAuthTokens, setCurrentAuthenticatedUser, setStoredAuthTokens } from "../../lib/user/storage.ts";
 import { AuthenticationObject, invalidateRefreshToken } from "../../lib/user/accounts.ts";
 
-const authStorageMiddleware = createListenerMiddleware();
+const authChangeUserStorageMiddleware = createListenerMiddleware();
+const authTokenChangedMiddleware = createListenerMiddleware();
 
-authStorageMiddleware.startListening({
+authChangeUserStorageMiddleware.startListening({
 	matcher: isAnyOf(setCurrentUserAndStorage, logoutCurrentUser),
 	effect: async (_action, listenerApi) => {
 		let slice: IAuthSlice = listenerApi.getState() as IAuthSlice;
@@ -20,4 +21,17 @@ authStorageMiddleware.startListening({
 	}
 });
 
-export default { authStorageMiddleware };
+authTokenChangedMiddleware.startListening({
+	matcher: isAnyOf(setAccessAndIDTokens),
+	effect: async (action) => {
+		let currentUser = await getCurrentAuthenticatedUser();
+
+		await setStoredAuthTokens({
+			RefreshToken: currentUser!.tokens.RefreshToken,
+			AccessToken: action.payload.accessToken,
+			IdToken: action.payload.idToken
+		});
+	}
+})
+
+export default { authChangeUserStorageMiddleware, authTokenChangedMiddleware };
