@@ -19,29 +19,34 @@ accountCloudSyncMiddleware.startListening({
 		let state: RootState = listenerApi.getState() as RootState;
 
 		// Filters the current videos by what has been requested in the queue.
-		let targetedVideos: Video[] = state.video.currentVideos
-			.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1);
-		let targetedTags: TagDefinition[] = state.video.tagDefinitions
-			.filter(x => state.account.updatedTagIDsQueue.findIndex(y => y.dataID == x.id) != -1);
-
-		let videosResponse = await pushAccountVideos(
-			state.auth.currentUser!.tokens.IdToken,
-			state.account.updatedVideoIDsQueue,
-			targetedVideos
-		);
-
-		if (videosResponse?.status == HttpStatusCode.OK) {
-			listenerApi.dispatch(clearVideoAccountQueue());
+		if (state.account.updatedVideoIDsQueue.length > 0) {
+			let targetedVideos: Video[] = state.video.currentVideos
+				.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1);
+			
+			let videosResponse = await pushAccountVideos(
+				state.auth.currentUser!.tokens.IdToken,
+				state.account.updatedVideoIDsQueue,
+				targetedVideos
+			);
+			
+			if (videosResponse?.status == HttpStatusCode.OK) {
+				listenerApi.dispatch(clearVideoAccountQueue());
+			}
 		}
+		
+		if (state.account.updatedTagIDsQueue.length > 0) {
+			let targetedTags: TagDefinition[] = state.video.tagDefinitions
+				.filter(x => state.account.updatedTagIDsQueue.findIndex(y => y.dataID == x.id) != -1);
 
-		let tagsResponse = await pushAccountTagDefinitions(
-			state.auth.currentUser!.tokens.IdToken,
-			state.account.updatedTagIDsQueue,
-			targetedTags
-		);
-
-		if (tagsResponse?.status == HttpStatusCode.OK) {
-			listenerApi.dispatch(clearTagsAccountQueue());
+			let tagsResponse = await pushAccountTagDefinitions(
+				state.auth.currentUser!.tokens.IdToken,
+				state.account.updatedTagIDsQueue,
+				targetedTags
+			);
+			
+			if (tagsResponse?.status == HttpStatusCode.OK) {
+				listenerApi.dispatch(clearTagsAccountQueue());
+			}
 		}
 	}
 });
