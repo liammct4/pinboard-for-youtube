@@ -21,6 +21,12 @@ let storageTemplate: IStorage = {
 		path: undefined,
 		resetPasswordState: undefined,
 		resendVerificationEmailState: undefined
+	},
+	account: {
+		mutationQueues: {
+			tagPendingQueue: [],
+			videoPendingQueue: []
+		}
 	}
 }
 
@@ -66,6 +72,12 @@ describe("Local storage operations.", () => {
 				path: undefined,
 				resetPasswordState: undefined,
 				resendVerificationEmailState: undefined
+			},
+			account: {
+				mutationQueues: {
+					tagPendingQueue: [],
+					videoPendingQueue: []
+				}
 			}
 		};
 

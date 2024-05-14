@@ -1,9 +1,14 @@
 import { HttpStatusCode } from "./http";
 
+export type NetworkErrorType = "NoConnection" | "TimedOut";
+export type ConnectionEventType = "Disconnected" | "Reconnected";
+
+export type OfflineHandler = (error: NetworkErrorType) => void | Promise<void>;
+export type UnauthorizedResolver = (originalRequest: RequestInfo, originalResponse: HttpResponse) => ResolveAttempt | Promise<ResolveAttempt>;
+export type ConnectionChangedHandler = (type: ConnectionEventType) => void | Promise<void>;
+
 export type Method = "GET" | "HEAD" | "POST" | "PUT" | "DELETE" | "CONNECT" | "OPTIONS" | "TRACE" | "PATCH";
 export type HeaderArray = [string, string][];
-export type NetworkErrorType = "NoConnection" | "TimedOut";
-export type UnauthorizedResolver = (originalRequest: RequestInfo, originalResponse: HttpResponse) => ResolveAttempt | Promise<ResolveAttempt>;
 export type RequestInfo = {
 	method: Method;
 	url: string;
@@ -21,19 +26,31 @@ export type HttpResponse = {
 }
 
 export class RequestHandler {
-	private _offlineHandler: (error: NetworkErrorType) => void | Promise<void> = () => { };
+	private _offlineHandler: OfflineHandler = () => { };
 	private _unauthorizedResolver: UnauthorizedResolver = () => null!;
-	// Whenever an unauthorized error occurs, it is important to disable the unauthorized resolver
-	// from responding to the error if it is still happening to prevent recursion of handlers causing
-	// the handler to trigger again.
+	private _connectionChangedHandler: ConnectionChangedHandler = () => { };
+	/**
+	 * Whenever an unauthorized error occurs, it is important to disable the unauthorized resolver
+	 * from responding to the error if it is still happening to prevent recursion of handlers causing
+	 * the handler to trigger again.
+	 */
 	private lockUnauthorizedHandler: boolean = false;
 
-	set offlineHandler(handler: (error: NetworkErrorType) => void | Promise<void>) {
+	set offlineHandler(handler: OfflineHandler) {
 		this._offlineHandler = handler;
 	}
 
 	set unauthorizedResolver(handler: UnauthorizedResolver) {
 		this._unauthorizedResolver = handler;
+	}
+
+	set connectionChangedHandler(handler: ConnectionChangedHandler) {
+		this._connectionChangedHandler = handler;
+	}
+
+	constructor() {
+		window.addEventListener("offline", () => this._connectionChangedHandler("Disconnected"));
+		window.addEventListener("online", () => this._connectionChangedHandler("Reconnected"));
 	}
 	
 	async sendRequest(

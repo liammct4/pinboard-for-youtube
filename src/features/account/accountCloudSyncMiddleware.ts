@@ -3,14 +3,15 @@ import { RootState } from "../../app/store";
 import { pushAccountVideos } from "../../lib/user/data/videos.ts";
 import { TagDefinition, Video } from "../../lib/video/video.ts";
 import { userIsLoggedIn } from "../../lib/user/accounts.ts";
-import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue } from "./accountSlice.ts";
+import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue, pushQueues } from "./accountSlice.ts";
 import { HttpStatusCode } from "../../lib/util/http.ts";
 import { pushAccountTagDefinitions } from "../../lib/user/data/tags.ts";
+import { setTagQueueStorage, setVideoQueueStorage } from "../../lib/user/queue/queueStorage.ts";
 
 const accountCloudSyncMiddleware = createListenerMiddleware();
 
 accountCloudSyncMiddleware.startListening({
-	matcher: isAnyOf(appendMutationToAccountQueue, appendMutationBatchToAccountQueue),
+	matcher: isAnyOf(appendMutationToAccountQueue, appendMutationBatchToAccountQueue, pushQueues),
 	effect: async (_action, listenerApi) => {
 		if (!userIsLoggedIn()) {
 			return;
@@ -29,8 +30,14 @@ accountCloudSyncMiddleware.startListening({
 				targetedVideos
 			);
 			
+			// Handle queue, clears it from storage as well.
 			if (videosResponse?.status == HttpStatusCode.OK) {
 				listenerApi.dispatch(clearVideoAccountQueue());
+				await setVideoQueueStorage([]);
+			}
+			else {
+				// Something went wrong, so save to storage. 
+				await setVideoQueueStorage(state.account.updatedVideoIDsQueue);
 			}
 		}
 		
@@ -46,6 +53,10 @@ accountCloudSyncMiddleware.startListening({
 			
 			if (tagsResponse?.status == HttpStatusCode.OK) {
 				listenerApi.dispatch(clearTagsAccountQueue());
+				await setTagQueueStorage([]);
+			}
+			else {
+				await setTagQueueStorage(state.account.updatedTagIDsQueue);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
 import AppThemes from "./../../styling/theme.json"
+import { DataMutation } from "../../features/account/accountSlice.ts"
 
 export interface IStorage {
 	user_data: {
@@ -19,6 +20,12 @@ export interface IStorage {
 		currentUser: IAuthenticatedUser | undefined;
 	},
 	persistentState: IPersistentState;
+	account: {
+		mutationQueues: {
+			videoPendingQueue: DataMutation[],
+			tagPendingQueue: DataMutation[]
+		}
+	}
 }
 
 export async function getNestedStorageData(path: string): Promise<any> {
@@ -60,7 +67,7 @@ export async function ensureInitialized(): Promise<void> {
 		theme = AppThemes[0];
 	}
 
-	let template: IStorage = {
+	let blankTemplate: IStorage = {
 		user_data: {
 			videos: [],
 			config: {
@@ -83,8 +90,14 @@ export async function ensureInitialized(): Promise<void> {
 			path: undefined,
 			resetPasswordState: undefined,
 			resendVerificationEmailState: undefined
+		},
+		account: {
+			mutationQueues: {
+				tagPendingQueue: [],
+				videoPendingQueue: []
+			}
 		}
 	};
 
-	await chrome.storage.local.set(template);
+	await chrome.storage.local.set(blankTemplate);
 }

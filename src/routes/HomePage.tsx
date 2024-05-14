@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
 import { useNotificationMessage } from "../components/features/useNotificationMessage";
-import { GlobalRequestHandler, NetworkErrorType } from "../lib/util/request";
+import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../lib/util/request";
 import { getCurrentAuthenticatedUser } from "../lib/user/storage";
 import { useDispatch } from "react-redux";
 import { setAccessAndIDTokens } from "../features/auth/authSlice";
 import { regenerateTokensWithRefreshToken } from "../lib/user/accounts";
 import { HttpStatusCode } from "../lib/util/http";
+import { pushQueues } from "../features/account/accountSlice";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
@@ -74,6 +75,11 @@ export function HomePage(): React.ReactNode {
 			}
 
 			return { success: true, response: reattemptedRequest };
+		},
+		GlobalRequestHandler.connectionChangedHandler = (type: ConnectionEventType) => {
+			if (type == "Reconnected") {
+				dispatch(pushQueues());
+			}
 		}
 	}, []);
 

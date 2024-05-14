@@ -89,6 +89,9 @@ export const accountSlice = createSlice({
 					};
 				}));
 		},
+		pushQueues: () => {
+			
+		},
 		clearVideoAccountQueue: (state) => {
 			state.updatedVideoIDsQueue = [];
 		},
@@ -98,5 +101,5 @@ export const accountSlice = createSlice({
 	}
 })
 
-export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue } = accountSlice.actions;
+export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue, pushQueues } = accountSlice.actions;
 export default accountSlice.reducer;

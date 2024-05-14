@@ -22,6 +22,12 @@ let storageTemplate: IStorage = {
 		path: undefined,
 		resetPasswordState: undefined,
 		resendVerificationEmailState: undefined
+	},
+	account: {
+		mutationQueues: {
+			tagPendingQueue: [],
+			videoPendingQueue: []
+		}
 	}
 }
 
