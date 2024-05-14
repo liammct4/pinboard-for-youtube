@@ -27,7 +27,7 @@ export function VideoTimestampList(): React.ReactNode {
 
 	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
 		let videoTimestamps = topLevelVideos.videos.find(x => x.videoID == video.videoID)?.timestamps;
-		let updatedTimestamps: Array<Timestamp> = [ ...videoTimestamps! ];
+		let updatedTimestamps: Timestamp[] = [ ...videoTimestamps! ];
 
 		if (newTimestamp == null) {
 			// The timestamp has been deleted.
@@ -75,7 +75,7 @@ export function VideoTimestampList(): React.ReactNode {
 		dispatch(topLevelVideos.actions.removeExpandedID(video.videoID));
 	}
 
-	const handleTimestampReorder = (newTimestamps: Array<Timestamp>) => {
+	const handleTimestampReorder = (newTimestamps: Timestamp[]) => {
 		let listener = (_event: any) => {
 			document.removeEventListener("mouseup", listener);
 			setTimeout(() => {

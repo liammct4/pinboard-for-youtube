@@ -77,7 +77,7 @@ export function AppearancePresets(): React.ReactNode {
 		addCustomTheme(newTheme);
 	}
 	let { register, handleSubmit, handler, submit } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
-	const onReorder = (newCustomThemes: Array<AppTheme>) => {
+	const onReorder = (newCustomThemes: AppTheme[]) => {
 		setCustomThemes(newCustomThemes);
 	};
 

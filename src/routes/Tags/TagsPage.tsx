@@ -13,7 +13,7 @@ import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage";
 import { TagItem } from "../../components/video/tags/TagItem/TagItem";
 import "./TagsPage.css"
 
-function resolveNewTag(tagDefinitions: Array<TagDefinition>): string {
+function resolveNewTag(tagDefinitions: TagDefinition[]): string {
 	let resolved = false;
 	let next = 1;
 

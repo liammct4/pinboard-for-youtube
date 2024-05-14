@@ -1,132 +1,26 @@
-import { convertArrayToMap } from "../../util/json/map";
 import { TagDefinition, Video } from "../../video/video"
-import { IStorage, getNestedStorageData } from "../storage"
+import { IStorage } from "../storage"
 
-export async function getStoredVideos(): Promise<Array<Video>> {
-	let videos: Array<Video> = await getNestedStorageData("user_data/videos");
-
-	if (videos == undefined) {
-		throw new Error("Invalid operation, the user video data does not exist.");
-	}
+export async function getStoredVideos(): Promise<Video[]> {
+	let storage = await chrome.storage.local.get() as IStorage;
+	let videos: Video[] = storage.user_data.videos;
 
 	return videos;
 }
 
-export async function getVideoFromIndex(index: number): Promise<Video> {
-	let videos: Array<Video> = await getStoredVideos();
+export async function setStoredVideos(videos: Video[]) {
+	let storage = await chrome.storage.local.get() as IStorage;
 
-	if (index < 0 || index > videos.length) {
-		throw new Error("Invalid argument provided, the index was out of range.");
-	}
+	storage.user_data.videos = videos;
 
-	return videos[index];
-}
-
-export async function getVideoFromVideoID(videoID: string): Promise<Video | null> {
-	let videos: Array<Video> = await getStoredVideos();
-
-	for (let i: number = 0; i < videos.length; i++) {
-		if (videos[i].videoID == videoID) {
-			return videos[i];
-		}
-	}
-
-	return null;
-}
-
-export async function getIndexOfVideo(videoID: string) : Promise<number> {
-	let [_, storageVideos] = await modifyStorageVideos();
-	let index: number = storageVideos.findIndex((x) => x.videoID == videoID);
-
-	return index;
-}
-
-async function modifyStorageVideos(): Promise<[any, Array<Video>]> {
-	let userData: any = await chrome.storage.local.get("user_data");
-	let storageVideos: Array<Video> = userData["user_data"]["videos"];
-
-	return [userData, storageVideos];
-}
-
-export async function setStoredVideos(videos: Array<Video>) {
-	let [userData, _storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
-
-	userData["user_data"]["videos"] = videos;
-
-	await chrome.storage.local.set(userData);
-}
-
-export async function clearStoredVideos() {
-	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
-	
-	// Clears the array.
-	storageVideos.length = 0;
-
-	await chrome.storage.local.set(userData);
-}
-
-export async function pushVideoBatch(newVideos: Array<Video>): Promise<void> {
-	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
-
-	// Replace any existing videos with new ones in the argument "newVideos".
-	for (let i: number = 0; i < storageVideos.length; i++) {
-		let video: Video = storageVideos[i];
-
-		for (let j: number = 0; j < newVideos.length; j++) {
-			if (video.videoID == newVideos[j].videoID) {
-				storageVideos[i] = newVideos[j];
-
-				newVideos.splice(j--, 1);
-			}
-		}
-	}
-
-	storageVideos.push(...newVideos);
-
-	await chrome.storage.local.set(userData);
-}
-
-export async function pushVideo(video: Video): Promise<void> {
-	await pushVideoBatch([ video ]);
-}
-
-export async function insertVideoBatch(index: number, videos: Array<Video>): Promise<void> {
-	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
-
-	if (index == undefined || index < 0 || index > storageVideos.length) {
-		throw new Error("Invalid argument provided, the index provided was invalid, index: {}.")
-	}
-
-	storageVideos.splice(index, 0, ...videos);
-	
-	await chrome.storage.local.set(userData);
-}
-
-
-export async function insertVideo(index: number, video: Video): Promise<void> {
-	await insertVideoBatch(index, [ video ]);
-}
-
-export async function removeVideoByVideoID(videoID: string): Promise<boolean> {
-	let [userData, storageVideos]: [any, Array<Video>] = await modifyStorageVideos();
-	let index: number = storageVideos.findIndex((x) => x.videoID == videoID);
-
-	if (index == -1) {
-		return false;
-	}
-
-	storageVideos.splice(index, 1);
-	
-	await chrome.storage.local.set(userData);
-
-	return true;
+	await chrome.storage.local.set(storage);
 }
 
 /**
  * Retrieves the user defined tag definitions from storage.
  */
-export async function getStorageTagDefinitions(): Promise<Array<TagDefinition>> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
+export async function getStorageTagDefinitions(): Promise<TagDefinition[]> {
+	let storage = await chrome.storage.local.get() as IStorage;
 
 	return storage.user_data.tagDefinitions;
 }
@@ -134,7 +28,7 @@ export async function getStorageTagDefinitions(): Promise<Array<TagDefinition>> 
 /**
  * Sets the tag definitions in storage.
  */
-export async function setStorageTagDefinitions(tags: Array<TagDefinition>): Promise<void> {
+export async function setStorageTagDefinitions(tags: TagDefinition[]): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
 	storage.user_data.tagDefinitions = tags;
 

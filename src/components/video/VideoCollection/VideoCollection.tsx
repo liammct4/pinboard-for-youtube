@@ -6,7 +6,7 @@ import VideoTimestampList from "./../VideoTimestampList/VideoTimestampList.jsx"
 import "./VideoCollection.css"
 
 export interface IVideoCollectionProperties {
-	onReorder: (reordered: Array<Video>) => void;
+	onReorder: (reordered: Video[]) => void;
 }
 
 export function VideoCollection({ onReorder }: IVideoCollectionProperties): React.ReactNode {

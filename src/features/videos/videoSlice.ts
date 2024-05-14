@@ -5,8 +5,8 @@ import { TagDefinition, Video } from "../../lib/video/video.ts";
 
 export interface IVideoSlice {
 	activeVideoID?: string;
-	currentVideos: Array<Video>;
-	tagDefinitions: Array<TagDefinition>;
+	currentVideos: Video[];
+	tagDefinitions: TagDefinition[];
 	currentSelectedTagFilter: string;
 }
 
@@ -58,10 +58,10 @@ export const videoSlice = createSlice({
 		clearVideos: (state) => {
 			state.currentVideos.length = 0;
 		},
-		setVideos: (state, action: PayloadAction<Array<Video>>) => {
+		setVideos: (state, action: PayloadAction<Video[]>) => {
 			state.currentVideos = action.payload;
 		},
-		setVideosWithoutQueue: (state, action: PayloadAction<Array<Video>>) => {
+		setVideosWithoutQueue: (state, action: PayloadAction<Video[]>) => {
 			state.currentVideos = action.payload;
 		},
 		addTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
@@ -101,10 +101,10 @@ export const videoSlice = createSlice({
 
 			state.tagDefinitions.splice(index, 1);
 		},
-		setTagDefinitions: (state, action: PayloadAction<Array<TagDefinition>>) => {
+		setTagDefinitions: (state, action: PayloadAction<TagDefinition[]>) => {
 			state.tagDefinitions = action.payload;
 		},
-		setTagDefinitionsWithoutQueue: (state, action: PayloadAction<Array<TagDefinition>>) => {
+		setTagDefinitionsWithoutQueue: (state, action: PayloadAction<TagDefinition[]>) => {
 			state.tagDefinitions = action.payload;
 		},
 		setTagFilter: (state, action: PayloadAction<string>) => {

@@ -11,7 +11,7 @@ export async function getCurrentTheme(): Promise<AppTheme> {
 	return storage.user_data.config.theme;
 }
 
-export async function getCustomThemes(): Promise<Array<AppTheme>> {
+export async function getCustomThemes(): Promise<AppTheme[]> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 
 	return storage.user_data.config.customThemes;
@@ -32,7 +32,7 @@ export async function setStorageTheme(theme: AppTheme): Promise<void> {
  * Sets the user custom themes in the user config in extension local storage.
  * @param theme The new custom themes.
  */
-export async function setStorageCustomThemes(themes: Array<AppTheme>): Promise<void> {
+export async function setStorageCustomThemes(themes: AppTheme[]): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
 	storage.user_data.config.customThemes = themes;
 

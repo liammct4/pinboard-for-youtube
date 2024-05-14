@@ -8,7 +8,7 @@ export type DialogClosedHandler = (result: string) => void;
 export interface IMessageDialogProperties {
 	title: string;
 	body: string;
-	buttons: Array<string>;
+	buttons: string[];
 	defaultMessage?: string;
 	onButtonPressed: DialogClosedHandler;
 	children: React.ReactNode;

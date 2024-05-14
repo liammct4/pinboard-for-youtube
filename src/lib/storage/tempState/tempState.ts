@@ -1,7 +1,7 @@
 import { LayoutState } from "./layoutState";
 
 export interface ITempState {
-	expandedVideos: Array<string>,
+	expandedVideos: string[],
 	layout: LayoutState;
 }
 
@@ -21,7 +21,7 @@ export async function getTempState(): Promise<ITempState> {
  * Retrieves the list of saved expanded videos in temp_state storage.
  * @returns An array of expanded videos.
  */
-export async function getExpandedVideos(): Promise<Array<string>> {
+export async function getExpandedVideos(): Promise<string[]> {
 	let tempState = await getTempState();
 
 	return tempState.expandedVideos;

@@ -8,7 +8,7 @@ export function MenuPage(): React.ReactNode {
 	const navigate = useNavigate();
 	const location = useLocation();
 	
-	const currentPath: Array<string> = decodeURI(location.pathname).split("/");
+	const currentPath: string[] = decodeURI(location.pathname).split("/");
 	// Remove everything before options page.
 	currentPath.splice(0, 3);
 

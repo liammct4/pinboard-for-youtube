@@ -3,7 +3,7 @@ import { Video, generateTimestamp } from "../src/lib/video/video";
 
 /* This files contains all of the testing/sample data needed. */
 
-export const sampleVideoData: Array<Video> = [
+export const sampleVideoData: Video[] = [
 	{
 		"videoID": "LXb3EKWsInQ",
 		"timestamps": [

@@ -9,8 +9,8 @@ import { DataMutation } from "../../features/account/accountSlice.ts"
 
 export interface IStorage {
 	user_data: {
-		videos: Array<Video>;
-		tagDefinitions: Array<TagDefinition>;
+		videos: Video[];
+		tagDefinitions: TagDefinition[];
 		tagFilter: string;
 		config: IConfig;
 	},
@@ -26,28 +26,6 @@ export interface IStorage {
 			tagPendingQueue: DataMutation[]
 		}
 	}
-}
-
-export async function getNestedStorageData(path: string): Promise<any> {
-	let data: any = await chrome.storage.local.get();
-	let keys: Array<string> = path.split(/[\/\\]/).filter(x => x != "");
-
-	let current: string = data[keys[0]];
-
-	if (current == undefined) {
-		return undefined;
-	}
-
-	for (let i: number = 1; i < keys.length; i++) {
-		let nextKey: any = keys[i];
-		current = current[nextKey];
-
-		if (current == undefined) {
-			return undefined;
-		}
-	}
-
-	return current;
 }
 
 export async function ensureInitialized(): Promise<void> {

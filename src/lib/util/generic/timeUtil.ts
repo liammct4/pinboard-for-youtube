@@ -27,10 +27,10 @@ export function getSecondsFromTimestamp(time: string): number {
 		throw new TypeError(`Invalid argument provided, the timestamp was an invalid value. Value proivded: '${time}'.`);
 	}
 
-	let parts: Array<string> = time.split(":").reverse();
+	let parts: string[] = time.split(":").reverse();
 
 	let total: number = 0;
-	let mult: Array<number> = [1, 60, 3600, 86400];
+	let mult: number[] = [1, 60, 3600, 86400];
 	
 	for (let i = 0; i < parts.length; i++) {
 		let num: number = Number(parts[i]);

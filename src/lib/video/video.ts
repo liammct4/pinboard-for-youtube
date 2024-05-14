@@ -14,11 +14,11 @@ export type TagDefinition = {
 
 export type Video = {
 	videoID: string;
-	timestamps: Array<Timestamp>;
+	timestamps: Timestamp[];
 	/**
 	 * Array of tag definition ids.
 	 */
-	appliedTags: Array<string>;
+	appliedTags: string[];
 };
 
 /**

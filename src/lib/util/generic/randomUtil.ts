@@ -5,7 +5,7 @@
  * @param max The maximum value which the random number can be.
  * @returns A numeric value which is entirely unique to the dataset.
  */
-export function generateUniqueFrom<T>(dataset: Array<T>, selector: (x: T) => number, max: number = Number.MAX_SAFE_INTEGER): number | null {
+export function generateUniqueFrom<T>(dataset: T[], selector: (x: T) => number, max: number = Number.MAX_SAFE_INTEGER): number | null {
 	let isGeneratedUnique: boolean = false;
 	let uniqueAvailable: boolean = false;
 	

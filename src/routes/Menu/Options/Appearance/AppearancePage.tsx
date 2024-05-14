@@ -11,7 +11,7 @@ import AppPalettes from "../../../../styling/theme.json";
 export function AppearancePage() {
 	const dispatch = useDispatch();
 	const currentTheme: AppTheme = useSelector((state: RootState) => state.theme.currentTheme) as AppTheme;
-	const customThemes: Array<AppTheme> = useSelector((state: RootState) => state.theme.customThemes);
+	const customThemes: AppTheme[] = useSelector((state: RootState) => state.theme.customThemes);
 
 	return (
 		<>
@@ -23,7 +23,7 @@ export function AppearancePage() {
 						setCurrentTheme: (theme: AppTheme) => dispatch(setCurrentTheme(theme)),
 						addCustomTheme: (theme: AppTheme) => dispatch(addCustomTheme(theme)),
 						deleteCustomTheme: (themeName: string) => dispatch(deleteCustomTheme(themeName)),
-						setCustomThemes: (themes: Array<AppTheme>) => dispatch(setCustomThemes(themes))
+						setCustomThemes: (themes: AppTheme[]) => dispatch(setCustomThemes(themes))
 					}
 				}}>
 				<Routes>

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LayoutState } from "../../lib/storage/tempState/layoutState";
 
 export interface IStateSlice {
-	expandedVideoIDs: Array<string>;
+	expandedVideoIDs: string[];
 	layout: LayoutState;
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: boolean;

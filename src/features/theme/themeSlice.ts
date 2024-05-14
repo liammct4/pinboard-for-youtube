@@ -4,8 +4,8 @@ import ThemePresets from "./../../styling/theme.json"
 
 export interface IThemeSlice {
 	currentTheme: AppTheme;
-	themePresets: Array<AppTheme>;
-	customThemes: Array<AppTheme>;
+	themePresets: AppTheme[];
+	customThemes: AppTheme[];
 }
 
 const initialState: IThemeSlice = {
@@ -32,7 +32,7 @@ export const themeSlice = createSlice({
 
 			state.customThemes[existingIndex] = action.payload;
 		},
-		setCustomThemes: (state, action: PayloadAction<Array<AppTheme>>) => {
+		setCustomThemes: (state, action: PayloadAction<AppTheme[]>) => {
 			state.customThemes = action.payload;
 		},
 		deleteCustomTheme: (state, action: PayloadAction<string>) => {

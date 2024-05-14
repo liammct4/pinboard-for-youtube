@@ -3,7 +3,7 @@ import { IStorage } from "../storage";
 
 export interface IConfig {
 	theme: AppTheme;
-	customThemes: Array<AppTheme>;
+	customThemes: AppTheme[];
 }
 
 export async function getUserConfig(): Promise<IConfig> {

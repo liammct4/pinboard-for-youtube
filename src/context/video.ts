@@ -4,16 +4,16 @@ import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/
 
 export interface IVideoContext {
 	activeVideoID: string | undefined,
-	videos: Array<Video>,
-	openVideos: Array<string>,
-	tagDefinitions: Array<TagDefinition>,
+	videos: Video[],
+	openVideos: string[],
+	tagDefinitions: TagDefinition[],
 	deleteMode: boolean
 	actions: {
 		addVideo: ActionCreatorWithPayload<Video, "video/addVideo">,
 		updateVideo: ActionCreatorWithPayload<Video, "video/updateVideo">,
 		removeVideo: ActionCreatorWithPayload<string, "video/removeVideo">,
 		clearVideos: ActionCreatorWithoutPayload<"video/clearVideos">,
-		setVideos: ActionCreatorWithPayload<Array<Video>, "video/setVideos">,
+		setVideos: ActionCreatorWithPayload<Video[], "video/setVideos">,
 		addExpandedID: ActionCreatorWithPayload<string, "tempState/addExpandedID">,
 		removeExpandedID: ActionCreatorWithPayload<string, "tempState/removeExpandedID">
 	},

@@ -60,7 +60,7 @@ function validateVideo(value: string): string | null {
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const videos: Array<Video> = useSelector((state: RootState) => state.video.currentVideos);
+	const videos: Video[] = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
@@ -130,7 +130,7 @@ export function VideosPage(): React.ReactNode {
 		
 		dispatch(updateVideo(activeVideo));
 	};
-	const handleReorderedItems = (reordered: Array<Video>) => {
+	const handleReorderedItems = (reordered: Video[]) => {
 		// To mitigate lag from store dispatching.
 		let listener = (_event: any) => {
 			document.removeEventListener("mouseup", listener);
