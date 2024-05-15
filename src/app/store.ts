@@ -3,7 +3,6 @@ import videoReducer from "../features/videos/videoSlice.ts"
 import tempStateReducer from "../features/state/tempStateSlice.ts"
 import tempStateMiddleware from "../features/state/stateStorageMiddleware.ts"
 import videoStorageMiddleware from "../features/videos/videoStorageMiddleware.ts"
-import videoTimelineMiddleware from "../features/videos/videoTimelineMiddlware.ts"
 import tagStorageMiddleware from "../features/videos/tagStorageUpdateMiddleware.ts"
 import tagCascadeUpdateMiddleware from "../features/videos/tagCascadeUpdateMiddleware.ts"
 import themeMiddleware from "../features/theme/themeMiddleware.ts"
@@ -28,7 +27,6 @@ export let store = configureStore({
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
 		.prepend(videoStorageMiddleware.middleware)
 		.prepend(videoQueueSyncVideoMiddleware.middleware)
-		.prepend(videoTimelineMiddleware.middleware)
 		.prepend(tagQueueSyncMiddleware.middleware)
 		.prepend(tagCascadeUpdateMiddleware.middleware)
 		.prepend(tagStorageMiddleware.tagStorageUpdateUpdateMiddleware.middleware)

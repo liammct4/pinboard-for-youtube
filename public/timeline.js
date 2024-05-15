@@ -337,7 +337,30 @@ function changeTheme(theme) {
 	});
 }
 
+async function update() {
+	// Fetch videos from storage.
+	let storage = await chrome.storage.local.get();
+
+	if (storage.user_data.videos != undefined) {
+		let video = storage.user_data.videos.find(x => x.videoID == getCurrentVideoID());
+		setTimelineTimestamps(video.timestamps);
+	}
+
+	videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
+
+	// Fetch current theme from storage.
+	let currentTheme = storage.user_data?.config?.theme;
+
+	if (currentTheme != undefined) {
+		changeTheme(currentTheme);
+	}
+}
+
 async function initialize() {
+	chrome.storage.local.onChanged.addListener(async () => {
+		update();
+	});
+
 	let progressBar = document.querySelector(".ytp-chrome-bottom");
 	
 	if (progressBar == undefined) {
@@ -437,36 +460,14 @@ async function initialize() {
 	`;
 
 	progressBar.appendChild(timelineOuterContainer);
-	
-	// Fetch videos from storage.
-	let userData = (await chrome.storage.local.get("user_data")).user_data;
-	let videos = userData?.videos;
 
-	if (videos != undefined) {
-		let video = videos.find(x => x.videoID == getCurrentVideoID());
-		setTimelineTimestamps(video.timestamps);
-	}
-
-	videoTimelineSizeObserver.observe(timelineContainer);
-
-	// Fetch current theme from storage.
-	let currentTheme = userData?.config?.theme;
-
-	if (currentTheme != undefined) {
-		changeTheme(currentTheme);
-	}
+	update();
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
 	switch (request.type) {
 		case "pfy_get_active_info":
 			response(getActiveInfo());
-			break;
-		case "pfy_set_timestamp_buttons":
-			response(setTimelineTimestamps(request.data));
-			break;
-		case "pfy_change_theme":
-			response(changeTheme(request.data));
 			break;
 	}
 });

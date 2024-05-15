@@ -2,7 +2,6 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addCustomTheme, deleteCustomTheme, setCurrentTheme, setCustomThemes } from "./themeSlice.ts";
 import { setStorageCustomThemes, setStorageTheme } from "../../lib/storage/config/theme/theme.ts";
 import { swapAppTheme as changeAppTheme } from "../../lib/browser/extension/theme.ts";
-import { changeYouTubeTimestampTheme } from "../../lib/browser/youtube.ts";
 import { RootState } from "../../app/store.ts";
 
 const updateThemeMiddleware = createListenerMiddleware();
@@ -13,9 +12,6 @@ updateThemeMiddleware.startListening({
 	actionCreator: setCurrentTheme,
 	effect: async (action, _listenerApi) => {
 		changeAppTheme(action.payload);
-		
-		// Updates the timeline buttons.
-		changeYouTubeTimestampTheme(action.payload);
 	}
 });
 
