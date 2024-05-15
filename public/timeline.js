@@ -343,7 +343,7 @@ async function update() {
 
 	if (storage.user_data.videos != undefined) {
 		let video = storage.user_data.videos.find(x => x.videoID == getCurrentVideoID());
-		setTimelineTimestamps(video.timestamps);
+		setTimelineTimestamps(video?.timestamps ?? []);
 	}
 
 	videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
