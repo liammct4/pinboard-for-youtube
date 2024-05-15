@@ -46,11 +46,13 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
+       class="arrow-fill"
        id="rect2294"
        style="fill:#fbdecd;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
        d="M 0,0.26467518 V 0 h 2.1166666 l 1e-7,0.26467518 -1.0583333,1.32291662 z"
        sodipodi:nodetypes="cccccc" />
     <path
+       class="arrow-border"
        style="fill:none;stroke:#c64a15;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 0,0.26467518 1.0583334,1.5875918 2.1166667,0.26467518"
        id="path1006"

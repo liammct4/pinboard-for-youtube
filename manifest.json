@@ -21,13 +21,13 @@
     "content_scripts": [
         {
             "matches": ["https://*.youtube.com/*"],
-            "js": ["webcomponents-bundle.js", "video.js", "timeline.js"],
+            "js": ["webcomponents-bundle.js", "video.js", "timeline.js", "controls.js"],
             "css": ["globals.css", "common-definitions.css"]
         }
     ],
     "web_accessible_resources": [
         {
-			"resources": ["arrow_down_timeline.svg"],
+			"resources": ["/assets/misc/arrow_down_timeline.svg", "/assets/logo/logo.svg"],
 			"matches": ["https://*.youtube.com/*"]
         }
     ],
