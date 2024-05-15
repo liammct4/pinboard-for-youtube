@@ -2,8 +2,12 @@
 // 'timeline.js' content script for interacting with the active video timeline.
 // ----------------------------------
 
-function getCurrentVideoID() {
-	return document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
+function getVideoIDFromLink(videoURL) {
+	let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
+
+	let result = extractIDRegex.exec(videoURL);
+
+	return result.groups.videoID;
 }
 
 function getMainVideo() {
@@ -298,7 +302,7 @@ async function handleTimestampChange(newTimestamp) {
 		return;
 	}
 
-	let video = videos.find(v => v.videoID == getCurrentVideoID());
+	let video = videos.find(v => v.videoID == getVideoIDFromLink(window.location.href));
 	let timestampIndex = video.timestamps.findIndex(t => t.id == newTimestamp.id);
 
 	video.timestamps[timestampIndex] = newTimestamp;
@@ -322,10 +326,12 @@ function setTimelineTimestamps(timestamps) {
 }
 
 function getActiveInfo() {
+	let mainVideo = getMainVideo();
+
 	return {
-		paused: getMainVideo().paused,
-		currentTime: getMainVideo().currentTime,
-		length: getMainVideo().duration
+		paused: mainVideo.paused,
+		currentTime: mainVideo.currentTime,
+		length: mainVideo.duration
 	};
 }
 
@@ -338,15 +344,22 @@ function changeTheme(theme) {
 }
 
 async function update() {
-	// Fetch videos from storage.
+	let video = getMainVideo();
 	let storage = await chrome.storage.local.get();
 
-	if (storage.user_data.videos != undefined) {
-		let video = storage.user_data.videos.find(x => x.videoID == getCurrentVideoID());
-		setTimelineTimestamps(video?.timestamps ?? []);
+	const handler = async () => {
+		// Fetch videos from storage.
+		if (storage.user_data.videos != undefined) {
+			let video = storage.user_data.videos.find(x => x.videoID == getVideoIDFromLink(window.location.href));
+			setTimelineTimestamps(video?.timestamps ?? []);
+		}
+
+		videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
+
+		video.removeEventListener("loadeddata", handler);
 	}
 
-	videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
+	video.addEventListener("loadeddata", handler);
 
 	// Fetch current theme from storage.
 	let currentTheme = storage.user_data?.config?.theme;
@@ -356,11 +369,14 @@ async function update() {
 	}
 }
 
-async function initialize() {
-	chrome.storage.local.onChanged.addListener(async () => {
+function probeAndUpdateTimestamps() {	
+	// Check if it hasnt been already initialized.
+	let existingContainer =document.querySelector(".pfy-timeline-container");
+	if (existingContainer != undefined) {
 		update();
-	});
-
+		return;
+	}
+	
 	let progressBar = document.querySelector(".ytp-chrome-bottom");
 	
 	if (progressBar == undefined) {
@@ -460,8 +476,21 @@ async function initialize() {
 	`;
 
 	progressBar.appendChild(timelineOuterContainer);
-
 	update();
+}
+
+async function initialize() {
+	chrome.storage.local.onChanged.addListener(async () => {
+		update();
+	});
+
+	window.navigation.addEventListener("navigate", () => {
+		setTimeout(() => {
+			probeAndUpdateTimestamps();
+		}, 200);
+	});
+
+	setTimeout(() => probeAndUpdateTimestamps(), 200);
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		
