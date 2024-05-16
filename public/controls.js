@@ -2,17 +2,25 @@
 // 'controls.js' content script for injecting controls (e.g. save video button) on the page.
 // ----------------------------------
 
-function getCurrentVideoID() {
-	return document.querySelector("body > .watch-main-col > meta[itemprop='identifier']").getAttribute("content");
+function getVideoIDFromLink(videoURL) {
+	let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
+
+	let result = extractIDRegex.exec(videoURL);
+
+	return result.groups.videoID;
 }
 
 function attemptSetup() {
 	// When YouTube first loads, the control buttons and options (e.g. like button) aren't on first load.
 	// so waiting is needed before initializing the custom controls.
-	let controlBar = document.querySelector("#above-the-fold > #top-row #top-level-buttons-computed");
-	
+	let controlBar = document.querySelector("#above-the-fold > #top-row ytd-menu-renderer");
+
 	if (controlBar == undefined) {
 		setTimeout(() => attemptSetup(), 200);
+		return;
+	}
+
+	if (document.querySelector(".pfy-control-outer-container") != undefined) {
 		return;
 	}
 
@@ -57,9 +65,10 @@ function attemptSetup() {
 	
 	saveVideoButton.addEventListener("click", async () => {
 		let storage = await chrome.storage.local.get();
+		let videoID = getVideoIDFromLink(window.location.href);
 
 		// Push to extension local storage.
-		let index = storage.user_data.videos.findIndex(x => x.videoID == getCurrentVideoID());
+		let index = storage.user_data.videos.findIndex(x => x.videoID == videoID);
 
 		let newTimestamp = {
 			id: crypto.randomUUID(), 
@@ -69,7 +78,7 @@ function attemptSetup() {
 
 		if (index == -1) {	
 			storage.user_data.videos.push({
-				videoID: getCurrentVideoID(),
+				videoID: videoID,
 				timestamps: [ newTimestamp ],
 				appliedTags: []
 			});
@@ -81,7 +90,7 @@ function attemptSetup() {
 		if (storage.auth.currentUser != undefined) {
 			// Make sure to upload to account if the user is logged in.
 			storage.account.mutationQueues.videoPendingQueue.push({
-				dataID: getCurrentVideoID(),
+				dataID: videoID,
 				timestamp: Date.now(),
 				position: index
 			});
@@ -92,6 +101,20 @@ function attemptSetup() {
 }
 
 function initialize() {
+	window.navigation.addEventListener("navigate", (event) => {
+		const check = () => {
+			if (document.querySelector("#above-the-fold > #top-row ytd-menu-renderer") != undefined) {
+				setTimeout(attemptSetup, 50);
+			}
+			else {
+				setTimeout(check, 200);
+			}
+		}
+
+		if (/watch\?v=(?<videoID>.{11})/.test(event.destination.url)) {	
+			check();
+		}
+	});
 	attemptSetup();
 }
 
