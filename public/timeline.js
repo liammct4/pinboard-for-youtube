@@ -344,22 +344,15 @@ function changeTheme(theme) {
 }
 
 async function update() {
-	let video = getMainVideo();
 	let storage = await chrome.storage.local.get();
 
-	const handler = async () => {
-		// Fetch videos from storage.
-		if (storage.user_data.videos != undefined) {
-			let video = storage.user_data.videos.find(x => x.videoID == getVideoIDFromLink(window.location.href));
-			setTimelineTimestamps(video?.timestamps ?? []);
-		}
-
-		videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
-
-		video.removeEventListener("loadeddata", handler);
+	// Fetch videos from storage.
+	if (storage.user_data.videos != undefined) {
+		let video = storage.user_data.videos.find(x => x.videoID == getVideoIDFromLink(window.location.href));
+		setTimelineTimestamps(video?.timestamps ?? []);
 	}
 
-	video.addEventListener("loadeddata", handler);
+	videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
 
 	// Fetch current theme from storage.
 	let currentTheme = storage.user_data?.config?.theme;
@@ -371,7 +364,7 @@ async function update() {
 
 function probeAndUpdateTimestamps() {	
 	// Check if it hasnt been already initialized.
-	let existingContainer =document.querySelector(".pfy-timeline-container");
+	let existingContainer = document.querySelector(".pfy-timeline-container");
 	if (existingContainer != undefined) {
 		update();
 		return;
@@ -476,6 +469,10 @@ function probeAndUpdateTimestamps() {
 	`;
 
 	progressBar.appendChild(timelineOuterContainer);
+
+	let video = document.querySelector("video");
+	video.addEventListener("loadeddata", update);
+
 	update();
 }
 
