@@ -6,6 +6,8 @@ import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
 import AppThemes from "./../../styling/theme.json"
 import { DataMutation } from "../../features/account/accountSlice.ts"
+import settingDefinitions from "./../config/settingDefinitions.json"
+import { SettingValue } from "../../features/settings/settingsSlice.ts"
 
 export interface IStorage {
 	user_data: {
@@ -45,13 +47,17 @@ export async function ensureInitialized(): Promise<void> {
 		theme = AppThemes[0];
 	}
 
+	let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
+		return { settingName: x.settingName, value: x.defaultValue.toString() };
+	});
+
 	let blankTemplate: IStorage = {
 		user_data: {
 			videos: [],
 			config: {
 				theme: theme,
 				customThemes: [],
-				userSettings: []
+				userSettings: defaultUserSettings
 			},
 			tagDefinitions: [],
 			tagFilter: ""

@@ -100,7 +100,29 @@ function attemptSetup() {
 	});
 }
 
-function initialize() {
+async function initialize() {
+	let storage = await chrome.storage.local.get();
+
+	// Means that the extension hasn't been opened yet.
+	if (storage.user_data == undefined) {
+		return;
+	}
+
+	// Handle if the button has been disabled.
+	chrome.storage.local.onChanged.addListener(async () => {
+		let storage = await chrome.storage.local.get();
+
+		let button = document.querySelector(".pfy-save-video-button");
+
+		// If it is null, that means that storage hasn't been initialized, or the settings.
+		if (storage?.user_data?.config?.userSettings.find(x => x.settingName == "saveVideoTimestampButtonEnabled").value ?? true) {
+			button.style.display = "initial";
+		}
+		else {
+			button.style.display = "none";
+		}
+	});
+
 	window.navigation.addEventListener("navigate", (event) => {
 		const check = () => {
 			if (document.querySelector("#above-the-fold > #top-row ytd-menu-renderer") != undefined) {

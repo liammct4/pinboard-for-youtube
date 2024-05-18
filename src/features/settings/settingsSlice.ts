@@ -35,7 +35,7 @@ export const settingsSlice = createSlice({
 				if (index == -1) {
 					state.settingValues.push({
 						settingName: settingDefinition.settingName,
-						value: settingDefinition.defaultValue
+						value: settingDefinition.defaultValue.toString()
 					})
 				}
 			}

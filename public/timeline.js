@@ -347,9 +347,16 @@ async function update() {
 	let storage = await chrome.storage.local.get();
 
 	// Fetch videos from storage.
-	if (storage.user_data.videos != undefined) {
+	if (storage.user_data != undefined) {
 		let video = storage.user_data.videos.find(x => x.videoID == getVideoIDFromLink(window.location.href));
-		setTimelineTimestamps(video?.timestamps ?? []);
+
+		// If it is null, that means that storage hasn't been initialized, or the settings.
+		if (storage?.user_data?.config?.userSettings.find(x => x.settingName == "timestampButtonsEnabled").value ?? true) {
+			setTimelineTimestamps(video?.timestamps ?? []);
+		}
+		else {
+			setTimelineTimestamps([]);
+		}
 	}
 
 	videoTimelineSizeObserver.observe(getTimelineContainers().timelineContainer);
