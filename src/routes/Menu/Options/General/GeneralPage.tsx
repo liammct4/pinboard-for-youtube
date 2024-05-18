@@ -52,7 +52,7 @@ export function GeneralPage(): React.ReactNode {
 							}
 							
 							let settingDefinition = settingDefinitions.find(y => y.settingName == x.data)!;
-							let existingValue = settingValues.find(y => y.settingName == settingDefinition.settingName)?.value;
+							let existingValue = settingValues.find(y => y.settingName == settingDefinition.settingName)?.value.toString();
 
 							return <FormField
 								key={x.data}

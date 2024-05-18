@@ -4,13 +4,13 @@
 		"displayName": "Timeline timestamps",
 		"description": "Shows saved timestamps on a videos timeline on the YouTube page.",
 		"inputFormat": "Switch",
-		"defaultValue": "true"
+		"defaultValue": true
 	},
 	{
 		"settingName": "saveVideoTimestampButtonEnabled",
 		"displayName": "Save video button",
 		"description": "Shows a button on a video page which allows quick saving of the current video.",
 		"inputFormat": "Switch",
-		"defaultValue": "true"
+		"defaultValue": true
 	}
 ]
