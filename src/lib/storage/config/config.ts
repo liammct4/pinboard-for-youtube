@@ -13,3 +13,11 @@ export async function getUserSettingsStorage(): Promise<SettingValue[]> {
 
 	return storage.user_data.config.userSettings;
 }
+
+export async function setUserSettingsStorage(newSettings: SettingValue[]): Promise<void> {
+	let storage: IStorage = await chrome.storage.local.get() as IStorage;
+
+	storage.user_data.config.userSettings = newSettings;
+
+	await chrome.storage.local.set(storage);
+}

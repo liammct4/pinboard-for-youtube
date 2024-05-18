@@ -15,6 +15,7 @@ import accountCloudSyncMiddleware from "../features/account/accountCloudSyncMidd
 import authAccountDataMiddleware from "../features/auth/authAccountDataMiddleware.ts"
 import tagQueueSyncMiddleware from "../features/videos/tagQueueSyncMiddleware.ts"
 import settingsSlice from "../features/settings/settingsSlice.ts"
+import { settingsStorageMiddleware } from "../features/settings/settingsStorageMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -44,6 +45,7 @@ export let store = configureStore({
 		.prepend(authStorageMiddleware.authTokenChangedMiddleware.middleware)
 		.prepend(accountCloudSyncMiddleware.middleware)
 		.prepend(authAccountDataMiddleware.authAccountDataMiddleware.middleware)
+		.prepend(settingsStorageMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;
