@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNotificationMessage } from "../../../../components/features/useNotificationMessage";
-import { SwitchInputPrimtive } from "../../../../components/input/SwitchInput/SwitchInputPrimitive";
+import { SwitchInputPrimitive } from "../../../../components/input/SwitchInput/SwitchInput";
 import { IStorage } from "../../../../lib/storage/storage";
 import "./DebugPage.css";
 
@@ -25,7 +25,7 @@ export function DebugPage(): React.ReactNode {
 				You probably didn't mean to open this page, this page is intended solely for development and
 				debugging, using this with your saved data can cause corruption or data loss!
 			</p>
-			<SwitchInputPrimtive
+			<SwitchInputPrimitive
 				label="I understand the risks, and want to continue"
 				labelSize="medium"
 				reversed={false}

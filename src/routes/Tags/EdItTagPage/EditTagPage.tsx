@@ -39,7 +39,7 @@ export function EditTagPage(): React.ReactNode {
 						name="name"
 						register={register}
 						selector={(data: IModifyTagForm) => data.name}
-						inputType={InputMethodType.Text}
+						inputType="Text"
 						submitEvent={submit.current}
 						fieldSize="large"
 						defaultValue={tagDefinition?.name}

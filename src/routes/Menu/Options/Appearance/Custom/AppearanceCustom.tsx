@@ -101,7 +101,7 @@ export function AppearanceCustom(): React.ReactNode {
 							register={register}
 							submitEvent={submit.current}
 							selector={(data: IEditThemeForm) => data.name}
-							inputType={InputMethodType.Text}
+							inputType="Text"
 							// @ts-ignore
 							defaultValue={editingTheme.name}
 							validationMethod={(value: string) => {
@@ -121,7 +121,7 @@ export function AppearanceCustom(): React.ReactNode {
 								register={register}
 								submitEvent={submit.current}
 								selector={(data: IEditThemeForm) => data[x]}
-								inputType={InputMethodType.Colour}
+								inputType="Colour"
 								// @ts-ignore
 								defaultValue={editingTheme.palette[x]}
 								/>

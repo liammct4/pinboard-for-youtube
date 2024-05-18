@@ -5,16 +5,19 @@ import { NumericInput } from "./NumericInput/NumericInput";
 import { TextInput } from "./TextInput/TextInput";
 import { IInputComponentProperties } from "./inputComponent";
 import { DropdownInput } from "./DropdownInput/DropdownInput";
+import { SwitchInput } from "./SwitchInput/SwitchInput";
 
 export function getInputComponent<T extends FieldValues>(inputType: InputMethodType): React.FC<IInputComponentProperties<T>> {
 	switch (inputType) {
-		case InputMethodType.Text:
+		case "Text":
 			return TextInput;
-		case InputMethodType.Numeric:
+		case "Numeric":
 			return NumericInput;
-		case InputMethodType.Colour:
+		case "Colour":
 			return ColourInput;
-		case InputMethodType.Dropdown:
+		case "Dropdown":
 			return DropdownInput;
+		case "Switch":
+			return SwitchInput;
 	}
 }

@@ -30,6 +30,8 @@ import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { getUserSettingsStorage } from "./lib/storage/config/config.ts"
+import { initializeAndSetSettingsDefault, setSettingValues } from "./features/settings/settingsSlice.ts"
 
 async function setupState() {
 	await ensureInitialized();
@@ -106,6 +108,9 @@ async function setupState() {
 	// Retrieve the current theme from storage since it cannot be loaded in initial state.
 	store.dispatch(setCurrentTheme(await getCurrentTheme()));
 	store.dispatch(setCustomThemes(await getCustomThemes()));
+	store.dispatch(setSettingValues(await getUserSettingsStorage()));
+
+	store.dispatch(initializeAndSetSettingsDefault());
 }
 
 await setupState();

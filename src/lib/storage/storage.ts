@@ -50,7 +50,8 @@ export async function ensureInitialized(): Promise<void> {
 			videos: [],
 			config: {
 				theme: theme,
-				customThemes: []
+				customThemes: [],
+				userSettings: []
 			},
 			tagDefinitions: [],
 			tagFilter: ""

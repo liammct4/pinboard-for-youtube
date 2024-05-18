@@ -105,7 +105,7 @@ export function AppearancePresets(): React.ReactNode {
 							selector={(value: IAddCustomThemeForm) => value.customName}
 							fieldSize="medium"
 							defaultValue="My Theme"
-							inputType={InputMethodType.Text}
+							inputType="Text"
 							submitEvent={submit.current}
 							validationMethod={(data: string) => {
 								let allThemes = [
@@ -132,7 +132,7 @@ export function AppearancePresets(): React.ReactNode {
 								selector={(value: IAddCustomThemeForm) => value.customName}
 								defaultValue="None"
 								fieldSize="small"
-								inputType={InputMethodType.Dropdown}
+								inputType="Dropdown"
 								submitEvent={submit.current}
 								/>
 						</DropdownOptionsContext.Provider>

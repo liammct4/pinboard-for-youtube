@@ -1,0 +1,5 @@
+[
+	{ "type": "heading", "data": "YouTube Settings" },
+	{ "type": "field", "data": "timestampButtonsEnabled" },
+	{ "type": "field", "data": "saveVideoTimestampButtonEnabled" }
+]

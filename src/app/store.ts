@@ -14,6 +14,7 @@ import accountSlice from "../features/account/accountSlice.ts"
 import accountCloudSyncMiddleware from "../features/account/accountCloudSyncMiddleware.ts"
 import authAccountDataMiddleware from "../features/auth/authAccountDataMiddleware.ts"
 import tagQueueSyncMiddleware from "../features/videos/tagQueueSyncMiddleware.ts"
+import settingsSlice from "../features/settings/settingsSlice.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -21,7 +22,8 @@ export let store = configureStore({
 		tempState: tempStateReducer,
 		theme: themeReducer,
 		auth: authSlice,
-		account: accountSlice
+		account: accountSlice,
+		settings: settingsSlice
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()

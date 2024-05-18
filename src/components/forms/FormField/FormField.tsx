@@ -33,7 +33,7 @@ export function FormField<T extends IErrorFieldValues>({
 		validationMethod = () => null,
 		submitEvent,
 		selector,
-		inputType = InputMethodType.Text,
+		inputType = "Text",
 		defaultValue = "",
 		visible = true
 	}: IFormFieldProperties<T>): React.ReactNode {

@@ -1,0 +1,10 @@
+.modify-settings-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--pfy-spacing-standard);
+	margin-bottom: var(--pfy-spacing-standard);
+
+	.modify-settings-button {
+		align-self: start;
+	}
+}

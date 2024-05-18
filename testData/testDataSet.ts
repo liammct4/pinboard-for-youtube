@@ -90,5 +90,6 @@ export const sampleConfigData: IConfig = {
 		},
 		modifiable: true
 	},
-	customThemes: []
+	customThemes: [],
+	userSettings: []
 }

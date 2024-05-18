@@ -30,7 +30,7 @@ export function UserDetailsFormPrimitive({ register, submit, showEmail = true, s
 				name="email"
 				register={register}
 				selector={(data: IUserDetailsForm) => data.email}
-				inputType={InputMethodType.Text}
+				inputType="Text"
 				submitEvent={submit}
 				fieldSize="large"
 				// The email field does not need to be validated if not shown.
@@ -43,7 +43,7 @@ export function UserDetailsFormPrimitive({ register, submit, showEmail = true, s
 					name="password"
 					register={register}
 					selector={(data: IUserDetailsForm) => data.password}
-					inputType={InputMethodType.Text}
+					inputType="Text"
 					submitEvent={submit}
 					fieldSize="large"
 					validationMethod={showPassword ? validatePasswordInputField : () => null}
