@@ -29,9 +29,10 @@ export function AppearanceCustom(): React.ReactNode {
 		// @ts-ignore
 		delete data.name;
 
-		deleteCustomTheme(editingTheme!.name);
+		deleteCustomTheme(editingTheme!.id);
 
 		let updatedTheme: AppTheme = {
+			id: editingTheme!.id,
 			name: name,
 			palette: {
 				...data
@@ -89,7 +90,7 @@ export function AppearanceCustom(): React.ReactNode {
 									use-stroke/>
 							</button>
 					</ActionMessageDialog>
-					<h3 className="theme-title">{id}</h3>
+					<h3 className="theme-title">{editingTheme.name}</h3>
 				</div>
 				<hr className="bold-separator"/>
 				<form className="edit-theme-form" id={`edit-custom-theme-form`} onSubmit={handleSubmit(handler)}>

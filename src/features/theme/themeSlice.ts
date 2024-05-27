@@ -23,7 +23,7 @@ export const themeSlice = createSlice({
 			state.currentTheme = action.payload;
 		},
 		addCustomTheme: (state, action: PayloadAction<AppTheme>) => {
-			let existingIndex = state.customThemes.findIndex(x => x.name == action.payload.name)
+			let existingIndex = state.customThemes.findIndex(x => x.id == action.payload.id)
 
 			if (existingIndex == -1) {
 				state.customThemes.push(action.payload);
@@ -36,7 +36,7 @@ export const themeSlice = createSlice({
 			state.customThemes = action.payload;
 		},
 		deleteCustomTheme: (state, action: PayloadAction<string>) => {
-			let index = state.customThemes.findIndex(x => x.name == action.payload);
+			let index = state.customThemes.findIndex(x => x.id == action.payload);
 			
 			state.customThemes.splice(index, 1);
 		},

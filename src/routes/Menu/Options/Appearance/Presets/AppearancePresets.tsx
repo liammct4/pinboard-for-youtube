@@ -29,7 +29,7 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 				<button
 					className="select-button"
 					onClick={() => setCurrentTheme(theme)}
-					data-selected={currentTheme.name == theme.name ? "" : null}>
+					data-selected={currentTheme.id == theme.id ? "" : null}>
 					<h3 className="name">{theme.name}</h3>
 					<div className="preview-grid">
 						<div style={{ background: theme.palette["primary-common"] }}/>
@@ -40,7 +40,7 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 				</button>
 				{ theme.modifiable ?
 				<div className="modify-buttons">
-					<button className="square-button button-base button-small" onClick={() => deleteCustomTheme(theme.name)}>
+					<button className="square-button button-base button-small" onClick={() => deleteCustomTheme(theme.id)}>
 						<IconContainer
 							className="icon-colour-standard"
 							asset={DeleteIcon}
@@ -69,6 +69,7 @@ export function AppearancePresets(): React.ReactNode {
 			?? themes[0].palette;
 
 		let newTheme: AppTheme = {
+			id: crypto.randomUUID(),
 			name: form.customName,
 			palette: palette,
 			modifiable: true
@@ -84,7 +85,7 @@ export function AppearancePresets(): React.ReactNode {
 	return (
 		<>
 			<Reorder.Group className="theme-list" values={themes} onReorder={() => null}>
-				{themes.map(x => <li key={x.name}><ThemePreset theme={x}/></li>)}
+				{themes.map(x => <li key={x.id}><ThemePreset theme={x}/></li>)}
 			</Reorder.Group>
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>
@@ -153,7 +154,7 @@ export function AppearancePresets(): React.ReactNode {
 			<hr className="regular-separator"/>
 			{customThemes.length != 0 ?
 			<Reorder.Group layoutScroll className="theme-list" values={customThemes} onReorder={onReorder}>
-				{customThemes.map(x => <ThemePreset key={x.name} theme={x}/>)}
+				{customThemes.map(x => <ThemePreset key={x.id} theme={x}/>)}
 			</Reorder.Group>
 			: <span className="empty-theme-list-text">Nothing to display...</span>}
 		</>

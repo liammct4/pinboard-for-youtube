@@ -53,6 +53,7 @@ export const sampleVideoData: Video[] = [
 
 export const sampleConfigData: IConfig = {
 	theme: {
+		"id": "b3eea507-4ae7-4ed9-b845-b517f624dbe9",
 		"name": "Default",
 		"palette": {
 			"primary-common": "rgb(255, 30, 74)",

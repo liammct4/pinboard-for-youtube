@@ -16,6 +16,7 @@ import authAccountDataMiddleware from "../features/auth/authAccountDataMiddlewar
 import tagQueueSyncMiddleware from "../features/videos/tagQueueSyncMiddleware.ts"
 import settingsSlice from "../features/settings/settingsSlice.ts"
 import { settingsStorageMiddleware } from "../features/settings/settingsStorageMiddleware.ts"
+import { themeQueueSyncMiddleware } from "../features/theme/themeQueueSyncMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -40,6 +41,7 @@ export let store = configureStore({
 		.prepend(tempStateMiddleware.layoutStateUpdateMiddleware.middleware)
 		.prepend(themeMiddleware.updateThemeMiddleware.middleware)
 		.prepend(themeMiddleware.updateStorageMiddleware.middleware)
+		.prepend(themeQueueSyncMiddleware.middleware)
 		.prepend(themeMiddleware.updateCustomThemeStorageMiddleware.middleware)
 		.prepend(authStorageMiddleware.authChangeUserStorageMiddleware.middleware)
 		.prepend(authStorageMiddleware.authTokenChangedMiddleware.middleware)

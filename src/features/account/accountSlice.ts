@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 // Timestamp in a queue (E.g. QueuedVideo.timestamp) is milliseconds from epoch for server compatibility.
 
-export type ServerResourceType = "VIDEO" | "TAG";
+export type ServerResourceType = "VIDEO" | "TAG" | "THEME";
 
 export type DataMutation = {
 	dataID: string;
@@ -13,11 +13,13 @@ export type DataMutation = {
 export interface IAccountSlice {
 	updatedVideoIDsQueue: DataMutation[]
 	updatedTagIDsQueue: DataMutation[]
+	updatedThemeIDsQueue: DataMutation[]
 }
 
 const initialState: IAccountSlice = {
 	updatedVideoIDsQueue: [],
-	updatedTagIDsQueue: []
+	updatedTagIDsQueue: [],
+	updatedThemeIDsQueue: []
 }
 
 export interface IQueueAppendInfo {
@@ -48,6 +50,9 @@ export const accountSlice = createSlice({
 				case "TAG":
 					source = state.updatedTagIDsQueue;
 					break;
+				case "THEME":
+					source = state.updatedThemeIDsQueue;
+					break;
 			}
 
 			let existingQueueIndex = source.findIndex(x => x.dataID == action.payload.mutationDataID);
@@ -76,6 +81,9 @@ export const accountSlice = createSlice({
 					break;
 				case "TAG":
 					source = state.updatedTagIDsQueue;
+					break;
+				case "THEME":
+					source = state.updatedThemeIDsQueue;
 					break;
 			}
 
