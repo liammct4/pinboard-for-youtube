@@ -21,8 +21,8 @@ export type ResolveAttempt = {
 }
 
 export type HttpResponse = {
-	status: number,
-	body: any
+	status: number;
+	body: any;
 }
 
 export class RequestHandler {

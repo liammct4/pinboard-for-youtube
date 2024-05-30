@@ -32,7 +32,7 @@ export interface IStorage {
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
-	let storage: any = await chrome.storage.local.get();
+	let storage: IStorage | {} | undefined = await chrome.storage.local.get();
 
 	if (Object.keys(storage).length != 0) {
 		return;

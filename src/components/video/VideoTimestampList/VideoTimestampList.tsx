@@ -5,8 +5,8 @@ import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts
 import { generateUniqueFrom } from "../../../lib/util/generic/randomUtil.ts";
 import { Reorder, useDragControls } from "framer-motion";
 import { LabeledArrowExpander } from "../../presentation/LabeledArrowExpander/LabeledArrowExpander.js"
-import VideoTimestamp from  "./../VideoTimestamp/VideoTimestamp.jsx"
-import VideoCard from "./../VideoCard/VideoCard.jsx"
+import { VideoTimestamp } from  "./../VideoTimestamp/VideoTimestamp.jsx"
+import { VideoCard } from "./../VideoCard/VideoCard.jsx"
 import { ReactComponent as PlusIcon } from "src/../assets/symbols/plus.svg"
 import { ReactComponent as DragHandle } from "src/../assets/icons/drag_vrect.svg"
 import { ReactComponent as CrossIcon } from "src/../assets/symbols/cross.svg"
@@ -76,7 +76,7 @@ export function VideoTimestampList(): React.ReactNode {
 	}
 
 	const handleTimestampReorder = (newTimestamps: Timestamp[]) => {
-		let listener = (_event: any) => {
+		let listener = () => {
 			document.removeEventListener("mouseup", listener);
 			setTimeout(() => {
 				let newVideo: Video = {
@@ -212,5 +212,3 @@ export function VideoTimestampList(): React.ReactNode {
 		</Reorder.Item>
 	)
 }
-
-export default VideoTimestampList;

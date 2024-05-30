@@ -5,14 +5,13 @@ import { ThemeContext } from "../../../../../context/theme";
 import { DropdownOptionsContext } from "../../../../../components/input/DropdownInput/context";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { AppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
-import { InputMethodType } from "../../../../../lib/config/configurationOption";
 import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
-import FormDialog from "../../../../../components/dialogs/FormDialog";
-import SplitHeading from "../../../../../components/presentation/SplitHeading/SplitHeading";
+import { FormDialog } from "../../../../../components/dialogs/FormDialog";
+import { SplitHeading } from "../../../../../components/presentation/SplitHeading/SplitHeading";
 import { ReactComponent as DeleteIcon } from "./../../../../../../assets/icons/bin.svg"
 import { IconContainer } from "../../../../../components/images/svgAsset";
-import ActionMessageDialog from "../../../../../components/dialogs/ActionDialogMessage";
+import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearancePresets.css"
 
 interface IThemePresetProperties {

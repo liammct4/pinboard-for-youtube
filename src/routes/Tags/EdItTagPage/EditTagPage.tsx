@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
-import SplitHeading from "../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../components/presentation/SplitHeading/SplitHeading";
 import { IErrorFieldValues, useValidatedForm } from "../../../components/forms/validated-form";
 import { FormField } from "../../../components/forms/FormField/FormField";
-import { InputMethodType } from "../../../lib/config/configurationOption";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { FormStyleContext } from "../../../components/input/formStyleContext";

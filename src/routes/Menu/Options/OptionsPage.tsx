@@ -16,5 +16,3 @@ export function OptionsPage(): React.ReactNode {
 		</>
 	)
 }
-
-export default OptionsPage;

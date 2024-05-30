@@ -58,5 +58,3 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 		</AlertDialog.Root>
 	);
 }
-
-export default ActionMessageDialog;

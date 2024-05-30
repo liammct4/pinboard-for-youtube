@@ -48,5 +48,3 @@ export function MenuPage(): React.ReactNode {
 		</div>
 	);
 }
-
-export default MenuPage;

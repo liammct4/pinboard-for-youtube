@@ -3,8 +3,8 @@ import { addTagDefinition, removeTagDefinition, setTagDefinitions, setTagFilter,
 import { RootState } from "../../app/store";
 import { setStorageTagDefinitions, setStorageTagFilter } from "../../lib/storage/userData/userData";
 
-const tagStorageUpdateUpdateMiddleware = createListenerMiddleware();
-const tagFilterUpdateMiddleware = createListenerMiddleware();
+export const tagStorageUpdateUpdateMiddleware = createListenerMiddleware();
+export const tagFilterUpdateMiddleware = createListenerMiddleware();
 
 tagStorageUpdateUpdateMiddleware.startListening({
 	matcher: isAnyOf(addTagDefinition, removeTagDefinition, setTagDefinitions),
@@ -21,5 +21,3 @@ tagFilterUpdateMiddleware.startListening({
 		await setStorageTagFilter(action.payload);
 	}
 })
-
-export default { tagStorageUpdateUpdateMiddleware, tagFilterUpdateMiddleware };

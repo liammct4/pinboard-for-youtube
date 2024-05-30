@@ -5,7 +5,7 @@ import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from 
 import { Video } from "../../lib/video/video";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 
-const videoQueueSyncVideoMiddleware = createListenerMiddleware();
+export const videoQueueSyncVideoMiddleware = createListenerMiddleware();
 
 videoQueueSyncVideoMiddleware.startListening({
 	matcher: isAnyOf(addVideo, updateVideo, removeVideo, clearVideos, setVideos),
@@ -64,5 +64,3 @@ videoQueueSyncVideoMiddleware.startListening({
 		}
 	}
 });
-
-export default videoQueueSyncVideoMiddleware;

@@ -8,7 +8,7 @@ import { HttpStatusCode } from "../../lib/util/http.ts";
 import { setVideoQueueStorage } from "../../lib/user/queue/queueStorage.ts";
 import { AppTheme } from "../../lib/config/theming/appTheme.ts";
 
-const accountCloudSyncMiddleware = createListenerMiddleware();
+export const accountCloudSyncMiddleware = createListenerMiddleware();
 
 // TODO: refactor all handling of resource data into one.
 async function handleSyncing<T>(
@@ -82,5 +82,3 @@ accountCloudSyncMiddleware.startListening({
 		)
 	}
 });
-
-export default accountCloudSyncMiddleware;

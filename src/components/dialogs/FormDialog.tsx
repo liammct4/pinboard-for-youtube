@@ -53,5 +53,3 @@ export function FormDialog({
 		</DialogBox>
 	);
 }
-
-export default FormDialog;

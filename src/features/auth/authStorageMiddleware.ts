@@ -3,8 +3,8 @@ import { setCurrentUserAndStorage, logoutCurrentUser, IAuthSlice, setAccessAndID
 import { getCurrentAuthenticatedUser, getStoredAuthTokens, setCurrentAuthenticatedUser, setStoredAuthTokens } from "../../lib/user/storage.ts";
 import { AuthenticationObject, invalidateRefreshToken } from "../../lib/user/accounts.ts";
 
-const authChangeUserStorageMiddleware = createListenerMiddleware();
-const authTokenChangedMiddleware = createListenerMiddleware();
+export const authChangeUserStorageMiddleware = createListenerMiddleware();
+export const authTokenChangedMiddleware = createListenerMiddleware();
 
 authChangeUserStorageMiddleware.startListening({
 	matcher: isAnyOf(setCurrentUserAndStorage, logoutCurrentUser),
@@ -33,5 +33,3 @@ authTokenChangedMiddleware.startListening({
 		});
 	}
 })
-
-export default { authChangeUserStorageMiddleware, authTokenChangedMiddleware };

@@ -3,7 +3,7 @@ import { addVideo, clearVideos, removeVideo, setVideos, setVideosWithoutQueue, u
 import { RootState } from "../../app/store";
 import { setStoredVideos } from "../../lib/storage/userData/userData";
 
-const videoStorageMiddleware = createListenerMiddleware();
+export const videoStorageMiddleware = createListenerMiddleware();
 
 videoStorageMiddleware.startListening({
 	matcher: isAnyOf(addVideo, updateVideo, removeVideo, clearVideos, setVideos, setVideosWithoutQueue),
@@ -13,5 +13,3 @@ videoStorageMiddleware.startListening({
 		await setStoredVideos(state.video.currentVideos);
 	}
 });
-
-export default videoStorageMiddleware;

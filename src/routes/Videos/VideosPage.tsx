@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage.tsx";
-import FormDialog from "../../components/dialogs/FormDialog.tsx";
-import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading.tsx";
-import VideoCard from "../../components/video/VideoCard/VideoCard.tsx";
-import VideoCollection from "../../components/video/VideoCollection/VideoCollection.tsx";
+import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
+import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
+import { SplitHeading } from "../../components/presentation/SplitHeading/SplitHeading.tsx";
+import { VideoCard } from "../../components/video/VideoCard/VideoCard.tsx";
+import { VideoCollection } from "../../components/video/VideoCollection/VideoCollection.tsx";
 import { VideoListContext } from "../../context/video.ts";
 import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
 import { addVideo, clearVideos, removeVideo, setTagFilter, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
@@ -132,7 +132,7 @@ export function VideosPage(): React.ReactNode {
 	};
 	const handleReorderedItems = (reordered: Video[]) => {
 		// To mitigate lag from store dispatching.
-		let listener = (_event: any) => {
+		let listener = () => {
 			document.removeEventListener("mouseup", listener);
 			setTimeout(() => {
 				dispatch(setVideos(reordered));

@@ -4,9 +4,9 @@ import { setStorageCustomThemes, setStorageTheme } from "../../lib/storage/confi
 import { swapAppTheme as changeAppTheme } from "../../lib/browser/extension/theme.ts";
 import { RootState } from "../../app/store.ts";
 
-const updateThemeMiddleware = createListenerMiddleware();
-const updateStorageMiddleware = createListenerMiddleware();
-const updateCustomThemeStorageMiddleware = createListenerMiddleware();
+export const updateThemeMiddleware = createListenerMiddleware();
+export const updateStorageMiddleware = createListenerMiddleware();
+export const updateCustomThemeStorageMiddleware = createListenerMiddleware();
 
 updateThemeMiddleware.startListening({
 	actionCreator: setCurrentTheme,
@@ -30,5 +30,3 @@ updateCustomThemeStorageMiddleware.startListening({
 		setStorageCustomThemes(state.theme.customThemes);
 	}
 });
-
-export default { updateThemeMiddleware, updateStorageMiddleware, updateCustomThemeStorageMiddleware };

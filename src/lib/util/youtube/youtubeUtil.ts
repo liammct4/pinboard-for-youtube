@@ -5,7 +5,7 @@ export class DoesNotExistError extends Error {
 	public requested: string;
 	public originalError: string;
 	
-	constructor(message: string, requested: any, originalError: string) {
+	constructor(message: string, requested: string, originalError: string) {
 		super(message);
 		this.name = "ValidationError";
 		this.requested = requested;

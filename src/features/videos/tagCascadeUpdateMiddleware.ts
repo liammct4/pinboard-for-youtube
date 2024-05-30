@@ -2,7 +2,7 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addTagDefinition, removeTagDefinition, setTagDefinitions, updateVideo } from "./videoSlice";
 import { RootState } from "../../app/store";
 
-const tagCascadeUpdateMiddleware = createListenerMiddleware();
+export const tagCascadeUpdateMiddleware = createListenerMiddleware();
 
 tagCascadeUpdateMiddleware.startListening({
 	matcher: isAnyOf(addTagDefinition, removeTagDefinition, setTagDefinitions),
@@ -21,5 +21,3 @@ tagCascadeUpdateMiddleware.startListening({
 		}
 	}
 });
-
-export default tagCascadeUpdateMiddleware;

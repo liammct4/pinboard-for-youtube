@@ -6,10 +6,9 @@ import { AppTheme, ColourPalette } from "../../../../../lib/config/theming/appTh
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
-import { InputMethodType } from "../../../../../lib/config/configurationOption";
 import { ReactComponent as ArrowIcon } from "./../../../../../../assets/symbols/arrow.svg"
 import { IconContainer } from "../../../../../components/images/svgAsset";
-import ActionMessageDialog from "../../../../../components/dialogs/ActionDialogMessage";
+import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearanceCustom.css"
 
 interface IEditThemeForm extends ColourPalette, IErrorFieldValues {

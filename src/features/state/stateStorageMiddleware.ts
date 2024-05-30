@@ -2,9 +2,9 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { addExpandedID, removeExpandedID, setLayoutState } from "./tempStateSlice";
 import * as storageState from "../../lib/storage/tempState/tempState.ts"
 
-const addIDMiddleware = createListenerMiddleware();
-const removeIDMiddleware = createListenerMiddleware();
-const layoutStateUpdateMiddleware = createListenerMiddleware();
+export const addIDMiddleware = createListenerMiddleware();
+export const removeIDMiddleware = createListenerMiddleware();
+export const layoutStateUpdateMiddleware = createListenerMiddleware();
 
 addIDMiddleware.startListening({
 	actionCreator: addExpandedID,
@@ -26,5 +26,3 @@ layoutStateUpdateMiddleware.startListening({
 		await storageState.setLayoutState(action.payload);
 	}
 })
-
-export default { addIDMiddleware, removeIDMiddleware, layoutStateUpdateMiddleware };

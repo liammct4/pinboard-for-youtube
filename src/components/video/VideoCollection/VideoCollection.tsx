@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { VideoContext, VideoListContext } from "../../../context/video.ts";
 import { Video } from "../../../lib/video/video.ts";
 import { Reorder } from "framer-motion";
-import VideoTimestampList from "./../VideoTimestampList/VideoTimestampList.jsx"
+import { VideoTimestampList } from "./../VideoTimestampList/VideoTimestampList.jsx"
 import "./VideoCollection.css"
 
 export interface IVideoCollectionProperties {
@@ -22,5 +22,3 @@ export function VideoCollection({ onReorder }: IVideoCollectionProperties): Reac
 		</Reorder.Group>
 	)
 }
-
-export default VideoCollection;

@@ -12,5 +12,3 @@ export function SplitHeading({ className = "", text }: ISplitHeadingProperties):
 		</div>
 	);
 }
-
-export default SplitHeading;

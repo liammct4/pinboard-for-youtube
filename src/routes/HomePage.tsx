@@ -106,5 +106,3 @@ export function HomePage(): React.ReactNode {
 		</div>
 	);
 }
-
-export default HomePage;

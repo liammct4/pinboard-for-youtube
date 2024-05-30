@@ -112,5 +112,12 @@ export const accountSlice = createSlice({
 	}
 })
 
-export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue, clearThemesAccountQueue, pushQueues } = accountSlice.actions;
+export const {
+	appendMutationToAccountQueue,
+	appendMutationBatchToAccountQueue,
+	clearVideoAccountQueue,
+	clearTagsAccountQueue,
+	clearThemesAccountQueue,
+	pushQueues
+} = accountSlice.actions;
 export default accountSlice.reducer;

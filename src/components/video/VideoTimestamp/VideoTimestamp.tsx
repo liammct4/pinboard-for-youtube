@@ -108,5 +108,3 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 		</Reorder.Item>
 	);
 }
-
-export default VideoTimestamp;

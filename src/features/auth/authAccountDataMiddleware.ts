@@ -9,7 +9,7 @@ import { TagDefinition, Video } from "../../lib/video/video.ts";
 import { AppTheme } from "../../lib/config/theming/appTheme.ts";
 import { setCustomThemesWithoutQueue } from "../theme/themeSlice.ts";
 
-const authAccountDataMiddleware = createListenerMiddleware();
+export const authAccountDataMiddleware = createListenerMiddleware();
 
 authAccountDataMiddleware.startListening({
 	matcher: isAnyOf(setCurrentUserAndStorage, setCurrentUser),
@@ -40,5 +40,3 @@ authAccountDataMiddleware.startListening({
 		}, 10);
 	}
 });
-
-export default { authAccountDataMiddleware };

@@ -5,7 +5,7 @@ import settingDefinitions from "./../../../../lib/config/settingDefinitions.json
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
 import settingsLayout from "./settingsLayout.json"
-import SplitHeading from "../../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../../components/presentation/SplitHeading/SplitHeading";
 import { useCallback } from "react";
 import { SettingValue, setSettingValues } from "../../../../features/settings/settingsSlice";
 import "./GeneralPage.css"

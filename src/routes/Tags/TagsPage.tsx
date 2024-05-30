@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -7,9 +7,9 @@ import { TagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
 import { IconContainer } from "../../components/images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
-import SplitHeading from "../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../components/presentation/SplitHeading/SplitHeading";
 import { TagItemContext } from "../../context/tag";
-import ActionMessageDialog from "../../components/dialogs/ActionDialogMessage";
+import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage";
 import { TagItem } from "../../components/video/tags/TagItem/TagItem";
 import "./TagsPage.css"
 

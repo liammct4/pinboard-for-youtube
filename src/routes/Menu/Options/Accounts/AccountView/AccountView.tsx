@@ -12,8 +12,8 @@ import { HttpResponse } from "../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { validatePasswordInputField } from "../../../../../lib/user/details/password";
-import SplitHeading from "../../../../../components/presentation/SplitHeading/SplitHeading";
-import FormDialog from "../../../../../components/dialogs/FormDialog";
+import { SplitHeading } from "../../../../../components/presentation/SplitHeading/SplitHeading";
+import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import "./AccountView.css"
 
 interface IUpdatePasswordForm extends IErrorFieldValues {

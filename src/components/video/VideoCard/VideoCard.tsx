@@ -44,5 +44,3 @@ export function VideoCard({ className = "", videoID, placeholderTitle = "" }: IV
 		</div>
 	)
 }
-
-export default VideoCard;

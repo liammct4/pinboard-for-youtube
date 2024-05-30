@@ -12,5 +12,3 @@ export function HelpPage(): React.ReactNode {
 		</>
 	);
 }
-
-export default HelpPage;

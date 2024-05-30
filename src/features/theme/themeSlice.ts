@@ -46,5 +46,11 @@ export const themeSlice = createSlice({
 	}
 });
 
-export const { setCurrentTheme, addCustomTheme, setCustomThemes, deleteCustomTheme, setCustomThemesWithoutQueue } = themeSlice.actions;
+export const {
+	setCurrentTheme,
+	addCustomTheme,
+	setCustomThemes,
+	deleteCustomTheme,
+	setCustomThemesWithoutQueue
+} = themeSlice.actions;
 export default themeSlice.reducer;

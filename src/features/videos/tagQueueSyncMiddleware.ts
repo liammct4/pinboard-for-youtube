@@ -1,11 +1,10 @@
-import { RootState } from "../../app/store";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addTagDefinition, removeTagDefinition, setTagDefinitions } from "./videoSlice";
 import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from "../account/accountSlice";
 import { TagDefinition } from "../../lib/video/video";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 
-const tagQueueSyncMiddleware = createListenerMiddleware();
+export const tagQueueSyncMiddleware = createListenerMiddleware();
 
 tagQueueSyncMiddleware.startListening({
 	matcher: isAnyOf(addTagDefinition, removeTagDefinition, setTagDefinitions),
@@ -46,5 +45,3 @@ tagQueueSyncMiddleware.startListening({
 		}
 	}
 });
-
-export default tagQueueSyncMiddleware;
