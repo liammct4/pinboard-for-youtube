@@ -105,9 +105,12 @@ export const accountSlice = createSlice({
 		},
 		clearTagsAccountQueue: (state) => {
 			state.updatedTagIDsQueue = [];
+		},
+		clearThemesAccountQueue: (state) => {
+			state.updatedThemeIDsQueue = [];
 		}
 	}
 })
 
-export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue, pushQueues } = accountSlice.actions;
+export const { appendMutationToAccountQueue, appendMutationBatchToAccountQueue, clearVideoAccountQueue, clearTagsAccountQueue, clearThemesAccountQueue, pushQueues } = accountSlice.actions;
 export default accountSlice.reducer;

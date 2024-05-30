@@ -10,9 +10,11 @@ import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import { SyncTimer } from "../lib/util/generic/timeUtil";
 import { userIsLoggedIn } from "../lib/user/accounts";
 import { setTagDefinitionsWithoutQueue, setVideosWithoutQueue } from "../features/videos/videoSlice";
-import { getAccountCloudVideos } from "../lib/user/data/videos";
+import { getAccountResourceData } from "../lib/user/data/resource.ts";
+import { TagDefinition, Video } from "../lib/video/video.ts";
+import { AppTheme } from "../lib/config/theming/appTheme.ts";
+import { setCustomThemesWithoutQueue } from "../features/theme/themeSlice.ts";
 import "./HomePage.css"
-import { getAccountCloudTags } from "../lib/user/data/tags";
 
 export function PfyWrapper(): React.ReactNode {
 	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
@@ -64,8 +66,9 @@ export function PfyWrapper(): React.ReactNode {
 			}
 
 			let token = currentUser!.tokens.IdToken;
-			let retrievedVideos = await getAccountCloudVideos(token);
-			let retrievedTagDefinitions = await getAccountCloudTags(token);
+			let retrievedVideos = await getAccountResourceData<Video>("VIDEO", token);
+			let retrievedTagDefinitions = await getAccountResourceData<TagDefinition>("TAG", token);
+			let retrievedCustomThemes = await getAccountResourceData<AppTheme>("THEME", token);
 			
 			if (retrievedVideos != undefined) {
 				dispatch(setVideosWithoutQueue(retrievedVideos));	
@@ -73,6 +76,10 @@ export function PfyWrapper(): React.ReactNode {
 
 			if (retrievedTagDefinitions != undefined) {
 				dispatch(setTagDefinitionsWithoutQueue(retrievedTagDefinitions));
+			}
+
+			if (retrievedCustomThemes != undefined) {
+				dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
 			}
 		}
 

@@ -1,14 +1,47 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { pushAccountVideos } from "../../lib/user/data/videos.ts";
+import { pushAccountResourceData } from "../../lib/user/data/resource.ts";
 import { TagDefinition, Video } from "../../lib/video/video.ts";
 import { userIsLoggedIn } from "../../lib/user/accounts.ts";
-import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearVideoAccountQueue, pushQueues } from "./accountSlice.ts";
+import { DataMutation, ServerResourceType, appendMutationBatchToAccountQueue, appendMutationToAccountQueue, clearTagsAccountQueue, clearThemesAccountQueue, clearVideoAccountQueue, pushQueues } from "./accountSlice.ts";
 import { HttpStatusCode } from "../../lib/util/http.ts";
-import { pushAccountTagDefinitions } from "../../lib/user/data/tags.ts";
-import { setTagQueueStorage, setVideoQueueStorage } from "../../lib/user/queue/queueStorage.ts";
+import { setVideoQueueStorage } from "../../lib/user/queue/queueStorage.ts";
+import { AppTheme } from "../../lib/config/theming/appTheme.ts";
 
 const accountCloudSyncMiddleware = createListenerMiddleware();
+
+// TODO: refactor all handling of resource data into one.
+async function handleSyncing<T>(
+	resource: ServerResourceType,
+	idToken: string,
+	mutationQueue: DataMutation[],
+	baseData: T[],
+	grabID: (item: T) => string,
+	clearDataAccountQueue: () => void
+) {
+	if (mutationQueue.length > 0) {
+		let targetedData: T[] = baseData
+			.filter(x => mutationQueue.findIndex(y => y.dataID == grabID(x)) != -1);
+		
+		let videosResponse = await pushAccountResourceData(
+			resource,
+			idToken,
+			mutationQueue,
+			targetedData
+		);
+		
+		/* Clear the appropriate queue. */
+		// Clears the queue from storage as well.
+		if (videosResponse?.status == HttpStatusCode.OK) {
+			clearDataAccountQueue();
+			await setVideoQueueStorage([]);
+		}
+		else {
+			// Something went wrong, so save to storage. 
+			await setVideoQueueStorage(mutationQueue);
+		}
+	}
+}
 
 accountCloudSyncMiddleware.startListening({
 	matcher: isAnyOf(appendMutationToAccountQueue, appendMutationBatchToAccountQueue, pushQueues),
@@ -18,47 +51,35 @@ accountCloudSyncMiddleware.startListening({
 		}
 
 		let state: RootState = listenerApi.getState() as RootState;
+		let idToken = state.auth.currentUser!.tokens.IdToken;
 
 		// Filters the current videos by what has been requested in the queue.
-		if (state.account.updatedVideoIDsQueue.length > 0) {
-			let targetedVideos: Video[] = state.video.currentVideos
-				.filter(x => state.account.updatedVideoIDsQueue.findIndex(y => y.dataID == x.videoID) != -1);
-			
-			let videosResponse = await pushAccountVideos(
-				state.auth.currentUser!.tokens.IdToken,
-				state.account.updatedVideoIDsQueue,
-				targetedVideos
-			);
-			
-			// Handle queue, clears it from storage as well.
-			if (videosResponse?.status == HttpStatusCode.OK) {
-				listenerApi.dispatch(clearVideoAccountQueue());
-				await setVideoQueueStorage([]);
-			}
-			else {
-				// Something went wrong, so save to storage. 
-				await setVideoQueueStorage(state.account.updatedVideoIDsQueue);
-			}
-		}
+		handleSyncing<Video>(
+			"VIDEO",
+			idToken,
+			state.account.updatedVideoIDsQueue,
+			state.video.currentVideos,
+			(video) => video.videoID,
+			() => listenerApi.dispatch(clearVideoAccountQueue())
+		);
 		
-		if (state.account.updatedTagIDsQueue.length > 0) {
-			let targetedTags: TagDefinition[] = state.video.tagDefinitions
-				.filter(x => state.account.updatedTagIDsQueue.findIndex(y => y.dataID == x.id) != -1);
+		handleSyncing<TagDefinition>(
+			"TAG",
+			idToken,
+			state.account.updatedTagIDsQueue,
+			state.video.tagDefinitions,
+			(tag) => tag.id,
+			() => listenerApi.dispatch(clearTagsAccountQueue())
+		);
 
-			let tagsResponse = await pushAccountTagDefinitions(
-				state.auth.currentUser!.tokens.IdToken,
-				state.account.updatedTagIDsQueue,
-				targetedTags
-			);
-			
-			if (tagsResponse?.status == HttpStatusCode.OK) {
-				listenerApi.dispatch(clearTagsAccountQueue());
-				await setTagQueueStorage([]);
-			}
-			else {
-				await setTagQueueStorage(state.account.updatedTagIDsQueue);
-			}
-		}
+		handleSyncing<AppTheme>(
+			"THEME",
+			idToken,
+			state.account.updatedThemeIDsQueue,
+			state.theme.customThemes,
+			(theme) => theme.id,
+			() => listenerApi.dispatch(clearThemesAccountQueue())
+		)
 	}
 });
 

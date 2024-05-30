@@ -40,8 +40,11 @@ export const themeSlice = createSlice({
 			
 			state.customThemes.splice(index, 1);
 		},
+		setCustomThemesWithoutQueue: (state, action: PayloadAction<AppTheme[]>) => {
+			state.customThemes = action.payload;
+		}
 	}
 });
 
-export const { setCurrentTheme, addCustomTheme, setCustomThemes, deleteCustomTheme } = themeSlice.actions;
+export const { setCurrentTheme, addCustomTheme, setCustomThemes, deleteCustomTheme, setCustomThemesWithoutQueue } = themeSlice.actions;
 export default themeSlice.reducer;
