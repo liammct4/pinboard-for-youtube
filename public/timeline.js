@@ -302,7 +302,7 @@ async function handleTimestampChange(newTimestamp) {
 		return;
 	}
 
-	let video = videos.find(v => v.videoID == getVideoIDFromLink(window.location.href));
+	let video = videos.find(v => v.id == getVideoIDFromLink(window.location.href));
 	let timestampIndex = video.timestamps.findIndex(t => t.id == newTimestamp.id);
 
 	video.timestamps[timestampIndex] = newTimestamp;
@@ -348,7 +348,7 @@ async function update() {
 
 	// Fetch videos from storage.
 	if (storage.user_data != undefined) {
-		let video = storage.user_data.videos.find(x => x.videoID == getVideoIDFromLink(window.location.href));
+		let video = storage.user_data.videos.find(x => x.id == getVideoIDFromLink(window.location.href));
 
 		// If it is null, that means that storage hasn't been initialized, or the settings.
 		if (storage?.user_data?.config?.userSettings.find(x => x.settingName == "timestampButtonsEnabled").value ?? true) {

@@ -68,7 +68,7 @@ function attemptSetup() {
 		let videoID = getVideoIDFromLink(window.location.href);
 
 		// Push to extension local storage.
-		let index = storage.user_data.videos.findIndex(x => x.videoID == videoID);
+		let index = storage.user_data.videos.findIndex(x => x.id == videoID);
 
 		let newTimestamp = {
 			id: crypto.randomUUID(), 
@@ -78,7 +78,7 @@ function attemptSetup() {
 
 		if (index == -1) {	
 			storage.user_data.videos.push({
-				videoID: videoID,
+				id: videoID,
 				timestamps: [ newTimestamp ],
 				appliedTags: []
 			});
