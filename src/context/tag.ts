@@ -1,9 +1,9 @@
 import { createContext } from "react"
-import { TagDefinition } from "../lib/video/video";
+import { ITagDefinition } from "../lib/video/video";
 
 export type ITagItemContext = {
-	crossButtonPress: (tag: TagDefinition) => void;
-	tagButtonPress: (tag: TagDefinition) => void;
+	crossButtonPress: (tag: ITagDefinition) => void;
+	tagButtonPress: (tag: ITagDefinition) => void;
 }
 
 export const TagItemContext = createContext<ITagItemContext>(null!);

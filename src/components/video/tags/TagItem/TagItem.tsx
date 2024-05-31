@@ -1,12 +1,12 @@
 import { useContext } from "react";
-import { TagDefinition } from "../../../../lib/video/video";
+import { ITagDefinition } from "../../../../lib/video/video";
 import "./TagItem.css"
 import { TagItemContext } from "../../../../context/tag";
 import { ReactComponent as CrossIcon } from "./../../../../../assets/symbols/cross.svg"
 import { IconContainer } from "../../../images/svgAsset";
 
 interface ITagItemProperties {
-	tagDefinition: TagDefinition;
+	tagDefinition: ITagDefinition;
 	selected?: boolean
 }
 

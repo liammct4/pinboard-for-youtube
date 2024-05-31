@@ -1,5 +1,6 @@
-export type AppTheme = {
-	id: string;
+import { IKeyIDItem } from "../../../features/account/accountSlice";
+
+export interface IAppTheme extends IKeyIDItem {
 	name: string;
 	palette: ColourPalette;
 	modifiable: boolean;

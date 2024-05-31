@@ -11,8 +11,8 @@ import { SyncTimer } from "../lib/util/generic/timeUtil";
 import { userIsLoggedIn } from "../lib/user/accounts";
 import { setTagDefinitionsWithoutQueue, setVideosWithoutQueue } from "../features/videos/videoSlice";
 import { getAccountResourceData } from "../lib/user/data/resource.ts";
-import { TagDefinition, Video } from "../lib/video/video.ts";
-import { AppTheme } from "../lib/config/theming/appTheme.ts";
+import { ITagDefinition, IVideo } from "../lib/video/video.ts";
+import { IAppTheme } from "../lib/config/theming/appTheme.ts";
 import { setCustomThemesWithoutQueue } from "../features/theme/themeSlice.ts";
 import "./HomePage.css"
 
@@ -66,9 +66,9 @@ export function PfyWrapper(): React.ReactNode {
 			}
 
 			let token = currentUser!.tokens.IdToken;
-			let retrievedVideos = await getAccountResourceData<Video>("VIDEO", token);
-			let retrievedTagDefinitions = await getAccountResourceData<TagDefinition>("TAG", token);
-			let retrievedCustomThemes = await getAccountResourceData<AppTheme>("THEME", token);
+			let retrievedVideos = await getAccountResourceData<IVideo>("VIDEO", token);
+			let retrievedTagDefinitions = await getAccountResourceData<ITagDefinition>("TAG", token);
+			let retrievedCustomThemes = await getAccountResourceData<IAppTheme>("THEME", token);
 			
 			if (retrievedVideos != undefined) {
 				dispatch(setVideosWithoutQueue(retrievedVideos));	

@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { VideoContext, VideoListContext } from "../../../context/video.ts";
-import { Video } from "../../../lib/video/video.ts";
+import { IVideo } from "../../../lib/video/video.ts";
 import { Reorder } from "framer-motion";
 import { VideoTimestampList } from "./../VideoTimestampList/VideoTimestampList.jsx"
 import "./VideoCollection.css"
 
 export interface IVideoCollectionProperties {
-	onReorder: (reordered: Video[]) => void;
+	onReorder: (reordered: IVideo[]) => void;
 }
 
 export function VideoCollection({ onReorder }: IVideoCollectionProperties): React.ReactNode {
@@ -15,7 +15,7 @@ export function VideoCollection({ onReorder }: IVideoCollectionProperties): Reac
 	return (
 		<Reorder.Group layoutScroll className="timestamp-scrollbox-list" values={collection.videos} onReorder={onReorder}>
 			{collection.videos.map(x =>
-				<VideoContext.Provider key={x.videoID} value={x}>
+				<VideoContext.Provider key={x.id} value={x}>
 					<VideoTimestampList></VideoTimestampList>
 				</VideoContext.Provider>
 			)}

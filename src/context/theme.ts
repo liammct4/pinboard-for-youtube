@@ -1,15 +1,15 @@
 import { createContext, Context } from "react"
-import { AppTheme } from "../lib/config/theming/appTheme";
+import { IAppTheme } from "../lib/config/theming/appTheme";
 
 export interface IThemeContext {
-	themes: AppTheme[];
-	customThemes: AppTheme[];
-	currentTheme: AppTheme;
+	themes: IAppTheme[];
+	customThemes: IAppTheme[];
+	currentTheme: IAppTheme;
 	actions: {
-		setCurrentTheme: (theme: AppTheme) => void;
-		addCustomTheme: (theme: AppTheme) => void;
+		setCurrentTheme: (theme: IAppTheme) => void;
+		addCustomTheme: (theme: IAppTheme) => void;
 		deleteCustomTheme: (themeName: string) => void;
-		setCustomThemes: (themes: AppTheme[]) => void;
+		setCustomThemes: (themes: IAppTheme[]) => void;
 	}
 }
 

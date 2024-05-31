@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppTheme } from "../../lib/config/theming/appTheme";
+import { IAppTheme } from "../../lib/config/theming/appTheme";
 import ThemePresets from "./../../styling/theme.json"
 
 export interface IThemeSlice {
-	currentTheme: AppTheme;
-	themePresets: AppTheme[];
-	customThemes: AppTheme[];
+	currentTheme: IAppTheme;
+	themePresets: IAppTheme[];
+	customThemes: IAppTheme[];
 }
 
 const initialState: IThemeSlice = {
@@ -19,10 +19,10 @@ export const themeSlice = createSlice({
 	name: "theme",
 	initialState,
 	reducers: {
-		setCurrentTheme: (state, action: PayloadAction<AppTheme>) => {
+		setCurrentTheme: (state, action: PayloadAction<IAppTheme>) => {
 			state.currentTheme = action.payload;
 		},
-		addCustomTheme: (state, action: PayloadAction<AppTheme>) => {
+		addCustomTheme: (state, action: PayloadAction<IAppTheme>) => {
 			let existingIndex = state.customThemes.findIndex(x => x.id == action.payload.id)
 
 			if (existingIndex == -1) {
@@ -32,7 +32,7 @@ export const themeSlice = createSlice({
 
 			state.customThemes[existingIndex] = action.payload;
 		},
-		setCustomThemes: (state, action: PayloadAction<AppTheme[]>) => {
+		setCustomThemes: (state, action: PayloadAction<IAppTheme[]>) => {
 			state.customThemes = action.payload;
 		},
 		deleteCustomTheme: (state, action: PayloadAction<string>) => {
@@ -40,7 +40,7 @@ export const themeSlice = createSlice({
 			
 			state.customThemes.splice(index, 1);
 		},
-		setCustomThemesWithoutQueue: (state, action: PayloadAction<AppTheme[]>) => {
+		setCustomThemesWithoutQueue: (state, action: PayloadAction<IAppTheme[]>) => {
 			state.customThemes = action.payload;
 		}
 	}

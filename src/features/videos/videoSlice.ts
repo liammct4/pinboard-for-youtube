@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 // @ts-ignore
 import StorageArea from 'mem-storage-area/StorageArea'
-import { TagDefinition, Video } from "../../lib/video/video.ts";
+import { ITagDefinition, IVideo } from "../../lib/video/video.ts";
 
 export interface IVideoSlice {
 	activeVideoID?: string;
-	currentVideos: Video[];
-	tagDefinitions: TagDefinition[];
+	currentVideos: IVideo[];
+	tagDefinitions: ITagDefinition[];
 	currentSelectedTagFilter: string;
 }
 
@@ -35,12 +35,12 @@ export const videoSlice = createSlice({
 			state.currentSelectedTagFilter = action.payload.currentSelectedTagFilter;
 			state.tagDefinitions = action.payload.tagDefinitions;
 		},
-		addVideo: (state, action: PayloadAction<Video>) => {
+		addVideo: (state, action: PayloadAction<IVideo>) => {
 			state.currentVideos.push(action.payload);
 		},
 		// Accepts a video ID.
 		removeVideo: (state, action: PayloadAction<string>) => {
-			let index = state.currentVideos.findIndex(x => x.videoID == action.payload);
+			let index = state.currentVideos.findIndex(x => x.id == action.payload);
 
 			if (index == -1) {
 				return;
@@ -48,9 +48,9 @@ export const videoSlice = createSlice({
 
 			state.currentVideos.splice(index, 1);
 		},
-		updateVideo: (state, action: PayloadAction<Video>) => {
+		updateVideo: (state, action: PayloadAction<IVideo>) => {
 			for (let i = 0; i < state.currentVideos.length; i++) {
-				if (state.currentVideos[i].videoID == action.payload.videoID) {
+				if (state.currentVideos[i].id == action.payload.id) {
 					state.currentVideos[i] = action.payload;
 				}
 			}
@@ -58,13 +58,13 @@ export const videoSlice = createSlice({
 		clearVideos: (state) => {
 			state.currentVideos.length = 0;
 		},
-		setVideos: (state, action: PayloadAction<Video[]>) => {
+		setVideos: (state, action: PayloadAction<IVideo[]>) => {
 			state.currentVideos = action.payload;
 		},
-		setVideosWithoutQueue: (state, action: PayloadAction<Video[]>) => {
+		setVideosWithoutQueue: (state, action: PayloadAction<IVideo[]>) => {
 			state.currentVideos = action.payload;
 		},
-		addTagDefinition: (state, action: PayloadAction<TagDefinition>) => {
+		addTagDefinition: (state, action: PayloadAction<ITagDefinition>) => {
 			for (let i = 0; i < state.tagDefinitions.length; i++) {
 				let tag = state.tagDefinitions[i];
 
@@ -101,10 +101,10 @@ export const videoSlice = createSlice({
 
 			state.tagDefinitions.splice(index, 1);
 		},
-		setTagDefinitions: (state, action: PayloadAction<TagDefinition[]>) => {
+		setTagDefinitions: (state, action: PayloadAction<ITagDefinition[]>) => {
 			state.tagDefinitions = action.payload;
 		},
-		setTagDefinitionsWithoutQueue: (state, action: PayloadAction<TagDefinition[]>) => {
+		setTagDefinitionsWithoutQueue: (state, action: PayloadAction<ITagDefinition[]>) => {
 			state.tagDefinitions = action.payload;
 		},
 		setTagFilter: (state, action: PayloadAction<string>) => {

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
+import { IKeyIDItem } from "../../features/account/accountSlice";
 
 export type Timestamp = {
 	id: string;
@@ -6,14 +7,12 @@ export type Timestamp = {
 	message: string;
 };
 
-export type TagDefinition = {
-	id: string;
+export interface ITagDefinition extends IKeyIDItem {
 	name: string;
 	colour: string;
 }
 
-export type Video = {
-	videoID: string;
+export interface IVideo extends IKeyIDItem {
 	timestamps: Timestamp[];
 	/**
 	 * Array of tag definition ids.

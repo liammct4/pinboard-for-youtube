@@ -1,14 +1,14 @@
-import { TagDefinition, Video } from "../../video/video"
+import { ITagDefinition, IVideo } from "../../video/video"
 import { IStorage } from "../storage"
 
-export async function getStoredVideos(): Promise<Video[]> {
+export async function getStoredVideos(): Promise<IVideo[]> {
 	let storage = await chrome.storage.local.get() as IStorage;
-	let videos: Video[] = storage.user_data.videos;
+	let videos: IVideo[] = storage.user_data.videos;
 
 	return videos;
 }
 
-export async function setStoredVideos(videos: Video[]) {
+export async function setStoredVideos(videos: IVideo[]) {
 	let storage = await chrome.storage.local.get() as IStorage;
 
 	storage.user_data.videos = videos;
@@ -19,7 +19,7 @@ export async function setStoredVideos(videos: Video[]) {
 /**
  * Retrieves the user defined tag definitions from storage.
  */
-export async function getStorageTagDefinitions(): Promise<TagDefinition[]> {
+export async function getStorageTagDefinitions(): Promise<ITagDefinition[]> {
 	let storage = await chrome.storage.local.get() as IStorage;
 
 	return storage.user_data.tagDefinitions;
@@ -28,7 +28,7 @@ export async function getStorageTagDefinitions(): Promise<TagDefinition[]> {
 /**
  * Sets the tag definitions in storage.
  */
-export async function setStorageTagDefinitions(tags: TagDefinition[]): Promise<void> {
+export async function setStorageTagDefinitions(tags: ITagDefinition[]): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
 	storage.user_data.tagDefinitions = tags;
 

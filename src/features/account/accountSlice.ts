@@ -3,6 +3,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 // Timestamp in a queue (E.g. QueuedVideo.timestamp) is milliseconds from epoch for server compatibility.
 
 export type ServerResourceType = "VIDEO" | "TAG" | "THEME";
+export interface IKeyIDItem {
+	id: string;
+}
 
 export type DataMutation = {
 	dataID: string;

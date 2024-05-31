@@ -14,7 +14,7 @@ tagCascadeUpdateMiddleware.startListening({
 			let newTags = video.appliedTags.filter(x => state.video.tagDefinitions.find(y => x == y.id));
 
 			listenerApi.dispatch(updateVideo({
-				videoID: video.videoID,
+				id: video.id,
 				timestamps: video.timestamps,
 				appliedTags: newTags
 			}));

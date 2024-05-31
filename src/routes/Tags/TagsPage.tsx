@@ -3,7 +3,7 @@ import { RootState } from "../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { addTagDefinition, removeTagDefinition, setTagDefinitions } from "../../features/videos/videoSlice";
-import { TagDefinition } from "../../lib/video/video";
+import { ITagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
 import { IconContainer } from "../../components/images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
@@ -13,7 +13,7 @@ import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessag
 import { TagItem } from "../../components/video/tags/TagItem/TagItem";
 import "./TagsPage.css"
 
-function resolveNewTag(tagDefinitions: TagDefinition[]): string {
+function resolveNewTag(tagDefinitions: ITagDefinition[]): string {
 	let resolved = false;
 	let next = 1;
 
@@ -47,7 +47,7 @@ export function TagsPage(): React.ReactNode {
 			<SplitHeading text="Custom Tags"/>
 			<p className="tag-description">You can use tags to organize videos, use the dropdown in the main dashboard to filter videos by tag.</p>
 			<TagItemContext.Provider value={{
-				crossButtonPress: (tag: TagDefinition) => {
+				crossButtonPress: (tag: ITagDefinition) => {
 					if (selectedTag == tag.id) {
 						navigate(".");
 						setSelectedTag(null);
@@ -55,7 +55,7 @@ export function TagsPage(): React.ReactNode {
 
 					dispatch(removeTagDefinition(tag.id))
 				},
-				tagButtonPress: (tag: TagDefinition) => {
+				tagButtonPress: (tag: ITagDefinition) => {
 					if (selectedTag == tag.id) {
 						setSelectedTag(null);
 						navigate(".");

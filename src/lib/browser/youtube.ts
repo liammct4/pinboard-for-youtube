@@ -1,4 +1,4 @@
-import { AppTheme } from "../config/theming/appTheme";
+import { IAppTheme } from "../config/theming/appTheme";
 import { Timestamp } from "../video/video";
 
 export interface IVideoInfo {

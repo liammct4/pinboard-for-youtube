@@ -1,10 +1,10 @@
 import { SettingValue } from "../../../features/settings/settingsSlice";
-import { AppTheme } from "../../config/theming/appTheme";
+import { IAppTheme } from "../../config/theming/appTheme";
 import { IStorage } from "../storage";
 
 export interface IConfig {
-	theme: AppTheme;
-	customThemes: AppTheme[];
+	theme: IAppTheme;
+	customThemes: IAppTheme[];
 	userSettings: SettingValue[];
 }
 

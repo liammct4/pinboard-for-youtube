@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { useDispatch } from "react-redux"
 import { VideoContext, VideoListContext } from "../../../context/video.ts";
-import { Timestamp, Video, generateTimestamp } from "../../../lib/video/video.ts";
+import { Timestamp, IVideo, generateTimestamp } from "../../../lib/video/video.ts";
 import { generateUniqueFrom } from "../../../lib/util/generic/randomUtil.ts";
 import { Reorder, useDragControls } from "framer-motion";
 import { LabeledArrowExpander } from "../../presentation/LabeledArrowExpander/LabeledArrowExpander.js"
@@ -26,7 +26,7 @@ export function VideoTimestampList(): React.ReactNode {
 	let dragControls = useDragControls();
 
 	const onChange = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		let videoTimestamps = topLevelVideos.videos.find(x => x.videoID == video.videoID)?.timestamps;
+		let videoTimestamps = topLevelVideos.videos.find(x => x.id == video.id)?.timestamps;
 		let updatedTimestamps: Timestamp[] = [ ...videoTimestamps! ];
 
 		if (newTimestamp == null) {
@@ -43,8 +43,8 @@ export function VideoTimestampList(): React.ReactNode {
 			}
 		}
 
-		let updatedVideo: Video = {
-			videoID: video.videoID,
+		let updatedVideo: IVideo = {
+			id: video.id,
 			timestamps: updatedTimestamps,
 			appliedTags: video.appliedTags
 		}
@@ -54,8 +54,8 @@ export function VideoTimestampList(): React.ReactNode {
 
 	const onAddTimestamp: () => void = () => {
 		let newTime = generateUniqueFrom(video.timestamps, (x) => x.time, 86400);
-		let updatedVideo: Video = {
-			videoID: video.videoID,
+		let updatedVideo: IVideo = {
+			id: video.id,
 			timestamps: [
 				...video.timestamps,
 				generateTimestamp(newTime!, "New Timestamp")
@@ -68,18 +68,18 @@ export function VideoTimestampList(): React.ReactNode {
 
 	const handleExpanded = (open: boolean) => {
 		if (open) {
-			dispatch(topLevelVideos.actions.addExpandedID(video.videoID));
+			dispatch(topLevelVideos.actions.addExpandedID(video.id));
 			return;
 		}
 
-		dispatch(topLevelVideos.actions.removeExpandedID(video.videoID));
+		dispatch(topLevelVideos.actions.removeExpandedID(video.id));
 	}
 
 	const handleTimestampReorder = (newTimestamps: Timestamp[]) => {
 		let listener = () => {
 			document.removeEventListener("mouseup", listener);
 			setTimeout(() => {
-				let newVideo: Video = {
+				let newVideo: IVideo = {
 					...video,
 					timestamps: newTimestamps
 				}
@@ -100,20 +100,20 @@ export function VideoTimestampList(): React.ReactNode {
 	// Handles delete mode.
 	const onVideoClicked = () => {
 		if (topLevelVideos.deleteMode) {
-			dispatch(topLevelVideos.actions.removeVideo(video.videoID));
+			dispatch(topLevelVideos.actions.removeVideo(video.id));
 		}
 	}
 
-	let isOpen = topLevelVideos.openVideos.includes(video.videoID);
+	let isOpen = topLevelVideos.openVideos.includes(video.id);
 
 	return (
-		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.videoID}>
+		<Reorder.Item value={video} dragListener={false} dragControls={dragControls} id={video.id}>
 			<div className="video-list-outer" onClick={onVideoClicked} data-is-delete={topLevelVideos.deleteMode}>
 				{/* The delete/cross image when hovering. */}
 				<IconContainer className="icon-colour-standard delete-image" asset={CrossIcon} use-stroke/>
 				<div className="video-list-inner" data-is-delete={topLevelVideos.deleteMode}>
 					<div className="video-card">
-						<VideoCard videoID={video.videoID}/>
+						<VideoCard videoID={video.id}/>
 						<div className="drag-handle" onPointerDown={(e) => dragControls.start(e)}>
 							<IconContainer
 								className="icon-colour-standard drag-handle"
@@ -126,7 +126,7 @@ export function VideoTimestampList(): React.ReactNode {
 						<LabeledArrowExpander expanded={isOpen} onExpanded={handleExpanded} openMessage="Close timestamps" closeMessage="Expand timestamps">	
 							<Reorder.Group className="timestamp-list" values={video.timestamps} onReorder={handleTimestampReorder}>
 								{video.timestamps.map((x) => 
-									<VideoTimestamp key={x.id} videoID={video.videoID} timestamp={x} onChange={onChange}></VideoTimestamp>)}
+									<VideoTimestamp key={x.id} videoID={video.id} timestamp={x} onChange={onChange}></VideoTimestamp>)}
 							</Reorder.Group>
 							<div className="add-timestamp-row">
 								<p className="fake-timestamp">00:00</p>
@@ -152,7 +152,7 @@ export function VideoTimestampList(): React.ReactNode {
 										return;
 									}
 
-									let updatedVideo: Video = {
+									let updatedVideo: IVideo = {
 										...video,
 										appliedTags: [ ...video.appliedTags ]
 									}
@@ -171,7 +171,7 @@ export function VideoTimestampList(): React.ReactNode {
 								<Select.Root
 									value=""
 									onValueChange={(value) => {
-										let updatedVideo: Video = {
+										let updatedVideo: IVideo = {
 											...video,
 											appliedTags: [
 												...video.appliedTags,

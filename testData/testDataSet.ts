@@ -1,11 +1,11 @@
 import { IConfig } from "../src/lib/storage/config/config";
-import { Video, generateTimestamp } from "../src/lib/video/video";
+import { IVideo, generateTimestamp } from "../src/lib/video/video";
 
 /* This files contains all of the testing/sample data needed. */
 
-export const sampleVideoData: Video[] = [
+export const sampleVideoData: IVideo[] = [
 	{
-		"videoID": "LXb3EKWsInQ",
+		"id": "LXb3EKWsInQ",
 		"timestamps": [
 			generateTimestamp(63, "Timestamp expands to this end margin." ),
 			generateTimestamp(4351, "Timestamp in the middle..."),
@@ -13,7 +13,7 @@ export const sampleVideoData: Video[] = [
 		"appliedTags": []
 	},
 	{
-		"videoID": "njX2bu-_Vw4",
+		"id": "njX2bu-_Vw4",
 		"timestamps": [
 			generateTimestamp(230, "Sed imperdiet interdum tempus."),
 			generateTimestamp(1200, "Nunc dui dolor, feugiat id eros feugiat."),
@@ -23,21 +23,21 @@ export const sampleVideoData: Video[] = [
 		"appliedTags": []
 	},
 	{
-		"videoID": "AKeUssuu3Is",
+		"id": "AKeUssuu3Is",
 		"timestamps": [
 			generateTimestamp(16, "Maecenas lectus nisl, pretium.")
 		],
 		"appliedTags": []
 	},
 	{
-		"videoID": "ZjVAsJOl8SM",
+		"id": "ZjVAsJOl8SM",
 		"timestamps": [
 			generateTimestamp(1063, "Another timestamp.")
 		],
 		"appliedTags": []
 	},
 	{
-		"videoID": "PnvkrBXmLSI",
+		"id": "PnvkrBXmLSI",
 		"timestamps": [
 			generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
 			generateTimestamp(0, "Maximus quis purus."),
@@ -45,7 +45,7 @@ export const sampleVideoData: Video[] = [
 		"appliedTags": []
 	},
 	{
-		"videoID": "ERYG3NE1DO8",
+		"id": "ERYG3NE1DO8",
 		"timestamps": [],
 		"appliedTags": []
 	}

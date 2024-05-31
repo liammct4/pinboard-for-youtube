@@ -1,7 +1,7 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addTagDefinition, removeTagDefinition, setTagDefinitions } from "./videoSlice";
 import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from "../account/accountSlice";
-import { TagDefinition } from "../../lib/video/video";
+import { ITagDefinition } from "../../lib/video/video";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 
 export const tagQueueSyncMiddleware = createListenerMiddleware();
@@ -13,7 +13,7 @@ tagQueueSyncMiddleware.startListening({
 			return;
 		}
 
-		let affectedTags: string | TagDefinition | TagDefinition[] = action.payload;
+		let affectedTags: string | ITagDefinition | ITagDefinition[] = action.payload;
 
 		if (Array.isArray(affectedTags)) {
 			listenerApi.dispatch(appendMutationBatchToAccountQueue(

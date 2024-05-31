@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { FormStyleContext } from "../../../components/input/formStyleContext";
 import { addTagDefinition } from "../../../features/videos/videoSlice";
-import { TagDefinition } from "../../../lib/video/video";
+import { ITagDefinition } from "../../../lib/video/video";
 import "./EditTagPage.css"
 
 interface IModifyTagForm extends IErrorFieldValues {
@@ -19,7 +19,7 @@ export function EditTagPage(): React.ReactNode {
 	const tagDefinition = tags.find(x => x.id == tagId)!;
 	const dispatch = useDispatch();
 	const modifySubmitHandler = (data: IModifyTagForm) => {
-		let updatedTag: TagDefinition = {
+		let updatedTag: ITagDefinition = {
 			...tagDefinition,
 			name: data.name
 		}

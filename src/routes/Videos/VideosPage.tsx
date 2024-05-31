@@ -8,7 +8,7 @@ import { VideoListContext } from "../../context/video.ts";
 import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
 import { addVideo, clearVideos, removeVideo, setTagFilter, setVideos, updateVideo } from "../../features/videos/videoSlice.ts";
 import { addExpandedID, removeExpandedID, setLayoutState } from "../../features/state/tempStateSlice.ts";
-import { Video, generateTimestamp } from "../../lib/video/video.ts";
+import { IVideo, generateTimestamp } from "../../lib/video/video.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
 import { FormField } from "../../components/forms/FormField/FormField.tsx";
@@ -50,7 +50,7 @@ function validateVideo(value: string): string | null {
 	else if (!YTUtil.videoExists(value)) {
 		return "Video does not exist.";
 	}
-	else if (currentVideos.findIndex(x => x.videoID == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
+	else if (currentVideos.findIndex(x => x.id == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
 		return "Video has already been added.";
 	}
 	
@@ -60,7 +60,7 @@ function validateVideo(value: string): string | null {
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const videos: Video[] = useSelector((state: RootState) => state.video.currentVideos);
+	const videos: IVideo[] = useSelector((state: RootState) => state.video.currentVideos);
 	const activeVideoID: string | undefined = useSelector((state: RootState) => state.video.activeVideoID);
 	const openVideos = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
@@ -70,14 +70,14 @@ export function VideosPage(): React.ReactNode {
 	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const tagFilterDefinition = useMemo(() => tagDefinitions.find(x => x.id == tagFilter), [tagFilter]);
 	const [ filterTitleText, setFilterTitleText ] = useState("");
-	const [ filteredVideos, setFilteredVideos ] = useState<Video[]>([]);
+	const [ filteredVideos, setFilteredVideos ] = useState<IVideo[]>([]);
 	// Filter the videos according to tags and search bar.
 	useEffect(() => {
 		const filterVideos = async () => {
-			let filtered: Video[] = [];
+			let filtered: IVideo[] = [];
 
 			for (let video of videos) {
-				let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(video.videoID)).title.toLowerCase();
+				let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(video.id)).title.toLowerCase();
 				let tagFiltered = video.appliedTags.findIndex(x => x == tagFilter) != -1 || tagFilter == "";
 
 				let filterWords = filterTitleText.split(' ');
@@ -95,8 +95,8 @@ export function VideosPage(): React.ReactNode {
 		filterVideos();
 	}, [tagDefinitions, tagFilter, videos, filterTitleText])
 	const onAddVideo: SubmitHandler<IAddVideoForm> = useCallback((data) => {
-		let newVideo: Video = {
-			videoID: YTUtil.getVideoIdFromYouTubeLink(data.link),
+		let newVideo: IVideo = {
+			id: YTUtil.getVideoIdFromYouTubeLink(data.link),
 			timestamps: [],
 			appliedTags: []
 		};
@@ -104,12 +104,12 @@ export function VideosPage(): React.ReactNode {
 		dispatch(addVideo(newVideo));
 	}, [videos]);
 	const onSaveActiveVideo: () => void = () => {
-		if (videos.find(x => x.videoID == activeVideoID) != undefined) {
+		if (videos.find(x => x.id == activeVideoID) != undefined) {
 			return;
 		}
 
-		let video: Video = {
-			videoID: activeVideoID!,
+		let video: IVideo = {
+			id: activeVideoID!,
 			timestamps: [],
 			appliedTags: []
 		};
@@ -117,10 +117,10 @@ export function VideosPage(): React.ReactNode {
 	};
 	const onPinCurrentTimestamp = async () => {
 		let result = await getActiveVideoInfo();
-		let video = videos.find(x => x.videoID == activeVideoID)!;
+		let video = videos.find(x => x.id == activeVideoID)!;
 		
-		let activeVideo: Video = {
-			videoID: activeVideoID!,
+		let activeVideo: IVideo = {
+			id: activeVideoID!,
 			timestamps: [
 				...video.timestamps,
 				generateTimestamp(Math.floor(result!.currentTime), "Current time")
@@ -130,7 +130,7 @@ export function VideosPage(): React.ReactNode {
 		
 		dispatch(updateVideo(activeVideo));
 	};
-	const handleReorderedItems = (reordered: Video[]) => {
+	const handleReorderedItems = (reordered: IVideo[]) => {
 		// To mitigate lag from store dispatching.
 		let listener = () => {
 			document.removeEventListener("mouseup", listener);
@@ -172,7 +172,7 @@ export function VideosPage(): React.ReactNode {
 						{/* Current video controls */}
 						<div className="current-video-buttons">
 							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.videoID == activeVideoID) == undefined}>Pin timestamp</button>
+							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={videos.find(x => x.id == activeVideoID) == undefined}>Pin timestamp</button>
 						</div>
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}

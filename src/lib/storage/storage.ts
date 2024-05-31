@@ -1,5 +1,5 @@
 import { IConfig } from "./config/config"
-import { TagDefinition, Video } from "./../video/video.ts"
+import { ITagDefinition, IVideo } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
@@ -11,8 +11,8 @@ import { SettingValue } from "../../features/settings/settingsSlice.ts"
 
 export interface IStorage {
 	user_data: {
-		videos: Video[];
-		tagDefinitions: TagDefinition[];
+		videos: IVideo[];
+		tagDefinitions: ITagDefinition[];
 		tagFilter: string;
 		config: IConfig;
 	},

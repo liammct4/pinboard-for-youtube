@@ -1,23 +1,23 @@
 import { createContext, Context } from "react"
-import { TagDefinition, Video } from "../lib/video/video";
+import { ITagDefinition, IVideo } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 
 export interface IVideoContext {
 	activeVideoID: string | undefined,
-	videos: Video[],
+	videos: IVideo[],
 	openVideos: string[],
-	tagDefinitions: TagDefinition[],
+	tagDefinitions: ITagDefinition[],
 	deleteMode: boolean
 	actions: {
-		addVideo: ActionCreatorWithPayload<Video, "video/addVideo">,
-		updateVideo: ActionCreatorWithPayload<Video, "video/updateVideo">,
+		addVideo: ActionCreatorWithPayload<IVideo, "video/addVideo">,
+		updateVideo: ActionCreatorWithPayload<IVideo, "video/updateVideo">,
 		removeVideo: ActionCreatorWithPayload<string, "video/removeVideo">,
 		clearVideos: ActionCreatorWithoutPayload<"video/clearVideos">,
-		setVideos: ActionCreatorWithPayload<Video[], "video/setVideos">,
+		setVideos: ActionCreatorWithPayload<IVideo[], "video/setVideos">,
 		addExpandedID: ActionCreatorWithPayload<string, "tempState/addExpandedID">,
 		removeExpandedID: ActionCreatorWithPayload<string, "tempState/removeExpandedID">
 	},
 }
 
 export const VideoListContext: Context<IVideoContext> = createContext<IVideoContext>(null!);
-export const VideoContext: Context<Video> = createContext<Video>(null!);
+export const VideoContext: Context<IVideo> = createContext<IVideo>(null!);

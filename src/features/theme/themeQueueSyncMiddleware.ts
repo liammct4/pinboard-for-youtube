@@ -2,7 +2,7 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from "../account/accountSlice";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 import { addCustomTheme, deleteCustomTheme, setCustomThemes } from "./themeSlice";
-import { AppTheme } from "../../lib/config/theming/appTheme";
+import { IAppTheme } from "../../lib/config/theming/appTheme";
 
 export const themeQueueSyncMiddleware = createListenerMiddleware();
 
@@ -13,7 +13,7 @@ themeQueueSyncMiddleware.startListening({
 			return;
 		}
 
-		let affectedThemes: string | AppTheme | AppTheme[] = action.payload;
+		let affectedThemes: string | IAppTheme | IAppTheme[] = action.payload;
 
 		if (Array.isArray(affectedThemes)) {
 			listenerApi.dispatch(appendMutationBatchToAccountQueue(

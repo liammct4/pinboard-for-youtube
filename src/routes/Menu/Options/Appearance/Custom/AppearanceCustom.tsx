@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { ThemeContext } from "../../../../../context/theme";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { AppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
+import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
@@ -19,7 +19,7 @@ export function AppearanceCustom(): React.ReactNode {
 	const { themes, customThemes, currentTheme, actions: { addCustomTheme, deleteCustomTheme, setCurrentTheme } } = useContext(ThemeContext);
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const editingTheme: AppTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
+	const editingTheme: IAppTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
 	const handlerBase = useCallback((data: IEditThemeForm) => {
 		let name = data.name;
 
@@ -30,7 +30,7 @@ export function AppearanceCustom(): React.ReactNode {
 
 		deleteCustomTheme(editingTheme!.id);
 
-		let updatedTheme: AppTheme = {
+		let updatedTheme: IAppTheme = {
 			id: editingTheme!.id,
 			name: name,
 			palette: {

@@ -2,7 +2,7 @@ import { RootState } from "../../app/store";
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addVideo, clearVideos, removeVideo, setVideos, updateVideo } from "./videoSlice";
 import { appendMutationBatchToAccountQueue, appendMutationToAccountQueue } from "../account/accountSlice";
-import { Video } from "../../lib/video/video";
+import { IVideo } from "../../lib/video/video";
 import { userIsLoggedIn } from "../../lib/user/accounts";
 
 export const videoQueueSyncVideoMiddleware = createListenerMiddleware();
@@ -18,7 +18,7 @@ videoQueueSyncVideoMiddleware.startListening({
 		}
 
 		// Each of the actions above can have different types of payload/argument so it needs to be separated.
-		let affectedVideos: string | Video | Video[] | undefined = action.payload;
+		let affectedVideos: string | IVideo | IVideo[] | undefined = action.payload;
 
 		if (affectedVideos == undefined) {
 			// Means that all were affected.
@@ -26,7 +26,7 @@ videoQueueSyncVideoMiddleware.startListening({
 				dataMutationType: "TAG",
 				info: state.video.currentVideos.map((item, index) => {
 					return {
-						mutationDataID: item.videoID,
+						mutationDataID: item.id,
 						position: index
 					}
 				})
@@ -38,7 +38,7 @@ videoQueueSyncVideoMiddleware.startListening({
 				dataMutationType: "VIDEO",
 				info: affectedVideos.map((item, index) => {
 					return {
-						mutationDataID: item.videoID,
+						mutationDataID: item.id,
 						position: index
 					}
 				})
@@ -49,17 +49,17 @@ videoQueueSyncVideoMiddleware.startListening({
 			listenerApi.dispatch(appendMutationToAccountQueue({
 				dataMutationType: "VIDEO",
 				mutationDataID: affectedVideos,
-				position: state.video.currentVideos.findIndex(x => x.videoID == affectedVideos)
+				position: state.video.currentVideos.findIndex(x => x.id == affectedVideos)
 			}));
 		}
 		else {
-			let casted = affectedVideos as Video;
+			let casted = affectedVideos as IVideo;
 
 			// Means that just an individual video was affected.
 			listenerApi.dispatch(appendMutationToAccountQueue({
 				dataMutationType: "VIDEO",
-				mutationDataID: casted.videoID,
-				position: state.video.currentVideos.findIndex(x => x.videoID == casted.videoID)
+				mutationDataID: casted.id,
+				position: state.video.currentVideos.findIndex(x => x.id == casted.id)
 			}));
 		}
 	}

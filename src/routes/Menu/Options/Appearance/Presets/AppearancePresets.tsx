@@ -4,7 +4,7 @@ import { store } from "../../../../../app/store";
 import { ThemeContext } from "../../../../../context/theme";
 import { DropdownOptionsContext } from "../../../../../components/input/DropdownInput/context";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
-import { AppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
+import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
 import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
@@ -15,7 +15,7 @@ import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDia
 import "./AppearancePresets.css"
 
 interface IThemePresetProperties {
-	theme: AppTheme;
+	theme: IAppTheme;
 }
 
 function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
@@ -67,7 +67,7 @@ export function AppearancePresets(): React.ReactNode {
 			.find(x => x.name == form.basedOn)?.palette
 			?? themes[0].palette;
 
-		let newTheme: AppTheme = {
+		let newTheme: IAppTheme = {
 			id: crypto.randomUUID(),
 			name: form.customName,
 			palette: palette,
@@ -77,7 +77,7 @@ export function AppearancePresets(): React.ReactNode {
 		addCustomTheme(newTheme);
 	}
 	let { register, handleSubmit, handler, submit } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
-	const onReorder = (newCustomThemes: AppTheme[]) => {
+	const onReorder = (newCustomThemes: IAppTheme[]) => {
 		setCustomThemes(newCustomThemes);
 	};
 

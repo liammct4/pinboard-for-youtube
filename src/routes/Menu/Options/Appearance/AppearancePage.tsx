@@ -4,14 +4,14 @@ import { AppearanceCustom } from "./Custom/AppearanceCustom";
 import { ThemeContext } from "../../../../context/theme";
 import { addCustomTheme, deleteCustomTheme, setCurrentTheme, setCustomThemes } from "../../../../features/theme/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { AppTheme } from "../../../../lib/config/theming/appTheme";
+import { IAppTheme } from "../../../../lib/config/theming/appTheme";
 import { RootState } from "../../../../app/store";
 import AppPalettes from "../../../../styling/theme.json";
 
 export function AppearancePage() {
 	const dispatch = useDispatch();
-	const currentTheme: AppTheme = useSelector((state: RootState) => state.theme.currentTheme) as AppTheme;
-	const customThemes: AppTheme[] = useSelector((state: RootState) => state.theme.customThemes);
+	const currentTheme: IAppTheme = useSelector((state: RootState) => state.theme.currentTheme) as IAppTheme;
+	const customThemes: IAppTheme[] = useSelector((state: RootState) => state.theme.customThemes);
 
 	return (
 		<>
@@ -20,10 +20,10 @@ export function AppearancePage() {
 					customThemes: customThemes, 
 					currentTheme: currentTheme,
 					actions: {
-						setCurrentTheme: (theme: AppTheme) => dispatch(setCurrentTheme(theme)),
-						addCustomTheme: (theme: AppTheme) => dispatch(addCustomTheme(theme)),
+						setCurrentTheme: (theme: IAppTheme) => dispatch(setCurrentTheme(theme)),
+						addCustomTheme: (theme: IAppTheme) => dispatch(addCustomTheme(theme)),
 						deleteCustomTheme: (themeName: string) => dispatch(deleteCustomTheme(themeName)),
-						setCustomThemes: (themes: AppTheme[]) => dispatch(setCustomThemes(themes))
+						setCustomThemes: (themes: IAppTheme[]) => dispatch(setCustomThemes(themes))
 					}
 				}}>
 				<Routes>
