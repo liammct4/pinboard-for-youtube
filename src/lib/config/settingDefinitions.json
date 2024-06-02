@@ -12,5 +12,12 @@
 		"description": "Shows a button on a video page which allows quick saving of the current video.",
 		"inputFormat": "Switch",
 		"defaultValue": true
+	},
+	{
+		"settingName": "pinCurrentTimestampShortcut",
+		"displayName": "Pin timestamp shortcut",
+		"description": "Pins the current timestamp of a video when pressed.",
+		"inputFormat": "Key",
+		"defaultValue": "Ctrl + E"
 	}
 ]

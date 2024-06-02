@@ -6,6 +6,7 @@ import { TextInput } from "./TextInput/TextInput";
 import { IInputComponentProperties } from "./inputComponent";
 import { DropdownInput } from "./DropdownInput/DropdownInput";
 import { SwitchInput } from "./SwitchInput/SwitchInput";
+import { KeyInput } from "./KeyInput/KeyInput";
 
 export function getInputComponent<T extends FieldValues>(inputType: InputMethodType): React.FC<IInputComponentProperties<T>> {
 	switch (inputType) {
@@ -19,5 +20,7 @@ export function getInputComponent<T extends FieldValues>(inputType: InputMethodT
 			return DropdownInput;
 		case "Switch":
 			return SwitchInput;
+		case "Key":
+			return KeyInput;
 	}
 }

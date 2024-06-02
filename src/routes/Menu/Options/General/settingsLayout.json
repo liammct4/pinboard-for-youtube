@@ -1,5 +1,7 @@
 [
 	{ "type": "heading", "data": "YouTube Settings" },
 	{ "type": "field", "data": "timestampButtonsEnabled" },
-	{ "type": "field", "data": "saveVideoTimestampButtonEnabled" }
+	{ "type": "field", "data": "saveVideoTimestampButtonEnabled" },
+	{ "type": "heading", "data": "Shortcuts & Bindings" },
+	{ "type": "field", "data": "pinCurrentTimestampShortcut" }
 ]

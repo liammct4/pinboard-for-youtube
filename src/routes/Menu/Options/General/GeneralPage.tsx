@@ -13,6 +13,7 @@ import "./GeneralPage.css"
 interface ISettingsForm extends IErrorFieldValues {
 	timestampButtonsEnabled: boolean;
 	saveVideoTimestampButtonEnabled: boolean;
+	pinCurrentTimestampShortcut: string;
 }
 
 export function GeneralPage(): React.ReactNode {
@@ -22,7 +23,7 @@ export function GeneralPage(): React.ReactNode {
 		let settings: SettingValue[] = Object
 			.keys(data)
 			.filter(x => x != "error")
-			.map(x => {
+			.map(x => {				
 				// See SwitchInput.tsx for reason for this.
 				let matchingSettingDefinition = settingDefinitions.find(y => y.settingName == x);
 				let newValue: string = data[x];
@@ -42,7 +43,7 @@ export function GeneralPage(): React.ReactNode {
 	return (
 		<>
 			<FormStyleContext.Provider value={{
-				labelSize: "large"
+				labelSize: "very large"
 			}}>
 				<form className="modify-settings-form" id="modify-settings-form" onSubmit={handleSubmit(handler)}>
 					{

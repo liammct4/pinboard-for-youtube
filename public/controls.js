@@ -10,6 +10,41 @@ function getVideoIDFromLink(videoURL) {
 	return result.groups.videoID;
 }
 
+async function saveCurrentTimestampToVideo() {
+	let storage = await chrome.storage.local.get();
+	let videoID = getVideoIDFromLink(window.location.href);
+
+	let index = storage.user_data.videos.findIndex(x => x.id == videoID);
+
+	let newTimestamp = {
+		id: crypto.randomUUID(), 
+		time: Math.round(document.querySelector("video").currentTime),
+		message: "Saved timestamp.",
+	}
+
+	if (index == -1) {	
+		storage.user_data.videos.push({
+			id: videoID,
+			timestamps: [ newTimestamp ],
+			appliedTags: []
+		});
+	}
+	else {
+		storage.user_data.videos[index].timestamps.push(newTimestamp);
+	}
+		
+	if (storage.auth.currentUser != undefined) {
+		// Make sure to upload to account if the user is logged in.
+		storage.account.mutationQueues.videoPendingQueue.push({
+			dataID: videoID,
+			timestamp: Date.now(),
+			position: index
+		});
+	}
+
+	await chrome.storage.local.set(storage);
+}
+
 function attemptSetup() {
 	// When YouTube first loads, the control buttons and options (e.g. like button) aren't on first load.
 	// so waiting is needed before initializing the custom controls.
@@ -64,41 +99,36 @@ function attemptSetup() {
 	let saveVideoButton = controlContainerOuter.querySelector(".pfy-save-video-button");
 	
 	saveVideoButton.addEventListener("click", async () => {
-		let storage = await chrome.storage.local.get();
-		let videoID = getVideoIDFromLink(window.location.href);
-
 		// Push to extension local storage.
-		let index = storage.user_data.videos.findIndex(x => x.id == videoID);
-
-		let newTimestamp = {
-			id: crypto.randomUUID(), 
-			time: Math.round(document.querySelector("video").currentTime),
-			message: "Saved timestamp.",
-		}
-
-		if (index == -1) {	
-			storage.user_data.videos.push({
-				id: videoID,
-				timestamps: [ newTimestamp ],
-				appliedTags: []
-			});
-		}
-		else {
-			storage.user_data.videos[index].timestamps.push(newTimestamp);
-		}
-			
-		if (storage.auth.currentUser != undefined) {
-			// Make sure to upload to account if the user is logged in.
-			storage.account.mutationQueues.videoPendingQueue.push({
-				dataID: videoID,
-				timestamp: Date.now(),
-				position: index
-			});
-		}
-
-		await chrome.storage.local.set(storage);
+		saveCurrentTimestampToVideo();
 	});
 }
+
+const excludedKeys = ["Control", "Meta", "Alt", "Shift"]
+const matchingKeysFilter = new Map([
+	[ "+", "=" ],
+	[ "_", "-" ],
+	[ "!", "1" ],
+	[ "\"", "2" ],
+	[ "£", "3" ],
+	[ "$", "4" ],
+	[ "%", "5" ],
+	[ "^", "6" ],
+	[ "&", "7" ],
+	[ "*", "8" ],
+	[ "(", "9" ],
+	[ ")", "0" ],
+	[ "¬", "`" ],
+	[ "|", "\\" ],
+	[ "<", "," ],
+	[ ">", "." ],
+	[ ":", ";" ],
+	[ "@", "'" ],
+	[ "{", "[" ],
+	[ "}", "]" ],
+	[ "~", "#" ],
+	[ "?", "/" ],
+]);
 
 async function initialize() {
 	let storage = await chrome.storage.local.get();
@@ -137,6 +167,45 @@ async function initialize() {
 			check();
 		}
 	});
+
+	// Shortcuts.
+	document.addEventListener("keypress", async (event) => {
+		let storage = await chrome.storage.local.get();
+		
+		if (storage == undefined || Object.keys(storage).length == 0) {
+			return;
+		}
+
+		let settings = storage.user_data.config.userSettings;
+		
+		let pinCurrentTimestampShortcut = settings.find(x => x.settingName == "pinCurrentTimestampShortcut").value
+
+		let pressedElements = [
+			event.ctrlKey ? "Ctrl" : null,
+			event.altKey ? "Alt" : null,
+			event.shiftKey ? "Shift" : null,
+			event.metaKey ? "Win" : null,
+		].filter(x => x != null);
+
+		if (event.key != undefined && !excludedKeys.includes(event.key)) {
+			if (matchingKeysFilter.has(event.key)) {
+				pressedElements.push(matchingKeysFilter.get(event.key.toUpperCase()));
+			}
+			else {
+				pressedElements.push(event.key.toUpperCase());
+			}
+		}
+
+		let keyCombinationPressed = pressedElements.join(" + ");
+
+		switch (keyCombinationPressed)
+		{
+			case pinCurrentTimestampShortcut:
+				saveCurrentTimestampToVideo();
+				break;
+		}
+	});
+
 	attemptSetup();
 }
 
