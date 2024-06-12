@@ -7,6 +7,7 @@ function getMainVideo() {
 }
 
 function setVideoPosition(time) {
+	let mainVideo = getMainVideo();
 	mainVideo.currentTime = time;
 
 	return {};
