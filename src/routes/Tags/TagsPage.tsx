@@ -7,7 +7,7 @@ import { ITagDefinition } from "../../lib/video/video";
 import { v4 as uuid } from "uuid"
 import { IconContainer } from "../../components/images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
-import { SplitHeading } from "../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { TagItemContext } from "../../context/tag";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage";
 import { TagItem } from "../../components/video/tags/TagItem/TagItem";

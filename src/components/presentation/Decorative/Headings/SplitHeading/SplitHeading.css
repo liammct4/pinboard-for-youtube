@@ -1,0 +1,27 @@
+.outer-heading-box-bold {
+	background: var(--pfy-empty-01-depth);
+	padding: var(--pfy-spacing-standard-compact);
+	padding-left: var(--pfy-spacing-standard);
+	border-radius: var(--pfy-spacing-standard-compact);
+
+	.heading-text {
+		font-size: var(--pfy-font-heading-small);
+		margin: 0;
+		border-left: var(--pfy-spacing-standard-compact) solid var(--pfy-primary-dark);
+		padding-left: var(--pfy-spacing-standard);
+	}
+}
+
+.outer-heading-box-regular {
+	background: var(--pfy-empty-01-normal);
+	padding: 1px;
+	padding-left: var(--pfy-spacing-standard-compact);
+	border-radius: var(--pfy-spacing-standard-compact);
+
+	.heading-text {
+		font-size: var(--pfy-font-heading-tiny);
+		margin: 0;
+		border-left: 2px solid var(--pfy-primary-faded);
+		padding-left: var(--pfy-spacing-standard);
+	}
+}

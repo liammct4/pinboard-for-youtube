@@ -5,15 +5,34 @@ import settingDefinitions from "./../../../../lib/config/settingDefinitions.json
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
 import settingsLayout from "./settingsLayout.json"
-import { SplitHeading } from "../../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { useCallback } from "react";
 import { SettingValue, setSettingValues } from "../../../../features/settings/settingsSlice";
 import "./GeneralPage.css"
+
+type SettingOption = "Heading" | "Field" | "Separator";
+interface ISettingElement {
+	type: SettingOption;
+}
+
+interface ISettingHeading extends ISettingElement {
+	message: string;
+	style: "bold" | "regular"
+}
+
+interface ISettingField extends ISettingElement {
+	fieldName: "string";
+}
+
+interface ISettingSeparator extends ISettingElement { }
 
 interface ISettingsForm extends IErrorFieldValues {
 	timestampButtonsEnabled: boolean;
 	saveVideoTimestampButtonEnabled: boolean;
 	pinCurrentTimestampShortcut: string;
+	useAutoSaveLatestTimestamp: boolean;	
+	onlyBringAutoSavedTimestampForward: boolean;
+	autoSaveLatestTimestampMessage: string;	
 }
 
 export function GeneralPage(): React.ReactNode {
@@ -48,15 +67,22 @@ export function GeneralPage(): React.ReactNode {
 				<form className="modify-settings-form" id="modify-settings-form" onSubmit={handleSubmit(handler)}>
 					{
 						settingsLayout.map<React.ReactNode>(x => {
-							if (x.type == "heading") {
-								return <SplitHeading key={x.data} text={x.data}/>
+							switch (x.type)
+							{
+								case "heading":
+									let heading = x as ISettingHeading;
+									return <SplitHeading key={heading.message} text={heading.message!} type={heading.style}/>
+								case "separator":
+									return <hr className="regular-separator"/>
 							}
-							
-							let settingDefinition = settingDefinitions.find(y => y.settingName == x.data)!;
+
+							let field = x as ISettingField;
+
+							let settingDefinition = settingDefinitions.find(y => y.settingName == field.fieldName)!;
 							let existingValue = settingValues.find(y => y.settingName == settingDefinition.settingName)?.value.toString();
 
 							return <FormField
-								key={x.data}
+								key={field.fieldName}
 								fieldSize="medium"
 								label={settingDefinition.displayName}
 								name={settingDefinition.settingName}

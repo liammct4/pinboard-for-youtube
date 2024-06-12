@@ -14,6 +14,10 @@ function getMainVideo() {
 	return document.querySelector("video");
 }
 
+function isUserLoggedIn(storage) {
+	return storage.auth.currentUser != undefined;
+} 
+
 // Due to tabs being discarded (Edge) after a tab is idle, accessing the timeline DOM should
 // be done through this function.
 function getTimelineContainers() {
@@ -59,6 +63,10 @@ function getTimestampFromSeconds(seconds) {
 	result += `${minutes.toString().padStart(2, "0")}:${remaining.toString().padStart(2, "0")}`;
 
 	return result;
+}
+
+function getSettingValue(storage, settingName) {
+	return storage.user_data.config.userSettings.find(x => x.settingName == settingName).value;
 }
 
 class TimestampTimelineButton extends HTMLElement {
@@ -351,7 +359,7 @@ async function update() {
 		let video = storage.user_data.videos.find(x => x.id == getVideoIDFromLink(window.location.href));
 
 		// If it is null, that means that storage hasn't been initialized, or the settings.
-		if (storage?.user_data?.config?.userSettings.find(x => x.settingName == "timestampButtonsEnabled").value ?? true) {
+		if (getSettingValue(storage, "timestampButtonsEnabled") ?? true) {
 			setTimelineTimestamps(video?.timestamps ?? []);
 		}
 		else {
@@ -367,9 +375,73 @@ async function update() {
 	if (currentTheme != undefined) {
 		changeTheme(currentTheme);
 	}
+
 }
 
-function probeAndUpdateTimestamps() {	
+async function updateAutosaved() {
+	let storage = await chrome.storage.local.get();
+
+	// Autosaved timestamp.
+	let settings = storage?.user_data?.config?.userSettings;
+
+	if (settings == undefined) {
+		return;
+	}
+
+	let useAutoSaveLatestTimestamp = getSettingValue(storage, "useAutoSaveLatestTimestamp");
+	let onlyBringAutoSavedTimestampForward = getSettingValue(storage, "onlyBringAutoSavedTimestampForward");
+	let autoSaveLatestTimestampMessage = getSettingValue(storage, "autoSaveLatestTimestampMessage");
+
+	if (!useAutoSaveLatestTimestamp) {
+		return;
+	}
+
+	let videoPlayer = getMainVideo();
+	let storageVideos = storage.user_data.videos;
+	let currentVideoIndex = storageVideos.findIndex(v => v.id == getVideoIDFromLink(window.location.href));
+	let currentVideo = storageVideos[currentVideoIndex];
+	let timestamp = currentVideo.timestamps.find(x => x.message == autoSaveLatestTimestampMessage);
+
+	if (timestamp == undefined) {
+		currentVideo.timestamps.push({
+			id: crypto.randomUUID(),
+			time: Math.round(videoPlayer.currentTime),
+			message: autoSaveLatestTimestampMessage
+		});
+
+		await storage.account.mutationQueues.videoPendingQueue.push({
+			dataID: currentVideo.id,
+			timestamp: Date.now(),
+			position: currentVideoIndex
+		});
+
+		await chrome.storage.local.set(storage);
+		return;
+	}
+
+	if (Math.round(videoPlayer.currentTime) != timestamp.time) {
+		if (onlyBringAutoSavedTimestampForward) {
+			timestamp.time = Math.max(videoPlayer.currentTime, timestamp.time);
+		}
+		else {
+			timestamp.time = videoPlayer.currentTime;
+		}
+
+		timestamp.time = Math.round(timestamp.time);
+		
+		if (isUserLoggedIn(storage)) {
+			await storage.account.mutationQueues.videoPendingQueue.push({
+				dataID: currentVideo.id,
+				timestamp: Date.now(),
+				position: currentVideoIndex
+			});
+		}
+
+		await chrome.storage.local.set(storage);
+	}
+}
+
+function probeAndUpdateState() {	
 	// Check if it hasnt been already initialized.
 	let existingContainer = document.querySelector(".pfy-timeline-container");
 	if (existingContainer != undefined) {
@@ -478,7 +550,11 @@ function probeAndUpdateTimestamps() {
 	progressBar.appendChild(timelineOuterContainer);
 
 	let video = document.querySelector("video");
+	video.removeEventListener("loadeddata", update);
 	video.addEventListener("loadeddata", update);
+
+	video.removeEventListener("timeupdate", updateAutosaved);
+	video.addEventListener("timeupdate", updateAutosaved);
 
 	update();
 }
@@ -490,11 +566,11 @@ async function initialize() {
 
 	window.navigation.addEventListener("navigate", () => {
 		setTimeout(() => {
-			probeAndUpdateTimestamps();
+			probeAndUpdateState();
 		}, 200);
 	});
 
-	setTimeout(() => probeAndUpdateTimestamps(), 200);
+	setTimeout(() => probeAndUpdateState(), 200);
 }
 
 chrome.runtime.onMessage.addListener(async (request, _sender, response) => {		

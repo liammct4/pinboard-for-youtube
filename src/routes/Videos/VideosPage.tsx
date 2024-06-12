@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
-import { SplitHeading } from "../../components/presentation/SplitHeading/SplitHeading.tsx";
+import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
 import { VideoCard } from "../../components/video/VideoCard/VideoCard.tsx";
 import { VideoCollection } from "../../components/video/VideoCollection/VideoCollection.tsx";
 import { VideoListContext } from "../../context/video.ts";

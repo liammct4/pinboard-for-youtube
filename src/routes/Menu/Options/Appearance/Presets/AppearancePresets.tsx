@@ -8,7 +8,7 @@ import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appT
 import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
-import { SplitHeading } from "../../../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { ReactComponent as DeleteIcon } from "./../../../../../../assets/icons/bin.svg"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";

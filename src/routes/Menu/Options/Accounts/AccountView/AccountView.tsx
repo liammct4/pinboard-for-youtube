@@ -12,7 +12,7 @@ import { HttpResponse } from "../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { validatePasswordInputField } from "../../../../../lib/user/details/password";
-import { SplitHeading } from "../../../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import "./AccountView.css"
 

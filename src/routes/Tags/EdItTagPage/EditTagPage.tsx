@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { SplitHeading } from "../../../components/presentation/SplitHeading/SplitHeading";
+import { SplitHeading } from "../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { IErrorFieldValues, useValidatedForm } from "../../../components/forms/validated-form";
 import { FormField } from "../../../components/forms/FormField/FormField";
 import { useDispatch, useSelector } from "react-redux";
