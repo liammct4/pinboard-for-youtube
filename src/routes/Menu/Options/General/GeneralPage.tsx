@@ -7,7 +7,7 @@ import { FormStyleContext } from "../../../../components/input/formStyleContext"
 import settingsLayout from "./settingsLayout.json"
 import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { useCallback } from "react";
-import { SettingValue, setSettingValues } from "../../../../features/settings/settingsSlice";
+import { SettingPrimitiveValue, SettingValue, setSettingValues } from "../../../../features/settings/settingsSlice";
 import "./GeneralPage.css"
 
 type SettingOption = "Heading" | "Field" | "Separator";
@@ -45,7 +45,7 @@ export function GeneralPage(): React.ReactNode {
 			.map(x => {				
 				// See SwitchInput.tsx for reason for this.
 				let matchingSettingDefinition = settingDefinitions.find(y => y.settingName == x);
-				let newValue: string = data[x];
+				let newValue: SettingPrimitiveValue = data[x];
 
 				if (matchingSettingDefinition?.inputFormat == "Switch" && newValue == undefined) {
 					// Get the currently saved setting value, since it's unchanged.

@@ -2,6 +2,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { InputMethodType } from "../../lib/config/configurationOption";
 import settingDefinitions from "./../../lib/config/settingDefinitions.json"
 
+export type SettingPrimitiveValue = string | number | boolean | bigint;
+
 export type SettingOption = {
 	settingName: string;
 	displayName: string;
@@ -12,7 +14,7 @@ export type SettingOption = {
 
 export type SettingValue = {
 	settingName: string;
-	value: string;
+	value: SettingPrimitiveValue;
 }
 
 export interface ISettingsSlice {
@@ -35,7 +37,7 @@ export const settingsSlice = createSlice({
 				if (index == -1) {
 					state.settingValues.push({
 						settingName: settingDefinition.settingName,
-						value: settingDefinition.defaultValue.toString()
+						value: settingDefinition.defaultValue
 					})
 				}
 			}
