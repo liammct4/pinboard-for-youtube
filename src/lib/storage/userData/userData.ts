@@ -32,7 +32,7 @@ export async function setStorageTagDefinitions(tags: ITagDefinition[]): Promise<
 	let storage = await chrome.storage.local.get() as IStorage;
 	storage.user_data.tagDefinitions = tags;
 
-	await chrome.storage.local.set({ "user_data": storage.user_data });
+	await chrome.storage.local.set(storage);
 }
 
 /**
@@ -53,5 +53,5 @@ export async function setStorageTagFilter(tagFilterID: string): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
 	storage.user_data.tagFilter = tagFilterID;
 
-	await chrome.storage.local.set({ "user_data": storage.user_data });
+	await chrome.storage.local.set(storage);
 }
