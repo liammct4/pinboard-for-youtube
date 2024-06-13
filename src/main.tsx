@@ -29,6 +29,7 @@ import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { getUserSettingsStorage } from "./lib/storage/config/config.ts"
 import { initializeAndSetSettingsDefault, setSettingValues } from "./features/settings/settingsSlice.ts"
+import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -80,7 +81,7 @@ async function setupState() {
 		<React.StrictMode>
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-					<Route path="/*" element={<PfyWrapper/>}>
+					<Route path="/*" element={<PfyWrapper/>} errorElement={<Navigate to={"/app/error"}/>}>
 						<Route path="app" element={<HomePage/>}>
 							<Route path="videos" element={<VideosPage/>}/>
 							<Route path="tags" element={<TagsPage/>}>
@@ -97,10 +98,11 @@ async function setupState() {
 								<Route path="help" element={<HelpPage/>}/>				
 							</Route>
 							<Route path="" element={<Navigate to="videos" replace/>}/>
+							<Route path="error" element={<ErrorPage/>}/>
 						</Route>
 						<Route path="*" element={<Navigate to="app" replace/>}/>
 					</Route>
-				))}/>
+				), )}/>
 			</Provider>
 		</React.StrictMode>
 	);

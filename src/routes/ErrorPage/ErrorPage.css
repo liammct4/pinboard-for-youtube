@@ -1,0 +1,23 @@
+.error-page {
+	.main-error-text {
+		color: var(--pfy-text-strong);
+		font-size: var(--pfy-font-text-big);
+	}
+
+	.more-error-text {
+		color: var(--pfy-text-normal);
+		font-size: var(--pfy-font-text-standard);
+	}
+
+	.toolbar {
+		display: flex;
+		flex-direction: column;
+		gap: var(--pfy-spacing-standard);
+		align-items: center;
+		margin-bottom: var(--pfy-spacing-large);
+
+		& button {
+			width: 200px;
+		}
+	}
+}
