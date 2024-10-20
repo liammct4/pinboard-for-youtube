@@ -1,0 +1,8 @@
+.extension-bounds {
+	width: var(--pfy-window-width);
+	height: var(--pfy-window-height);
+
+	&[data-expanded-window="true"] {
+		width: var(--pfy-window-width-expanded);
+	}
+}

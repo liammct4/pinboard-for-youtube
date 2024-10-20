@@ -6,7 +6,7 @@ import { getActiveTabURL } from "./lib/browser/page.ts"
 import { IVideoSlice, setVideoState } from "./features/videos/videoSlice.ts"
 import { getStorageTagDefinitions, getStorageTagFilter, getStoredVideos } from "./lib/storage/userData/userData.ts"
 import { ensureInitialized } from "./lib/storage/storage.ts"
-import { getVideoIdFromYouTubeLink, videoExists } from "./lib/util/youtube/youtubeUtil.ts"
+import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
 import { getExpandedVideos, getLayoutState } from "./lib/storage/tempState/tempState.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
@@ -42,7 +42,7 @@ async function setupState() {
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
 
-		if (currentUrl != undefined && videoExists(currentUrl)) {
+		if (currentUrl != undefined && doesVideoExist(currentUrl)) {
 			// If an error happens, it means that the current page is not a youtube video.
 			try {
 				activeID = getVideoIdFromYouTubeLink(currentUrl);
@@ -76,12 +76,12 @@ async function setupState() {
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
 	}
-	
+	//errorElement={<Navigate to={"/app/error"}/>}
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-					<Route path="/*" element={<PfyWrapper/>} errorElement={<Navigate to={"/app/error"}/>}>
+					<Route path="/*" element={<PfyWrapper/>} >
 						<Route path="app" element={<HomePage/>}>
 							<Route path="videos" element={<VideosPage/>}/>
 							<Route path="tags" element={<TagsPage/>}>

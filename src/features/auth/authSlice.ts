@@ -3,10 +3,12 @@ import { IAuthenticatedUser, TemporaryTokens } from "../../lib/user/accounts";
 
 export interface IAuthSlice {
 	currentUser: IAuthenticatedUser | undefined;
+	currentUserUnverified: IAuthenticatedUser | undefined;
 }
 
 const initialState: IAuthSlice = {
-	currentUser: undefined
+	currentUser: undefined,
+	currentUserUnverified: undefined
 }
 
 export const authSlice = createSlice({

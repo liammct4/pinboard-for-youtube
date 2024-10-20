@@ -99,7 +99,7 @@ export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<I
  * @param url The url to check.
  * @returns True if the video in a YouTube url exists, otherwise False.
  */
-export function videoExists(url: string): boolean {
+export function doesVideoExist(url: string): boolean {
 	try {
 		getYoutubeVideoInfoFromLink(url);
 		return true;

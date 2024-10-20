@@ -47,7 +47,7 @@ function validateVideo(value: string): string | null {
 	else if (!YTUtil.YOUTUBE_EXTRACT_VIDEO_ID_REGEX.test(value)) {
 		return "The link entered was invalid."
 	}
-	else if (!YTUtil.videoExists(value)) {
+	else if (!YTUtil.doesVideoExist(value)) {
 		return "Video does not exist.";
 	}
 	else if (currentVideos.findIndex(x => x.id == YTUtil.getVideoIdFromYouTubeLink(value)) != -1) {
@@ -155,7 +155,7 @@ export function VideosPage(): React.ReactNode {
 				</div>
 				: <></>
 			}
-			<div className="video-page-inner" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
+			<div className="video-page-inner scrollbar-big" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
 				<TwoToggleLayoutExpander
 					expanded={layoutState.isCurrentVideosSectionExpanded}
 					onExpandedEvent={(value: boolean) => {
@@ -251,7 +251,7 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
-				<div className="video-collection-scrollbox">
+				<div className="separated-scrollbox">
 					<VideoListContext.Provider value={{
 						activeVideoID,
 						videos: filteredVideos,

@@ -100,15 +100,6 @@
 			margin-top: var(--pfy-spacing-standard);
 			margin-bottom: var(--pfy-spacing-standard);
 		}
-
-		.video-collection-scrollbox {
-			margin-top: var(--pfy-spacing-standard);
-			background: var(--pfy-empty-01-normal);
-			border: 1px solid var(--pfy-primary-dark);
-			border-radius: var(--pfy-spacing-large);
-			overflow-y: scroll;
-			flex-grow: 1;
-		}
 	}
 }
 

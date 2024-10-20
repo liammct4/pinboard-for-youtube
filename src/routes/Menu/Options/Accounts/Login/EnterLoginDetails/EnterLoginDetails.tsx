@@ -11,7 +11,7 @@ export function EnterLoginDetails(): React.ReactNode {
 	const onLoginSubmitted = async (value: IUserDetailsForm) => {
 		activateMessage(undefined, "Logging you in...", "Info", "Info", -1);
 		setTimeout(async () => {
-			let newlyAuthenticatedUser: IAuthenticatedUser | undefined = await attemptLogin(value.email, value.password);
+			let newlyAuthenticatedUser = await attemptLogin(value.email, value.password);
 
 			// Leave the offline errors to the offline handler. (In GlobalRequestHandler)
 			if (!navigator.onLine) {
@@ -24,10 +24,6 @@ export function EnterLoginDetails(): React.ReactNode {
 			}
 
 			activateMessage("Success!", "You have now been logged in.", "Success", "Tick", 4000, "Slide");
-
-			setTimeout(() => {
-				navigate("/app/menu/options/accounts");
-			}, 10);
 		}, 200);
 	}
 

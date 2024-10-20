@@ -13,38 +13,42 @@ export function MenuPage(): React.ReactNode {
 	currentPath.splice(0, 3);
 
 	return (
-		<div className="menu-outer scrollbar-small">
-			<ul className="path-links">
-				{currentPath.map(x =>
-					<li className="path-item" key={x}>
-						{
-							x == currentPath[currentPath.length - 1] ?
-								<span className="current-link">{toTitleCase(x)}</span>
-							:
-								<button className="button-subtle path-history" onClick={() => {
-									let fullPath: string = encodeURI(currentPath
-										.slice(0, currentPath.indexOf(x) + 1)
-										.join("/")
-									);
+		<>
+			<div className="menu-outer">
+				<div className="menu-controls scrollbar-small">
+					<ul className="path-links">
+						{currentPath.map(x =>
+							<li className="path-item" key={x}>
+								{
+									x == currentPath[currentPath.length - 1] ?
+										<span className="current-link">{toTitleCase(x)}</span>
+									:
+										<button className="button-subtle path-history" onClick={() => {
+											let fullPath: string = encodeURI(currentPath
+												.slice(0, currentPath.indexOf(x) + 1)
+												.join("/")
+											);
 
-									navigate("/app/menu/" + fullPath)
-								}}>
-									<span>{toTitleCase(x)}</span>
-								</button>
-						}
-					</li>
-				)}
-			</ul>
-			<button className="close-button circle-button" onClick={() => navigate("..")}>
-				<IconContainer
-					className="icon-colour-standard"
-					asset={CloseIcon}
-					use-stroke/>
-			</button>
-			<hr className="bold-separator"></hr>
-			<div className="page-content">
-				<Outlet/>
+											navigate("/app/menu/" + fullPath)
+										}}>
+											<span>{toTitleCase(x)}</span>
+										</button>
+								}
+							</li>
+						)}
+					</ul>
+					<button className="close-button circle-button" onClick={() => navigate("..")}>
+						<IconContainer
+							className="icon-colour-standard"
+							asset={CloseIcon}
+							use-stroke/>
+					</button>
+					<hr className="bold-separator"></hr>
+				</div>
+				<div className="page-content">
+					<Outlet/>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
