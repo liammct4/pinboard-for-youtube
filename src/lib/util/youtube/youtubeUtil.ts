@@ -14,6 +14,8 @@ export class DoesNotExistError extends Error {
 }
 
 export interface IYoutubeVideoInfo {
+	// video_id is not apart of the API response. It is set manually.
+	video_id: string;
 	thumbnail_width: number;
 	width: number;
 	provider_name: string;
@@ -78,17 +80,22 @@ export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: s
 	return getTimestampVideoLinkFromSeconds(videoID, seconds);
 }
 
-export async function getYoutubeVideoInfoFromLink(url: string): Promise<IYoutubeVideoInfo> {
-	let result = JSON.parse((await request.GlobalRequestHandler.sendRequest("GET", `https://noembed.com/embed?url=${url}`))?.body)
-
-	if (result.hasOwnProperty("error")) {
-		throw new DoesNotExistError("The video requested does not exist.", url, result.error);
+export async function getYoutubeVideoInfoFromLink(url: string): Promise<IYoutubeVideoInfo | undefined> {
+	let response = await request.GlobalRequestHandler.sendRequest("GET", `https://www.youtube.com/oembed?url=${url}`);
+	
+	if (response?.status == 404) {
+		return undefined;
+		//throw new DoesNotExistError("The video requested does not exist.", url, response.body);
 	}
+	
+	let info = JSON.parse(response?.body) as IYoutubeVideoInfo;
+	info.url = url;
+	info.video_id = getVideoIdFromYouTubeLink(url);
 
-	return result;
+	return info;
 }
 
-export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<IYoutubeVideoInfo> {
+export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<IYoutubeVideoInfo | undefined> {
 	let link: string = getYouTubeLinkFromVideoID(videoID);
 	
 	return getYoutubeVideoInfoFromLink(link);

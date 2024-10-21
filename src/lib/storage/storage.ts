@@ -8,6 +8,7 @@ import AppThemes from "./../../styling/theme.json"
 import { DataMutation } from "../../features/account/accountSlice.ts"
 import settingDefinitions from "./../config/settingDefinitions.json"
 import { SettingValue } from "../../features/settings/settingsSlice.ts"
+import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
 
 export interface IStorage {
 	user_data: {
@@ -27,6 +28,9 @@ export interface IStorage {
 			videoPendingQueue: DataMutation[],
 			tagPendingQueue: DataMutation[]
 		}
+	},
+	cache: {
+		videos: IYoutubeVideoInfo[]
 	}
 }
 
@@ -81,6 +85,9 @@ export async function ensureInitialized(): Promise<void> {
 				tagPendingQueue: [],
 				videoPendingQueue: []
 			}
+		},
+		cache: {
+			videos: []
 		}
 	};
 

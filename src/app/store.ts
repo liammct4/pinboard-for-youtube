@@ -5,6 +5,7 @@ import themeReducer from "../features/theme/themeSlice.ts"
 import authSlice from "../features/auth/authSlice.ts"
 import accountSlice from "../features/account/accountSlice.ts"
 import settingsSlice from "../features/settings/settingsSlice.ts"
+import cacheSlice from "../features/cache/cacheSlice.ts"
 import { videoStorageMiddleware } from "../features/videos/videoStorageMiddleware.ts"
 import { tagCascadeUpdateMiddleware } from "../features/videos/tagCascadeUpdateMiddleware.ts"
 import { videoQueueSyncVideoMiddleware } from "../features/videos/videoQueueSyncVideoMiddleware.ts"
@@ -17,6 +18,7 @@ import { tagFilterUpdateMiddleware, tagStorageUpdateUpdateMiddleware } from "../
 import { addIDMiddleware, layoutStateUpdateMiddleware, removeIDMiddleware } from "../features/state/stateStorageMiddleware.ts"
 import { updateCustomThemeStorageMiddleware, updateStorageMiddleware, updateThemeMiddleware } from "../features/theme/themeMiddleware.ts"
 import { authChangeUserStorageMiddleware, authTokenChangedMiddleware } from "../features/auth/authStorageMiddleware.ts"
+import { cacheSaveStorageMiddleware } from "../features/cache/cacheSaveStorageMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -25,7 +27,8 @@ export let store = configureStore({
 		theme: themeReducer,
 		auth: authSlice,
 		account: accountSlice,
-		settings: settingsSlice
+		settings: settingsSlice,
+		cache: cacheSlice
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
@@ -48,6 +51,7 @@ export let store = configureStore({
 		.prepend(accountCloudSyncMiddleware.middleware)
 		.prepend(authAccountDataMiddleware.middleware)
 		.prepend(settingsStorageMiddleware.middleware)
+		.prepend(cacheSaveStorageMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

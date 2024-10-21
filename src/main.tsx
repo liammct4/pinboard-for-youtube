@@ -33,6 +33,8 @@ import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
+import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 
 async function setupState() {
 	await ensureInitialized();
@@ -68,8 +70,13 @@ async function setupState() {
 		}
 	}
 
+	let cacheState: ICacheSlice = {
+		videoCache: await getVideoCacheFromStorage()
+	};
+
 	store.dispatch(setVideoState(videoState));
 	store.dispatch(setTempState(tempState));
+	store.dispatch(setCacheState(cacheState));
 
 	const currentUser = await getCurrentAuthenticatedUser();
 
