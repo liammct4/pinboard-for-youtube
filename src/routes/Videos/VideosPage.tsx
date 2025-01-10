@@ -77,7 +77,13 @@ export function VideosPage(): React.ReactNode {
 			let filtered: IVideo[] = [];
 
 			for (let video of videos) {
-				let title = (await YTUtil.getYoutubeVideoInfoFromVideoID(video.id)).title.toLowerCase();
+				let info = await YTUtil.getYoutubeVideoInfoFromVideoID(video.id);
+
+				if (info == undefined) {
+					continue;
+				}
+
+				let title = info.title.toLowerCase();
 				let tagFiltered = video.appliedTags.findIndex(x => x == tagFilter) != -1 || tagFilter == "";
 
 				let filterWords = filterTitleText.split(' ');
