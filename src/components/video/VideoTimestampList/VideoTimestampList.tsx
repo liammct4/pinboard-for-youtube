@@ -14,7 +14,6 @@ import { IconContainer } from "../../images/svgAsset.tsx";
 import { TagItem } from "../tags/TagItem/TagItem.tsx";
 import { TagItemContext } from "../../../context/tag.ts";
 import * as Select from "@radix-ui/react-select"
-import { updateVideo } from "../../../features/videos/videoSlice.ts";
 import { SelectItem } from "../../input/DropdownInput/dropdown.tsx";
 import "./../../../styling/elements/select.css"
 import "./VideoTimestampList.css"
@@ -158,8 +157,6 @@ export function VideoTimestampList(): React.ReactNode {
 									}
 
 									updatedVideo.appliedTags.splice(index);
-
-									dispatch(updateVideo(updatedVideo));
 								}
 							}}>
 								{video.appliedTags.map(x => 
@@ -178,8 +175,6 @@ export function VideoTimestampList(): React.ReactNode {
 												value
 											]
 										}
-
-										dispatch(updateVideo(updatedVideo));
 									}}> 
 									<Select.Trigger className="select-button field-input circle-button add-tag-dropdown-button" aria-label="Theme" disabled={applicableTags.length == 0}>
 										<div className="value-outer" >

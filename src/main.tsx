@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { IVideoSlice, setVideoState } from "./features/videos/videoSlice.ts"
 import { getStorageTagDefinitions, getStorageTagFilter, getStoredVideos } from "./lib/storage/userData/userData.ts"
 import { ensureInitialized } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
@@ -21,8 +20,6 @@ import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
 import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/theme.ts"
 import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
-import { TagsPage } from "./routes/Tags/TagsPage.tsx"
-import { EditTagPage } from "./routes/Tags/EditTagPage/EditTagPage.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { setCurrentUser } from "./features/auth/authSlice.ts"
 import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
@@ -30,15 +27,29 @@ import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { getUserSettingsStorage } from "./lib/storage/config/config.ts"
 import { initializeAndSetSettingsDefault, setSettingValues } from "./features/settings/settingsSlice.ts"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
+import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
+import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
-import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
-import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 
 async function setupState() {
-	await ensureInitialized();
+	
+	//@ts-ignore
+	chrome.storage = {
+		local: {
+			//@ts-ignore
+			get: (t) => { return {} },
+			//@ts-ignore
+			clear: () => {},
+			//@ts-ignore
+			set: () => {},
+			//@ts-ignore
+			remove: () => {}
+		}
+	}
 
+	await ensureInitialized();
 	let activeID = undefined;
 
 	if (chrome.extension != null) {
@@ -55,30 +66,24 @@ async function setupState() {
 		activeID = "xcJtL7QggTI";
 	}
 
-	let videoState: IVideoSlice = {
-		activeVideoID: activeID,
-		currentVideos: await getStoredVideos(),
-		currentSelectedTagFilter: await getStorageTagFilter(),
-		tagDefinitions: await getStorageTagDefinitions()
-	}
-
 	let tempState: IStateSlice = {
-		expandedVideoIDs: await getExpandedVideos(),
-		layout: await getLayoutState(),
+		expandedVideoIDs: [],//await getExpandedVideos(),
+		//@ts-ignore
+		layout: {},//await getLayoutState(),
 		temporarySingleState: {
 			onRequestIsVideoControlLocked: false
 		}
 	}
 
 	let cacheState: ICacheSlice = {
-		videoCache: await getVideoCacheFromStorage()
+		//@ts-ignore
+		videoCache: {}//await getVideoCacheFromStorage()
 	};
 
-	store.dispatch(setVideoState(videoState));
 	store.dispatch(setTempState(tempState));
 	store.dispatch(setCacheState(cacheState));
 
-	const currentUser = await getCurrentAuthenticatedUser();
+	const currentUser = undefined;//await getCurrentAuthenticatedUser();
 
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
@@ -91,9 +96,6 @@ async function setupState() {
 					<Route path="/*" element={<PfyWrapper/>} >
 						<Route path="app" element={<HomePage/>}>
 							<Route path="videos" element={<VideosPage/>}/>
-							<Route path="tags" element={<TagsPage/>}>
-								<Route path="edit/:tagId" element={<EditTagPage/>}/>
-							</Route>
 							<Route path="menu" element={<MenuPage/>}>
 								<Route path="options/*" element={<OptionsPage/>}>
 									<Route path="general" element={<GeneralPage/>}/>

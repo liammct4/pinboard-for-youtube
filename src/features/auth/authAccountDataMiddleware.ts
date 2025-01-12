@@ -2,7 +2,6 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { setCurrentUserAndStorage, IAuthSlice, setCurrentUser } from "./authSlice.ts";
 import { userIsLoggedIn } from "../../lib/user/accounts.ts";
 import { getAccountResourceData } from "../../lib/user/data/resource.ts";
-import { setTagDefinitionsWithoutQueue, setVideosWithoutQueue } from "../videos/videoSlice.ts";
 import { getCurrentAuthenticatedUser } from "../../lib/user/storage.ts";
 import { disableControlsLock, enableControlsLock } from "../state/tempStateSlice.ts";
 import { ITagDefinition, IVideo } from "../../lib/video/video.ts";
@@ -34,8 +33,6 @@ authAccountDataMiddleware.startListening({
 				return;
 			}
 	
-			listenerApi.dispatch(setVideosWithoutQueue(retrievedVideos));
-			listenerApi.dispatch(setTagDefinitionsWithoutQueue(retrievedTagDefinitions));
 			listenerApi.dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
 		}, 10);
 	}

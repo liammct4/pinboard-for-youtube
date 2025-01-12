@@ -9,7 +9,6 @@ import * as Toast from "@radix-ui/react-toast";
 import { getSavedPath } from "../lib/storage/persistentState/persistentState";
 import { SyncTimer } from "../lib/util/generic/timeUtil";
 import { userIsLoggedIn } from "../lib/user/accounts";
-import { setTagDefinitionsWithoutQueue, setVideosWithoutQueue } from "../features/videos/videoSlice";
 import { getAccountResourceData } from "../lib/user/data/resource.ts";
 import { ITagDefinition, IVideo } from "../lib/video/video.ts";
 import { IAppTheme } from "../lib/config/theming/appTheme.ts";
@@ -71,14 +70,6 @@ export function PfyWrapper(): React.ReactNode {
 			let retrievedVideos = await getAccountResourceData<IVideo>("VIDEO", token);
 			let retrievedTagDefinitions = await getAccountResourceData<ITagDefinition>("TAG", token);
 			let retrievedCustomThemes = await getAccountResourceData<IAppTheme>("THEME", token);
-			
-			if (retrievedVideos != undefined) {
-				dispatch(setVideosWithoutQueue(retrievedVideos));	
-			}
-
-			if (retrievedTagDefinitions != undefined) {
-				dispatch(setTagDefinitionsWithoutQueue(retrievedTagDefinitions));
-			}
 
 			if (retrievedCustomThemes != undefined) {
 				dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
