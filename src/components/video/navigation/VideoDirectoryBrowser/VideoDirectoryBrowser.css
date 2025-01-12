@@ -1,0 +1,20 @@
+.directory-navigator {
+	display: flex;
+	flex-direction: row;
+
+	.directory-navigator-slices {
+		display: flex;
+		flex-direction: row;
+		list-style-type: none;
+
+		& li {
+			svg {
+				margin-left: var(--pfy-spacing-standard-compact);
+				margin-right: var(--pfy-spacing-standard-compact);
+				width: 15px;
+			}
+		}
+	}
+}
+
+
