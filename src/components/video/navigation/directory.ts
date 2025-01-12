@@ -21,7 +21,7 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 
 	let current: IVideoBrowserNode = node;
 
-	if (node.slice == slices[0]) {
+	if (node.slice.trim() == slices[0].trim()) {
 		slices.splice(0, 1);
 	}
 	else {
@@ -41,7 +41,7 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 		for (let node of currentDirectory.subNodes) {
 			let nodeSliceOrID = getNodePathIdentifier(node);
 			
-			if (slice == nodeSliceOrID) {
+			if (slice.trim() == nodeSliceOrID.trim()) {
 				current = node;
 				found = true;
 				break;
@@ -65,6 +65,13 @@ export function getNodePathIdentifier(node: IVideoBrowserNode): string {
 	}
 }
 
+export function reformatDirectoryPath(path: string): string {
+	const slices = path.split('>');
+	const reformatted = slices.map(x => x.trim());
+
+	return reformatted.join(" > ");
+}
+
 export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNode): string {
 	let slices: string[] = [ getNodePathIdentifier(directory) ];
 	let current = directory.parent;
@@ -75,7 +82,7 @@ export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNod
 		current = current.parent;
 	}
 
-	let fullPath = slices.join(">");
+	let fullPath = slices.join(" > ");
 
 	return fullPath;
 }

@@ -123,11 +123,9 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
-				<div className="separated-scrollbox">
-					<VideoDirectoryBrowser>
+				<VideoDirectoryBrowser>
 
-					</VideoDirectoryBrowser>
-				</div>
+				</VideoDirectoryBrowser>
 			</div>
 		</div>
 	);

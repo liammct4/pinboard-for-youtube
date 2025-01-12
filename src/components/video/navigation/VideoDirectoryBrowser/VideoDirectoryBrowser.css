@@ -1,17 +1,49 @@
 .directory-navigator {
 	display: flex;
 	flex-direction: row;
+	margin: 0;
+
+	.directory-path-bar {
+		width: 100%;
+	}
 
 	.directory-navigator-slices {
 		display: flex;
 		flex-direction: row;
 		list-style-type: none;
+		margin: 0;
 
 		& li {
+			display: flex;
+			padding-top: 1px;
+			padding-bottom: 1px;
+			align-items: center;
+			font-size: var(--pfy-font-text-standard);
+
 			svg {
-				margin-left: var(--pfy-spacing-standard-compact);
-				margin-right: var(--pfy-spacing-standard-compact);
-				width: 15px;
+				width: 12px;
+				margin-left: -2px;
+				margin-right: -2px;
+			}
+		}
+
+		.jump-to-slice-path-button {
+			display: flex;
+			padding-left: var(--pfy-spacing-standard-compact);
+			padding-right: var(--pfy-spacing-standard-compact);
+			background: var(--pfy-shade-light-03);
+			font-size: var(--pfy-font-text-standard);
+			border: 1px solid transparent;
+			color: black;
+			text-align: center;
+			justify-content: end;
+			align-items: center;
+			height: 100%;
+			border-radius: var(--pfy-spacing-standard-compact);
+
+			&:hover {
+				background-color: var(--pfy-shade-04);
+				border: 1px solid var(--pfy-shade-03);
 			}
 		}
 	}
