@@ -1,57 +1,33 @@
 import { ITagDefinition, IVideo } from "../../video/video"
 import { IStorage } from "../storage"
 
-export async function getStoredVideos(): Promise<IVideo[]> {
+export async function getVideoDictionary(): Promise<Map<string, IVideo>> {
 	let storage = await chrome.storage.local.get() as IStorage;
-	let videos: IVideo[] = storage.user_data.videos;
+	let map = new Map<string, IVideo>();
 
-	return videos;
+	storage.user_data.videos.forEach(x => map.set(x.id, x));
+
+	return map;
 }
 
-export async function setStoredVideos(videos: IVideo[]) {
+export async function saveVideoDictionaryToStorage(map: Map<string, IVideo>): Promise<void> {
 	let storage = await chrome.storage.local.get() as IStorage;
+	let videos: IVideo[] = [];
+
+	for (const key of map.keys()) {
+		videos.push(map.get(key)!);
+	}
 
 	storage.user_data.videos = videos;
 
 	await chrome.storage.local.set(storage);
 }
 
-/**
- * Retrieves the user defined tag definitions from storage.
- */
-export async function getStorageTagDefinitions(): Promise<ITagDefinition[]> {
+
+export async function setStoredVideos(videos: IVideo[]) {
 	let storage = await chrome.storage.local.get() as IStorage;
 
-	return storage.user_data.tagDefinitions;
-}
-
-/**
- * Sets the tag definitions in storage.
- */
-export async function setStorageTagDefinitions(tags: ITagDefinition[]): Promise<void> {
-	let storage = await chrome.storage.local.get() as IStorage;
-	storage.user_data.tagDefinitions = tags;
-
-	await chrome.storage.local.set(storage);
-}
-
-/**
- * Retrieves the currently selected tag filter ID from storage.
- * @returns The tag filter ID in storage.
- */
-export async function getStorageTagFilter(): Promise<string> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.user_data.tagFilter;
-}
-
-/**
- * Sets the single tag filter in storage.
- * @param tagFilterID The selected tag filter, this is ID's only, not names.
- */
-export async function setStorageTagFilter(tagFilterID: string): Promise<void> {
-	let storage = await chrome.storage.local.get() as IStorage;
-	storage.user_data.tagFilter = tagFilterID;
+	storage.user_data.videos = videos;
 
 	await chrome.storage.local.set(storage);
 }

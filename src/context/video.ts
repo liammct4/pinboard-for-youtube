@@ -2,6 +2,10 @@ import { createContext, Context } from "react"
 import { ITagDefinition, IVideo } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 
+export interface IVideoDirectoryContext {
+	videoData: Map<string, IVideo>;
+}
+
 export interface IVideoContext {
 	activeVideoID: string | undefined,
 	videos: IVideo[],
@@ -21,3 +25,4 @@ export interface IVideoContext {
 
 export const VideoListContext: Context<IVideoContext> = createContext<IVideoContext>(null!);
 export const VideoContext: Context<IVideo> = createContext<IVideo>(null!);
+export const VideoDirectoryContext: Context<IVideoDirectoryContext> = createContext<IVideoDirectoryContext>(null!);

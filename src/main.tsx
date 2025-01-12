@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { getStorageTagDefinitions, getStorageTagFilter, getStoredVideos } from "./lib/storage/userData/userData.ts"
+import { getVideoDictionary } from "./lib/storage/userData/userData.ts"
 import { ensureInitialized } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
@@ -33,6 +33,7 @@ import { checkAndImplementLocalStorage } from "./lib/browser/features/localStora
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { VideoDirectoryContext } from "./context/video.ts"
 
 checkAndImplementLocalStorage();
 
@@ -76,30 +77,34 @@ async function setupState() {
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
 	}
-	//errorElement={<Navigate to={"/app/error"}/>}
+
+	let videos = await getVideoDictionary();
+
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
-				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-					<Route path="/*" element={<PfyWrapper/>} >
-						<Route path="app" element={<HomePage/>}>
-							<Route path="videos" element={<VideosPage/>}/>
-							<Route path="menu" element={<MenuPage/>}>
-								<Route path="options/*" element={<OptionsPage/>}>
-									<Route path="general" element={<GeneralPage/>}/>
-									<Route path="accounts/*" element={<AccountsPage/>}/>
-									<Route path="appearance/*" element={<AppearancePage/>}/>
-									<Route path="debug/*" element={<DebugPage/>}/>
-									<Route path="*" element={<OptionsNavigator/>}/>
+				<VideoDirectoryContext.Provider value={{ videoData: videos }}>
+					<RouterProvider router={createBrowserRouter(createRoutesFromElements(
+						<Route path="/*" element={<PfyWrapper/>} >
+							<Route path="app" element={<HomePage/>}>
+								<Route path="videos" element={<VideosPage/>}/>
+								<Route path="menu" element={<MenuPage/>}>
+									<Route path="options/*" element={<OptionsPage/>}>
+										<Route path="general" element={<GeneralPage/>}/>
+										<Route path="accounts/*" element={<AccountsPage/>}/>
+										<Route path="appearance/*" element={<AppearancePage/>}/>
+										<Route path="debug/*" element={<DebugPage/>}/>
+										<Route path="*" element={<OptionsNavigator/>}/>
+									</Route>
+									<Route path="help" element={<HelpPage/>}/>				
 								</Route>
-								<Route path="help" element={<HelpPage/>}/>				
+								<Route path="" element={<Navigate to="videos" replace/>}/>
+								<Route path="error" element={<ErrorPage/>}/>
 							</Route>
-							<Route path="" element={<Navigate to="videos" replace/>}/>
-							<Route path="error" element={<ErrorPage/>}/>
+							<Route path="*" element={<Navigate to="app" replace/>}/>
 						</Route>
-						<Route path="*" element={<Navigate to="app" replace/>}/>
-					</Route>
-				), )}/>
+					), )}/>
+				</VideoDirectoryContext.Provider>
 			</Provider>
 		</React.StrictMode>
 	);
