@@ -2,24 +2,25 @@ import { useContext } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
 
 export function useVideoAccess() {
-	const videos = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { videoData, directoryRoot } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 
 	return {
-		videos,
+		videoData,
+		root: directoryRoot,
 		addVideo: (videoID: string) => {
-			if (videos.videoData.has(videoID)) {
+			if (videoData.has(videoID)) {
 				return;
 			}
 			
-			videos.videoData.set(videoID, {
+			videoData.set(videoID, {
 				id: videoID,
 				timestamps: [],
 				appliedTags: []
 			})
 		},
 		removeVideo: (videoID: string) => {
-			if (videos.videoData.has(videoID)){
-				videos.videoData.delete(videoID);
+			if (videoData.has(videoID)){
+				videoData.delete(videoID);
 			}
 		}
 	}

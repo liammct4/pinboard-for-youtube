@@ -1,0 +1,4 @@
+.video-directory-item {
+	display: flex;
+	flex-direction: row;
+}

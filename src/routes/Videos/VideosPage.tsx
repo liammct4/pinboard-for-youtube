@@ -22,6 +22,8 @@ import { useVideoAccess } from "../../components/features/useVideoAccess.ts";
 import { getVideoIdFromYouTubeLink } from "../../lib/util/youtube/youtubeUtil.ts";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
+import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
+import { VideoDirectoryInteractionContext } from "../../components/video/navigation/directory.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -34,7 +36,7 @@ export function VideosPage(): React.ReactNode {
 	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { videos, addVideo, removeVideo } = useVideoAccess();
+	const { videoData, addVideo, removeVideo } = useVideoAccess();
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
@@ -122,7 +124,9 @@ export function VideosPage(): React.ReactNode {
 					</form>
 				</div>
 				<div className="separated-scrollbox">
-					
+					<VideoDirectoryBrowser>
+
+					</VideoDirectoryBrowser>
 				</div>
 			</div>
 		</div>

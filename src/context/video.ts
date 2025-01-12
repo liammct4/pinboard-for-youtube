@@ -1,9 +1,11 @@
 import { createContext, Context } from "react"
 import { ITagDefinition, IVideo } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
+import { IDirectoryNode } from "../components/video/navigation/directory";
 
 export interface IVideoDirectoryContext {
 	videoData: Map<string, IVideo>;
+	directoryRoot: IDirectoryNode
 }
 
 export interface IVideoContext {

@@ -34,6 +34,7 @@ import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 import { VideoDirectoryContext } from "./context/video.ts"
+import { IDirectoryNode } from "./components/video/navigation/directory.ts"
 
 checkAndImplementLocalStorage();
 
@@ -80,10 +81,56 @@ async function setupState() {
 
 	let videos = await getVideoDictionary();
 
+	let testDirectoryRoot: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: null,
+		slice: "$",
+		subNodes: []
+	}
+
+	let nodeA: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: testDirectoryRoot,
+		slice: "test",
+		subNodes: []
+	}
+
+	let nodeB: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: testDirectoryRoot,
+		slice: "random",
+		subNodes: []
+	}
+
+	let nodeC: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: testDirectoryRoot,
+		slice: "videos",
+		subNodes: []
+	}
+
+	let nodeCA: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: nodeC,
+		slice: "other",
+		subNodes: []
+	}
+
+	let nodeCB: IDirectoryNode = {
+		type: "DIRECTORY",
+		parent: nodeC,
+		slice: "unused",
+		subNodes: []
+	}
+
+	nodeC.subNodes = [nodeCA, nodeCB]
+
+	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC]
+
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
-				<VideoDirectoryContext.Provider value={{ videoData: videos }}>
+				<VideoDirectoryContext.Provider value={{ videoData: videos, directoryRoot: testDirectoryRoot }}>
 					<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 						<Route path="/*" element={<PfyWrapper/>} >
 							<Route path="app" element={<HomePage/>}>
