@@ -1,32 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
 import { VideoCard } from "../../components/video/VideoCard/VideoCard.tsx";
-import { VideoCollection } from "../../components/video/VideoCollection/VideoCollection.tsx";
-import { VideoListContext } from "../../context/video.ts";
-import * as YTUtil from "../../lib/util/youtube/youtubeUtil.ts"
-import { addExpandedID, removeExpandedID, setLayoutState } from "../../features/state/tempStateSlice.ts";
-import { IVideo, generateTimestamp } from "../../lib/video/video.ts";
-import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
+import { setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
 import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, store } from "../../app/store.ts";
-import { SubmitHandler } from "react-hook-form";
+import { RootState } from "../../app/store.ts";
 import { ReactComponent as TagIcon} from "./../../../assets/icons/tag.svg"
 import { IconContainer } from "../../components/images/svgAsset.tsx";
 import { useNavigate } from "react-router-dom";
-import * as Select from "@radix-ui/react-select";
-import { SelectItem } from "../../components/input/DropdownInput/dropdown.tsx";
 import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggleLayoutExpander/TwoToggleLayoutExpander.tsx";
-import { ReactComponent as ArrowIcon } from "./../../../assets/symbols/arrow.svg"
 import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
 import { ReactComponent as DeleteIcon } from "./../../../assets/icons/bin.svg"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
+import { useVideoAccess } from "../../components/features/useVideoAccess.ts";
+import { getVideoIdFromYouTubeLink } from "../../lib/util/youtube/youtubeUtil.ts";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 
@@ -41,9 +34,14 @@ export function VideosPage(): React.ReactNode {
 	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
+	const { videos, addVideo, removeVideo } = useVideoAccess();
+	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
+		let id = getVideoIdFromYouTubeLink(data.link);
+
+		addVideo(id);
+	});
 	useHotkeys("delete", () => setInDeleteMode(!inDeleteMode));
-	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>(() => { });
-	
+
 	// TODO
 	const activeVideoID = "";
 	const onSaveActiveVideo = () => { };
