@@ -29,28 +29,17 @@ import { initializeAndSetSettingsDefault, setSettingValues } from "./features/se
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
 import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
+import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 
-async function setupState() {
-	
-	//@ts-ignore
-	chrome.storage = {
-		local: {
-			//@ts-ignore
-			get: (t) => { return {} },
-			//@ts-ignore
-			clear: () => {},
-			//@ts-ignore
-			set: () => {},
-			//@ts-ignore
-			remove: () => {}
-		}
-	}
+checkAndImplementLocalStorage();
 
+async function setupState() {
 	await ensureInitialized();
-	let activeID = undefined;
+
+	let activeID;
 
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -67,9 +56,8 @@ async function setupState() {
 	}
 
 	let tempState: IStateSlice = {
-		expandedVideoIDs: [],//await getExpandedVideos(),
-		//@ts-ignore
-		layout: {},//await getLayoutState(),
+		expandedVideoIDs: await getExpandedVideos(),
+		layout: await getLayoutState(),
 		temporarySingleState: {
 			onRequestIsVideoControlLocked: false
 		}
@@ -77,13 +65,13 @@ async function setupState() {
 
 	let cacheState: ICacheSlice = {
 		//@ts-ignore
-		videoCache: {}//await getVideoCacheFromStorage()
+		videoCache: await getVideoCacheFromStorage()
 	};
 
 	store.dispatch(setTempState(tempState));
 	store.dispatch(setCacheState(cacheState));
 
-	const currentUser = undefined;//await getCurrentAuthenticatedUser();
+	const currentUser = await getCurrentAuthenticatedUser();
 
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
