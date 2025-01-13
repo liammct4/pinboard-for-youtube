@@ -1,17 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { VideoDirectory } from "../VideoDirectory/VideoDirectory"
-import "./VideoDirectoryBrowser.css"
 import { useVideoAccess } from "../../../features/useVideoAccess";
-import { getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath as reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
+import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrow_sideways.svg"
+import "./VideoDirectoryBrowser.css"
 
 export function VideoDirectoryBrowser(): React.ReactNode {
 	const { videoData, root } = useVideoAccess();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
+	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		let node = getItemFromNode(directoryPath, root);
@@ -61,13 +62,30 @@ export function VideoDirectoryBrowser(): React.ReactNode {
 	return (
 		<>
 			<div className="directory-navigator">
-				<button className="button-base button-small square-button" onClick={() => setDirectoryPath(getRootDirectoryPathFromSubDirectory(directory!.parent!))}>←</button>
+				<div className="navigation-buttons">
+					<button className="button-base button-small square-button" onClick={() => {
+						setDirectoryPath(getRootDirectoryPathFromSubDirectory(directory!.parent!))
+						setNavigationStack([ ...navigationStack, directory!.slice ]);
+					}} disabled={directory?.parent == null}>←</button>
+					<button className="button-base button-small square-button" onClick={() => {
+						setDirectoryPath("$");
+						setNavigationStack([]);
+					}}>🏠︎</button>
+					<button className="button-base button-small square-button" onClick={() => {
+						let stackRemovedSlice = [ ...navigationStack ];
+						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
+
+						setDirectoryPath(directoryPathConcat(directoryPath, slice));
+						setNavigationStack(stackRemovedSlice);
+					}} disabled={navigationStack.length == 0}>→</button>
+				</div>
 				{
 					isEditingPathManually ?
 						<input
 							className="directory-path-bar small-text-input"
 							onBlur={(e) => {
 								setDirectoryPath(reformatDirectoryPath(e.target.value));
+								setNavigationStack([]);
 								setIsEditingPathManually(false);
 							}}
 							autoFocus
@@ -85,6 +103,7 @@ export function VideoDirectoryBrowser(): React.ReactNode {
 										<li key={directPath}>
 											<button className="jump-to-slice-path-button" onClick={(e) => {
 												setDirectoryPath(directPath);
+												setNavigationStack([]);
 												e.stopPropagation();
 											}}>{x}</button>
 											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
@@ -98,7 +117,10 @@ export function VideoDirectoryBrowser(): React.ReactNode {
 			</div>
 			<VideoDirectoryInteractionContext.Provider
 				value={{
-					navigateRequest: (requester) => setDirectoryPath(getRootDirectoryPathFromSubDirectory(requester))
+					navigateRequest: (requester) => {
+						setDirectoryPath(getRootDirectoryPathFromSubDirectory(requester));
+						setNavigationStack([]);
+					}
 				}}>
 				<div className="separated-scrollbox">
 					{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}

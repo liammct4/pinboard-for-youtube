@@ -4,6 +4,12 @@
 	gap: var(--pfy-spacing-standard);
 	margin: 0;
 
+	.navigation-buttons {
+		display: flex;
+		flex-direction: row;
+		gap: var(--pfy-spacing-standard-compact);
+	}
+
 	.directory-path-bar {
 		width: 100%;
 	}

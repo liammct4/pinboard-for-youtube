@@ -72,6 +72,18 @@ export function reformatDirectoryPath(path: string): string {
 	return reformatted.join(" > ");
 }
 
+export function directoryPathConcat(base: string, slice: string): string {
+	let slim = base.trim();
+
+	if (slim.endsWith(">", )) {
+		slim = slim.slice(0, slim.length - 2);
+	}
+
+	slim = slim.trimEnd();
+
+	return slim + " > " + slice.trim();
+}
+
 export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNode): string {
 	let slices: string[] = [ getNodePathIdentifier(directory) ];
 	let current = directory.parent;
