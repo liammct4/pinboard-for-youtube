@@ -1,6 +1,7 @@
 .directory-navigator {
 	display: flex;
 	flex-direction: row;
+	gap: var(--pfy-spacing-standard);
 	margin: 0;
 
 	.directory-path-bar {

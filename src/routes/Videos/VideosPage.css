@@ -66,11 +66,12 @@
 			margin-bottom: var(--pfy-spacing-standard-compact);
 		}
 
-		.video-collection-buttons {
+		.video-navigation-panel {
 			display: grid;
-			grid-template-columns: auto auto auto 1fr auto auto;
-			grid-template-rows: 1fr 1fr;
+			grid-template-columns: 1fr auto;
+			grid-template-rows: 1fr;
 			gap: var(--pfy-spacing-standard);
+			margin-bottom: var(--pfy-spacing-standard);
 
 			.open-filter-dropdown {
 				min-width: 136px;
@@ -94,6 +95,13 @@
 					flex-grow: 1;
 				}
 			}
+		}
+
+		.modification-button-panel {
+			display: flex;
+			flex-direction: row;
+			margin-top: var(--pfy-spacing-standard);
+			gap: var(--pfy-spacing-standard);
 		}
 
 		.video-collection-section-heading {

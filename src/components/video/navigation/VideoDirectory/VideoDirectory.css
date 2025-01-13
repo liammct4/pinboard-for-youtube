@@ -1,4 +1,50 @@
-.video-directory-item {
+.video-directory-list {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
+	list-style-type: none;
+	margin: var(--pfy-spacing-standard);
+	gap: 1px;
+	padding: 0;
+	
+	.node-item {
+		border: 1px solid transparent;
+		border-bottom: 1px solid var(--pfy-primary-faded);
+		padding: var(--pfy-spacing-standard-compact);
+		--color-with: color-mix(in srgb, var(--pfy-primary-common) 10%, transparent);
+
+		&[data-is-hover-highlight] {
+			&:hover {
+				border: 1px solid var(--pfy-primary-common);
+				background-color: var(--color-with);
+				backdrop-filter: opacity(0);
+			}
+		}
+	}
+
+	.directory-node-item {
+		display: flex;
+		flex-direction: column;
+		font-size: var(--pfy-font-text-big);
+
+		div {
+			display: flex;
+			flex-direction: row;
+			gap: var(--pfy-spacing-standard);
+
+			.enter-navigate-button {
+				display: flex;
+				background-color: transparent;
+				border: none;
+				flex-direction: row;
+				align-items: center;
+				padding: 0;
+				font-size: var(--pfy-font-text-standard);
+				width: 100%;
+			}
+		}
+		
+		hr {
+			margin: var(--pfy-spacing-standard-compact);
+		}
+	}
 }

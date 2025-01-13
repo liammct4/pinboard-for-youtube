@@ -74,33 +74,35 @@ export function VideoDirectoryBrowser(): React.ReactNode {
 							defaultValue={directoryPath}/>
 						:
 						<ul className="directory-path-bar small-text-input directory-navigator-slices" onClick={() => setIsEditingPathManually(true)}>
-						{
-							slices.map(x => {
-								accumulator += x;
-								let directPath = accumulator;
-								
-								accumulator += " > ";
-								
-								return (
-									<li key={directPath}>
-										<button className="jump-to-slice-path-button" onClick={(e) => {
-											setDirectoryPath(directPath);
-											e.stopPropagation();
-										}}>{x}</button>
-										<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
-									</li>
-								);
-							})
-						}
-						<li>{last}</li>
-					</ul>
+							{
+								slices.map(x => {
+									accumulator += x;
+									let directPath = accumulator;
+									
+									accumulator += " > ";
+									
+									return (
+										<li key={directPath}>
+											<button className="jump-to-slice-path-button" onClick={(e) => {
+												setDirectoryPath(directPath);
+												e.stopPropagation();
+											}}>{x}</button>
+											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
+										</li>
+									);
+								})
+							}
+							<li>{last}</li>
+						</ul>
 				}
 			</div>
 			<VideoDirectoryInteractionContext.Provider
 				value={{
 					navigateRequest: (requester) => setDirectoryPath(getRootDirectoryPathFromSubDirectory(requester))
 				}}>
-				{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+				<div className="separated-scrollbox">
+					{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+				</div>
 			</VideoDirectoryInteractionContext.Provider>
 		</>
 	)

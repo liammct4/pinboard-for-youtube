@@ -80,7 +80,23 @@ export function VideosPage(): React.ReactNode {
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}
 				<SplitHeading className="video-collection-section-heading" text="My video timestamps"></SplitHeading>
-				<div className="video-collection-buttons">
+				<div className="video-navigation-panel">
+					{/* Search bar. */}
+					<form className="search-bar-form">
+						<input className="small-text-input" type="text"/>
+						<button className="button-base button-small circle-button" type="submit">
+							<IconContainer
+								asset={SearchIcon}
+								className="icon-colour-standard"
+								use-stroke/>
+						</button>
+					</form>
+				</div>
+				<VideoDirectoryBrowser>
+
+				</VideoDirectoryBrowser>
+				{/* Modification buttons */ }
+				<div className="modification-button-panel">
 					{/* Add video dialog. */}
 					<FormDialog
 						formID="add-video-form"
@@ -107,25 +123,7 @@ export function VideosPage(): React.ReactNode {
 					<button className="button-base button-small square-button" title="Delete mode" onClick={() => setInDeleteMode(!inDeleteMode)} data-active-toggle={inDeleteMode}>
 						<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke attached-attributes={{ "data-active-toggle": inDeleteMode }}/>
 					</button>
-					{/* Empty div to fill the horizontal space in the grid. */}
-					<div/>
-					<button className="button-base button-small square-button" onClick={() => navigate("../tags")}>
-						<IconContainer className="icon-colour-standard" asset={TagIcon} use-fill use-stroke manual-stroke="--pfy-primary-ultradark"/>
-					</button>
-					{/* Search bar. */}
-					<form className="search-bar-form">
-						<input className="small-text-input" type="text"/>
-						<button className="button-base button-small circle-button" type="submit">
-							<IconContainer
-								asset={SearchIcon}
-								className="icon-colour-standard"
-								use-stroke/>
-						</button>
-					</form>
 				</div>
-				<VideoDirectoryBrowser>
-
-				</VideoDirectoryBrowser>
 			</div>
 		</div>
 	);
