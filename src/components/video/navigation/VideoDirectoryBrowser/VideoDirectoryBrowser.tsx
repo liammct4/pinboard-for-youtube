@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { VideoDirectory } from "../VideoDirectory/VideoDirectory"
+import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoAccess } from "../../../features/useVideoAccess";
 import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
@@ -7,7 +7,13 @@ import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrow_sideways.svg"
 import "./VideoDirectoryBrowser.css"
 
-export function VideoDirectoryBrowser(): React.ReactNode {
+export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
+
+export interface IVideoDirectoryBrowserProperties {
+	videoStyle: VideoPresentationStyle;
+}
+
+export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { videoData, root } = useVideoAccess();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
@@ -122,9 +128,14 @@ export function VideoDirectoryBrowser(): React.ReactNode {
 						setNavigationStack([]);
 					}
 				}}>
-				<div className="separated-scrollbox">
-					{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-				</div>
+				<VideoDirectoryPresentationContext.Provider
+					value={{
+						videoItemStyle: videoStyle
+					}}>
+					<div className="separated-scrollbox">
+						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+					</div>
+				</VideoDirectoryPresentationContext.Provider>
 			</VideoDirectoryInteractionContext.Provider>
 		</>
 	)

@@ -30,11 +30,12 @@ import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
 import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
+import { sampleVideoData } from "./../testData/testDataSet.ts";
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 import { VideoDirectoryContext } from "./context/video.ts"
-import { IDirectoryNode } from "./components/video/navigation/directory.ts"
+import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
 
 checkAndImplementLocalStorage();
 
@@ -123,9 +124,17 @@ async function setupState() {
 		subNodes: []
 	}
 
+	let videoA: IVideoNode = {
+		type: "VIDEO",
+		parent: testDirectoryRoot,
+		videoID: sampleVideoData[0].id
+	}
+
+	videos.set(videoA.videoID, sampleVideoData[0]);
+
 	nodeC.subNodes = [nodeCA, nodeCB]
 
-	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC]
+	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, videoA]
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>

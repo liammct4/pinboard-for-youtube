@@ -1,17 +1,18 @@
 import { createContext, useContext } from "react";
 import { VideoTimestamp } from "../../VideoTimestamp/VideoTimestamp";
-import { getNodePathIdentifier, IDirectoryNode, IVideoBrowserNode, VideoDirectoryInteractionContext } from "../directory"
+import { getNodePathIdentifier, IDirectoryNode, IVideoBrowserNode, IVideoNode, VideoDirectoryInteractionContext } from "../directory"
 import { ReactComponent as CategoryIcon } from "./../../../../../assets/icons/category.svg"
-import "./VideoDirectory.css"
 import { IconContainer } from "../../../images/svgAsset";
+import "./VideoDirectory.css"
+import { VideoPresentationStyle } from "../VideoDirectoryBrowser/VideoDirectoryBrowser";
+import { CompactVideoItem } from "../../styledVideoItems/CompactVideoItem/CompactVideoItem";
+import { MinimalVideoItem } from "../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
+import { RegularVideoItem } from "../../styledVideoItems/RegularVideoItem/RegularVideoItem";
+import { useVideoAccess } from "../../../features/useVideoAccess";
+import { IVideo } from "../../../../lib/video/video";
 
 export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;
-}
-
-interface IDirectoryItemProperties {
-	// TODO
-	node: IDirectoryNode,
 }
 
 interface IInteractableBrowserNodeProperties {
@@ -20,6 +21,7 @@ interface IInteractableBrowserNodeProperties {
 
 function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
 	let isDirectoryNode = node.type == "DIRECTORY";
+	let key = getNodePathIdentifier(node);
 
 	return (
 		<li
@@ -27,12 +29,16 @@ function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): 
 			data-is-hover-highlight={isDirectoryNode}>
 			{
 				isDirectoryNode ?
-					<DirectoryItem key={getNodePathIdentifier(node)} node={node as IDirectoryNode}/>
+					<DirectoryItem key={key} node={node as IDirectoryNode}/>
 					:
-					<p key={getNodePathIdentifier(node)}>Regular item placeholder</p>
+					<VideoItem key={key} node={node as IVideoNode}/>
 			}
 		</li>
 	);
+}
+
+interface IDirectoryItemProperties {
+	node: IDirectoryNode
 }
 
 function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNode {
@@ -50,6 +56,31 @@ function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNode {
 	)
 }
 
+interface IVideoItemProperties {
+	node: IVideoNode;
+}
+
+function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
+	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
+	const { videoData } = useVideoAccess();
+
+	if (!videoData.has(node.videoID)) {
+		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
+		return <p>ERROR</p>;
+	}
+	
+	let video = videoData.get(node.videoID) as IVideo;
+	
+	switch (videoItemStyle) {
+		case "COMPACT":
+			return <CompactVideoItem video={video}/>;
+		case "MINIMAL":
+			return <MinimalVideoItem video={video}/>;
+		case "REGULAR":
+			return <RegularVideoItem video={video}/>;
+	}
+}
+
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
 		<ul className="video-directory-list">
@@ -57,3 +88,11 @@ export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): Re
 		</ul>
 	)
 }
+
+export interface IVideoDirectoryPresentationContext {
+	videoItemStyle: VideoPresentationStyle;
+}
+
+export const VideoDirectoryPresentationContext = createContext<IVideoDirectoryPresentationContext>({
+	videoItemStyle: "REGULAR"
+});
