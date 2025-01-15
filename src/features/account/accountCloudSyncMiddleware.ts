@@ -7,6 +7,8 @@ import { DataMutation, IKeyIDItem, ServerResourceType, appendMutationBatchToAcco
 import { HttpStatusCode } from "../../lib/util/http.ts";
 import { setVideoQueueStorage } from "../../lib/user/queue/queueStorage.ts";
 import { IAppTheme } from "../../lib/config/theming/appTheme.ts";
+import { getVideoDictionary } from "../../lib/storage/userData/userData.ts";
+import { getItemFromStorage } from "../../lib/storage/storage.ts";
 
 export const accountCloudSyncMiddleware = createListenerMiddleware();
 
@@ -57,16 +59,8 @@ accountCloudSyncMiddleware.startListening({
 			"VIDEO",
 			idToken,
 			state.account.updatedVideoIDsQueue,
-			state.video.currentVideos,
+			await getItemFromStorage((s) => s.user_data.videos),
 			() => listenerApi.dispatch(clearVideoAccountQueue())
-		);
-		
-		handleSyncing<ITagDefinition>(
-			"TAG",
-			idToken,
-			state.account.updatedTagIDsQueue,
-			state.video.tagDefinitions,
-			() => listenerApi.dispatch(clearTagsAccountQueue())
 		);
 
 		handleSyncing<IAppTheme>(

@@ -82,10 +82,16 @@ export async function saveDirectoryToStorage(root: IDirectoryNode) {
 	await chrome.storage.local.set(storage);
 }
 
-export async function setStoredVideos(videos: IVideo[]) {
+export async function setStoredVideos(videos: Map<string, IVideo>) {
 	let storage = await chrome.storage.local.get() as IStorage;
 
-	storage.user_data.videos = videos;
+	let videoList: IVideo[] = [];
+
+	for (let video of videos.values()) {
+		videoList.push(video);
+	}
+
+	storage.user_data.videos = videoList;
 
 	await chrome.storage.local.set(storage);
 }

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
-import { useVideoAccess } from "../../../features/useVideoAccess";
+import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
@@ -16,7 +16,7 @@ export interface IVideoDirectoryBrowserProperties {
 }
 
 export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
-	const { videoData, root } = useVideoAccess();
+	const { videoData, root } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);

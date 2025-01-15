@@ -101,3 +101,9 @@ export async function ensureInitialized(): Promise<void> {
 
 	await chrome.storage.local.set(blankTemplate);
 }
+
+export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {
+	let storage = await chrome.storage.local.get() as IStorage;
+
+	return accessor(storage);
+}

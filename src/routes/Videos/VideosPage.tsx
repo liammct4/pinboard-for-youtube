@@ -18,7 +18,7 @@ import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.s
 import { ReactComponent as DeleteIcon } from "./../../../assets/icons/bin.svg"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
-import { useVideoAccess } from "../../components/features/useVideoAccess.ts";
+import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";
 import { getVideoIdFromYouTubeLink } from "../../lib/util/youtube/youtubeUtil.ts";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
@@ -37,7 +37,7 @@ export function VideosPage(): React.ReactNode {
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { videoData, addVideo, removeVideo } = useVideoAccess();
+	const { videoData, addVideo, removeVideo } = useVideoStateAccess();
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 

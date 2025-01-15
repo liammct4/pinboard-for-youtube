@@ -8,7 +8,7 @@ import { VideoPresentationStyle } from "../VideoDirectoryBrowser/VideoDirectoryB
 import { CompactVideoItem } from "../../styledVideoItems/CompactVideoItem/CompactVideoItem";
 import { MinimalVideoItem } from "../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
 import { RegularVideoItem } from "../../styledVideoItems/RegularVideoItem/RegularVideoItem";
-import { useVideoAccess } from "../../../features/useVideoAccess";
+import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { IVideo } from "../../../../lib/video/video";
 
 export interface IVideoDirectoryProperties {
@@ -61,7 +61,7 @@ interface IVideoItemProperties {
 
 function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
-	const { videoData } = useVideoAccess();
+	const { videoData } = useVideoStateAccess();
 
 	if (!videoData.has(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);

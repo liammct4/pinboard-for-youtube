@@ -1,9 +1,15 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
 import { getItemFromNode, IDirectoryNode, IVideoNode } from "../video/navigation/directory";
+import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 
-export function useVideoAccess() {
+export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+
+	useEffect(() => {
+		setStoredVideos(videoData);
+		saveDirectoryToStorage(directoryRoot);
+	}, [counter]);
 
 	return {
 		videoData,
@@ -28,6 +34,7 @@ export function useVideoAccess() {
 			};
 
 			desiredDirectory.subNodes.push(newVideoNode);
+			
 			setCounter(counter + 1);
 		},
 		removeVideo: (videoID: string) => {
