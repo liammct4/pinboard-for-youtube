@@ -5,13 +5,9 @@ import { IVideoItemProperties } from "../VideoItem";
 import { VideoTimestamp } from "../../VideoTimestamp/VideoTimestamp";
 import { Timestamp } from "../../../../lib/video/video";
 
-export function CompactVideoItem({ video }: IVideoItemProperties): React.ReactNode {
+export function CompactVideoItem({ video, onTimestampChanged }: IVideoItemProperties): React.ReactNode {
 	const { video: videoInfo } = useVideoInfo(video.id);
 	const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
-
-	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		// TODO.
-	}
 
 	return (
 		<>

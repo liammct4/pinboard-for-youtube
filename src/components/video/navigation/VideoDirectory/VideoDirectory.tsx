@@ -9,7 +9,7 @@ import { CompactVideoItem } from "../../styledVideoItems/CompactVideoItem/Compac
 import { MinimalVideoItem } from "../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
 import { RegularVideoItem } from "../../styledVideoItems/RegularVideoItem/RegularVideoItem";
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { IVideo } from "../../../../lib/video/video";
+import { IVideo, Timestamp } from "../../../../lib/video/video";
 
 export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;
@@ -61,7 +61,7 @@ interface IVideoItemProperties {
 
 function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
-	const { videoData } = useVideoStateAccess();
+	const { videoData, updateVideo } = useVideoStateAccess();
 
 	if (!videoData.has(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
@@ -69,14 +69,33 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	}
 	
 	let video = videoData.get(node.videoID) as IVideo;
+
+	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
+		let newVideo = { ...video };
+		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
+
+		if (index == -1) {
+			console.error("Timestamp doesn't exist.");
+			return;	
+		}
+
+		if (newTimestamp == null) {
+			newVideo.timestamps.splice(index, 1);
+		}
+		else {	
+			newVideo.timestamps[index] = newTimestamp;
+		}
+
+		updateVideo(newVideo);
+	};
 	
 	switch (videoItemStyle) {
 		case "COMPACT":
-			return <CompactVideoItem video={video}/>;
+			return <CompactVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
 		case "MINIMAL":
-			return <MinimalVideoItem video={video}/>;
+			return <MinimalVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
 		case "REGULAR":
-			return <RegularVideoItem video={video}/>;
+			return <RegularVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
 	}
 }
 

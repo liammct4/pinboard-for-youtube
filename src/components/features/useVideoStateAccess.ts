@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
 import { getItemFromNode, IDirectoryNode, IVideoNode } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
+import { IVideo } from "../../lib/video/video";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
@@ -41,6 +42,15 @@ export function useVideoStateAccess() {
 			if (videoData.has(videoID)){
 				videoData.delete(videoID);
 			}
+			setCounter(counter + 1);
+		},
+		updateVideo: (video: IVideo) => {
+			if (!videoData.has(video.id)) {
+				return;
+			}
+
+			videoData.set(video.id, video);
+
 			setCounter(counter + 1);
 		}
 	}
