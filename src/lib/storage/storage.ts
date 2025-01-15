@@ -9,10 +9,12 @@ import { DataMutation } from "../../features/account/accountSlice.ts"
 import settingDefinitions from "./../config/settingDefinitions.json"
 import { SettingValue } from "../../features/settings/settingsSlice.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
+import { IDirectoryNode } from "../../components/video/navigation/directory.ts"
 
 export interface IStorage {
 	user_data: {
 		videos: IVideo[];
+		directoryRoot: IDirectoryNode;
 		tagDefinitions: ITagDefinition[];
 		tagFilter: string;
 		config: IConfig;
@@ -58,6 +60,12 @@ export async function ensureInitialized(): Promise<void> {
 	let blankTemplate: IStorage = {
 		user_data: {
 			videos: [],
+			directoryRoot: {
+				type: "DIRECTORY",
+				slice: "$",
+				parent: null,
+				subNodes: []
+			},
 			config: {
 				theme: theme,
 				customThemes: [],

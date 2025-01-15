@@ -11,16 +11,21 @@ export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
 export interface IVideoDirectoryBrowserProperties {
 	videoStyle: VideoPresentationStyle;
+	directoryPath: string;
+	onDirectoryPathChanged: (newPath: string) => void; 
 }
 
-export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProperties): React.ReactNode {
+export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { videoData, root } = useVideoAccess();
-	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const directory = useMemo<IDirectoryNode | null>(() => {
+		if (root == null) {
+			return null;
+		}
+
 		let node = getItemFromNode(directoryPath, root);
 
 		if (node == null) {
@@ -48,11 +53,11 @@ export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProp
 		}
 
 		return node as IDirectoryNode;
-	}, [directoryPath]);
+	}, [directoryPath, root, videoData]);
 
 	useEffect(() => {
 		if (directory == null) {
-			setDirectoryPath(lastKnownValidPath);
+			onDirectoryPathChanged(lastKnownValidPath);
 		}
 		else {
 			setLastKnownValidPath(directoryPath);
@@ -70,18 +75,18 @@ export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProp
 			<div className="directory-navigator">
 				<div className="navigation-buttons">
 					<button className="button-base button-small square-button" onClick={() => {
-						setDirectoryPath(getRootDirectoryPathFromSubDirectory(directory!.parent!))
+						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(directory!.parent!))
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
 					}} disabled={directory?.parent == null}>←</button>
 					<button className="button-base button-small square-button" onClick={() => {
-						setDirectoryPath("$");
+						onDirectoryPathChanged("$");
 						setNavigationStack([]);
 					}}>🏠︎</button>
 					<button className="button-base button-small square-button" onClick={() => {
 						let stackRemovedSlice = [ ...navigationStack ];
 						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
 
-						setDirectoryPath(directoryPathConcat(directoryPath, slice));
+						onDirectoryPathChanged(directoryPathConcat(directoryPath, slice));
 						setNavigationStack(stackRemovedSlice);
 					}} disabled={navigationStack.length == 0}>→</button>
 				</div>
@@ -90,7 +95,7 @@ export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProp
 						<input
 							className="directory-path-bar small-text-input"
 							onBlur={(e) => {
-								setDirectoryPath(reformatDirectoryPath(e.target.value));
+								onDirectoryPathChanged(reformatDirectoryPath(e.target.value));
 								setNavigationStack([]);
 								setIsEditingPathManually(false);
 							}}
@@ -108,7 +113,7 @@ export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProp
 									return (
 										<li key={directPath}>
 											<button className="jump-to-slice-path-button" onClick={(e) => {
-												setDirectoryPath(directPath);
+												onDirectoryPathChanged(directPath);
 												setNavigationStack([]);
 												e.stopPropagation();
 											}}>{x}</button>
@@ -124,7 +129,7 @@ export function VideoDirectoryBrowser({ videoStyle }: IVideoDirectoryBrowserProp
 			<VideoDirectoryInteractionContext.Provider
 				value={{
 					navigateRequest: (requester) => {
-						setDirectoryPath(getRootDirectoryPathFromSubDirectory(requester));
+						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(requester));
 						setNavigationStack([]);
 					}
 				}}>

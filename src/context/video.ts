@@ -5,7 +5,9 @@ import { IDirectoryNode } from "../components/video/navigation/directory";
 
 export interface IVideoDirectoryContext {
 	videoData: Map<string, IVideo>;
-	directoryRoot: IDirectoryNode
+	directoryRoot: IDirectoryNode;
+	counter: number;
+	setCounter: (newNumber: number) => void;
 }
 
 export interface IVideoContext {

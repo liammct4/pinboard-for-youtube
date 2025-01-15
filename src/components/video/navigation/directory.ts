@@ -65,6 +65,14 @@ export function getNodePathIdentifier(node: IVideoBrowserNode): string {
 	}
 }
 
+export function getParentPathFromPath(path: string): string {
+	let slices = path.split('>').map(x => x.trim());
+
+	slices.splice(slices.length - 1, 1);
+
+	return slices.join(" > ");
+}
+
 export function reformatDirectoryPath(path: string): string {
 	const slices = path.split('>');
 	const reformatted = slices.map(x => x.trim());

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { getVideoDictionary } from "./lib/storage/userData/userData.ts"
+import { getVideoDictionary, saveDirectoryToStorage, saveVideoDictionaryToStorage } from "./lib/storage/userData/userData.ts"
 import { ensureInitialized } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
@@ -31,11 +31,11 @@ import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
 import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
+import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
+import { VideoWrapper } from "./routes/VideoWrapper.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
-import { VideoDirectoryContext } from "./context/video.ts"
-import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
 
 checkAndImplementLocalStorage();
 
@@ -136,12 +136,15 @@ async function setupState() {
 
 	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, videoA]
 
+	await saveVideoDictionaryToStorage(videos);
+	await saveDirectoryToStorage(testDirectoryRoot);
+
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
-				<VideoDirectoryContext.Provider value={{ videoData: videos, directoryRoot: testDirectoryRoot }}>
-					<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-						<Route path="/*" element={<PfyWrapper/>} >
+				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
+					<Route path="/*" element={<PfyWrapper/>}>
+						<Route path="*" element={<VideoWrapper/>}>
 							<Route path="app" element={<HomePage/>}>
 								<Route path="videos" element={<VideosPage/>}/>
 								<Route path="menu" element={<MenuPage/>}>
@@ -159,8 +162,8 @@ async function setupState() {
 							</Route>
 							<Route path="*" element={<Navigate to="app" replace/>}/>
 						</Route>
-					), )}/>
-				</VideoDirectoryContext.Provider>
+					</Route>
+				))}/>
 			</Provider>
 		</React.StrictMode>
 	);

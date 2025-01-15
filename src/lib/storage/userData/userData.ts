@@ -1,3 +1,4 @@
+import { IDirectoryNode, IVideoBrowserNode, IVideoNode } from "../../../components/video/navigation/directory";
 import { ITagDefinition, IVideo } from "../../video/video"
 import { IStorage } from "../storage"
 
@@ -23,6 +24,63 @@ export async function saveVideoDictionaryToStorage(map: Map<string, IVideo>): Pr
 	await chrome.storage.local.set(storage);
 }
 
+function addParentPass(root: IDirectoryNode) {
+	for (let node of (root as IDirectoryNode).subNodes) {
+		node.parent = root;
+
+		if (node.type == "DIRECTORY") {
+			addParentPass(node as IDirectoryNode);
+		}
+	}
+}
+
+export async function getDirectoryRootFromStorage(): Promise<IDirectoryNode> {
+	let storage = await chrome.storage.local.get() as IStorage;
+
+	addParentPass(storage.user_data.directoryRoot);
+	
+	return storage.user_data.directoryRoot;
+}
+
+function removeParentPass(root: IDirectoryNode): IDirectoryNode {
+	let newRoot: IDirectoryNode = {
+		type: "DIRECTORY",
+		slice: root.slice,
+		parent: null,
+		subNodes: []
+	}
+
+	for (let node of root.subNodes) {
+		let newNode: IVideoBrowserNode;
+
+		if (node.type == "DIRECTORY") {
+			newNode = removeParentPass(node as IDirectoryNode);
+		}
+		else {
+			let newVideoNode: IVideoNode = {
+				parent: null,
+				type: "VIDEO",
+				videoID: (node as IVideoNode).videoID
+			};
+
+			newNode = newVideoNode;
+		}
+
+		newRoot.subNodes.push(newNode);
+	}
+
+	return newRoot;
+}
+
+export async function saveDirectoryToStorage(root: IDirectoryNode) {
+	let storage = await chrome.storage.local.get() as IStorage;
+
+	let newRoot = removeParentPass(root);
+
+	storage.user_data.directoryRoot = newRoot;
+
+	await chrome.storage.local.set(storage);
+}
 
 export async function setStoredVideos(videos: IVideo[]) {
 	let storage = await chrome.storage.local.get() as IStorage;

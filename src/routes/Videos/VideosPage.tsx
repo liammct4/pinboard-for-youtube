@@ -34,13 +34,14 @@ export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
+	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { videoData, addVideo, removeVideo } = useVideoAccess();
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
-		addVideo(id);
+		addVideo(id, directoryPath);
 	});
 	useHotkeys("delete", () => setInDeleteMode(!inDeleteMode));
 
@@ -92,7 +93,7 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
-				<VideoDirectoryBrowser videoStyle="COMPACT"/>
+				<VideoDirectoryBrowser videoStyle="COMPACT" directoryPath={directoryPath} onDirectoryPathChanged={setDirectoryPath}/>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
 					{/* Add video dialog. */}
