@@ -21,7 +21,6 @@ interface IInteractableBrowserNodeProperties {
 
 function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
 	let isDirectoryNode = node.type == "DIRECTORY";
-	let key = getNodePathIdentifier(node);
 
 	return (
 		<li
@@ -29,9 +28,9 @@ function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): 
 			data-is-hover-highlight={isDirectoryNode}>
 			{
 				isDirectoryNode ?
-					<DirectoryItem key={key} node={node as IDirectoryNode}/>
+					<DirectoryItem node={node as IDirectoryNode}/>
 					:
-					<VideoItem key={key} node={node as IVideoNode}/>
+					<VideoItem node={node as IVideoNode}/>
 			}
 		</li>
 	);
@@ -84,7 +83,7 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
 		<ul className="video-directory-list">
-			{directoryData.subNodes.map(x => <InteractableBrowserNode node={x}/>)}
+			{directoryData.subNodes.map(x => <InteractableBrowserNode key={getNodePathIdentifier(x)} node={x}/>)}
 		</ul>
 	)
 }

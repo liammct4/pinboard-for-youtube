@@ -21,7 +21,7 @@ export function CompactVideoItem({ video }: IVideoItemProperties): React.ReactNo
 				expanded={isExpanded}
 				onExpanded={setIsExpanded}>
 				{
-					video.timestamps.map(x => <VideoTimestamp videoID={video.id} timestamp={x} onChange={onTimestampChanged}/>)
+					video.timestamps.map(x => <VideoTimestamp key={x.id} videoID={video.id} timestamp={x} onChange={onTimestampChanged}/>)
 				}
 			</LabeledArrowExpander>
 		</>
