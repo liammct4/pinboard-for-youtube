@@ -3,6 +3,8 @@
 	flex-direction: row;
 
 	.expander-control-button {
+		padding: 2px !important;
+
 		.indicator-arrow-wrapper {
 			display: flex;
 			height: 100%;

@@ -64,7 +64,7 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
 
 	return (
-		<div className="timestamp-inner">
+		<li className="timestamp-inner">
 			<button className="square-button button-base button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
 				<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
 			</button>
@@ -103,6 +103,6 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 						submitEvent={submit.current}
 						defaultValue={timestamp.message}/>
 			</FormDialog>
-		</div>
+		</li>
 	);
 }

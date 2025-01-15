@@ -10,6 +10,7 @@ import { MinimalVideoItem } from "../../styledVideoItems/MinimalVideoItem/Minima
 import { RegularVideoItem } from "../../styledVideoItems/RegularVideoItem/RegularVideoItem";
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { IVideo, Timestamp } from "../../../../lib/video/video";
+import { VideoItemContext } from "../../styledVideoItems/VideoItem";
 
 export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;
@@ -88,15 +89,38 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 		updateVideo(newVideo);
 	};
+
+	const onTimestampAdded = (newTimestamp: Timestamp) => {
+		let newVideo = { ...video };
+
+		newVideo.timestamps.push(newTimestamp);
+
+		updateVideo(newVideo);
+	}
+
+	let styleItem;
 	
 	switch (videoItemStyle) {
 		case "COMPACT":
-			return <CompactVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
+			styleItem = <CompactVideoItem/>;
+			break;
 		case "MINIMAL":
-			return <MinimalVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
+			styleItem = <MinimalVideoItem/>;
+			break;
 		case "REGULAR":
-			return <RegularVideoItem video={video} onTimestampChanged={onTimestampChanged}/>;
+			styleItem = <RegularVideoItem/>
+			break;
 	}
+
+	return (
+		<VideoItemContext.Provider value={{
+			video,
+			onTimestampAdded,
+			onTimestampChanged
+		}}>
+			{styleItem}
+		</VideoItemContext.Provider>
+	);
 }
 
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
