@@ -42,7 +42,7 @@ function validateTimestamp(value: string): string | null {
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestampProperties): React.ReactNode {
-	const { activeVideoID } = useContext(VideoListContext);
+	const activeVideoID = "";
 	
 	const onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
@@ -64,47 +64,45 @@ export function VideoTimestamp({ videoID, timestamp, onChange }: IVideoTimestamp
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
 
 	return (
-		<Reorder.Item value={timestamp} id={timestamp.id}>
-			<div className="timestamp-inner">
-				<button className="square-button button-base button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
-					<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
-				</button>
-				<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
-				<p className="message-text">{timestamp.message}</p>
-				<div style={{ flexGrow: "1" }}></div>
-				<button className="square-button button-base button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
-					<IconContainer
-						className="bin-icon icon-colour-standard"
-						asset={BinIcon}
-						use-stroke/>
-				</button>
-				{/* Edit dialog */}
-				<FormDialog
-					formID="edit-timestamp-form"
-					formTitle="Edit timestamp"
-					submitText="Save"
-					labelSize="small"
-					trigger={<button className="edit-button button-base button-small">Edit</button>}
-					handleSubmit={handleSubmit(handler)}>
-						{/* Time */}
-						<FormField<IEditTimestampForm> register={register} registerOptions={null}
-							label="Time:"
-							name="time"
-							fieldSize="small"
-							selector={(data) => data.time}
-							submitEvent={submit.current}
-							validationMethod={validateTimestamp}
-							defaultValue={stringTime}/>
-						{/* Message */}
-						<FormField<IEditTimestampForm> register={register} registerOptions={null}
-							label="Message:"
-							name="message"
-							fieldSize="large"
-							selector={(data) => data.message}
-							submitEvent={submit.current}
-							defaultValue={timestamp.message}/>
-				</FormDialog>
-			</div>
-		</Reorder.Item>
+		<div className="timestamp-inner">
+			<button className="square-button button-base button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+				<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
+			</button>
+			<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
+			<p className="message-text">{timestamp.message}</p>
+			<div style={{ flexGrow: "1" }}></div>
+			<button className="square-button button-base button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
+				<IconContainer
+					className="bin-icon icon-colour-standard"
+					asset={BinIcon}
+					use-stroke/>
+			</button>
+			{/* Edit dialog */}
+			<FormDialog
+				formID="edit-timestamp-form"
+				formTitle="Edit timestamp"
+				submitText="Save"
+				labelSize="small"
+				trigger={<button className="edit-button button-base button-small">Edit</button>}
+				handleSubmit={handleSubmit(handler)}>
+					{/* Time */}
+					<FormField<IEditTimestampForm> register={register} registerOptions={null}
+						label="Time:"
+						name="time"
+						fieldSize="small"
+						selector={(data) => data.time}
+						submitEvent={submit.current}
+						validationMethod={validateTimestamp}
+						defaultValue={stringTime}/>
+					{/* Message */}
+					<FormField<IEditTimestampForm> register={register} registerOptions={null}
+						label="Message:"
+						name="message"
+						fieldSize="large"
+						selector={(data) => data.message}
+						submitEvent={submit.current}
+						defaultValue={timestamp.message}/>
+			</FormDialog>
+		</div>
 	);
 }
