@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
+import { InteractableBrowserNode, VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
+import { directoryPathConcat, getItemFromNode, getNodePathIdentifier, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrow_sideways.svg"
 import "./VideoDirectoryBrowser.css"
+import { DragList } from "../../../../lib/dragList/DragList";
+import { IVideo } from "../../../../lib/video/video";
+import "./../VideoDirectory/VideoDirectory.css"
+import { DragListItem } from "../../../../lib/dragList/DragListItem";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -137,9 +141,9 @@ export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPa
 					value={{
 						videoItemStyle: videoStyle
 					}}>
-					<div className="separated-scrollbox">
+					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl">
 						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-					</div>
+					</DragList>
 				</VideoDirectoryPresentationContext.Provider>
 			</VideoDirectoryInteractionContext.Provider>
 		</>

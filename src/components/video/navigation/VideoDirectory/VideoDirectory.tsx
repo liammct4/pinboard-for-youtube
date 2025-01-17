@@ -11,16 +11,17 @@ import { RegularVideoItem } from "../../styledVideoItems/RegularVideoItem/Regula
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { IVideo, Timestamp } from "../../../../lib/video/video";
 import { VideoItemContext } from "../../styledVideoItems/VideoItem";
+import { DragListItem } from "../../../../lib/dragList/DragListItem";
 
 export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;
 }
 
-interface IInteractableBrowserNodeProperties {
+export interface IInteractableBrowserNodeProperties {
 	node: IVideoBrowserNode;
 }
 
-function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
+export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
 	let isDirectoryNode = node.type == "DIRECTORY";
 
 	return (
@@ -126,7 +127,13 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
 		<ul className="video-directory-list">
-			{directoryData.subNodes.map(x => <InteractableBrowserNode key={getNodePathIdentifier(x)} node={x}/>)}
+			{
+				directoryData.subNodes.map(x => 
+					<DragListItem id={getNodePathIdentifier(x)}>
+						<InteractableBrowserNode node={x}/>
+					</DragListItem>
+				)	
+			}
 		</ul>
 	)
 }

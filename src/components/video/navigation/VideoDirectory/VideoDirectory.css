@@ -2,9 +2,9 @@
 	display: flex;
 	flex-direction: column;
 	list-style-type: none;
-	margin: var(--pfy-spacing-standard);
+	padding: var(--pfy-spacing-standard-compact);
+	margin: 0;
 	gap: 1px;
-	padding: 0;
 	
 	.node-item {
 		border: 1px solid transparent;
