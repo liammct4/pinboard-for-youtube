@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { VideoTimestamp } from "../../VideoTimestamp/VideoTimestamp";
+import { VideoTimestamp } from "../../timestamps/VideoTimestamp/VideoTimestamp";
 import { getNodePathIdentifier, IDirectoryNode, IVideoBrowserNode, IVideoNode, VideoDirectoryInteractionContext } from "../directory"
 import { ReactComponent as CategoryIcon } from "./../../../../../assets/icons/category.svg"
 import { IconContainer } from "../../../images/svgAsset";
@@ -99,6 +99,12 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		updateVideo(newVideo);
 	}
 
+	const setTimestamps = (timestamps: Timestamp[]) => {
+		let newVideo = { ...video, timestamps: timestamps };
+
+		updateVideo(newVideo);
+	}
+
 	let styleItem;
 	
 	switch (videoItemStyle) {
@@ -117,7 +123,8 @@ function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		<VideoItemContext.Provider value={{
 			video,
 			onTimestampAdded,
-			onTimestampChanged
+			onTimestampChanged,
+			setTimestamps
 		}}>
 			{styleItem}
 		</VideoItemContext.Provider>

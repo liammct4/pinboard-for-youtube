@@ -10,12 +10,12 @@
 		border: 1px solid transparent;
 		border-bottom: 1px solid var(--pfy-primary-faded);
 		padding: var(--pfy-spacing-standard-compact);
-		--color-with: color-mix(in srgb, var(--pfy-primary-common) 10%, transparent);
+		--transparent-bg: color-mix(in srgb, var(--pfy-primary-common) 10%, transparent);
 
 		&[data-is-hover-highlight="true"] {
 			&:hover {
 				border: 1px solid var(--pfy-primary-common);
-				background-color: var(--color-with);
+				background-color: var(--transparent-bg);
 				backdrop-filter: opacity(0);
 			}
 		}

@@ -1,0 +1,40 @@
+.timestamp-list {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	user-select: none;
+
+	.move-line {
+		margin: 0 !important;
+		position: relative;
+		outline: var(--pfy-spacing-standard-compact) solid var(--pfy-primary-dark);
+		border: none;
+		
+		&[data-is-visible="false"] {
+			outline-color: transparent !important;
+		}
+	}
+
+	.drag-list-timestamp {
+		transition: transform var(--pfy-timing-fast);
+		transform: scale(1);
+	}
+
+	.drag-list-active-timestamp {
+		--transparent-bg: color-mix(in srgb, var(--pfy-primary-common) 30%, transparent);
+		transition: transform var(--pfy-timing-fast);
+		transform: scale(1.05);
+
+		background-color: var(--transparent-bg);
+		outline: 0px solid var(--pfy-shade-03);
+	}
+
+	.empty-timestamps-message {
+		text-align: center;
+		font-style: italic;
+		font-size: var(--pfy-font-text-standard);
+		color: var(--pfy-text-lighter);
+		height: var(--pfy-element-button-size-regular);
+		padding-bottom: 4px;
+	}
+}

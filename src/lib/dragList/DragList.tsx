@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react"
 
 export type DragEvent = {
+	startDragID: string;
 	inbetweenStartID: string | null;
 	inbetweenEndID: string | null;
 	overlappingID: string | null;
@@ -8,14 +9,15 @@ export type DragEvent = {
 
 export interface IDragListProperties {
 	className?: string;
-	children: JSX.Element;
+	children: JSX.Element | JSX.Element[];
 	dragListName: string;
 	onDrag?: (e: DragEvent) => void;
+	onDragEnd?: (e: DragEvent) => void;
 }
 
 export type InbetweenIDEventType = -1 | string | 1;
 
-export function DragList({ className, dragListName, children, onDrag }: IDragListProperties) {
+export function DragList({ className, dragListName, children, onDrag, onDragEnd }: IDragListProperties) {
 	const listBox = useRef<HTMLDivElement>(null);
 	const [ startDragID, setStartDragID ] = useState<string | null>(null);
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
@@ -56,6 +58,7 @@ export function DragList({ className, dragListName, children, onDrag }: IDragLis
 				}
 
 				return {
+					startDragID: startDragID!,
 					inbetweenStartID: startID,
 					inbetweenEndID: endID,
 					overlappingID: overlappingID
@@ -84,7 +87,13 @@ export function DragList({ className, dragListName, children, onDrag }: IDragLis
 	};
 	
 	useEffect(() => {
-		window.addEventListener("mouseup", () => setStartDragID(null));
+		window.addEventListener("mouseup", () => {
+			setStartDragID(null);
+
+			if (onDragEnd != null) {
+				onDragEnd(dragInfo!);
+			}
+		});
 	}, [listBox.current]);
 	
 	return (

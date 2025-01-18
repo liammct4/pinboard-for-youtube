@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useVideoInfo } from "../../../features/useVideoInfo";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
-import { VideoTimestamp } from "../../VideoTimestamp/VideoTimestamp";
+import { VideoTimestamp } from "../../timestamps/VideoTimestamp/VideoTimestamp";
 import { Timestamp } from "../../../../lib/video/video";
 import { ReactComponent as PlusIcon } from "./../../../../../assets/symbols/plus.svg"
 import { ReactComponent as PlayIcon } from "./../../../../../assets/icons/jump_icon.svg"
@@ -9,9 +9,10 @@ import { IconContainer } from "../../../images/svgAsset";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { getYouTubeLinkFromVideoID, getYoutubeVideoInfoFromLink } from "../../../../lib/util/youtube/youtubeUtil";
 import "./CompactVideoItem.css"
+import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 
 export function CompactVideoItem(): React.ReactNode {
-	const { video, onTimestampAdded, onTimestampChanged } = useContext<IVideoItemContext>(VideoItemContext);
+	const { video, onTimestampAdded, onTimestampChanged, setTimestamps } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo } = useVideoInfo(video.id);
 	const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
@@ -23,13 +24,12 @@ export function CompactVideoItem(): React.ReactNode {
 				expanded={isExpanded}
 				onExpanded={setIsExpanded}>
 				<div className="compact-video-item-inner">
-					<ul className="timestamp-list">
-						{
-							video.timestamps.length != 0 ?
-								video.timestamps.map(x => <VideoTimestamp key={x.id} videoID={video.id} timestamp={x} onChange={onTimestampChanged}/>) :
-								<span className="empty-timestamps-message">No timestamps found.</span>
-						}
-					</ul>
+					<TimestampList
+						videoID={video.id}
+						timestamps={video.timestamps}
+						onTimestampChanged={onTimestampChanged}
+						onTimestampsChanged={setTimestamps}
+					/>
 					<button className="button-base circle-button" onClick={() => {
 						onTimestampAdded({ id: crypto.randomUUID(), message: "New timestamp", time: 60 });
 					}}>

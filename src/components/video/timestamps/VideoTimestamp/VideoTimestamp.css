@@ -1,6 +1,7 @@
 .timestamp-inner {
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: auto 54px 1fr auto auto;
 	font-size: var(--pfy-font-text-standard);
 	gap: var(--pfy-spacing-standard-compact);
 	overflow-y: hidden;
@@ -11,11 +12,14 @@
 	}
 
 	.message-text {
+		display: block;
 		margin: 0;
+		height: var(--pfy-element-button-size-regular);
 		color: var(--pfy-text-light);
 		border-left: 1px solid var(--pfy-primary-common);
 		padding-left: var(--pfy-spacing-standard-compact);
 		padding-bottom: var(--pfy-spacing-standard-compact);
+		text-overflow: ellipsis;
 	}
 
 	.edit-button {

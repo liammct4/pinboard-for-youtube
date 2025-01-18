@@ -13,20 +13,5 @@
 		margin-top: var(--pfy-spacing-standard-compact);
 		padding-bottom: var(--pfy-spacing-standard-compact);
 		padding-left: var(--pfy-spacing-standard-compact);
-
-		.timestamp-list {
-			display: flex;
-			flex-direction: column;
-			padding: 0;
-
-			.empty-timestamps-message {
-				text-align: center;
-				font-style: italic;
-				font-size: var(--pfy-font-text-standard);
-				color: var(--pfy-text-lighter);
-				height: var(--pfy-element-button-size-regular);
-				padding-bottom: 4px;
-			}
-		}
 	}
 }
