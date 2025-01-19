@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { InteractableBrowserNode, VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
+import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
+import { InteractableBrowserNode } from "../VideoDirectory/nodes/InteractableBrowserNode";
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getNodePathIdentifier, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";

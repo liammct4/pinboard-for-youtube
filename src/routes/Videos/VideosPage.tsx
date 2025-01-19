@@ -93,7 +93,7 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
-				<VideoDirectoryBrowser videoStyle="COMPACT" directoryPath={directoryPath} onDirectoryPathChanged={setDirectoryPath}/>
+				<VideoDirectoryBrowser videoStyle="MINIMAL" directoryPath={directoryPath} onDirectoryPathChanged={setDirectoryPath}/>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
 					{/* Add video dialog. */}
