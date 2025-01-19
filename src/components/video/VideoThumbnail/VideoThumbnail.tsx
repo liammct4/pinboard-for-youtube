@@ -4,23 +4,26 @@ import { ReactComponent as ThumbnailMissingImage } from "./../../../../assets/th
 import "./VideoThumbnail.css"
 
 export interface IVideoThumbnailProperties {
+	className?: string;
 	videoID: string;
 	width?: number;
 	alt: string;
 }
 
-export function VideoThumbnail({ videoID, alt, width }: IVideoThumbnailProperties): React.ReactNode {
+export function VideoThumbnail({ className, videoID, alt, width }: IVideoThumbnailProperties): React.ReactNode {
 	const { videoExists } = useVideoInfo(videoID);
+
+	let widthPx = `${width ?? 80}px`;
 
 	if (videoExists) {
 		return <img
-			className="thumbnail-image"
-			style={{ width: `${width ?? 80}px` }}
+			className={`thumbnail-image ${className}`}
+			style={{ width: widthPx }}
 			src={`https://img.youtube.com/vi/${videoID}/default.jpg`}
 			alt={alt}
 			/>
 	}
 	else {
-		return <ThumbnailMissingImage className="thumbnail-image" preserveAspectRatio="none" width={undefined} height={undefined}/>;
+		return <ThumbnailMissingImage className={`thumbnail-image ${className}`} preserveAspectRatio="none" width={width} height={undefined}/>;
 	}
 }
