@@ -1,0 +1,29 @@
+.compact-video-item {
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	grid-template-rows: auto auto;
+	column-gap: var(--pfy-spacing-standard);
+	row-gap: var(--pfy-spacing-standard-compact);
+	align-items: center;
+
+	.thumbnail-image {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	& span {
+		display: flex;
+		font-size: var(--pfy-font-text-big);
+	}
+
+	.timestamp-expander {
+		grid-column: 1 / 4;
+		overflow-x: hidden;
+		padding: 1px;
+
+		> div {
+			padding: 1px;
+			padding-bottom: var(--pfy-spacing-standard-compact);
+		}
+	}
+}

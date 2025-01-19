@@ -3,6 +3,7 @@
 	flex-direction: column;
 	padding: 0;
 	user-select: none;
+	overflow: hidden;
 
 	.move-line {
 		margin: 0 !important;
