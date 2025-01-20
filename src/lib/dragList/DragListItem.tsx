@@ -22,7 +22,7 @@ export function DragListItem({ id, children }: IDragListItemProperties) {
 	// TODO: Replace with MutationObserver
 	useEffect(() => {
 		setTimeout(() => {
-			setCounter(counter + 1);
+			setCounter(Math.random());
 		}, 100);
 	}, [counter])
 	

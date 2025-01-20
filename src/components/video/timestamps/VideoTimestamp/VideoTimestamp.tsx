@@ -1,12 +1,10 @@
-import { useCallback, useContext } from "react"
-import { VideoListContext } from "../../../../context/video.ts";
+import { useCallback } from "react"
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp, cloneModifyTimestamp } from "../../../../lib/video/video.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../../forms/validated-form.ts";
 import { FormField } from "../../../forms/FormField/FormField.tsx";
-import { Reorder } from "framer-motion";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
 import { ReactComponent as BinIcon } from "src/../../assets/icons/bin.svg"
 import { ReactComponent as JumpVideoIcon } from "./../../../../../assets/icons/jump_icon.svg"

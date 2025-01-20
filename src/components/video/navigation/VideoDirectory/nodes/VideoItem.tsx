@@ -20,11 +20,11 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
 		return <p>ERROR</p>;
 	}
-
+	
 	let video = videoData.get(node.videoID) as IVideo;
 
 	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		let newVideo = { ...video };
+		let newVideo = { ...videoData.get(node.videoID)! };
 		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
 
 		if (index == -1) {
@@ -56,20 +56,6 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		updateVideo(newVideo);
 	};
 
-	let styleItem;
-
-	switch (videoItemStyle) {
-		case "COMPACT":
-			styleItem = <CompactVideoItem />;
-			break;
-		case "MINIMAL":
-			styleItem = <MinimalVideoItem />;
-			break;
-		case "REGULAR":
-			styleItem = <RegularVideoItem />;
-			break;
-	}
-
 	return (
 		<VideoItemContext.Provider value={{
 			video,
@@ -77,7 +63,11 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 			onTimestampChanged,
 			setTimestamps
 		}}>
-			{styleItem}
+			{
+				videoItemStyle == "MINIMAL" ? <MinimalVideoItem/> :
+				videoItemStyle == "COMPACT" ? <CompactVideoItem/> :
+				videoItemStyle == "REGULAR" ? <RegularVideoItem/> : <></>
+			}
 		</VideoItemContext.Provider>
 	);
 }

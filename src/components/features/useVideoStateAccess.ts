@@ -36,13 +36,13 @@ export function useVideoStateAccess() {
 
 			desiredDirectory.subNodes.push(newVideoNode);
 			
-			setCounter(counter + 1);
+			setCounter(Math.random());
 		},
 		removeVideo: (videoID: string) => {
 			if (videoData.has(videoID)){
 				videoData.delete(videoID);
 			}
-			setCounter(counter + 1);
+			setCounter(Math.random());
 		},
 		updateVideo: (video: IVideo) => {
 			if (!videoData.has(video.id)) {
@@ -51,7 +51,7 @@ export function useVideoStateAccess() {
 
 			videoData.set(video.id, video);
 
-			setCounter(counter + 1);
+			setCounter(Math.random());
 		}
 	}
 }
