@@ -14,15 +14,18 @@ export interface IVideoDirectoryProperties {
 
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
-		<ul className="video-directory-list">
-			{
-				directoryData.subNodes.map(x => 
-					<DragListItem id={getNodePathIdentifier(x)}>
-						<InteractableBrowserNode node={x}/>
-					</DragListItem>
-				)	
-			}
-		</ul>
+		directoryData.subNodes.length > 0 ?
+			<ul className="video-directory-list">
+				{
+					directoryData.subNodes.map(x => 
+						<DragListItem id={getNodePathIdentifier(x)}>
+							<InteractableBrowserNode node={x}/>
+						</DragListItem>
+					)	
+				}
+			</ul>
+			:
+			<span className="empty-directory-message">Nothing to find here...</span>
 	)
 }
 

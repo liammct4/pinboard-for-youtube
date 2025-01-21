@@ -117,6 +117,12 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 								setNavigationStack([]);
 								setIsEditingPathManually(false);
 							}}
+							onKeyDown={(e) => {
+								if (e.key == "Enter") {
+									onDirectoryPathChanged(e.currentTarget.value);
+									setNavigationStack([]);
+								}
+							}}
 							autoFocus
 							defaultValue={directoryPath}/>
 						:
