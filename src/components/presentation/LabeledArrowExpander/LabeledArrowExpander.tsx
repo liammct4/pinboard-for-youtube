@@ -1,6 +1,6 @@
 import { useState } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
-import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrow.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrows/arrowhead.svg"
 import { IconContainer } from "../../images/svgAsset";
 import "./../../../styling/elements/expander.css"
 import "./LabeledArrowExpander.css"

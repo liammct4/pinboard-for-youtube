@@ -4,11 +4,13 @@ import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
-import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrow_sideways.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
 import { ReactComponent as SettingsIcon } from "./../../../../../assets/icons/settings_icon.svg";
 import { ReactComponent as MinimalViewIcon } from "./../../../../../assets/icons/view/minimal_option.svg"
 import { ReactComponent as CompactViewIcon } from "./../../../../../assets/icons/view/compact_option.svg"
 import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons/view/regular_option.svg"
+import { ReactComponent as HomeIcon } from "./../../../../../assets/icons/home.svg"
+import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arrows/long_arrow.svg"
 import { DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
@@ -87,18 +89,24 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					<button className="button-base button-small square-button" onClick={() => {
 						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(directory!.parent!))
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
-					}} disabled={directory?.parent == null}>←</button>
+					}} disabled={directory?.parent == null}>
+						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
+					</button>
 					<button className="button-base button-small square-button" onClick={() => {
 						onDirectoryPathChanged("$");
 						setNavigationStack([]);
-					}}>🏠︎</button>
+					}}>
+						<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
+					</button>
 					<button className="button-base button-small square-button" onClick={() => {
 						let stackRemovedSlice = [ ...navigationStack ];
 						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
 
 						onDirectoryPathChanged(directoryPathConcat(directoryPath, slice));
 						setNavigationStack(stackRemovedSlice);
-					}} disabled={navigationStack.length == 0}>→</button>
+					}} disabled={navigationStack.length == 0}>
+						<IconContainer className="icon-colour-standard" asset={LongArrow} use-stroke/>
+					</button>
 				</div>
 				{
 					isEditingPathManually ?

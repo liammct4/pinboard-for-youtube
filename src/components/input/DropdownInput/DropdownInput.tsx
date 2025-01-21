@@ -4,7 +4,7 @@ import { IInputComponentProperties } from "../inputComponent";
 import { DropdownOptionsContext } from "./context";
 import { FormStyleContext } from "../formStyleContext";
 import * as Select from "@radix-ui/react-select"
-import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrow.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrows/arrowhead.svg"
 import { IconContainer } from "../../images/svgAsset";
 import { SelectItem } from "./dropdown";
 import "./../../../styling/elements/select.css"

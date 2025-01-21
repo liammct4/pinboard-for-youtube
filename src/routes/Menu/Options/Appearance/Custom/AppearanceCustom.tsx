@@ -6,7 +6,7 @@ import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appT
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
-import { ReactComponent as ArrowIcon } from "./../../../../../../assets/symbols/arrow.svg"
+import { ReactComponent as ArrowIcon } from "./../../../../../../assets/symbols/arrows/arrowhead.svg"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearanceCustom.css"

@@ -8,6 +8,17 @@
 		flex-direction: row;
 		gap: var(--pfy-spacing-standard-compact);
 		margin-right: var(--pfy-spacing-standard);
+
+		& button {
+			& svg {
+				width: calc(100% - 2px);
+				height: calc(100% - 2px);
+			}
+
+			.back-arrow {
+				transform: rotate(180deg);
+			}
+		}
 	}
 
 	.directory-path-bar {
