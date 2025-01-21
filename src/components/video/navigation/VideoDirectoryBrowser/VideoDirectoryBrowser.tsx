@@ -1,31 +1,36 @@
 import { useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
-import { InteractableBrowserNode } from "../VideoDirectory/nodes/InteractableBrowserNode";
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getNodePathIdentifier, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
+import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrow_sideways.svg"
-import "./VideoDirectoryBrowser.css"
+import { ReactComponent as SettingsIcon } from "./../../../../../assets/icons/settings_icon.svg";
+import { ReactComponent as MinimalViewIcon } from "./../../../../../assets/icons/view/minimal_option.svg"
+import { ReactComponent as CompactViewIcon } from "./../../../../../assets/icons/view/compact_option.svg"
+import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons/view/regular_option.svg"
 import { DragList } from "../../../../lib/dragList/DragList";
-import { IVideo } from "../../../../lib/video/video";
+import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
+import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import "./../VideoDirectory/VideoDirectory.css"
-import { DragListItem } from "../../../../lib/dragList/DragListItem";
+import "./VideoDirectoryBrowser.css"
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
 export interface IVideoDirectoryBrowserProperties {
-	videoStyle: VideoPresentationStyle;
+	defaultVideoStyle: VideoPresentationStyle;
 	directoryPath: string;
 	onDirectoryPathChanged: (newPath: string) => void; 
 }
 
-export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
+export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { videoData, root } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
+	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
+	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -130,7 +135,27 @@ export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPa
 							<li>{last}</li>
 						</ul>
 				}
+				<button className="settings-button button-base button-small square-button" onClick={() => setSettingsOpen(!settingsOpen)}>
+					<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
+				</button>
 			</div>
+			<ToggleExpander expanded={settingsOpen}>
+				<div className="settings-panel">
+					<LabelGroup label="View">
+						<div className="view-section">
+							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("MINIMAL")} data-active-toggle={currentViewStyle == "MINIMAL"}>
+								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "MINIMAL" }}/>
+							</button>
+							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("COMPACT")} data-active-toggle={currentViewStyle == "COMPACT"}>
+								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "COMPACT" }}/>
+							</button>
+							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("REGULAR")} data-active-toggle={currentViewStyle == "REGULAR"}>
+								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "REGULAR" }}/>
+							</button>
+						</div>
+					</LabelGroup>
+				</div>
+			</ToggleExpander>
 			<VideoDirectoryInteractionContext.Provider
 				value={{
 					navigateRequest: (requester) => {
@@ -140,7 +165,7 @@ export function VideoDirectoryBrowser({ videoStyle, directoryPath, onDirectoryPa
 				}}>
 				<VideoDirectoryPresentationContext.Provider
 					value={{
-						videoItemStyle: videoStyle
+						videoItemStyle: currentViewStyle
 					}}>
 					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl">
 						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}

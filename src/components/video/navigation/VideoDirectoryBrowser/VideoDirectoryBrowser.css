@@ -1,13 +1,13 @@
 .directory-navigator {
 	display: flex;
 	flex-direction: row;
-	gap: var(--pfy-spacing-standard);
 	margin: 0;
 
 	.navigation-buttons {
 		display: flex;
 		flex-direction: row;
 		gap: var(--pfy-spacing-standard-compact);
+		margin-right: var(--pfy-spacing-standard);
 	}
 
 	.directory-path-bar {
@@ -54,6 +54,38 @@
 			}
 		}
 	}
+
+	.settings-button {
+		margin-left: var(--pfy-spacing-standard-compact);
+
+		& svg {
+			width: calc(100% - var(--pfy-spacing-standard-compact));
+			height: calc(100% - var(--pfy-spacing-standard-compact));
+		}
+	}
 }
 
+.settings-panel {
+	display: flex;
+	flex-direction: row;
+	padding-bottom: var(--pfy-spacing-standard-compact);
 
+	.view-section {
+		display: flex;
+		flex-direction: row;
+		gap: var(--pfy-spacing-standard-compact);
+		padding-left: var(--pfy-spacing-standard-compact);
+		padding-right: var(--pfy-spacing-standard-compact);
+
+		& button {
+			display: flex;
+				
+			& svg {
+				width: calc(100% - 2px);
+				margin: auto;
+				height: auto;
+				margin: auto;
+			}
+		}
+	}
+}
