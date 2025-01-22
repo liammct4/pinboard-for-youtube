@@ -17,7 +17,7 @@ export interface IDirectoryNode extends IVideoBrowserNode {
 }
 
 export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrowserNode | null {
-	const slices = path.split('>');
+	const slices = splitPathIntoSlices(path);
 
 	let current: IVideoBrowserNode = node;
 
@@ -65,8 +65,12 @@ export function getNodePathIdentifier(node: IVideoBrowserNode): string {
 	}
 }
 
+export function splitPathIntoSlices(path: string): string[] {
+	return path.split('>').map(x => x.trim());
+}
+
 export function getParentPathFromPath(path: string): string {
-	let slices = path.split('>').map(x => x.trim());
+	let slices = splitPathIntoSlices(path);
 
 	slices.splice(slices.length - 1, 1);
 
@@ -74,10 +78,9 @@ export function getParentPathFromPath(path: string): string {
 }
 
 export function reformatDirectoryPath(path: string): string {
-	const slices = path.split('>');
-	const reformatted = slices.map(x => x.trim());
+	const slices = splitPathIntoSlices(path);
 
-	return reformatted.join(" > ");
+	return slices.join(" > ");
 }
 
 export function directoryPathConcat(base: string, slice: string): string {
@@ -107,12 +110,63 @@ export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNod
 	return fullPath;
 }
 
+export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string) {
+	let oldSplit = splitPathIntoSlices(oldDirectory);
+	let newSplit = splitPathIntoSlices(newDirectory);
+
+	// Incase of just renaming the directory. No need to traverse.
+	if (oldSplit.length == newSplit.length) {
+		let equal = true;
+
+		for (let i = 0; i < newSplit.length - 1; i++) {
+			if (oldSplit[i] == newSplit[i]) {
+				continue;
+			}
+
+			equal = false;
+			break;
+		}
+
+		// The first part of the path is equal, just the end might not be. (Renaming).
+		if (equal) {
+			let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
+
+			item.slice = newSplit[newSplit.length - 1];
+			return;
+		}
+	}
+	
+	// Otherwise, move as normal.
+	// Remove from old location.
+	let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
+
+	let oldParentIndex = item?.parent?.subNodes.findIndex(x => (x as IDirectoryNode).slice == item.slice) as number;
+	item.parent?.subNodes.splice(oldParentIndex, 1);
+
+	// Place in new location.
+	let newParentPath = [ ...newSplit ];
+	newParentPath.splice(newSplit.length - 1, 1);
+
+	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
+
+	newParent.subNodes.push(item);
+	item.parent = newParent;
+}
+
 export interface IVideoDirectoryInteractionContext {
 	navigateRequest: (requester: IDirectoryNode) => void;
+	selectedItems: string[];
+	setSelectedItems: (selectedItems: string[]) => void;
+	currentlyEditing: string | null;
+	requestEditEnd: (newSliceName: string) => void;
 }
 
 export const VideoDirectoryInteractionContext = createContext<IVideoDirectoryInteractionContext>(
 	{
-		navigateRequest: () => console.error("Cannot navigate VideoDirectory due to no context provided.")
+		navigateRequest: () => console.error("Cannot navigate VideoDirectory due to no context provided."),
+		selectedItems: [],
+		setSelectedItems: () => console.error("No context provided: VideoDirectoryInteractionContext.setSelectedItems"),
+		currentlyEditing: null,
+		requestEditEnd:  () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditEnd")
 	}
 );

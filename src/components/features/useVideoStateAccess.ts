@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { getItemFromNode, IDirectoryNode, IVideoNode } from "../video/navigation/directory";
+import { getItemFromNode, IDirectoryNode, IVideoNode, relocateDirectory } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 
@@ -52,6 +52,9 @@ export function useVideoStateAccess() {
 			videoData.set(video.id, video);
 
 			setCounter(Math.random());
+		},
+		moveDirectory: (oldDirectory: string, newDirectory: string) => {
+			relocateDirectory(directoryRoot, oldDirectory, newDirectory);
 		}
 	}
 }

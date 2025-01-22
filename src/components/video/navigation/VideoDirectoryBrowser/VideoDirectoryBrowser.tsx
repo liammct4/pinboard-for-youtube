@@ -16,6 +16,7 @@ import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpan
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
+import { useHotkeys } from "react-hotkeys-hook";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -26,13 +27,15 @@ export interface IVideoDirectoryBrowserProperties {
 }
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
-	const { videoData, root } = useVideoStateAccess();
+	const { videoData, root, moveDirectory } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
+	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
+	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -74,7 +77,20 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		else {
 			setLastKnownValidPath(directoryPath);
 		}
+
+		setSelectedItems([]);
 	}, [directory]);
+	useHotkeys("F2", () => {
+		if (selectedItems.length == 1) {
+			setCurrentlyEditing(selectedItems[0]);
+		}
+	})
+
+	const requestEditEnd = (newSliceName: string) => {
+		setCurrentlyEditing(null);
+
+		moveDirectory(directoryPathConcat(directoryPath, currentlyEditing as string), directoryPathConcat(directoryPath, newSliceName));
+	}
 
 	const slices = directoryPath.split(">");
 	const last = slices[slices.length - 1].trim();
@@ -175,7 +191,11 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					navigateRequest: (requester) => {
 						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(requester));
 						setNavigationStack([]);
-					}
+					},
+					selectedItems,
+					setSelectedItems,
+					currentlyEditing,
+					requestEditEnd
 				}}>
 				<VideoDirectoryPresentationContext.Provider
 					value={{
