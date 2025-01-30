@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { ReactComponent as CategoryIcon } from "./../../../../../../assets/icons/category.svg"
-import { IDirectoryNode, VideoDirectoryInteractionContext } from "../../directory";
+import { ReactComponent as DropIcon } from "./../../../../../../assets/icons/drop_in.svg"
+import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../../directory";
 import { IconContainer } from "../../../../images/svgAsset";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
 
@@ -9,25 +10,41 @@ interface IDirectoryItemProperties {
 }
 
 export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNode {
-	const { navigateRequest, selectedItems, setSelectedItems, currentlyEditing, requestEditEnd } = useContext(VideoDirectoryInteractionContext);
+	const {
+		navigateRequest,
+		selectedItems,
+		setSelectedItems,
+		currentlyEditing,
+		requestEditEnd,
+		draggingID
+	} = useContext(VideoDirectoryInteractionContext);
+
+	let isHover = draggingID == getSectionPrefix(node);
 
 	return (
 		<>
-			<div onClick={(e) => {
+			<div onMouseDown={(e) => {
+				let section = getSectionPrefix(node);
+
 				if (e.ctrlKey) {
-					if (selectedItems.includes(node.slice)) {
-						setSelectedItems([ ...selectedItems ].filter(x => x != node.slice));
+					if (selectedItems.includes(section)) {
+						setSelectedItems([ ...selectedItems ].filter(x => x != section));
 					}
 					else {
-						setSelectedItems([ ...selectedItems, node.slice])
+						setSelectedItems([ ...selectedItems, section])
 					}
 				}
-				else if (!selectedItems.includes(node.slice)) {
-					setSelectedItems([ node.slice ]);
+				else if (!selectedItems.includes(section)) {
+					setSelectedItems([ section ]);
 				}
-			}}>
+			}}
+			data-is-hover-overlap={isHover}>
 				<button className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
-					<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-stroke use-fill/>
+					{
+						isHover ?
+						<IconContainer className="icon-colour-standard" asset={DropIcon} use-fill use-stroke/> :
+						<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
+					}
 					{
 						currentlyEditing == node.slice ?
 						<input

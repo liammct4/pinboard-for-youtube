@@ -4,7 +4,7 @@ import { CompactVideoItem } from "../../../styledVideoItems/CompactVideoItem/Com
 import { MinimalVideoItem } from "../../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
 import { RegularVideoItem } from "../../../styledVideoItems/RegularVideoItem/RegularVideoItem";
 import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
-import { IVideoNode } from "../../directory";
+import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
 
@@ -14,6 +14,7 @@ interface IVideoItemProperties {
 
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
+	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
 	const { videoData, updateVideo } = useVideoStateAccess();
 
 	if (!videoData.has(node.videoID)) {
@@ -57,17 +58,30 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	};
 
 	return (
-		<VideoItemContext.Provider value={{
-			video,
-			onTimestampAdded,
-			onTimestampChanged,
-			setTimestamps
-		}}>
-			{
-				videoItemStyle == "MINIMAL" ? <MinimalVideoItem/> :
-				videoItemStyle == "COMPACT" ? <CompactVideoItem/> :
-				videoItemStyle == "REGULAR" ? <RegularVideoItem/> : <></>
+		<div onMouseDown={(e) => {
+			let section = getSectionPrefix(node);
+
+			if (e.ctrlKey) {
+				if (selectedItems.includes(section)) {
+					setSelectedItems([ ...selectedItems ].filter(x => x != section));
+				}
+				else {
+					setSelectedItems([ ...selectedItems, section])
+				}
 			}
-		</VideoItemContext.Provider>
+		}}>
+			<VideoItemContext.Provider value={{
+				video,
+				onTimestampAdded,
+				onTimestampChanged,
+				setTimestamps
+			}}>
+				{
+					videoItemStyle == "MINIMAL" ? <MinimalVideoItem/> :
+					videoItemStyle == "COMPACT" ? <CompactVideoItem/> :
+					videoItemStyle == "REGULAR" ? <RegularVideoItem/> : <></>
+				}
+			</VideoItemContext.Provider>
+		</div>
 	);
 }

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, VideoDirectoryInteractionContext } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -11,7 +11,7 @@ import { ReactComponent as CompactViewIcon } from "./../../../../../assets/icons
 import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons/view/regular_option.svg"
 import { ReactComponent as HomeIcon } from "./../../../../../assets/icons/home.svg"
 import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arrows/long_arrow.svg"
-import { DragList } from "../../../../lib/dragList/DragList";
+import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import "./../VideoDirectory/VideoDirectory.css"
@@ -36,6 +36,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
+	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
+	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -90,6 +92,33 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		setCurrentlyEditing(null);
 
 		moveDirectory(directoryPathConcat(directoryPath, currentlyEditing as string), directoryPathConcat(directoryPath, newSliceName));
+	}
+
+	const dragEnd = (e: DragEvent) => {
+		let slice = dragging?.overlappingID;
+
+		if (slice == undefined || getSectionType(slice) == "VIDEO") {
+			return;
+		}
+
+		let targetDirectory = directoryPathConcat(directoryPath, getRawSectionFromPrefix(slice));
+
+		for (let i of selectedItems) {
+			if (i == slice) {
+				continue;
+			}
+
+			let section = getRawSectionFromPrefix(i);
+
+			let oldPath = directoryPathConcat(directoryPath, section);
+			let newPath = directoryPathConcat(targetDirectory, section);
+
+			relocateDirectory(root, oldPath, newPath);
+		}
+
+
+		setIsDragging(false);
+		setDragging(null);
 	}
 
 	const slices = directoryPath.split(">");
@@ -195,13 +224,18 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					selectedItems,
 					setSelectedItems,
 					currentlyEditing,
-					requestEditEnd
+					requestEditEnd,
+					draggingID: dragging?.overlappingID ?? null
 				}}>
 				<VideoDirectoryPresentationContext.Provider
 					value={{
 						videoItemStyle: currentViewStyle
 					}}>
-					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl">
+					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl" onDrag={(e) => {
+						setDragging(e);
+						setIsDragging(true);
+					}}
+					onDragEnd={dragEnd}>
 						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
 					</DragList>
 				</VideoDirectoryPresentationContext.Provider>

@@ -55,6 +55,7 @@ export function useVideoStateAccess() {
 		},
 		moveDirectory: (oldDirectory: string, newDirectory: string) => {
 			relocateDirectory(directoryRoot, oldDirectory, newDirectory);
+			setCounter(Math.random());
 		}
 	}
 }

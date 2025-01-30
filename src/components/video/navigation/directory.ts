@@ -39,7 +39,7 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 		let currentDirectory = current as IDirectoryNode;
 
 		for (let node of currentDirectory.subNodes) {
-			let nodeSliceOrID = getNodePathIdentifier(node);
+			let nodeSliceOrID = getSectionRaw(node);
 			
 			if (slice.trim() == nodeSliceOrID.trim()) {
 				current = node;
@@ -56,12 +56,44 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 	return current;
 }
 
-export function getNodePathIdentifier(node: IVideoBrowserNode): string {
+// A section is either a slice, or a video ID.
+
+export function getSectionRaw(node: IVideoBrowserNode): string {
 	if (node.type == "VIDEO") {
 		return (node as IVideoNode).videoID;
 	}
 	else {
 		return (node as IDirectoryNode).slice;
+	}
+}
+
+export function getSectionPrefix(node: IVideoBrowserNode): string {
+	if (node.type == "VIDEO") {
+		return `vd:${(node as IVideoNode).videoID}`;
+	}
+	else {
+		return `dir:${(node as IDirectoryNode).slice}`;
+	}
+}
+
+export function getSectionType(section: string): NodeType {
+	if (section.startsWith("vd:")) {
+		return "VIDEO";
+	}
+	else {
+		return "DIRECTORY";
+	}
+}
+
+export function getRawSectionFromPrefix(section: string): string {
+	if (section.startsWith("vd:")) {
+		return section.substring(3, section.length);
+	}
+	else if (section.startsWith("dir:")) {
+		return section.substring(4, section.length);
+	}
+	else {
+		return section;
 	}
 }
 
@@ -96,7 +128,7 @@ export function directoryPathConcat(base: string, slice: string): string {
 }
 
 export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNode): string {
-	let slices: string[] = [ getNodePathIdentifier(directory) ];
+	let slices: string[] = [ getSectionRaw(directory) ];
 	let current = directory.parent;
 
 	while (current != null) {
@@ -135,7 +167,7 @@ export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, ne
 			return;
 		}
 	}
-	
+
 	// Otherwise, move as normal.
 	// Remove from old location.
 	let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
@@ -159,6 +191,7 @@ export interface IVideoDirectoryInteractionContext {
 	setSelectedItems: (selectedItems: string[]) => void;
 	currentlyEditing: string | null;
 	requestEditEnd: (newSliceName: string) => void;
+	draggingID: string | null;
 }
 
 export const VideoDirectoryInteractionContext = createContext<IVideoDirectoryInteractionContext>(
@@ -167,6 +200,7 @@ export const VideoDirectoryInteractionContext = createContext<IVideoDirectoryInt
 		selectedItems: [],
 		setSelectedItems: () => console.error("No context provided: VideoDirectoryInteractionContext.setSelectedItems"),
 		currentlyEditing: null,
-		requestEditEnd:  () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditEnd")
+		requestEditEnd:  () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditEnd"),
+		draggingID: null,
 	}
 );

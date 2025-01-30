@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { getNodePathIdentifier, IDirectoryNode, IVideoBrowserNode, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
+import { getSectionPrefix, IDirectoryNode, IVideoBrowserNode, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
 import "./InteractableBrowserNode.css"
@@ -11,7 +11,7 @@ export interface IInteractableBrowserNodeProperties {
 export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
 	const { selectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
 	let isDirectoryNode = node.type == "DIRECTORY";
-	let id = getNodePathIdentifier(node);
+	let id = getSectionPrefix(node);
 
 	return (
 		<li

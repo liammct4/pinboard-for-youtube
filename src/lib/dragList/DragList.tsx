@@ -86,16 +86,6 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 		}
 	};
 	
-	useEffect(() => {
-		window.addEventListener("mouseup", () => {
-			setStartDragID(null);
-
-			if (onDragEnd != null) {
-				onDragEnd(dragInfo!);
-			}
-		});
-	}, [listBox.current]);
-	
 	return (
 		<DragListContext.Provider
 			value={{
@@ -108,7 +98,13 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 				baseY: yBasePosition,
 				scrollY: yScroll
 			}}>
-			<div className={className} ref={listBox} onMouseMove={onMouseMove}>
+			<div className={className} ref={listBox} onMouseMove={onMouseMove} onMouseUp={() => {
+				setStartDragID(null);
+
+				if (onDragEnd != null) {
+					onDragEnd(dragInfo!);
+				}
+			}}>
 				{children}
 			</div>
 		</DragListContext.Provider>

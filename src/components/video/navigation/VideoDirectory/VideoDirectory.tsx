@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { VideoTimestamp } from "../../timestamps/VideoTimestamp/VideoTimestamp";
-import { getNodePathIdentifier, IDirectoryNode, VideoDirectoryInteractionContext } from "../directory"
+import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../directory"
 import { IconContainer } from "../../../images/svgAsset";
 import "./VideoDirectory.css"
 import { VideoPresentationStyle } from "../VideoDirectoryBrowser/VideoDirectoryBrowser";
@@ -11,14 +11,13 @@ export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;
 }
 
-
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
 		directoryData.subNodes.length > 0 ?
 			<ul className="video-directory-list">
 				{
 					directoryData.subNodes.map(x => 
-						<DragListItem id={getNodePathIdentifier(x)}>
+						<DragListItem id={getSectionPrefix(x)}>
 							<InteractableBrowserNode node={x}/>
 						</DragListItem>
 					)	
