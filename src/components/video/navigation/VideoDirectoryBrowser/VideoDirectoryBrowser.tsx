@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -234,6 +234,10 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl" onDrag={(e) => {
 						setDragging(e);
 						setIsDragging(true);
+
+						if (selectedItems.length == 0) {
+							setSelectedItems([ e.startDragID ]);
+						}
 					}}
 					onDragEnd={dragEnd}>
 						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
