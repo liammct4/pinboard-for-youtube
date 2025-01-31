@@ -17,6 +17,7 @@ import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGro
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
 import { useHotkeys } from "react-hotkeys-hook";
+import { useGlobalEvent } from "../../../features/events/useGlobalEvent";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -38,6 +39,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
+	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -94,7 +96,24 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		moveDirectory(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName));
 	}
 
-	const dragEnd = (e: DragEvent) => {
+	const dragEnd = () => {
+		if (dragging == "NOT_IN_BOUNDS") {
+			if (directoryBarHoverPath == null) {
+				return;
+			}
+
+			for (let i of selectedItems) {	
+				let section = getRawSectionFromPrefix(i);
+	
+				let oldPath = directoryPathConcat(directoryPath, section);
+				let newPath = directoryPathConcat(directoryBarHoverPath, section);
+	
+				moveDirectory(oldPath, newPath);
+			}
+
+			return;
+		}
+
 		let slice = dragging?.overlappingID;
 
 		if (slice == undefined || getSectionType(slice) == "VIDEO") {
@@ -113,9 +132,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			let oldPath = directoryPathConcat(directoryPath, section);
 			let newPath = directoryPathConcat(targetDirectory, section);
 
-			relocateDirectory(root, oldPath, newPath);
+			moveDirectory(oldPath, newPath);
 		}
-
 
 		setIsDragging(false);
 		setDragging(null);
@@ -185,7 +203,9 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 												onDirectoryPathChanged(directPath);
 												setNavigationStack([]);
 												e.stopPropagation();
-											}}>{x}</button>
+											}}
+											onMouseEnter={() => setDirectoryBarHoverPath(directPath)}
+											onMouseLeave={() => setDirectoryBarHoverPath(null)}>{x}</button>
 											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
 										</li>
 									);
@@ -225,7 +245,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					setSelectedItems,
 					currentlyEditing,
 					requestEditEnd,
-					draggingID: dragging?.overlappingID ?? null
+					draggingID: dragging != "NOT_IN_BOUNDS" ? dragging?.overlappingID ?? null : null
 				}}>
 				<VideoDirectoryPresentationContext.Provider
 					value={{
@@ -236,7 +256,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 							setDragging(e);
 							setIsDragging(true);
 
-							if (selectedItems.length == 0) {
+							if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 								setSelectedItems([ e.startDragID ]);
 							}
 						}}

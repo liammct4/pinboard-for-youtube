@@ -6,7 +6,7 @@ export type DragEvent = {
 	inbetweenStartID: string | null;
 	inbetweenEndID: string | null;
 	overlappingID: string | null;
-}
+} | "NOT_IN_BOUNDS";
 
 export interface IDragListProperties {
 	className?: string;
@@ -67,10 +67,10 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 			}
 		}
 
-		return null;
+		return "NOT_IN_BOUNDS";
 	}, [yMousePosition]);
 	useEffect(() => {
-		if (onDrag != undefined && dragInfo != null) {
+		if (onDrag != undefined && dragInfo) {
 			onDrag(dragInfo);
 		}
 	}, [dragInfo]);
@@ -85,35 +85,37 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 			}
 		}
 	});
-
-	const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-		if (startDragID != null) {
-			let y = listBox.current?.getBoundingClientRect().y!;
-			let listBoxPosition = e.clientY - y;
-			let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
-
-			setYBasePosition(y);
-			setYScroll(listBox?.current?.scrollTop!);
-			setYMousePosition(listBoxPositionWithScroll);
+	useGlobalEvent({
+		event: "MOUSE_MOVE",
+		name: `${dragListName}::mouse_move_calculate_drag`,
+		handler: (e: React.MouseEvent<HTMLElement>) => {
+			if (startDragID != null) {
+				let y = listBox.current?.getBoundingClientRect().y!;
+				let listBoxPosition = e.clientY - y;
+				let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
+	
+				setYBasePosition(y);
+				setYScroll(listBox?.current?.scrollTop!);
+				setYMousePosition(listBoxPositionWithScroll);
+			}
 		}
-	};
+	})
 	
 	return (
 		<DragListContext.Provider
 			value={{
 				dragListName,
 				startDragID,
-				overlappingID: dragInfo?.overlappingID ?? null,
-				inbetweenStartID: dragInfo?.inbetweenStartID ?? null,
-				inbetweenEndID: dragInfo?.inbetweenEndID ?? null,
+				overlappingID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.overlappingID ?? null : null,
+				inbetweenStartID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenStartID ?? null : null,
+				inbetweenEndID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenEndID ?? null : null,
 				setStartDragID: setStartDragID,
 				baseY: yBasePosition,
 				scrollY: yScroll
 			}}>
 			<div
 				className={className}
-				ref={listBox}
-				onMouseMove={onMouseMove}>
+				ref={listBox}>
 				{children}
 			</div>
 		</DragListContext.Provider>
