@@ -1,4 +1,5 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react"
+import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
 
 export type DragEvent = {
 	startDragID: string;
@@ -73,6 +74,17 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 			onDrag(dragInfo);
 		}
 	}, [dragInfo]);
+	useGlobalEvent({
+		event: "MOUSE_UP",
+		name: `${dragListName}::mouse_up_end_drag`,
+		handler: () => {
+			setStartDragID(null);
+
+			if (onDragEnd != null) {
+				onDragEnd(dragInfo!);
+			}
+		}
+	});
 
 	const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (startDragID != null) {
@@ -101,15 +113,7 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 			<div
 				className={className}
 				ref={listBox}
-				onMouseMove={onMouseMove}
-				onMouseUp={() => {
-					setStartDragID(null);
-
-					if (onDragEnd != null) {
-						onDragEnd(dragInfo!);
-					}
-				}
-			}>
+				onMouseMove={onMouseMove}>
 				{children}
 			</div>
 		</DragListContext.Provider>

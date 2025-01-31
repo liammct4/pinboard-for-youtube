@@ -36,6 +36,7 @@ import { VideoWrapper } from "./routes/VideoWrapper.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { EventWrapper } from "./components/features/events/EventWrapper.tsx"
 
 checkAndImplementLocalStorage();
 
@@ -145,22 +146,24 @@ async function setupState() {
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<PfyWrapper/>}>
 						<Route path="*" element={<VideoWrapper/>}>
-							<Route path="app" element={<HomePage/>}>
-								<Route path="videos" element={<VideosPage/>}/>
-								<Route path="menu" element={<MenuPage/>}>
-									<Route path="options/*" element={<OptionsPage/>}>
-										<Route path="general" element={<GeneralPage/>}/>
-										<Route path="accounts/*" element={<AccountsPage/>}/>
-										<Route path="appearance/*" element={<AppearancePage/>}/>
-										<Route path="debug/*" element={<DebugPage/>}/>
-										<Route path="*" element={<OptionsNavigator/>}/>
+							<Route path="*" element={<EventWrapper/>}>
+								<Route path="app" element={<HomePage/>}>
+									<Route path="videos" element={<VideosPage/>}/>
+									<Route path="menu" element={<MenuPage/>}>
+										<Route path="options/*" element={<OptionsPage/>}>
+											<Route path="general" element={<GeneralPage/>}/>
+											<Route path="accounts/*" element={<AccountsPage/>}/>
+											<Route path="appearance/*" element={<AppearancePage/>}/>
+											<Route path="debug/*" element={<DebugPage/>}/>
+											<Route path="*" element={<OptionsNavigator/>}/>
+										</Route>
+										<Route path="help" element={<HelpPage/>}/>				
 									</Route>
-									<Route path="help" element={<HelpPage/>}/>				
+									<Route path="" element={<Navigate to="videos" replace/>}/>
+									<Route path="error" element={<ErrorPage/>}/>
 								</Route>
-								<Route path="" element={<Navigate to="videos" replace/>}/>
-								<Route path="error" element={<ErrorPage/>}/>
+								<Route path="*" element={<Navigate to="app" replace/>}/>
 							</Route>
-							<Route path="*" element={<Navigate to="app" replace/>}/>
 						</Route>
 					</Route>
 				))}/>
