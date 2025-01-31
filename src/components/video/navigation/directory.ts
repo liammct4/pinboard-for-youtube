@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil";
 
 export type NodeType = "VIDEO" | "DIRECTORY";
 
@@ -181,7 +182,11 @@ export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, ne
 
 	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
 
-	newParent.subNodes.push(item);
+	let directoryEndIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
+	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, (item) => (item as IDirectoryNode).slice, 0, directoryEndIndex);
+
+	newParent.subNodes.splice(insertIndex, 0, item);
+	
 	item.parent = newParent;
 }
 

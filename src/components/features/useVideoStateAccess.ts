@@ -3,6 +3,7 @@ import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/vid
 import { getItemFromNode, IDirectoryNode, IVideoNode, relocateDirectory } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
+import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
@@ -34,7 +35,10 @@ export function useVideoStateAccess() {
 				videoID: videoID,
 			};
 
-			desiredDirectory.subNodes.push(newVideoNode);
+			let directoryStartIndex = desiredDirectory.subNodes.findIndex(x => x.type == "VIDEO");
+			let insertIndex = getAlphanumericInsertIndex(desiredDirectory.subNodes, newVideoNode, (item) => (item as IDirectoryNode).slice, directoryStartIndex, desiredDirectory.subNodes.length);
+
+			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
 			
 			setCounter(Math.random());
 		},
