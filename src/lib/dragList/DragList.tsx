@@ -98,13 +98,18 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 				baseY: yBasePosition,
 				scrollY: yScroll
 			}}>
-			<div className={className} ref={listBox} onMouseMove={onMouseMove} onMouseUp={() => {
-				setStartDragID(null);
+			<div
+				className={className}
+				ref={listBox}
+				onMouseMove={onMouseMove}
+				onMouseUp={() => {
+					setStartDragID(null);
 
-				if (onDragEnd != null) {
-					onDragEnd(dragInfo!);
+					if (onDragEnd != null) {
+						onDragEnd(dragInfo!);
+					}
 				}
-			}}>
+			}>
 				{children}
 			</div>
 		</DragListContext.Provider>

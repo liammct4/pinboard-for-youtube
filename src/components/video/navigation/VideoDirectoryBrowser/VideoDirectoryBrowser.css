@@ -103,4 +103,8 @@
 
 .video-directory-list {
 	user-select: none;
+
+	.empty-click-area {
+		flex-grow: 1;
+	}
 }

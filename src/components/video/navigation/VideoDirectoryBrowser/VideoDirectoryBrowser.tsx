@@ -231,17 +231,21 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					value={{
 						videoItemStyle: currentViewStyle
 					}}>
-					<DragList className="video-directory-list separated-scrollbox" dragListName="directory-dl" onDrag={(e) => {
-						setDragging(e);
-						setIsDragging(true);
+					<div className="video-directory-list separated-scrollbox">
+						<DragList dragListName="directory-dl" onDrag={(e) => {
+							setDragging(e);
+							setIsDragging(true);
 
-						if (selectedItems.length == 0) {
-							setSelectedItems([ e.startDragID ]);
-						}
-					}}
-					onDragEnd={dragEnd}>
-						{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-					</DragList>
+							if (selectedItems.length == 0) {
+								setSelectedItems([ e.startDragID ]);
+							}
+						}}
+						onDragEnd={dragEnd}
+						>
+							{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+						</DragList>
+						<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+					</div>
 				</VideoDirectoryPresentationContext.Provider>
 			</VideoDirectoryInteractionContext.Provider>
 		</>
