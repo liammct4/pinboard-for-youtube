@@ -91,7 +91,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const requestEditEnd = (newSliceName: string) => {
 		setCurrentlyEditing(null);
 
-		moveDirectory(directoryPathConcat(directoryPath, currentlyEditing as string), directoryPathConcat(directoryPath, newSliceName));
+		moveDirectory(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName));
 	}
 
 	const dragEnd = (e: DragEvent) => {

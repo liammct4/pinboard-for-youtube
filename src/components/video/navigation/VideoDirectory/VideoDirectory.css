@@ -43,6 +43,7 @@
 	}
 
 	.empty-directory-message {
+		display: block;
 		font-size: var(--pfy-font-text-big);
 		font-style: italic;
 		text-align: center;

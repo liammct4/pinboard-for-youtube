@@ -102,7 +102,10 @@
 }
 
 .video-directory-list {
+	display: flex;
+	flex-direction: column;
 	user-select: none;
+	align-items: stretch;
 
 	.empty-click-area {
 		flex-grow: 1;
