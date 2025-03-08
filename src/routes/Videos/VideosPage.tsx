@@ -24,6 +24,7 @@ import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryInteractionContext } from "../../components/video/navigation/directory.ts";
+import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -33,17 +34,19 @@ interface IAddVideoForm extends IErrorFieldValues {
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [ inDeleteMode, setInDeleteMode ] = useState<boolean>(false);
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
+	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { videoData, addVideo, removeVideo } = useVideoStateAccess();
+	const { videoData, addVideo, removeVideo, remove } = useVideoStateAccess();
 	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
 		addVideo(id, directoryPath);
 	});
-	useHotkeys("delete", () => setInDeleteMode(!inDeleteMode));
+
+	// Hotkeys for directory browser.
+	useHotkeys("delete", () => remove(directoryPath, selectedItems));
 
 	// TODO
 	const activeVideoID = "";
@@ -93,7 +96,16 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
-				<VideoDirectoryBrowser defaultVideoStyle="MINIMAL" directoryPath={directoryPath} onDirectoryPathChanged={setDirectoryPath}/>
+				<VideoDirectoryBrowserContext.Provider
+					value={{
+						selectedItems,
+						setSelectedItems
+					}}>
+					<VideoDirectoryBrowser
+						defaultVideoStyle="MINIMAL"
+						directoryPath={directoryPath}
+						onDirectoryPathChanged={setDirectoryPath}/>
+				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
 					{/* Add video dialog. */}
@@ -118,10 +130,6 @@ export function VideosPage(): React.ReactNode {
 						onButtonPressed={() => {}}>
 						<button className="button-base button-small">Clear videos</button>
 					</ActionMessageDialog>
-					{/* Delete mode button */}
-					<button className="button-base button-small square-button" title="Delete mode" onClick={() => setInDeleteMode(!inDeleteMode)} data-active-toggle={inDeleteMode}>
-						<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke attached-attributes={{ "data-active-toggle": inDeleteMode }}/>
-					</button>
 				</div>
 			</div>
 		</div>

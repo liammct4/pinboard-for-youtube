@@ -190,6 +190,24 @@ export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, ne
 	item.parent = newParent;
 }
 
+export function removeItems(root: IDirectoryNode, basePath: string, targetSections: string[]) {
+	let baseNode = getItemFromNode(basePath, root) as IDirectoryNode;
+
+	if (baseNode == undefined || baseNode.type != "DIRECTORY") {
+		return;
+	}
+
+	for (let target of targetSections) {
+		let targetIndex = baseNode.subNodes.findIndex(x => getSectionPrefix(x) == target);
+
+		if (targetIndex == -1) {
+			continue;
+		}
+
+		baseNode.subNodes.splice(targetIndex, 1);
+	}
+}
+
 export interface IVideoDirectoryInteractionContext {
 	navigateRequest: (requester: IDirectoryNode) => void;
 	selectedItems: string[];

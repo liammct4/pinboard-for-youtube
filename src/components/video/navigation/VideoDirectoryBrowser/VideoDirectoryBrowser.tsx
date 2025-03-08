@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix } from "../directory";
@@ -18,6 +18,7 @@ import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
 import { useHotkeys } from "react-hotkeys-hook";
 import { useGlobalEvent } from "../../../features/events/useGlobalEvent";
+import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -28,14 +29,14 @@ export interface IVideoDirectoryBrowserProperties {
 }
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
-	const { videoData, root, moveDirectory } = useVideoStateAccess();
+	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
+	const { videoData, root, move } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
-	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
@@ -84,16 +85,17 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 		setSelectedItems([]);
 	}, [directory]);
+	
 	useHotkeys("F2", () => {
 		if (selectedItems.length == 1) {
 			setCurrentlyEditing(selectedItems[0]);
 		}
-	})
+	});
 
 	const requestEditEnd = (newSliceName: string) => {
 		setCurrentlyEditing(null);
 
-		moveDirectory(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName));
+		move(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName));
 	}
 
 	const dragEnd = () => {
@@ -108,7 +110,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				let oldPath = directoryPathConcat(directoryPath, section);
 				let newPath = directoryPathConcat(directoryBarHoverPath, section);
 	
-				moveDirectory(oldPath, newPath);
+				move(oldPath, newPath);
 			}
 
 			return;
@@ -132,7 +134,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			let oldPath = directoryPathConcat(directoryPath, section);
 			let newPath = directoryPathConcat(targetDirectory, section);
 
-			moveDirectory(oldPath, newPath);
+			move(oldPath, newPath);
 		}
 
 		setIsDragging(false);

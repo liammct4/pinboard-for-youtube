@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { getItemFromNode, IDirectoryNode, IVideoNode, relocateDirectory } from "../video/navigation/directory";
+import { getItemFromNode, IDirectoryNode, IVideoNode, relocateDirectory, removeItems } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -57,8 +57,12 @@ export function useVideoStateAccess() {
 
 			setCounter(Math.random());
 		},
-		moveDirectory: (oldDirectory: string, newDirectory: string) => {
+		move: (oldDirectory: string, newDirectory: string) => {
 			relocateDirectory(directoryRoot, oldDirectory, newDirectory);
+			setCounter(Math.random());
+		},
+		remove: (path: string, sections: string[]) => {
+			removeItems(directoryRoot, path, sections);
 			setCounter(Math.random());
 		}
 	}
