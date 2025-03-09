@@ -36,6 +36,7 @@ export function VideosPage(): React.ReactNode {
 	const navigate = useNavigate();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
+	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { videoData, addVideo, removeVideo, remove } = useVideoStateAccess();
@@ -47,6 +48,11 @@ export function VideosPage(): React.ReactNode {
 
 	// Hotkeys for directory browser.
 	useHotkeys("delete", () => remove(directoryPath, selectedItems));
+	useHotkeys("F2", () => {
+		if (selectedItems.length == 1) {
+			setCurrentlyEditing(selectedItems[0]);
+		}
+	});
 
 	// TODO
 	const activeVideoID = "";
@@ -99,7 +105,9 @@ export function VideosPage(): React.ReactNode {
 				<VideoDirectoryBrowserContext.Provider
 					value={{
 						selectedItems,
-						setSelectedItems
+						setSelectedItems,
+						currentlyEditing,
+						setCurrentlyEditing
 					}}>
 					<VideoDirectoryBrowser
 						defaultVideoStyle="MINIMAL"

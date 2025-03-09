@@ -29,7 +29,7 @@ export interface IVideoDirectoryBrowserProperties {
 }
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
-	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
+	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
 	const { videoData, root, move } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
@@ -37,9 +37,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
-	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
-	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
@@ -85,12 +83,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 		setSelectedItems([]);
 	}, [directory]);
-	
-	useHotkeys("F2", () => {
-		if (selectedItems.length == 1) {
-			setCurrentlyEditing(selectedItems[0]);
-		}
-	});
 
 	const requestEditEnd = (newSliceName: string) => {
 		setCurrentlyEditing(null);
@@ -137,7 +129,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			move(oldPath, newPath);
 		}
 
-		setIsDragging(false);
 		setDragging(null);
 	}
 
@@ -256,7 +247,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					<div className="video-directory-list separated-scrollbox">
 						<DragList dragListName="directory-dl" onDrag={(e) => {
 							setDragging(e);
-							setIsDragging(true);
 
 							if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 								setSelectedItems([ e.startDragID ]);
