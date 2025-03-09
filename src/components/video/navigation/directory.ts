@@ -183,7 +183,7 @@ export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNod
 	return fullPath;
 }
 
-export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string) {
+export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string) {
 	let oldSplit = splitPathIntoSlices(oldDirectory);
 	let newSplit = splitPathIntoSlices(newDirectory);
 
@@ -223,7 +223,12 @@ export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, ne
 	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
 
 	let directoryEndIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
-	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, (item) => (item as IDirectoryNode).slice, 0, directoryEndIndex);
+
+	if (item.type == "DIRECTORY") {
+		
+	}
+
+	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, 0, directoryEndIndex);
 
 	newParent.subNodes.splice(insertIndex, 0, item);
 	

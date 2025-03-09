@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -28,13 +28,14 @@ export interface IVideoDirectoryBrowserProperties {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { videoData, root, directoryMove: move } = useVideoStateAccess();
+	const { videoData, root, directoryMove } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
+	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
@@ -112,10 +113,11 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			);
 		}
 		else {
-			move(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
+			directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
 		}
 
 		setCurrentlyEditing(null);
+		setIsDragging(false);
 	}
 
 	const dragEnd = () => {
@@ -130,9 +132,10 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				let oldPath = directoryPathConcat(directoryPath, section);
 				let newPath = directoryPathConcat(directoryBarHoverPath, section);
 	
-				move(oldPath, newPath);
+				directoryMove(oldPath, newPath);
 			}
 
+			setSelectedItems([]);
 			return;
 		}
 
@@ -154,10 +157,11 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			let oldPath = directoryPathConcat(directoryPath, section);
 			let newPath = directoryPathConcat(targetDirectory, section);
 
-			move(oldPath, newPath);
+			directoryMove(oldPath, newPath);
 		}
 
 		setDragging(null);
+		setSelectedItems([]);
 	}
 
 	const slices = directoryPath.split(">");
@@ -275,6 +279,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					<div className="video-directory-list separated-scrollbox">
 						<DragList dragListName="directory-dl" onDrag={(e) => {
 							setDragging(e);
+							setIsDragging(true);
 
 							if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 								setSelectedItems([ e.startDragID ]);
