@@ -13,6 +13,7 @@ import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggle
 import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
+import { ReactComponent as BinIcon } from "./../../../assets/icons/bin.svg"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";
@@ -62,7 +63,11 @@ export function VideosPage(): React.ReactNode {
 	const activeVideoID = "";
 	const onSaveActiveVideo = () => { };
 	const onPinCurrentTimestamp = () => { };
-	const clearVideos = () => { };
+	const clearEverything = (action: string) => {
+		if (action == "I understand, remove everything") {
+			directoryRemove("$", root.subNodes.map(x => getSectionPrefix(x)));
+		}
+	};
 
 	return (
 		<div className="video-page-outer">
@@ -133,7 +138,7 @@ export function VideosPage(): React.ReactNode {
 				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
-					<LabelGroup className="add-label-group" label="Add">
+					<LabelGroup className="modification-label-group" label="Add">
 						<FormDialog
 							formID="add-video-form"
 							formTitle="Add video"
@@ -189,13 +194,13 @@ export function VideosPage(): React.ReactNode {
 									selector={(data: IAddDirectoryForm) => data.directoryName}/>
 						</FormDialog>
 					</LabelGroup>
-					<LabelGroup label="Actions" placeLineAfter={false}>
+					<LabelGroup className="modification-label-group" label="Actions" placeLineAfter={false}>
 						<ActionMessageDialog
-							title="Clear all videos"
-							body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
-							buttons={[ "Continue", "Cancel" ]}
-							onButtonPressed={() => {}}>
-							<button className="button-base button-small">Clear videos</button>
+							title="Remove everything"
+							body="Are you really sure you want to do this? This action will permanently delete all directories, saved videos and timestamps and is impossible to undo."
+							buttons={[ "I understand, remove everything", "Cancel" ]}
+							onButtonPressed={clearEverything}>
+							<button className="button-base button-small">Clear All</button>
 						</ActionMessageDialog>
 					</LabelGroup>
 				</div>
