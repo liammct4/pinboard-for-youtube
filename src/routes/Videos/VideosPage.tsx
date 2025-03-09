@@ -37,6 +37,7 @@ export function VideosPage(): React.ReactNode {
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
+	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { videoData, addVideo, removeVideo, remove } = useVideoStateAccess();
@@ -47,7 +48,7 @@ export function VideosPage(): React.ReactNode {
 	});
 
 	// Hotkeys for directory browser.
-	useHotkeys("delete", () => remove(directoryPath, selectedItems));
+	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
 	useHotkeys("F2", () => {
 		if (selectedItems.length == 1) {
 			setCurrentlyEditing(selectedItems[0]);
@@ -62,6 +63,19 @@ export function VideosPage(): React.ReactNode {
 
 	return (
 		<div className="video-page-outer">
+			{/* Delete selected sections confirmation dialog */}
+			<ActionMessageDialog
+				buttons={["Yes", "Cancel"]}
+				title="Delete selected items"
+				onButtonPressed={(action) => {
+					if (action == "Yes") {
+						remove(directoryPath, selectedItems);
+					}
+
+					setDeleteConfirmationOpen(false);
+				}}
+				body="Are you sure you want to delete all the selected items, this action cannot be undone."
+				overrideOpen={deleteConfirmationOpen}/>
 			{temporarySingleState.onRequestIsVideoControlLocked ?
 				<div className="lock-spinner-outer">
 					<Spinner className="lock-spinner" text="Fetching account data"/>
