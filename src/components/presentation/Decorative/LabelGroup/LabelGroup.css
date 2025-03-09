@@ -8,7 +8,7 @@
 		text-align: center;
 		grid-row: 1;
 		grid-column: 1;
-		font-size: var(--pfy-font-text-big);
+		font-size: var(--pfy-font-text-standard);
 	}
 
 	.content-outer {

@@ -8,43 +8,46 @@ import { IErrorFieldValues, useValidatedForm } from "../../components/forms/vali
 import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store.ts";
-import { ReactComponent as TagIcon} from "./../../../assets/icons/tag.svg"
 import { IconContainer } from "../../components/images/svgAsset.tsx";
-import { useNavigate } from "react-router-dom";
 import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggleLayoutExpander/TwoToggleLayoutExpander.tsx";
 import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
 import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
 import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
-import { ReactComponent as DeleteIcon } from "./../../../assets/icons/bin.svg"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";
 import { getVideoIdFromYouTubeLink } from "../../lib/util/youtube/youtubeUtil.ts";
+import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
+import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
+import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
-import { VideoDirectoryInteractionContext } from "../../components/video/navigation/directory.ts";
-import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, getItemFromNode, getSectionPrefix, getSectionPrefixManual, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
-	error: boolean
+}
+
+interface IAddDirectoryForm extends IErrorFieldValues {
+	directoryName: string;
 }
 
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { videoData, addVideo, removeVideo, remove } = useVideoStateAccess();
-	let { register, handleSubmit, handler, submit, reset } = useValidatedForm<IAddVideoForm>((data) => {
+	const { root, directoryAddVideo, directoryRemove, directoryAdd } = useVideoStateAccess();
+	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
-		addVideo(id, directoryPath);
+		directoryAddVideo(id, directoryPath);
+	});
+	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => {
+		let result = directoryAdd(directoryPath, data.directoryName);
 	});
 
 	// Hotkeys for directory browser.
@@ -69,7 +72,7 @@ export function VideosPage(): React.ReactNode {
 				title="Delete selected items"
 				onButtonPressed={(action) => {
 					if (action == "Yes") {
-						remove(directoryPath, selectedItems);
+						directoryRemove(directoryPath, selectedItems);
 					}
 
 					setDeleteConfirmationOpen(false);
@@ -130,28 +133,71 @@ export function VideosPage(): React.ReactNode {
 				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
-					{/* Add video dialog. */}
-					<FormDialog
-						formID="add-video-form"
-						formTitle="Add video"
-						labelSize="small"
-						submitText="Add"
-						trigger={<button className="button-base button-small">Add video</button>}
-						handleSubmit={handleSubmit(handler)}>
-							<FormField<IAddVideoForm> register={register}
-								label="Link:"
-								name="link"
-								fieldSize="max"
-								submitEvent={submit.current}
-								selector={(data: IAddVideoForm) => data.link}/>
-					</FormDialog>
-					<ActionMessageDialog
-						title="Clear all videos"
-						body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
-						buttons={[ "Continue", "Cancel" ]}
-						onButtonPressed={() => {}}>
-						<button className="button-base button-small">Clear videos</button>
-					</ActionMessageDialog>
+					<LabelGroup className="add-label-group" label="Add">
+						<FormDialog
+							formID="add-video-form"
+							formTitle="Add video"
+							labelSize="small"
+							submitText="Add"
+							trigger={<button className="button-base button-small">Video</button>}
+							handleSubmit={addVideoForm.handleSubmit(addVideoForm.handler)}>
+								<FormField<IAddVideoForm>
+									register={addVideoForm.register}
+									label="Link:"
+									name="link"
+									fieldSize="max"
+									submitEvent={addVideoForm.submit.current}
+									selector={(data: IAddVideoForm) => data.link}/>
+						</FormDialog>
+						<FormDialog
+							formID="add-directory-form"
+							formTitle="Add directory"
+							labelSize="medium"
+							submitText="Add"
+							trigger={<button className="button-base button-small">Directory</button>}
+							handleSubmit={addDirectoryForm.handleSubmit(addDirectoryForm.handler)}>
+								<FormField<IAddDirectoryForm> register={addDirectoryForm.register}
+									label="Section Name:"
+									name="directoryName"
+									fieldSize="max"
+									validationMethod={(data) => {
+										let result = validateDirectoryName(data);
+
+										switch (result) {
+											case "EMPTY":
+												return "Please enter a name.";
+											case "TOO_LONG":
+												return `That name is too long, please enter something less than ${DIRECTORY_NAME_MAX_LENGTH} characters.`;
+											case "INVALID_CHARACTERS":
+												return "That name contains an invalid character.";
+											case "WHITESPACE_ONLY":
+												return "Name must contain at least one valid character.";
+										}
+
+										let currentDirectory = getItemFromNode(directoryPath, root) as IDirectoryNode;
+										let existingIndex = currentDirectory
+											.subNodes
+											.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(data, "DIRECTORY"));
+
+										if (existingIndex != -1) {
+											return "That directory already exists in this directory.";
+										}
+
+										return null;
+									}}
+									submitEvent={addDirectoryForm.submit.current}
+									selector={(data: IAddDirectoryForm) => data.directoryName}/>
+						</FormDialog>
+					</LabelGroup>
+					<LabelGroup label="Actions" placeLineAfter={false}>
+						<ActionMessageDialog
+							title="Clear all videos"
+							body="Are you sure you want to continue? This will permanently delete all saved videos and timestamps and cannot be undone."
+							buttons={[ "Continue", "Cancel" ]}
+							onButtonPressed={() => {}}>
+							<button className="button-base button-small">Clear videos</button>
+						</ActionMessageDialog>
+					</LabelGroup>
 				</div>
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -14,11 +14,9 @@ import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arr
 import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
+import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
-import { useHotkeys } from "react-hotkeys-hook";
-import { useGlobalEvent } from "../../../features/events/useGlobalEvent";
-import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -30,7 +28,7 @@ export interface IVideoDirectoryBrowserProperties {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { videoData, root, move } = useVideoStateAccess();
+	const { videoData, root, directoryMove: move } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
@@ -85,9 +83,39 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	}, [directory]);
 
 	const requestEditEnd = (newSliceName: string) => {
-		setCurrentlyEditing(null);
+		let result = validateDirectoryName(newSliceName);
 
-		move(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName));
+		if (result != null && result != "STARTS_ENDS_IN_WHITESPACE") {
+			let message = "";
+
+			switch (result) {
+				case "EMPTY":
+					message = "Names must contain at least one character.";
+					break;
+				case "INVALID_CHARACTERS":
+					message = `"${newSliceName}" contains an invalid character.`;
+					break;
+				case "TOO_LONG":
+					message = `That name is too long, names cannot exceed ${DIRECTORY_NAME_MAX_LENGTH} characters.`;
+					break;
+				case "WHITESPACE_ONLY":
+					message = "Names must contain at least one valid character.";
+			}
+
+			activateMessage(
+				"Unable to rename the directory.",
+				message,
+				"Warning",
+				"Warning",
+				5000,
+				"Shake"
+			);
+		}
+		else {
+			move(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
+		}
+
+		setCurrentlyEditing(null);
 	}
 
 	const dragEnd = () => {

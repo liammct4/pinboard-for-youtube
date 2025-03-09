@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { getItemFromNode, getSectionRaw, IDirectoryNode, IVideoNode, relocateDirectory, removeItems } from "../video/navigation/directory";
+import { addDirectory, AddDirectoryResult, getItemFromNode, getSectionRaw, IDirectoryNode, IVideoNode, relocateDirectory, removeItems } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -16,7 +16,7 @@ export function useVideoStateAccess() {
 	return {
 		videoData,
 		root: directoryRoot,
-		addVideo: (videoID: string, path: string) => {
+		directoryAddVideo: (videoID: string, path: string) => {
 			if (videoData.has(videoID)) {
 				return;
 			}
@@ -53,13 +53,13 @@ export function useVideoStateAccess() {
 			
 			setCounter(Math.random());
 		},
-		removeVideo: (videoID: string) => {
+		directoryRemoveVideo: (videoID: string) => {
 			if (videoData.has(videoID)){
 				videoData.delete(videoID);
 			}
 			setCounter(Math.random());
 		},
-		updateVideo: (video: IVideo) => {
+		directoryUpdateVideo: (video: IVideo) => {
 			if (!videoData.has(video.id)) {
 				return;
 			}
@@ -68,11 +68,17 @@ export function useVideoStateAccess() {
 
 			setCounter(Math.random());
 		},
-		move: (oldDirectory: string, newDirectory: string) => {
+		directoryAdd: function (targetPath: string, name: string): AddDirectoryResult {
+			let result = addDirectory(directoryRoot, targetPath, name);
+
+			setCounter(Math.random());
+			return result;
+		},
+		directoryMove: (oldDirectory: string, newDirectory: string) => {
 			relocateDirectory(directoryRoot, oldDirectory, newDirectory);
 			setCounter(Math.random());
 		},
-		remove: (path: string, sections: string[]) => {
+		directoryRemove: (path: string, sections: string[]) => {
 			removeItems(directoryRoot, path, sections);
 			setCounter(Math.random());
 		}

@@ -101,7 +101,12 @@
 			display: flex;
 			flex-direction: row;
 			margin-top: var(--pfy-spacing-standard);
-			gap: var(--pfy-spacing-standard);
+
+			.add-label-group {
+				display: flex;
+				flex-direction: row;
+				gap: var(--pfy-spacing-standard-compact);
+			}
 		}
 
 		.video-collection-section-heading {

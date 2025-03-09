@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil";
 
+export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
 
 export interface IVideoBrowserNode {
@@ -69,12 +70,13 @@ export function getSectionRaw(node: IVideoBrowserNode): string {
 }
 
 export function getSectionPrefix(node: IVideoBrowserNode): string {
-	if (node.type == "VIDEO") {
-		return `vd:${(node as IVideoNode).videoID}`;
-	}
-	else {
-		return `dir:${(node as IDirectoryNode).slice}`;
-	}
+	return getSectionPrefixManual(getSectionRaw(node), node.type);
+}
+
+export function getSectionPrefixManual(section: string, type: NodeType): string {
+	return type == "VIDEO" ?
+		`vd:${section}` :
+		`dir:${section}`;
 }
 
 export function getSectionType(section: string): NodeType {
@@ -96,6 +98,44 @@ export function getRawSectionFromPrefix(section: string): string {
 	else {
 		return section;
 	}
+}
+
+
+export type ValidateDirectoryNameError = 
+	"TOO_LONG" |
+	"EMPTY" |
+	"INVALID_CHARACTERS" |
+	"WHITESPACE_ONLY" |
+	"STARTS_ENDS_IN_WHITESPACE";
+	
+/**
+ * Rules:
+ *  - Must have at least one character.
+ *  - No greater than DIRECTORY_NAME_MAX_LENGTH (defined at the top of this file) characters.
+ *  - Must only contain alphanumeric characters, { .,()[];@~-=+ } and spaces.
+ *  - Cannot consist of whitespace characters only.
+ *  - Cannot begin or end with a whitespace character (Strip if case).
+ */
+export function validateDirectoryName(directoryName: string): ValidateDirectoryNameError | null {
+	let stripped = getRawSectionFromPrefix(directoryName);
+
+	if (stripped.length < 1) {
+		return "EMPTY";
+	}
+	else if (stripped.length > DIRECTORY_NAME_MAX_LENGTH) {
+		return "TOO_LONG";
+	}
+	else if (/[^A-z\s.,()\[\]\;\@\~\-=\+]/.test(directoryName)) {
+		return "INVALID_CHARACTERS";
+	}
+	else if (/^\s*$/.test(directoryName)) {
+		return "WHITESPACE_ONLY";
+	}
+	else if (directoryName.trim().length == directoryName.length) {
+		return "STARTS_ENDS_IN_WHITESPACE";
+	}
+
+	return null;
 }
 
 export function splitPathIntoSlices(path: string): string[] {
@@ -188,6 +228,41 @@ export function relocateDirectory(root: IDirectoryNode, oldDirectory: string, ne
 	newParent.subNodes.splice(insertIndex, 0, item);
 	
 	item.parent = newParent;
+}
+
+export type AddDirectoryResult ="DOES_NOT_EXIST" | "NOT_A_DIRECTORY" | "DIRECTORY_ALREADY_EXISTS" | null;
+
+export function addDirectory(root: IDirectoryNode, targetPath: string, name: string): AddDirectoryResult {
+	let newParent = getItemFromNode(targetPath, root) as IDirectoryNode;
+
+	if (newParent == undefined) {
+		return "DOES_NOT_EXIST";
+	}
+	else if (newParent.type != "DIRECTORY") {
+		return "NOT_A_DIRECTORY";
+	}
+
+	let existingIndex = newParent
+		.subNodes
+		.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(name, "DIRECTORY"));
+
+	if (existingIndex != -1) {
+		return "DIRECTORY_ALREADY_EXISTS";
+	}
+
+	let newDirectory: IDirectoryNode = {
+		slice: name,
+		parent: newParent,
+		type: "DIRECTORY",
+		subNodes: []
+	};
+
+	let videoStartIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
+	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, newDirectory, (item) => getSectionPrefix(item), 0, videoStartIndex);
+
+	newParent.subNodes.splice(insertIndex, 0, newDirectory);
+
+	return null;
 }
 
 export function removeItems(root: IDirectoryNode, basePath: string, targetSections: string[]) {

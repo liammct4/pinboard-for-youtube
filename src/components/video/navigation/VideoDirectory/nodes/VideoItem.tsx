@@ -15,7 +15,7 @@ interface IVideoItemProperties {
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	const { videoData, updateVideo } = useVideoStateAccess();
+	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess();
 
 	if (!videoData.has(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
