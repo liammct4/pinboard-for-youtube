@@ -265,6 +265,52 @@ export function addDirectory(root: IDirectoryNode, targetPath: string, name: str
 	return null;
 }
 
+export function findItemPathFromName(
+		root: IDirectoryNode,
+		itemName: string,
+		includeDirectories: boolean,
+		includeVideos: boolean,
+		endAfterFirstMatch: boolean
+	): string[] {
+	let result: string[] = [];
+
+	let itemNameDirectory = getSectionPrefixManual(itemName, "DIRECTORY");
+	let itemNameVideo = getSectionPrefixManual(itemName, "VIDEO");
+
+	const pass = (node: IDirectoryNode, accumulated: string) => {
+		if (endAfterFirstMatch && result.length > 0) {
+			return;
+		}
+
+		accumulated = accumulated == "" ? getSectionRaw(node) : directoryPathConcat(accumulated, getSectionRaw(node));
+
+		for (let subNode of node.subNodes) {
+			let sectionPrefix = getSectionPrefix(subNode);
+
+			if (subNode.type == "DIRECTORY") {
+				if (includeDirectories && sectionPrefix == itemNameDirectory) {
+					result.push(directoryPathConcat(accumulated, getSectionRaw(subNode)));
+				}
+
+				pass(subNode as IDirectoryNode, accumulated);
+			}
+			else if (subNode.type == "VIDEO") {
+				if (!includeVideos) {
+					break;
+				}
+
+				if (sectionPrefix == itemNameVideo) {
+					result.push(accumulated);
+				}
+			}
+		}
+	};
+
+	pass(root, "");
+
+	return result;
+}
+
 export function removeItems(root: IDirectoryNode, basePath: string, targetSections: string[]) {
 	let baseNode = getItemFromNode(basePath, root) as IDirectoryNode;
 

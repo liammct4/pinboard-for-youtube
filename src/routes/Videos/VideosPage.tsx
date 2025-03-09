@@ -17,13 +17,14 @@ import { ReactComponent as BinIcon } from "./../../../assets/icons/bin.svg"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";
-import { getVideoIdFromYouTubeLink } from "../../lib/util/youtube/youtubeUtil.ts";
+import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID } from "../../lib/util/youtube/youtubeUtil.ts";
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { DIRECTORY_NAME_MAX_LENGTH, getItemFromNode, getSectionPrefix, getSectionPrefixManual, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getSectionPrefix, getSectionPrefixManual, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
+import { useNotificationMessage } from "../../components/features/useNotificationMessage.tsx";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -41,7 +42,8 @@ export function VideosPage(): React.ReactNode {
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { root, directoryAddVideo, directoryRemove, directoryAdd } = useVideoStateAccess();
+	const { activateMessage } = useNotificationMessage();
+	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryAdd } = useVideoStateAccess();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
@@ -60,8 +62,46 @@ export function VideosPage(): React.ReactNode {
 	});
 
 	// TODO
-	const activeVideoID = "";
-	const onSaveActiveVideo = () => { };
+	const activeVideoID = "7twgitxn1AE";
+	const onSaveActiveVideo = () => {
+		if (videoData.has(activeVideoID)) {
+			let location = findItemPathFromName(root, activeVideoID, false, true, true);
+
+			// Should never happen since there should always be a location for a video.
+			if (location.length == 0) {
+				activateMessage(
+					"An error has occured",
+					"This video has already been added, however, while attempting to locate the videos directory, it could not be found, so to avoid issues, it has been placed within the root directory.",
+					"Warning",
+					"Warning",
+					10000,
+					"Shake"
+				);
+
+				let video = videoData.get(activeVideoID);
+				videoData.delete(video!.id);
+
+				directoryAddVideo(activeVideoID, "$");
+
+				// Override the newly "added" video.
+				directoryUpdateVideo(video!);
+			}
+			else {	
+				activateMessage(
+					undefined,
+					`That video already exists. It can be found in the directory "${location[0]}".`,
+					"Info",
+					"Info",
+					undefined,
+					"Slide"
+				);
+			}
+			
+			return;
+		}
+
+		directoryAddVideo(activeVideoID, directoryPath);
+	};
 	const onPinCurrentTimestamp = () => { };
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
