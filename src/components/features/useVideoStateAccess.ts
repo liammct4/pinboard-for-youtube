@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { getItemFromNode, IDirectoryNode, IVideoNode, relocateDirectory, removeItems } from "../video/navigation/directory";
+import { getItemFromNode, getSectionRaw, IDirectoryNode, IVideoNode, relocateDirectory, removeItems } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -36,7 +36,18 @@ export function useVideoStateAccess() {
 			};
 
 			let directoryStartIndex = desiredDirectory.subNodes.findIndex(x => x.type == "VIDEO");
-			let insertIndex = getAlphanumericInsertIndex(desiredDirectory.subNodes, newVideoNode, (item) => (item as IDirectoryNode).slice, directoryStartIndex, desiredDirectory.subNodes.length);
+
+			if (directoryStartIndex == -1) {
+				directoryStartIndex = desiredDirectory.subNodes.length;
+			}
+
+			let insertIndex = getAlphanumericInsertIndex(
+				desiredDirectory.subNodes,
+				newVideoNode,
+				getSectionRaw,
+				directoryStartIndex,
+				desiredDirectory.subNodes.length
+			);
 
 			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
 			
