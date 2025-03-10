@@ -213,7 +213,7 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	// Remove from old location.
 	let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
 
-	let oldParentIndex = item?.parent?.subNodes.findIndex(x => (x as IDirectoryNode).slice == item.slice) as number;
+	let oldParentIndex = item?.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(item)) as number;
 	item.parent?.subNodes.splice(oldParentIndex, 1);
 
 	// Place in new location.
@@ -224,11 +224,18 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 
 	let directoryEndIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
 
-	if (item.type == "DIRECTORY") {
-		
+	if (directoryEndIndex == -1) {
+		directoryEndIndex = newParent.subNodes.length;
 	}
 
-	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, 0, directoryEndIndex);
+	let insertIndex: number;
+
+	if (item.type == "DIRECTORY") {
+		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, 0, directoryEndIndex);
+	}
+	else {
+		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, directoryEndIndex, newParent.subNodes.length);
+	}
 
 	newParent.subNodes.splice(insertIndex, 0, item);
 	

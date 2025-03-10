@@ -131,11 +131,18 @@ async function setupState() {
 		videoID: sampleVideoData[0].id
 	}
 
+	let videoB: IVideoNode = {
+		type: "VIDEO",
+		parent: testDirectoryRoot,
+		videoID: sampleVideoData[1].id
+	}
+
 	videos.set(videoA.videoID, sampleVideoData[0]);
+	videos.set(videoB.videoID, sampleVideoData[1]);
 
 	nodeC.subNodes = [nodeCA, nodeCB]
 
-	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, videoA]
+	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, videoA, videoB];
 
 	await saveVideoDictionaryToStorage(videos);
 	await saveDirectoryToStorage(testDirectoryRoot);
