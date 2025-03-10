@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -35,7 +35,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
-	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
@@ -117,12 +116,10 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		}
 
 		setCurrentlyEditing(null);
-		setIsDragging(false);
 	}
 
 	const dragEnd = () => {
 		if (dragging == "NOT_IN_BOUNDS") {
-			console.log("here");
 			if (directoryBarHoverPath == null) {
 				return;
 			}
@@ -148,6 +145,13 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		}
 
 		let targetDirectory = directoryPathConcat(directoryPath, getRawSectionFromPrefix(slice));
+		let overlappingTargetSelected = selectedItems.findIndex(x => x == slice);
+
+		// Means that a directory to move to one that is also selected, and you can't move a directory into itself. 
+		if (overlappingTargetSelected != -1) {
+			setDragging(null);
+			return;
+		}
 
 		for (let i of selectedItems) {
 			if (i == slice) {
@@ -281,7 +285,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					<div className="video-directory-list separated-scrollbox">
 						<DragList dragListName="directory-dl" onDrag={(e) => {
 							setDragging(e);
-							setIsDragging(true);
 
 							if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 								setSelectedItems([ e.startDragID ]);
