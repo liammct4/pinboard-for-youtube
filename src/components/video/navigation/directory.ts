@@ -183,7 +183,11 @@ export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNod
 	return fullPath;
 }
 
-export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string) {
+export type RelocateItemError = 
+	"RENAME_ALREADY_EXISTS" |
+	"MOVE_ALREADY_EXISTS";
+
+export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string): RelocateItemError | null {
 	let oldSplit = splitPathIntoSlices(oldDirectory);
 	let newSplit = splitPathIntoSlices(newDirectory);
 
@@ -204,24 +208,38 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 		if (equal) {
 			let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
 
-			item.slice = newSplit[newSplit.length - 1];
-			return;
+			let newName = newSplit[newSplit.length - 1];
+			let alreadyExistingIndex = item.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(newName, "DIRECTORY"));
+
+			if (alreadyExistingIndex != -1) {
+				return "RENAME_ALREADY_EXISTS";
+			}
+
+			item.slice = newName;
+			return null;
 		}
 	}
 
 	// Otherwise, move as normal.
-	// Remove from old location.
-	let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
+	let itemToMove = getItemFromNode(oldDirectory, root) as IDirectoryNode;
 
-	let oldParentIndex = item?.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(item)) as number;
-	item.parent?.subNodes.splice(oldParentIndex, 1);
-
-	// Place in new location.
+	// Getting new location.
 	let newParentPath = [ ...newSplit ];
 	newParentPath.splice(newSplit.length - 1, 1);
 
 	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
 
+	let alreadyExistingIndex = newParent.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(itemToMove));
+
+	if (alreadyExistingIndex != -1) {
+		return "MOVE_ALREADY_EXISTS";
+	}
+
+	// Remove from old location.
+	let oldParentIndex = itemToMove?.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(itemToMove)) as number;
+	itemToMove.parent?.subNodes.splice(oldParentIndex, 1);
+
+	// Place in new location.
 	let directoryEndIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
 
 	if (directoryEndIndex == -1) {
@@ -230,16 +248,18 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 
 	let insertIndex: number;
 
-	if (item.type == "DIRECTORY") {
-		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, 0, directoryEndIndex);
+	if (itemToMove.type == "DIRECTORY") {
+		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, itemToMove, getSectionRaw, 0, directoryEndIndex);
 	}
 	else {
-		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, item, getSectionRaw, directoryEndIndex, newParent.subNodes.length);
+		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, itemToMove, getSectionRaw, directoryEndIndex, newParent.subNodes.length);
 	}
 
-	newParent.subNodes.splice(insertIndex, 0, item);
+	newParent.subNodes.splice(insertIndex, 0, itemToMove);
 	
-	item.parent = newParent;
+	itemToMove.parent = newParent;
+
+	return null;
 }
 
 export type AddDirectoryResult ="DOES_NOT_EXIST" | "NOT_A_DIRECTORY" | "DIRECTORY_ALREADY_EXISTS" | null;

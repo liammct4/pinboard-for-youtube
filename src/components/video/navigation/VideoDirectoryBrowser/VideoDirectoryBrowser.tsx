@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, IVideoBrowserNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
 import { useNotificationMessage } from "../../../features/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
@@ -24,6 +24,15 @@ export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
 	directoryPath: string;
 	onDirectoryPathChanged: (newPath: string) => void; 
+}
+
+export function getDirectoryMoveUserMessage(error: RelocateItemError): string {
+	switch (error) {
+		case "RENAME_ALREADY_EXISTS":
+			return "That name already exists in the target directory."
+		case "MOVE_ALREADY_EXISTS":
+			return "That directory already exists in the target directory.";
+	}
 }
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
@@ -112,7 +121,12 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			);
 		}
 		else {
-			directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
+			let result = directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
+
+			if (result != null) {
+				let message = getDirectoryMoveUserMessage(result);
+				activateMessage(undefined, message, "Error", "Error", 8000, "Shake");
+			}
 		}
 
 		setCurrentlyEditing(null);
