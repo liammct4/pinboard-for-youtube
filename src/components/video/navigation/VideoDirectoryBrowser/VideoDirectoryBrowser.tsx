@@ -122,6 +122,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 	const dragEnd = () => {
 		if (dragging == "NOT_IN_BOUNDS") {
+			console.log("here");
 			if (directoryBarHoverPath == null) {
 				return;
 			}
@@ -136,6 +137,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			}
 
 			setSelectedItems([]);
+			setDragging(null);
 			return;
 		}
 
