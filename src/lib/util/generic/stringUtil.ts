@@ -31,7 +31,7 @@ export function getAlphanumericInsertIndex<T>(items: T[], item: T, valueAccessor
 		}
 	}
 
-	return items.length;
+	return endIndex;
 }
 
 /**
