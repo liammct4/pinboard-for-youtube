@@ -1,0 +1,5 @@
+.mouse-tooltip-outer-frame {
+	position: absolute;
+	pointer-events: none;
+	z-index: 99999999;
+}

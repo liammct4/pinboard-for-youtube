@@ -11,10 +11,13 @@ import { ReactComponent as CompactViewIcon } from "./../../../../../assets/icons
 import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons/view/regular_option.svg"
 import { ReactComponent as HomeIcon } from "./../../../../../assets/icons/home.svg"
 import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arrows/long_arrow.svg"
+import { ReactComponent as CategoryDiamond } from "./../../../../../assets/icons/category_diamond.svg"
 import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
+import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
+import { useVideoInfo } from "../../../features/useVideoInfo";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
 
@@ -33,6 +36,25 @@ export function getDirectoryMoveUserMessage(error: RelocateItemError): string {
 		case "MOVE_ALREADY_EXISTS":
 			return "That directory already exists in the target directory.";
 	}
+}
+
+function DragDirectoryTooltipItem({ sliceSection }: { sliceSection: string }) {
+	return (
+		<li className="directory-item">
+			<IconContainer className="icon-colour-standard" asset={CategoryDiamond} use-fill/>
+			<span>{getRawSectionFromPrefix(sliceSection)}</span>
+		</li>
+	);
+}
+
+function DragVideoTooltipItem({ idSection }: { idSection: string }) {
+	const { video } = useVideoInfo(getRawSectionFromPrefix(idSection));
+
+	return (
+		<li className="video-item">
+			<span>{video?.title}</span>
+		</li>
+	);
 }
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
@@ -135,6 +157,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const dragEnd = () => {
 		if (dragging == "NOT_IN_BOUNDS") {
 			if (directoryBarHoverPath == null) {
+				setDragging(null);
 				return;
 			}
 
@@ -155,6 +178,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		let slice = dragging?.overlappingID;
 
 		if (slice == undefined || getSectionType(slice) == "VIDEO") {
+			setDragging(null);
 			return;
 		}
 
@@ -280,6 +304,18 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					</LabelGroup>
 				</div>
 			</ToggleExpander>
+			{/* For dragging */}
+			<MouseTooltip show={dragging != null} horizontal="START" vertical="CENTRE">
+				<ul className="drag-list-tooltip">
+					{
+						selectedItems.map(x => getSectionType(x) == "DIRECTORY" ?
+							<DragDirectoryTooltipItem key={x} sliceSection={x}/> :
+							<DragVideoTooltipItem key={x} idSection={x}/>
+						)
+					}
+				</ul>
+			</MouseTooltip>
+			{/* Item list */}
 			<VideoDirectoryInteractionContext.Provider
 				value={{
 					navigateRequest: (requester) => {

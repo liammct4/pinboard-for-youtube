@@ -111,3 +111,45 @@
 		flex-grow: 1;
 	}
 }
+
+.drag-list-tooltip {
+	--line-height: 16px;
+	--transparent-tooltip-colour: color-mix(in srgb, var(--pfy-empty-01-depth) 80%, transparent);
+	background-color: var(--transparent-tooltip-colour);
+	border-radius: var(--pfy-spacing-standard);
+	list-style-type: none;
+	padding: var(--pfy-spacing-large);
+	margin-left: var(--pfy-spacing-standard);
+	animation-name: tooltipPopInAnimation;
+	animation-duration: var(--pfy-timing-snappy);
+	transform-origin: left;
+
+	& li {
+		height: var(--line-height);
+		font-size: var(--pfy-font-text-standard);
+		font-weight: bold;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--pfy-spacing-standard);
+	}
+
+	.directory-item {
+		& svg {
+			width: var(--line-height);
+			height: var(--line-height);
+		}
+	}
+}
+
+@keyframes tooltipPopInAnimation {
+	0% {
+		transform: scale(0.8);
+		filter: opacity(0.8);
+	}
+	100% {
+		transform: scale(1);
+		filter: opacity(1);
+	}
+}
