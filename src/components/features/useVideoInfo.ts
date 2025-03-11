@@ -6,24 +6,23 @@ import { saveVideoToCache } from "../../features/cache/cacheSlice";
 
 export function useVideoInfo(videoID: string | undefined) {
 	const cache = useSelector((state: RootState) => state.cache.videoCache);
-	const [ contacted, setContacted ] = useState<boolean>();
 	const [ video, setVideo ] = useState<IYoutubeVideoInfo>();
 	const [ videoExists, setVideoExists ] = useState<boolean>(false);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		const getVideoInfo = async () => {
-			if (videoID == undefined) {
-				return;
-			}
+		if (videoID == undefined) {
+			return;
+		}
 
-			let index = cache.findIndex(x => x.video_id == videoID);
+		let index = cache.findIndex(x => x.video_id == videoID);
 
-			if (index != -1) {
-				setVideo(cache[index]);
-				setVideoExists(true);
-			}
-			else {
+		if (index != -1) {
+			setVideo(cache[index]);
+			setVideoExists(true);
+		}
+		else {
+			const getVideoInfo = async () => {
 				let info = await getYoutubeVideoInfoFromVideoID(videoID);
 	
 				if (info == undefined) {
@@ -32,12 +31,12 @@ export function useVideoInfo(videoID: string | undefined) {
 	
 				setVideo(info);
 				setVideoExists(true);
-
+	
 				dispatch(saveVideoToCache(info));
 			}
-		}
 
-		setTimeout(getVideoInfo, 200);
+			setTimeout(getVideoInfo, 50);
+		}
 	}, []);
 
 	return { videoExists, video };
