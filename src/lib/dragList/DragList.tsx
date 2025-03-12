@@ -76,7 +76,6 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 	}, [dragInfo]);
 	useGlobalEvent({
 		event: "MOUSE_UP",
-		name: `${dragListName}::mouse_up_end_drag`,
 		handler: () => {
 			setStartDragID(null);
 
@@ -87,7 +86,6 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 	});
 	useGlobalEvent({
 		event: "MOUSE_MOVE",
-		name: `${dragListName}::mouse_move_calculate_drag`,
 		handler: (e: React.MouseEvent<HTMLElement>) => {
 			if (startDragID != null) {
 				let y = listBox.current?.getBoundingClientRect().y!;
@@ -120,6 +118,11 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 			</div>
 		</DragListContext.Provider>
 	)
+}
+
+export type DragListItemData = {
+	id: string;
+	position: number;
 }
 
 export interface IDragListContext {

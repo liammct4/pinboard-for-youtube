@@ -111,6 +111,12 @@ async function setupState() {
 		subNodes: []
 	}
 
+	let nodeD: IDirectoryNode = { ...nodeC, slice: "other" };
+	let nodeE: IDirectoryNode = { ...nodeC, slice: "stuff" };
+	let nodeF: IDirectoryNode = { ...nodeC, slice: "tutorial" };
+	let nodeG: IDirectoryNode = { ...nodeC, slice: "folder" };
+	let nodeH: IDirectoryNode = { ...nodeC, slice: "directory" };
+
 	let nodeCA: IDirectoryNode = {
 		type: "DIRECTORY",
 		parent: nodeC,
@@ -142,7 +148,7 @@ async function setupState() {
 
 	nodeC.subNodes = [nodeCA, nodeCB]
 
-	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, videoA, videoB];
+	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, videoA, videoB];
 
 	await saveVideoDictionaryToStorage(videos);
 	await saveDirectoryToStorage(testDirectoryRoot);

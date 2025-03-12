@@ -12,7 +12,7 @@ import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons
 import { ReactComponent as HomeIcon } from "./../../../../../assets/icons/home.svg"
 import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arrows/long_arrow.svg"
 import { ReactComponent as CategoryDiamond } from "./../../../../../assets/icons/category_diamond.svg"
-import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
+import { DragEvent, DragList, DragListItemData } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
@@ -20,6 +20,7 @@ import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
+import { SelectionBoxScrollbox } from "../../../interactive/SelectionBoxScrollbox/SelectionBoxScrollbox";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -332,20 +333,21 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					value={{
 						videoItemStyle: currentViewStyle
 					}}>
-					<div className="video-directory-list separated-scrollbox">
-						<DragList dragListName="directory-dl" onDrag={(e) => {
-							setDragging(e);
+						<SelectionBoxScrollbox
+							frameClassName="video-directory-list separated-scrollbox"
+							boxClassName="video-selection-box">
+							<DragList dragListName="directory-dl" onDrag={(e) => {
+									setDragging(e);
 
-							if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
-								setSelectedItems([ e.startDragID ]);
-							}
-						}}
-						onDragEnd={dragEnd}
-						>
-							{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-						</DragList>
-						<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
-					</div>
+									if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
+										setSelectedItems([ e.startDragID ]);
+									}
+								}}
+								onDragEnd={dragEnd}>
+									{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+							</DragList>
+							<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+						</SelectionBoxScrollbox>
 				</VideoDirectoryPresentationContext.Provider>
 			</VideoDirectoryInteractionContext.Provider>
 		</>

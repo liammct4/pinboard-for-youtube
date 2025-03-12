@@ -1,0 +1,9 @@
+.selection-box-frame {
+	position: relative;
+
+	.selection-box {
+		position: absolute;
+		pointer-events: none;
+		overflow: hidden;
+	}
+}

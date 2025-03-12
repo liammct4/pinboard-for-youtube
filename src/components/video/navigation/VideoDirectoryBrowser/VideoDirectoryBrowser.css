@@ -106,9 +106,12 @@
 	flex-direction: column;
 	user-select: none;
 	align-items: stretch;
+	overflow: hidden;
 
-	.empty-click-area {
-		flex-grow: 1;
+	.video-selection-box {
+		--transparent-background: color-mix(in srgb, var(--pfy-primary-common) 50%, transparent);
+		border: 1px solid var(--pfy-primary-dark);
+		background-color: var(--transparent-background);
 	}
 }
 
