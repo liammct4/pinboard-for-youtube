@@ -12,7 +12,6 @@ export interface ISelectionBoxScrollboxProperties {
 	onSelectBegin?: (startingPoint: Coordinates) => void;
 	onSelectMove?: (box: Rect) => void;
 	onSelectEnd?: (box: Rect) => void;
-	getItemData?: (items: DragListItemData[]) => void;
 }
 
 export function SelectionBoxScrollbox({
@@ -21,7 +20,6 @@ export function SelectionBoxScrollbox({
 		onSelectBegin,
 		onSelectMove,
 		onSelectEnd,
-		getItemData,
 		children
 	}: ISelectionBoxScrollboxProperties) {
 	const frameRef = useRef<HTMLDivElement>(null!);

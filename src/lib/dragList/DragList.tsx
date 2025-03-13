@@ -1,5 +1,6 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react"
 import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
+import { Rect } from "../util/objects/types";
 
 export type DragEvent = {
 	startDragID: string;
@@ -12,13 +13,14 @@ export interface IDragListProperties {
 	className?: string;
 	children: JSX.Element | JSX.Element[];
 	dragListName: string;
+	onDragStart?: (startingID: string) => void;
 	onDrag?: (e: DragEvent) => void;
 	onDragEnd?: (e: DragEvent) => void;
 }
 
 export type InbetweenIDEventType = -1 | string | 1;
 
-export function DragList({ className, dragListName, children, onDrag, onDragEnd }: IDragListProperties) {
+export function DragList({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties) {
 	const listBox = useRef<HTMLDivElement>(null);
 	const [ startDragID, setStartDragID ] = useState<string | null>(null);
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
@@ -107,7 +109,10 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 				overlappingID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.overlappingID ?? null : null,
 				inbetweenStartID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenStartID ?? null : null,
 				inbetweenEndID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenEndID ?? null : null,
-				setStartDragID: setStartDragID,
+				setStartDragID: (e) => {
+					onDragStart?.(e);
+					setStartDragID(e)
+				},
 				baseY: yBasePosition,
 				scrollY: yScroll
 			}}>
@@ -122,7 +127,7 @@ export function DragList({ className, dragListName, children, onDrag, onDragEnd 
 
 export type DragListItemData = {
 	id: string;
-	position: number;
+	bounds: Rect;
 }
 
 export interface IDragListContext {

@@ -21,6 +21,7 @@ import { useVideoInfo } from "../../../features/useVideoInfo";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
 import { SelectionBoxScrollbox } from "../../../interactive/SelectionBoxScrollbox/SelectionBoxScrollbox";
+import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -67,6 +68,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
+	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const directory = useMemo<IDirectoryNode | null>(() => {
@@ -156,6 +158,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	}
 
 	const dragEnd = () => {
+		setIsDragging(false);
+
 		if (dragging == "NOT_IN_BOUNDS") {
 			if (directoryBarHoverPath == null) {
 				setDragging(null);
@@ -333,21 +337,22 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 					value={{
 						videoItemStyle: currentViewStyle
 					}}>
-						<SelectionBoxScrollbox
-							frameClassName="video-directory-list separated-scrollbox"
-							boxClassName="video-selection-box">
-							<DragList dragListName="directory-dl" onDrag={(e) => {
+						<SelectionList
+							className="video-directory-list separated-scrollbox"
+							boxClassName="video-selection-box"
+							allowSelection={!isDragging}
+							setSelectedItems={setSelectedItems}>
+								<DragList dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
 									setDragging(e);
 
 									if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 										setSelectedItems([ e.startDragID ]);
 									}
-								}}
-								onDragEnd={dragEnd}>
+								}} onDragEnd={dragEnd}>
 									{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-							</DragList>
-							<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
-						</SelectionBoxScrollbox>
+									<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+								</DragList>
+						</SelectionList>
 				</VideoDirectoryPresentationContext.Provider>
 			</VideoDirectoryInteractionContext.Provider>
 		</>
