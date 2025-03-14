@@ -12,8 +12,6 @@ interface IDirectoryItemProperties {
 export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNode {
 	const {
 		navigateRequest,
-		selectedItems,
-		setSelectedItems,
 		currentlyEditing,
 		requestEditEnd,
 		draggingID
@@ -24,22 +22,7 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 
 	return (
 		<>
-			<div onMouseDown={(e) => {
-				let section = getSectionPrefix(node);
-
-				if (e.ctrlKey) {
-					if (selectedItems.includes(section)) {
-						setSelectedItems([ ...selectedItems ].filter(x => x != section));
-					}
-					else {
-						setSelectedItems([ ...selectedItems, section])
-					}
-				}
-				else if (!selectedItems.includes(section)) {
-					setSelectedItems([ section ]);
-				}
-			}}
-			data-is-hover-overlap={isHover}>
+			<div data-is-hover-overlap={isHover}>
 				<button className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
 					{
 						isHover ?
