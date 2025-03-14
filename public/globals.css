@@ -51,7 +51,7 @@
 	--pfy-font-scheme-standard: var(--pfy-main-font), var(--pfy-fallback-font);
 
 	/* Sizes */
-	--pfy-window-width: 390px;
+	--pfy-window-width: 430px;
 	--pfy-window-height: 600px;
 	--pfy-window-width-expanded: 800px;
 	--pfy-logo-standard: 50px;

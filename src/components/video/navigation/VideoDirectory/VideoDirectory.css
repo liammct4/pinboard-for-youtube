@@ -4,7 +4,9 @@
 	list-style-type: none;
 	padding: var(--pfy-spacing-standard-compact);
 	margin: 0;
-	gap: 1px;
+	padding-right: var(--pfy-spacing-very-large);
+	padding-bottom: calc(var(--pfy-spacing-very-large) * 2);
+	gap: 5px;
 
 	.directory-node-item {
 		display: flex;
