@@ -18,7 +18,7 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 
 	// When dragging ends, reorder the list.
 	useEffect(() => {
-		if (isDragging || dragging == null) {
+		if (isDragging || dragging == null || dragging == "NOT_IN_BOUNDS") {
 			return;
 		}
 
@@ -56,7 +56,7 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 					setIsDragging(false);
 				}}>
 				{
-					timestamps.length != 0 ?
+					timestamps.length != 0 && dragging != "NOT_IN_BOUNDS" ?
 						timestamps.map(x =>
 							<DragListItem id={x.id} key={x.id}>
 								<>

@@ -39,4 +39,5 @@ export type ColourPalette = {
 	"content-shade-faded": string;
 	"content-link": string;
 	"content-link-visited": string;
+	"selection-primary": string;
 };

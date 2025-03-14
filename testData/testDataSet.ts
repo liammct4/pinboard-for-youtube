@@ -87,7 +87,8 @@ export const sampleConfigData: IConfig = {
 			"content-shade-standard": "rgb(197, 36, 56)",
 			"content-shade-faded": "rgb(227, 126, 156)",
 			"content-link": "rgb(218, 28, 132)",
-			"content-link-visited": "rgb(116, 51, 177)"
+			"content-link-visited": "rgb(116, 51, 177)",
+			"selection-primary": "rgb(255, 30, 74)"
 		},
 		modifiable: true
 	},

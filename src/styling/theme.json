@@ -34,7 +34,8 @@
 			"content-shade-standard": "rgb(197, 36, 56)",
 			"content-shade-faded": "rgb(227, 126, 156)",
 			"content-link": "rgb(218, 28, 132)",
-			"content-link-visited": "rgb(116, 51, 177)"
+			"content-link-visited": "rgb(116, 51, 177)",
+			"selection-primary": "rgb(255, 30, 74)"
 		},
 		"modifiable": false
 	},
@@ -73,7 +74,8 @@
 			"content-shade-standard": "rgb(197, 87, 71)",
 			"content-shade-faded": "rgb(227, 160, 156)",
 			"content-link": "rgb(223, 86, 149)",
-			"content-link-visited": "rgb(138, 82, 177)"
+			"content-link-visited": "rgb(138, 82, 177)",
+			"selection-primary": "rgb(255, 130, 77)"
 		},
 		"modifiable": false
 	},
@@ -112,7 +114,8 @@
 			"content-shade-standard": "rgb(212, 222, 255)",
 			"content-shade-faded": "rgb(187, 192, 233)",
 			"content-link": "rgb(51, 108, 255)",
-			"content-link-visited": "rgb(107, 73, 226)"
+			"content-link-visited": "rgb(107, 73, 226)",
+			"selection-primary": "rgb(230, 230, 230)"
 		},
 		"modifiable": false
 	},
@@ -151,7 +154,8 @@
 			"content-shade-standard": "rgb(212, 222, 255)",
 			"content-shade-faded": "rgb(187, 192, 233)",
 			"content-link": "rgb(184, 224, 255)",
-			"content-link-visited": "rgb(202, 190, 230)"
+			"content-link-visited": "rgb(202, 190, 230)",
+			"selection-primary": "rgb(198, 209, 230)"
 		},
 		"modifiable": false
 	},
@@ -190,7 +194,8 @@
 			"content-shade-standard": "rgb(13, 31, 53)",
 			"content-shade-faded": "rgb(59, 78, 101)",
 			"content-link": "rgb(130, 230, 174)",
-			"content-link-visited": "rgb(51, 98, 68)"
+			"content-link-visited": "rgb(51, 98, 68)",
+			"selection-primary": "rgb(0, 198, 255)"
 		},
 		"modifiable": false
 	},
@@ -229,7 +234,8 @@
 			"content-shade-standard": "rgb(48, 60, 41)",
 			"content-shade-faded": "rgb(65, 77, 58)",
 			"content-link": "rgb(48, 92, 237)",
-			"content-link-visited": "rgb(96, 78, 175)"
+			"content-link-visited": "rgb(96, 78, 175)",
+			"selection-primary": "rgb(99, 247, 46)"
 		},
 		"modifiable": false
 	}

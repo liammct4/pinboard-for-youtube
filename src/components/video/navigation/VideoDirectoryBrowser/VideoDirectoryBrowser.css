@@ -109,8 +109,8 @@
 	overflow: hidden;
 
 	.video-selection-box {
-		--transparent-background: color-mix(in srgb, var(--pfy-primary-common) 50%, transparent);
-		border: 1px solid var(--pfy-primary-dark);
+		--transparent-background: color-mix(in srgb, var(--pfy-selection-primary) 50%, transparent);
+		border: 1px solid var(--pfy-selection-primary);
 		background-color: var(--transparent-background);
 	}
 }

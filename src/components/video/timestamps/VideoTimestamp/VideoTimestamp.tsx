@@ -6,7 +6,7 @@ import { Timestamp, cloneModifyTimestamp } from "../../../../lib/video/video.ts"
 import { IErrorFieldValues, useValidatedForm } from "../../../forms/validated-form.ts";
 import { FormField } from "../../../forms/FormField/FormField.tsx";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
-import { ReactComponent as BinIcon } from "src/../../assets/icons/bin.svg"
+import { ReactComponent as BinIcon } from "./../../../../../assets/icons/bin.svg"
 import { ReactComponent as JumpVideoIcon } from "./../../../../../assets/icons/jump_icon.svg"
 import { IconContainer } from "../../../images/svgAsset.tsx";
 import "src/styling/dialog.css"

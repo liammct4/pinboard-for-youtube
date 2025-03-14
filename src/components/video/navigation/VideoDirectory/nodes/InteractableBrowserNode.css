@@ -2,18 +2,18 @@
 	border: 1px solid transparent;
 	border-bottom: 1px solid var(--pfy-primary-faded);
 	padding: var(--pfy-spacing-standard-compact);
-	--transparent-bg-selected: color-mix(in srgb, var(--pfy-primary-common) 10%, transparent);
-	--transparent-bg-hover: color-mix(in srgb, var(--pfy-primary-faded) 10%, transparent);
+	--transparent-bg-selected: color-mix(in srgb, var(--pfy-selection-primary) 10%, transparent);
+	--transparent-bg-hover: color-mix(in srgb, var(--pfy-selection-primary) 5%, transparent);
 
 	&[data-is-hover-highlight="true"] {
 		&:hover {
-			outline: 1px solid var(--pfy-primary-faded);
+			outline: 1px solid var(--pfy-selection-primary);
 			background-color: var(--transparent-bg-hover);
 		}
 	}
 
 	&[data-is-selected="true"] {
-		border: 1px solid var(--pfy-primary-common);
+		border: 1px solid var(--pfy-selection-primary);
 		background-color: var(--transparent-bg-selected);
 		backdrop-filter: opacity(0);
 	}
