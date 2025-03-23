@@ -125,7 +125,7 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
 	else if (stripped.length > DIRECTORY_NAME_MAX_LENGTH) {
 		return "TOO_LONG";
 	}
-	else if (/[^A-z\s.,()\[\]\;\@\~\-=\+]/.test(directoryName)) {
+	else if (/[^A-z0-9\s.,()\/\[\]\;\@\~\-=\+]/.test(directoryName)) {
 		return "INVALID_CHARACTERS";
 	}
 	else if (/^\s*$/.test(directoryName)) {
