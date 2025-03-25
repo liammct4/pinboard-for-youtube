@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { setAccessAndIDTokens } from "../features/auth/authSlice";
 import { regenerateTokensWithRefreshToken } from "../lib/user/accounts";
 import { HttpStatusCode } from "../lib/util/http";
-import { pushQueues } from "../features/account/accountSlice";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
@@ -78,7 +77,7 @@ export function HomePage(): React.ReactNode {
 		},
 		GlobalRequestHandler.connectionChangedHandler = (type: ConnectionEventType) => {
 			if (type == "Reconnected") {
-				dispatch(pushQueues());
+				// TODO.
 			}
 		}
 	}, []);

@@ -15,6 +15,7 @@ import { IAppTheme } from "../lib/config/theming/appTheme.ts";
 import { setCustomThemesWithoutQueue } from "../features/theme/themeSlice.ts";
 import "./HomePage.css"
 import "./PfyWrapper.css"
+import { LocalStorageContext, StorageWrapper } from "../components/features/storage/StorageWrapper.tsx";
 
 export function PfyWrapper(): React.ReactNode {
 	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
@@ -104,27 +105,29 @@ export function PfyWrapper(): React.ReactNode {
 
 	return (
 		<UserAuthContext.Provider value={{ currentUser }}>
-			<GlobalNotificationContext.Provider value={{
-				currentNotification: currentNotification,
-				setGlobalNotification: setCurrentNotification,
-				cancelCurrentNotification: () => {
-					setCurrentNotification(undefined);
-					setNotificationOpen(false);
-				}
-			}}>
-				<div className="pfy-style-context extension-bounds" data-expanded-window={expanded}>
-					<Toast.Provider>
-						<NotificationToast
-							isOpen={notificationOpen}
-							title={currentNotification?.title ?? ""}
-							message={currentNotification?.message ?? ""}
-							colour={currentNotification?.colour ?? "Blank"}
-							image={currentNotification?.image ?? "None"}
-							animationType={currentNotification?.animation ?? "Slide"}/>
-					</Toast.Provider>
-					<Outlet/>
-				</div>
-			</GlobalNotificationContext.Provider>
+			<StorageWrapper>
+				<GlobalNotificationContext.Provider value={{
+					currentNotification: currentNotification,
+					setGlobalNotification: setCurrentNotification,
+					cancelCurrentNotification: () => {
+						setCurrentNotification(undefined);
+						setNotificationOpen(false);
+					}
+				}}>
+					<div className="pfy-style-context extension-bounds" data-expanded-window={expanded}>
+						<Toast.Provider>
+							<NotificationToast
+								isOpen={notificationOpen}
+								title={currentNotification?.title ?? ""}
+								message={currentNotification?.message ?? ""}
+								colour={currentNotification?.colour ?? "Blank"}
+								image={currentNotification?.image ?? "None"}
+								animationType={currentNotification?.animation ?? "Slide"}/>
+						</Toast.Provider>
+						<Outlet/>
+					</div>
+				</GlobalNotificationContext.Provider>
+			</StorageWrapper>
 		</UserAuthContext.Provider>
 	)
 }

@@ -2,10 +2,8 @@ import { configureStore } from "@reduxjs/toolkit"
 import tempStateReducer from "../features/state/tempStateSlice.ts"
 import themeReducer from "../features/theme/themeSlice.ts"
 import authSlice from "../features/auth/authSlice.ts"
-import accountSlice from "../features/account/accountSlice.ts"
 import settingsSlice from "../features/settings/settingsSlice.ts"
 import cacheSlice from "../features/cache/cacheSlice.ts"
-import { accountCloudSyncMiddleware } from "../features/account/accountCloudSyncMiddleware.ts"
 import { authAccountDataMiddleware } from "../features/auth/authAccountDataMiddleware.ts"
 import { settingsStorageMiddleware } from "../features/settings/settingsStorageMiddleware.ts"
 import { themeQueueSyncMiddleware } from "../features/theme/themeQueueSyncMiddleware.ts"
@@ -19,7 +17,6 @@ export let store = configureStore({
 		tempState: tempStateReducer,
 		theme: themeReducer,
 		auth: authSlice,
-		account: accountSlice,
 		settings: settingsSlice,
 		cache: cacheSlice
 	},
@@ -34,7 +31,6 @@ export let store = configureStore({
 		.prepend(updateCustomThemeStorageMiddleware.middleware)
 		.prepend(authChangeUserStorageMiddleware.middleware)
 		.prepend(authTokenChangedMiddleware.middleware)
-		.prepend(accountCloudSyncMiddleware.middleware)
 		.prepend(authAccountDataMiddleware.middleware)
 		.prepend(settingsStorageMiddleware.middleware)
 		.prepend(cacheSaveStorageMiddleware.middleware)

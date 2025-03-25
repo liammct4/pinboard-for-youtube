@@ -1,12 +1,14 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { addDirectory, AddDirectoryResult, getItemFromNode, getSectionRaw, IDirectoryNode, IVideoNode, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems } from "../video/navigation/directory";
+import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
 import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
+import { useDirectoryResource } from "./useDirectoryResource";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { createAction, deleteAction, renameAction } = useDirectoryResource();
 
 	useEffect(() => {
 		setStoredVideos(videoData);
@@ -30,6 +32,7 @@ export function useVideoStateAccess() {
 			let desiredDirectory = getItemFromNode(path, directoryRoot) as IDirectoryNode;
 
 			let newVideoNode: IVideoNode = {
+				nodeID: crypto.randomUUID(),
 				type: "VIDEO",
 				parent: desiredDirectory,
 				videoID: videoID,
@@ -50,13 +53,17 @@ export function useVideoStateAccess() {
 			);
 
 			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
-			
+
+			createAction(newVideoNode);
 			setCounter(Math.random());
 		},
-		directoryRemoveVideo: (videoID: string) => {
-			if (videoData.has(videoID)){
-				videoData.delete(videoID);
+		directoryRemoveVideo: (videoIDs: string[]) => {			
+			for (let video of videoIDs) {
+				if (videoData.has(video)){
+					videoData.delete(video);
+				}
 			}
+		
 			setCounter(Math.random());
 		},
 		directoryUpdateVideo: (video: IVideo) => {
@@ -68,8 +75,12 @@ export function useVideoStateAccess() {
 
 			setCounter(Math.random());
 		},
-		directoryAdd: function (targetPath: string, name: string): AddDirectoryResult {
+		directoryAdd: function (targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
 			let result = addDirectory(directoryRoot, targetPath, name);
+
+			let newNode = getItemFromNode(directoryPathConcat(targetPath, name), directoryRoot) as VideoBrowserNode;
+
+			createAction(newNode);
 
 			setCounter(Math.random());
 			return result;
@@ -79,6 +90,16 @@ export function useVideoStateAccess() {
 			return relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
 		},
 		directoryRemove: (path: string, sections: string[]) => {
+			let parentNode = getItemFromNode(path, directoryRoot) as IDirectoryNode;
+
+			for (let section of sections) {
+				for (let node of parentNode.subNodes) {
+					if (getSectionPrefix(node) == section) {
+						deleteAction(node);
+					}
+				}
+			}
+			
 			removeItems(directoryRoot, path, sections);
 			setCounter(Math.random());
 		}

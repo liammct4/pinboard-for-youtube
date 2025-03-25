@@ -1,4 +1,4 @@
-import { IDirectoryNode, IVideoBrowserNode, IVideoNode } from "../../../components/video/navigation/directory";
+import { IDirectoryNode, IVideoNode, VideoBrowserNode } from "../../../components/video/navigation/directory";
 import { ITagDefinition, IVideo } from "../../video/video"
 import { IStorage } from "../storage"
 
@@ -44,23 +44,25 @@ export async function getDirectoryRootFromStorage(): Promise<IDirectoryNode> {
 
 function removeParentPass(root: IDirectoryNode): IDirectoryNode {
 	let newRoot: IDirectoryNode = {
-		type: "DIRECTORY",
+		nodeID: root.nodeID,
 		slice: root.slice,
 		parent: null,
-		subNodes: []
+		subNodes: [],
+		type: "DIRECTORY"
 	}
 
 	for (let node of root.subNodes) {
-		let newNode: IVideoBrowserNode;
+		let newNode: VideoBrowserNode;
 
 		if (node.type == "DIRECTORY") {
-			newNode = removeParentPass(node as IDirectoryNode);
+			newNode = removeParentPass(node);
 		}
 		else {
 			let newVideoNode: IVideoNode = {
+				nodeID: node.nodeID,
 				parent: null,
 				type: "VIDEO",
-				videoID: (node as IVideoNode).videoID
+				videoID: node.videoID
 			};
 
 			newNode = newVideoNode;

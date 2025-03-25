@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid"
-import { IKeyIDItem } from "../../features/account/accountSlice";
+import { IKeyIDItem } from "../../components/features/useAccountInfo";
 
 export type Timestamp = {
 	id: string;

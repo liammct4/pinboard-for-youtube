@@ -23,7 +23,7 @@ import { VideoDirectoryBrowserContext } from "../../components/video/navigation/
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getSectionPrefix, getSectionPrefixManual, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
 import { useNotificationMessage } from "../../components/features/useNotificationMessage.tsx";
 
 interface IAddVideoForm extends IErrorFieldValues {
@@ -43,7 +43,7 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
-	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryAdd } = useVideoStateAccess();
+	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd } = useVideoStateAccess();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
@@ -106,6 +106,8 @@ export function VideosPage(): React.ReactNode {
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
 			directoryRemove("$", root.subNodes.map(x => getSectionPrefix(x)));
+			
+			directoryRemoveVideo(Array.from(videoData.keys()));
 		}
 	};
 
@@ -118,6 +120,10 @@ export function VideosPage(): React.ReactNode {
 				onButtonPressed={(action) => {
 					if (action == "Yes") {
 						directoryRemove(directoryPath, selectedItems);
+						directoryRemoveVideo(selectedItems
+							.filter(x => getSectionType(x) == "VIDEO")
+							.map(x => getRawSectionFromPrefix(x))
+						);
 					}
 
 					setDeleteConfirmationOpen(false);

@@ -5,11 +5,13 @@ import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
 import AppThemes from "./../../styling/theme.json"
-import { DataMutation } from "../../features/account/accountSlice.ts"
 import settingDefinitions from "./../config/settingDefinitions.json"
 import { SettingValue } from "../../features/settings/settingsSlice.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
 import { IDirectoryNode } from "../../components/video/navigation/directory.ts"
+import { DataMutation } from "../../components/features/useAccountInfo.ts"
+import { IAppTheme } from "../config/theming/appTheme.ts"
+import { IDirectoryModificationAction } from "../../components/features/useDirectoryResource.ts"
 
 export interface IStorage {
 	user_data: {
@@ -27,14 +29,63 @@ export interface IStorage {
 	persistentState: IPersistentState;
 	account: {
 		mutationQueues: {
-			videoPendingQueue: DataMutation[],
-			tagPendingQueue: DataMutation[]
+			videoPendingQueue: DataMutation<IVideo>[],
+			themePendingQueue: DataMutation<IAppTheme>[],
+			directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
 		}
 	},
 	cache: {
 		videos: IYoutubeVideoInfo[]
 	}
 }
+
+let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
+	return { settingName: x.settingName, value: x.defaultValue.toString() };
+});
+
+export const BLANK_STORAGE_TEMPLATE: IStorage = {
+	user_data: {
+		videos: [],
+		directoryRoot: {
+			nodeID: crypto.randomUUID(),
+			slice: "$",
+			type: "DIRECTORY",
+			parent: null,
+			subNodes: []
+		},
+		config: {
+			theme: AppThemes == undefined ? sampleConfigData.theme : AppThemes[0],
+			customThemes: [],
+			userSettings: defaultUserSettings
+		},
+		tagDefinitions: [],
+		tagFilter: ""
+	},
+	temp_state: {
+		expandedVideos: [],
+		layout: {
+			isCurrentVideosSectionExpanded: true
+		}
+	},
+	auth: {
+		currentUser: undefined
+	},
+	persistentState: {
+		path: undefined,
+		resetPasswordState: undefined,
+		resendVerificationEmailState: undefined
+	},
+	account: {
+		mutationQueues: {
+			themePendingQueue: [],
+			videoPendingQueue: [],
+			directoryPendingQueue: []
+		}
+	},
+	cache: {
+		videos: []
+	}
+};
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
@@ -44,62 +95,7 @@ export async function ensureInitialized(): Promise<void> {
 		return;
 	}
 
-	let theme = null;
-
-	if (AppThemes == undefined) {
-		theme = sampleConfigData.theme;
-	}
-	else {
-		theme = AppThemes[0];
-	}
-
-	let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
-		return { settingName: x.settingName, value: x.defaultValue.toString() };
-	});
-
-	let blankTemplate: IStorage = {
-		user_data: {
-			videos: [],
-			directoryRoot: {
-				type: "DIRECTORY",
-				slice: "$",
-				parent: null,
-				subNodes: []
-			},
-			config: {
-				theme: theme,
-				customThemes: [],
-				userSettings: defaultUserSettings
-			},
-			tagDefinitions: [],
-			tagFilter: ""
-		},
-		temp_state: {
-			expandedVideos: [],
-			layout: {
-				isCurrentVideosSectionExpanded: true
-			}
-		},
-		auth: {
-			currentUser: undefined
-		},
-		persistentState: {
-			path: undefined,
-			resetPasswordState: undefined,
-			resendVerificationEmailState: undefined
-		},
-		account: {
-			mutationQueues: {
-				tagPendingQueue: [],
-				videoPendingQueue: []
-			}
-		},
-		cache: {
-			videos: []
-		}
-	};
-
-	await chrome.storage.local.set(blankTemplate);
+	await chrome.storage.local.set(BLANK_STORAGE_TEMPLATE);
 }
 
 export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {

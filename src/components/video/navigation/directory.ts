@@ -4,24 +4,29 @@ import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
 
-export interface IVideoBrowserNode {
-	type: NodeType;
+export interface INode {
 	parent: IDirectoryNode | null;
+	nodeID: string;
+	type: NodeType;
 }
 
-export interface IVideoNode extends IVideoBrowserNode {
+export type VideoBrowserNode = IVideoNode | IDirectoryNode; 
+
+export interface IVideoNode extends INode {
 	videoID: string;
+	type: "VIDEO";
 }
 
-export interface IDirectoryNode extends IVideoBrowserNode {
+export interface IDirectoryNode extends INode {
 	slice: string;
-	subNodes: IVideoBrowserNode[];
+	subNodes: VideoBrowserNode[];
+	type: "DIRECTORY";
 }
 
-export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrowserNode | null {
+export function getItemFromNode(path: string, node: IDirectoryNode): VideoBrowserNode | null {
 	const slices = splitPathIntoSlices(path);
 
-	let current: IVideoBrowserNode = node;
+	let current: VideoBrowserNode = node;
 
 	if (node.slice.trim() == slices[0].trim()) {
 		slices.splice(0, 1);
@@ -38,9 +43,7 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 			return null;
 		}
 
-		let currentDirectory = current as IDirectoryNode;
-
-		for (let node of currentDirectory.subNodes) {
+		for (let node of current.subNodes) {
 			let nodeSliceOrID = getSectionRaw(node);
 			
 			if (slice.trim() == nodeSliceOrID.trim()) {
@@ -60,16 +63,16 @@ export function getItemFromNode(path: string, node: IDirectoryNode): IVideoBrows
 
 // A section is either a slice, or a video ID.
 
-export function getSectionRaw(node: IVideoBrowserNode): string {
+export function getSectionRaw(node: VideoBrowserNode): string {
 	if (node.type == "VIDEO") {
-		return (node as IVideoNode).videoID;
+		return node.videoID;
 	}
 	else {
-		return (node as IDirectoryNode).slice;
+		return node.slice;
 	}
 }
 
-export function getSectionPrefix(node: IVideoBrowserNode): string {
+export function getSectionPrefix(node: VideoBrowserNode): string {
 	return getSectionPrefixManual(getSectionRaw(node), node.type);
 }
 
@@ -168,7 +171,7 @@ export function directoryPathConcat(base: string, slice: string): string {
 	return slim + " > " + slice.trim();
 }
 
-export function getRootDirectoryPathFromSubDirectory(directory: IVideoBrowserNode): string {
+export function getRootDirectoryPathFromSubDirectory(directory: VideoBrowserNode): string {
 	let slices: string[] = [ getSectionRaw(directory) ];
 	let current = directory.parent;
 
@@ -262,16 +265,20 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	return null;
 }
 
-export type AddDirectoryResult ="DOES_NOT_EXIST" | "NOT_A_DIRECTORY" | "DIRECTORY_ALREADY_EXISTS" | null;
+export type AddDirectoryResult = "DOES_NOT_EXIST" | "NOT_A_DIRECTORY" | "DIRECTORY_ALREADY_EXISTS";
 
-export function addDirectory(root: IDirectoryNode, targetPath: string, name: string): AddDirectoryResult {
+export type AddDirectorySuccess = [true, string];
+export type AddDirectoryFail = [false, AddDirectoryResult];
+
+// TODO: Replace with actual result type.
+export function addDirectory(root: IDirectoryNode, targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
 	let newParent = getItemFromNode(targetPath, root) as IDirectoryNode;
 
 	if (newParent == undefined) {
-		return "DOES_NOT_EXIST";
+		return [false, "DOES_NOT_EXIST"];
 	}
 	else if (newParent.type != "DIRECTORY") {
-		return "NOT_A_DIRECTORY";
+		return [false, "NOT_A_DIRECTORY"];
 	}
 
 	let existingIndex = newParent
@@ -279,10 +286,11 @@ export function addDirectory(root: IDirectoryNode, targetPath: string, name: str
 		.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(name, "DIRECTORY"));
 
 	if (existingIndex != -1) {
-		return "DIRECTORY_ALREADY_EXISTS";
+		return [false, "DIRECTORY_ALREADY_EXISTS"];
 	}
 
 	let newDirectory: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		slice: name,
 		parent: newParent,
 		type: "DIRECTORY",
@@ -294,7 +302,7 @@ export function addDirectory(root: IDirectoryNode, targetPath: string, name: str
 
 	newParent.subNodes.splice(insertIndex, 0, newDirectory);
 
-	return null;
+	return [true, newDirectory.nodeID];
 }
 
 export function findItemPathFromName(

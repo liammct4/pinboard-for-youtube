@@ -6,7 +6,6 @@ import { IStorage } from "../storage/storage";
 import { loginSaveUser } from "./storage";
 import { setCurrentUser } from "../../features/auth/authSlice";
 import { getAccountResourceData } from "./data/resource";
-import { ServerResourceType } from "../../features/account/accountSlice";
 
 export class AuthenticationError extends Error {
 
@@ -42,12 +41,12 @@ export function useLogin() {
 }
 
 export function useResourceConflictCheck(idToken: string | undefined) {
-	async function checkResource<T>(originalItems: T[], type: ServerResourceType): Promise<[T[] | undefined, boolean]> {
+	async function checkResource<T>(originalItems: T[], endpoint: string): Promise<[T[] | undefined, boolean]> {
 		if (idToken == undefined) {
 			return [undefined, false];
 		}
 
-		let accountItems = await getAccountResourceData<T>(type, idToken);
+		let accountItems = await getAccountResourceData<T>(endpoint, idToken);
 
 		if (accountItems == undefined) {
 			return [undefined, false];

@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import { getSectionPrefix, IDirectoryNode, IVideoBrowserNode, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
+import { getSectionPrefix, IDirectoryNode, IVideoDirectoryInteractionContext, IVideoNode, VideoBrowserNode, VideoDirectoryInteractionContext } from "../../directory";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
 import "./InteractableBrowserNode.css"
 
 export interface IInteractableBrowserNodeProperties {
-	node: IVideoBrowserNode;
+	node: VideoBrowserNode;
 }
 
 export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
@@ -33,10 +33,10 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 					setSelectedItems([ section ]);
 				}
 			}}>
-			{isDirectoryNode ?
-				<DirectoryItem node={node as IDirectoryNode} />
+			{node.type == "DIRECTORY" ?
+				<DirectoryItem node={node} />
 				:
-				<VideoItem node={node as IVideoNode}/>}
+				<VideoItem node={node}/>}
 		</li>
 	);
 }

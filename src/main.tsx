@@ -84,6 +84,7 @@ async function setupState() {
 	let videos = await getVideoDictionary();
 
 	let testDirectoryRoot: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: null,
 		slice: "$",
@@ -91,6 +92,7 @@ async function setupState() {
 	}
 
 	let nodeA: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: testDirectoryRoot,
 		slice: "test",
@@ -98,6 +100,7 @@ async function setupState() {
 	}
 
 	let nodeB: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: testDirectoryRoot,
 		slice: "random",
@@ -105,19 +108,21 @@ async function setupState() {
 	}
 
 	let nodeC: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: testDirectoryRoot,
 		slice: "videos",
 		subNodes: []
 	}
 
-	let nodeD: IDirectoryNode = { ...nodeC, slice: "other" };
-	let nodeE: IDirectoryNode = { ...nodeC, slice: "stuff" };
-	let nodeF: IDirectoryNode = { ...nodeC, slice: "tutorial" };
-	let nodeG: IDirectoryNode = { ...nodeC, slice: "folder" };
-	let nodeH: IDirectoryNode = { ...nodeC, slice: "directory" };
+	let nodeD: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "other" };
+	let nodeE: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "stuff" };
+	let nodeF: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "tutorial" };
+	let nodeG: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "folder" };
+	let nodeH: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "directory" };
 
 	let nodeCA: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: nodeC,
 		slice: "other",
@@ -125,6 +130,7 @@ async function setupState() {
 	}
 
 	let nodeCB: IDirectoryNode = {
+		nodeID: crypto.randomUUID(),
 		type: "DIRECTORY",
 		parent: nodeC,
 		slice: "unused",
@@ -132,12 +138,14 @@ async function setupState() {
 	}
 
 	let videoA: IVideoNode = {
+		nodeID: crypto.randomUUID(),
 		type: "VIDEO",
 		parent: testDirectoryRoot,
 		videoID: sampleVideoData[0].id
 	}
 
 	let videoB: IVideoNode = {
+		nodeID: crypto.randomUUID(),
 		type: "VIDEO",
 		parent: testDirectoryRoot,
 		videoID: sampleVideoData[1].id
