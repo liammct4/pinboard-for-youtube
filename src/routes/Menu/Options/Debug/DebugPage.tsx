@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNotificationMessage } from "../../../../components/features/useNotificationMessage";
 import { SwitchInputPrimitive } from "../../../../components/input/SwitchInput/SwitchInput";
 import { IStorage } from "../../../../lib/storage/storage";
 import "./DebugPage.css";
+import { useNotificationMessage } from "../../../../components/features/notifications/useNotificationMessage";
 
 export function DebugPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();

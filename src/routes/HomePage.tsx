@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
-import { useNotificationMessage } from "../components/features/useNotificationMessage";
+import { useNotificationMessage } from "../components/features/notifications/useNotificationMessage";
 import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../lib/util/request";
 import { getCurrentAuthenticatedUser } from "../lib/user/storage";
 import { useDispatch } from "react-redux";

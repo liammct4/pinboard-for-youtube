@@ -21,10 +21,10 @@ import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID } from "../../lib/
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
+import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
-import { useNotificationMessage } from "../../components/features/useNotificationMessage.tsx";
+import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;

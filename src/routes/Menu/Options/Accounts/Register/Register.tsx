@@ -4,7 +4,7 @@ import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { startResendVerfiyEmailState } from "../../../../../lib/storage/persistentState/resendVerificationEmail";
-import { useNotificationMessage } from "../../../../../components/features/useNotificationMessage";
+import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 import "./Register.css"
 
 export function Register(): React.ReactNode {

@@ -1,8 +1,12 @@
 import React, { useRef } from "react";
 import { Outlet } from "react-router-dom";
-import { GlobalEventContext, GlobalEventAction, GlobalEventHandler, EventType, INamedGlobalEventHandler } from "./useGlobalEvent";
+import { GlobalEventContext, EventType, INamedGlobalEventHandler } from "./useGlobalEvent";
 
-export function EventWrapper(): React.ReactNode {
+export interface IEventWrapperProperties {
+	children: JSX.Element | JSX.Element[];
+}
+
+export function EventWrapper({ children }: IEventWrapperProperties): React.ReactNode {
 	const handlers = useRef<INamedGlobalEventHandler[]>([]);
 
 	const filterTriggerEvent = (e: React.MouseEvent<HTMLElement>, eventType: EventType) =>
@@ -18,7 +22,7 @@ export function EventWrapper(): React.ReactNode {
 			onMouseMove={(e) => filterTriggerEvent(e, "MOUSE_MOVE")}
 			onMouseUp={(e) => filterTriggerEvent(e, "MOUSE_UP")}>
 			<GlobalEventContext.Provider value={{ handlers: handlers.current }}>
-				<Outlet/>
+				{children}
 			</GlobalEventContext.Provider>
 		</div>
 	);

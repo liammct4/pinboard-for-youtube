@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
-import { useNotificationMessage } from "../../../features/useNotificationMessage";
+import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
 import { ReactComponent as SettingsIcon } from "./../../../../../assets/icons/settings_icon.svg";

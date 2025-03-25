@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGenericErrorMessage, useNotificationMessage } from "../../../../../../components/features/useNotificationMessage";
+import { useGenericErrorMessage, useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { FormField } from "../../../../../../components/forms/FormField/FormField";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../../components/forms/validated-form";
 import { FormStyleContext } from "../../../../../../components/input/formStyleContext";

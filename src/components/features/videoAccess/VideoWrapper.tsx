@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { IVideo } from "../lib/video/video";
-import { getDirectoryRootFromStorage, getVideoDictionary } from "../lib/storage/userData/userData";
-import { VideoDirectoryContext } from "../context/video";
-import { IDirectoryNode } from "../components/video/navigation/directory";
-import { Outlet } from "react-router-dom";
+import { IVideo } from "../../../lib/video/video";
+import { getDirectoryRootFromStorage, getVideoDictionary } from "../../../lib/storage/userData/userData";
+import { VideoDirectoryContext } from "../../../context/video";
+import { IDirectoryNode } from "../../video/navigation/directory";
 
-export function VideoWrapper(): React.ReactNode {
+export interface IVideoWrapperProperties {
+	children: JSX.Element | JSX.Element[];
+}
+
+export function VideoWrapper({ children }: IVideoWrapperProperties): React.ReactNode {
 	const videos = useRef<Map<string, IVideo>>(null!);
 	const [ directoryRoot, setDirectoryRoot ] = useState<IDirectoryNode>(null!);
 	const [ counter, setCounter ] = useState<number>(0);
@@ -22,7 +25,7 @@ export function VideoWrapper(): React.ReactNode {
 	return (
 		<VideoDirectoryContext.Provider
 			value={{ videoData: videos.current, directoryRoot: directoryRoot, counter, setCounter }}>
-				<Outlet/>
+				{children}
 		</VideoDirectoryContext.Provider>
 	);
 }

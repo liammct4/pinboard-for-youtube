@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { IconContainer } from "../../../../../../components/images/svgAsset";
 import { ReactComponent as CrossIcon } from "./../../../../../../../assets/symbols/cross.svg" 
-import { useNotificationMessage } from "../../../../../../components/features/useNotificationMessage";
+import { useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { resendEmailVerificationLink } from "../../../../../../lib/user/accounts";
 import { endResendVerfiyEmailState, getResendVerfiyEmailState } from "../../../../../../lib/storage/persistentState/resendVerificationEmail";
 import { HttpStatusCode } from "../../../../../../lib/util/http";

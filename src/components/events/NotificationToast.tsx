@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AnimationName, ColourType, GlobalNotificationContext, IGlobalNotificationContext, ImageName, useMappedAssetIcon } from "../features/useNotificationMessage";
+import { AnimationName, ColourType, GlobalNotificationContext, IGlobalNotificationContext, ImageName, useMappedAssetIcon } from "../features/notifications/useNotificationMessage";
 import { Asset, IconContainer } from "../images/svgAsset";
 import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg"
 import * as Toast from "@radix-ui/react-toast";
