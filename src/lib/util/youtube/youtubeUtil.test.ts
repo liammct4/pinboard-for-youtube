@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+*/
+
 import * as youtubeUtil from "./youtubeUtil.ts"
 
 describe("Extracting a video ID from provided link 'getVideoIdFromYouTubeLink()'", () => {
