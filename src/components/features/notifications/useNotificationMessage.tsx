@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
-import { ReactComponent as BlankSVG } from "./../../../../assets/blankSVG.svg";
+import { ReactComponent as BlankSVG } from "./../../../../assets/blankSVG.svg"
 import { ReactComponent as ErrorIcon } from "./../../../../assets/icons/status/error.svg"
 import { ReactComponent as InfoIcon } from "./../../../../assets/icons/status/info.svg"
 import { ReactComponent as TickIcon } from "./../../../../assets/icons/status/tick.svg"
 import { ReactComponent as WarningIcon } from "./../../../../assets/icons/status/warning.svg"
-import { ReactComponent as InterentGlobeIcon } from "./../../../../assets/icons/status/internet.svg"
+import { ReactComponent as InternetGlobeIcon } from "./../../../../assets/icons/status/internet.svg" 
 import { Asset } from "../../images/svgAsset";
 
 export type ColourType = "Blank" | "Success" | "Warning" | "Info" | "Error";
@@ -87,7 +87,7 @@ export function useMappedAssetIcon(image: ImageName): Asset {
 		case "Warning":
 			return WarningIcon;
 		case "InternetGlobe":
-			return InterentGlobeIcon;
+			return InternetGlobeIcon;
 	}
 }
 

@@ -1,11 +1,12 @@
-import { IAuthenticatedUser, useLogin } from "../../../../../../lib/user/accounts";
+import { IAuthenticatedUser } from "../../../../../../lib/user/accounts";
 import { useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { Outlet, useNavigate } from "react-router-dom";
 import { IUserDetailsForm } from "../../UserDetailsForm/UserDetailsFormPage";
+import { useUserAccount } from "../../../../../../components/features/useUserAccount";
 
 export function EnterLoginDetails(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
-	const { attemptLogin } = useLogin();
+	const { attemptLogin } = useUserAccount();
 	const navigate = useNavigate();
 
 	const onLoginSubmitted = async (value: IUserDetailsForm) => {

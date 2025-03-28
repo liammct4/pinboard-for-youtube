@@ -1,11 +1,11 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { setCurrentUserAndStorage, IAuthSlice, setCurrentUser } from "./authSlice.ts";
-import { getAccountResourceData } from "../../lib/user/data/resource.ts";
 import { disableControlsLock, enableControlsLock } from "../state/tempStateSlice.ts";
 import { ITagDefinition, IVideo } from "../../lib/video/video.ts";
 import { IAppTheme } from "../../lib/config/theming/appTheme.ts";
 import { setCustomThemesWithoutQueue } from "../theme/themeSlice.ts";
 import { accessStorage } from "../../lib/storage/storage.ts";
+import { getAccountResourceData } from "../../lib/user/resource.ts";
 
 export const authAccountDataMiddleware = createListenerMiddleware();
 

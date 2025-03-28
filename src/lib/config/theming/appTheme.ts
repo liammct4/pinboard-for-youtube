@@ -1,4 +1,4 @@
-import { IKeyIDItem } from "../../../components/features/useAccountInfo";
+import { IKeyIDItem } from "../../../components/features/useUserAccount";
 
 export interface IAppTheme extends IKeyIDItem {
 	name: string;

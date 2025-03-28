@@ -4,7 +4,7 @@ import { HttpStatusCode } from "../../lib/util/http";
 import { HttpResponse } from "../../lib/util/request";
 import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubDirectory, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../video/navigation/directory";
 import { useLocalStorage } from "./storage/useLocalStorage";
-import { DataMutation, useAccountInfo } from "./useAccountInfo";
+import { DataMutation, useUserAccount } from "./useUserAccount";
 import { useServerResourceRequest } from "./useServerResourceRequest";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete";
@@ -22,7 +22,7 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 }
 
 export function useDirectoryResource() {
-	const { isSignedIn } = useAccountInfo();
+	const { isSignedIn } = useUserAccount();
 	const { storage, setStorage } = useLocalStorage();
 	const { sendRequest } = useServerResourceRequest(directoriesEndpoint);
 

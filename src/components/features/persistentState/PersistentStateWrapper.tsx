@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { To, useNavigate } from "react-router-dom";
-import { getAccountResourceData } from "../../../lib/user/data/resource";
 import { ITagDefinition, IVideo } from "../../../lib/video/video";
 import { IAppTheme } from "../../../lib/config/theming/appTheme";
 import { setCustomThemesWithoutQueue } from "../../../features/theme/themeSlice";
-import { useAccountInfo } from "../useAccountInfo";
+import { useUserAccount } from "../useUserAccount";
 import { useLocalStorage } from "../storage/useLocalStorage";
+import { getAccountResourceData } from "../../../lib/user/resource";
 
 export interface IPersistentStateWrapperProperties {
 	children: JSX.Element | JSX.Element[];
@@ -15,7 +15,7 @@ export interface IPersistentStateWrapperProperties {
 export function PersistentStateWrapper({ children }: IPersistentStateWrapperProperties) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { user, isSignedIn } = useAccountInfo();
+	const { user, isSignedIn } = useUserAccount();
 	const { storage } = useLocalStorage();
 
 	// When the extension initializes, the first thing to check if theres any persistent state and redirect.

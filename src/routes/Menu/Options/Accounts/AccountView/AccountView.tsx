@@ -8,11 +8,11 @@ import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
-import { validatePasswordInputField } from "../../../../../lib/user/details/password";
+import { validatePasswordInputField } from "../../../../../lib/user/password";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
-import { useAccountInfo } from "../../../../../components/features/useAccountInfo";
+import { useUserAccount } from "../../../../../components/features/useUserAccount";
 import "./AccountView.css"
 
 interface IUpdatePasswordForm extends IErrorFieldValues {
@@ -22,7 +22,7 @@ interface IUpdatePasswordForm extends IErrorFieldValues {
 }
 
 function useAccountDelete() {
-	const { user, isSignedIn } = useAccountInfo();
+	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -63,7 +63,7 @@ function useAccountDelete() {
 }
 
 function useEmailChange() {
-	const { user, isSignedIn } = useAccountInfo();
+	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 
 	const onChangeEmailSubmit = (value: IUserDetailsForm) => {
@@ -106,7 +106,7 @@ function useEmailChange() {
 }
 
 function usePasswordChange() {
-	const { user, isSignedIn } = useAccountInfo();
+	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 
 	const onChangePasswordSubmit = (value: IUpdatePasswordForm) => {
@@ -166,7 +166,7 @@ function usePasswordChange() {
 }
 
 export function AccountView(): React.ReactNode {
-	const { user, isSignedIn } = useAccountInfo();
+	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 	const { onDeleteSubmit } = useAccountDelete();
 	const { onChangeEmailSubmit } = useEmailChange();

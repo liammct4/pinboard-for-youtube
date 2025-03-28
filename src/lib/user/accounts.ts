@@ -1,15 +1,6 @@
-import { useDispatch } from "react-redux";
 import { accountsEndpoint, sessionEndpoint } from "../api/pinboardApi";
 import { HttpStatusCode } from "../util/http";
 import { HeaderArray, HttpResponse, GlobalRequestHandler } from "../util/request"
-import { IStorage } from "../storage/storage";
-import { loginSaveUser } from "./storage";
-import { setCurrentUser } from "../../features/auth/authSlice";
-import { getAccountResourceData } from "./data/resource";
-
-export class AuthenticationError extends Error {
-
-}
 
 export type AuthenticationObject = {
 	AccessToken: string;
@@ -25,40 +16,6 @@ export type TemporaryTokens = {
 export interface IAuthenticatedUser  {
 	email: string;
 	tokens: AuthenticationObject;
-}
-
-export function useLogin() {
-	const dispatch = useDispatch();
-
-	const attemptLogin = async (email: string, password: string) => {
-		let newlyAuthenticatedUser: IAuthenticatedUser | undefined = await loginSaveUser(email, password);
-
-		dispatch(setCurrentUser(newlyAuthenticatedUser));
-		return newlyAuthenticatedUser;
-	}
-
-	return { attemptLogin };
-}
-
-export function useResourceConflictCheck(idToken: string | undefined) {
-	async function checkResource<T>(originalItems: T[], endpoint: string): Promise<[T[] | undefined, boolean]> {
-		if (idToken == undefined) {
-			return [undefined, false];
-		}
-
-		let accountItems = await getAccountResourceData<T>(endpoint, idToken);
-
-		if (accountItems == undefined) {
-			return [undefined, false];
-		}
-		
-		return [accountItems,
-			(accountItems.length == 0 && originalItems.length != 0) ||
-			(accountItems.length != 0 && originalItems.length == 0)
-		];
-	}
-
-	return { checkResource };
 }
 
 /**

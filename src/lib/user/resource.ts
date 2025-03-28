@@ -1,5 +1,5 @@
-import { HttpStatusCode } from "../../util/http";
-import { GlobalRequestHandler, HeaderArray, HttpResponse } from "../../util/request";
+import { HttpStatusCode } from "../util/http";
+import { GlobalRequestHandler, HeaderArray, HttpResponse } from "../util/request";
 
 /**
  * Fetches a certain type of provided data resource from the server of

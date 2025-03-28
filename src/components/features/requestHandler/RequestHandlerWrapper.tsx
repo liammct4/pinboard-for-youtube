@@ -4,7 +4,7 @@ import { regenerateTokensWithRefreshToken } from "../../../lib/user/accounts";
 import { HttpStatusCode } from "../../../lib/util/http";
 import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../../../lib/util/request";
 import { useNotificationMessage } from "../notifications/useNotificationMessage";
-import { useAccountInfo } from "../useAccountInfo";
+import { useUserAccount } from "../useUserAccount";
 
 export interface IRequestHandlerWrapper {
 	children: JSX.Element | JSX.Element[];
@@ -12,7 +12,7 @@ export interface IRequestHandlerWrapper {
 
 export function RequestHandlerWrapper({ children }: IRequestHandlerWrapper) {
 	const { activateMessage } = useNotificationMessage();
-	const { isSignedIn, user } = useAccountInfo();
+	const { isSignedIn, user } = useUserAccount();
 	const dispatch = useDispatch();
 
 	// Setup handler.

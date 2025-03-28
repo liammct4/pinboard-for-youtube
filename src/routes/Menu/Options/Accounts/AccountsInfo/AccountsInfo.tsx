@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccountInfo } from "../../../../../components/features/useAccountInfo";
+import { useUserAccount } from "../../../../../components/features/useUserAccount";
 
 export function AccountsInfo(): React.ReactNode {
 	const navigate = useNavigate();
-	const { isSignedIn } = useAccountInfo();
+	const { isSignedIn } = useUserAccount();
 
 	useEffect(() => {
 		async function checkRedirectOnLoggedIn() {

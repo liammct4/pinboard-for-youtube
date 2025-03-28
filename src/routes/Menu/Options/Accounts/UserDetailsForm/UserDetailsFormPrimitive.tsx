@@ -2,10 +2,9 @@ import { UseFormRegister } from "react-hook-form";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { TextInputContext } from "../../../../../components/input/TextInput/TextInput";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { InputMethodType } from "../../../../../lib/config/configurationOption";
 import { IUserDetailsForm } from "./UserDetailsFormPage";
 import { MultiEvent } from "../../../../../lib/events/Event";
-import { validatePasswordInputField } from "../../../../../lib/user/details/password";
+import { validatePasswordInputField } from "../../../../../lib/user/password";
 
 export interface IUserDetailsFormPrimitiveProperties {
 	register: UseFormRegister<IUserDetailsForm>
