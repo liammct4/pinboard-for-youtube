@@ -1,12 +1,12 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { setSettingValues } from "./settingsSlice";
-import { setUserSettingsStorage } from "../../lib/storage/config/config";
+import { modifyStorage } from "../../lib/storage/storage";
 
 export const settingsStorageMiddleware = createListenerMiddleware();
 
 settingsStorageMiddleware.startListening({
 	actionCreator: setSettingValues,
 	effect: (action) => {
-		setUserSettingsStorage(action.payload);
+		modifyStorage(s => s.user_data.config.userSettings = action.payload);
 	}
 });

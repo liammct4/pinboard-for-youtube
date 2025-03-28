@@ -1,4 +1,4 @@
-import { IConfig } from "../src/lib/storage/config/config";
+import { IConfig } from "../src/lib/storage/config";
 import { IVideo, generateTimestamp } from "../src/lib/video/video";
 
 /* This files contains all of the testing/sample data needed. */

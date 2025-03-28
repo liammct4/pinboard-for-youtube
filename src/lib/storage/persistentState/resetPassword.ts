@@ -22,12 +22,6 @@ export async function setResetPasswordPersistentState(state: IResetPasswordState
 	await chrome.storage.local.set(storage);
 }
 
-export async function getResetPasswordPersistentState(): Promise<IResetPasswordState | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.persistentState.resetPasswordState;
-}
-
 export async function endResetPasswordPersistentState(): Promise<void> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 

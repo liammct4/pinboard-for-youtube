@@ -20,9 +20,3 @@ export interface IPersistentState {
 	resetPasswordState: IResetPasswordState | undefined;
 	resendVerificationEmailState?: IResendVerificationEmailState | undefined;
 }
-
-export async function getSavedPath(): Promise<string | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.persistentState.path;
-}

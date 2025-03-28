@@ -6,21 +6,24 @@ import { VideoWrapper } from "../components/features/videoAccess/VideoWrapper.ts
 import { EventWrapper } from "../components/features/events/EventWrapper.tsx";
 import "./HomePage.css"
 import "./PfyWrapper.css"
+import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
 
 export function PfyWrapper(): React.ReactNode {
 	return (
 		<StorageWrapper>
-			<VideoWrapper>
 				<div className="pfy-style-context">
 					<ExtensionBoundsWrapper>
 						<EventWrapper>
 							<NotificationWrapper>
-								<Outlet/>
+								<RequestHandlerWrapper>
+									<VideoWrapper>
+										<Outlet/>
+									</VideoWrapper>
+								</RequestHandlerWrapper>
 							</NotificationWrapper>
 						</EventWrapper>
 					</ExtensionBoundsWrapper>
 				</div>
-			</VideoWrapper>
 		</StorageWrapper>
 	)
 }

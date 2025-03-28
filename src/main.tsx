@@ -3,11 +3,9 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { getVideoDictionary, saveDirectoryToStorage, saveVideoDictionaryToStorage } from "./lib/storage/userData/userData.ts"
-import { ensureInitialized } from "./lib/storage/storage.ts"
+import { accessStorage, ensureInitialized, IStorage, modifyStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
-import { getExpandedVideos, getLayoutState } from "./lib/storage/tempState/tempState.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
@@ -18,25 +16,21 @@ import { GeneralPage } from "./routes/Menu/Options/General/GeneralPage.tsx"
 import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.tsx"
 import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
 import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
-import { getCurrentTheme, getCustomThemes } from "./lib/storage/config/theme/theme.ts"
 import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { setCurrentUser } from "./features/auth/authSlice.ts"
-import { getCurrentAuthenticatedUser } from "./lib/user/storage.ts"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
-import { getUserSettingsStorage } from "./lib/storage/config/config.ts"
 import { initializeAndSetSettingsDefault, setSettingValues } from "./features/settings/settingsSlice.ts"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
-import { getVideoCacheFromStorage } from "./lib/storage/cache/cache.ts"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
 import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
-import { VideoWrapper } from "./components/features/videoAccess/VideoWrapper.tsx"
+import { IVideo } from "./lib/video/video.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
-import { EventWrapper } from "./components/features/events/EventWrapper.tsx"
+import { removeParentPass } from "./lib/storage/userData/userData.ts"
 
 checkAndImplementLocalStorage();
 
@@ -59,29 +53,30 @@ async function setupState() {
 		activeID = "xcJtL7QggTI";
 	}
 
+	let storage: IStorage = await accessStorage();
+
 	let tempState: IStateSlice = {
-		expandedVideoIDs: await getExpandedVideos(),
-		layout: await getLayoutState(),
+		expandedVideoIDs: storage.temp_state.expandedVideos,
+		layout: storage.temp_state.layout,
 		temporarySingleState: {
 			onRequestIsVideoControlLocked: false
 		}
 	}
 
 	let cacheState: ICacheSlice = {
-		//@ts-ignore
-		videoCache: await getVideoCacheFromStorage()
+		videoCache: storage.cache.videos
 	};
 
 	store.dispatch(setTempState(tempState));
 	store.dispatch(setCacheState(cacheState));
 
-	const currentUser = await getCurrentAuthenticatedUser();
+	const currentUser = storage.auth.currentUser;
 
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
 	}
 
-	let videos = await getVideoDictionary();
+	let videos = new Map<string, IVideo>(storage.user_data.videos.map(x => [x.id, x]));
 
 	let testDirectoryRoot: IDirectoryNode = {
 		nodeID: crypto.randomUUID(),
@@ -158,8 +153,10 @@ async function setupState() {
 
 	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, videoA, videoB];
 
-	await saveVideoDictionaryToStorage(videos);
-	await saveDirectoryToStorage(testDirectoryRoot);
+	await modifyStorage(s => {
+		s.user_data.videos = Array.from(videos.values());
+		s.user_data.directoryRoot = removeParentPass(testDirectoryRoot);
+	});
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
@@ -189,9 +186,9 @@ async function setupState() {
 	);
 	
 	// Retrieve the current theme from storage since it cannot be loaded in initial state.
-	store.dispatch(setCurrentTheme(await getCurrentTheme()));
-	store.dispatch(setCustomThemes(await getCustomThemes()));
-	store.dispatch(setSettingValues(await getUserSettingsStorage()));
+	store.dispatch(setCurrentTheme(storage.user_data.config.theme));
+	store.dispatch(setCustomThemes(storage.user_data.config.customThemes));
+	store.dispatch(setSettingValues(storage.user_data.config.userSettings));
 
 	store.dispatch(initializeAndSetSettingsDefault());
 }

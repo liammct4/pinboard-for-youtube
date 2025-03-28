@@ -1,18 +1,26 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
 import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
-import { saveDirectoryToStorage, setStoredVideos } from "../../lib/storage/userData/userData";
+import { removeParentPass } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./useDirectoryResource";
+import { useLocalStorage } from "./storage/useLocalStorage";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction } = useDirectoryResource();
+	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
-		setStoredVideos(videoData);
-		saveDirectoryToStorage(directoryRoot);
+		if (directoryRoot == null) {
+			return;
+		}
+
+		storage.user_data.videos = Array.from(videoData.values());
+		storage.user_data.directoryRoot = removeParentPass(directoryRoot);
+
+		setStorage(storage);
 	}, [counter]);
 
 	return {

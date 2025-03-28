@@ -25,38 +25,3 @@ export async function loginSaveUser( email: string, password: string): Promise<I
 
 	return newlyAuthenticatedUser;
 }
-
-export async function getCurrentAuthenticatedUser(): Promise<IAuthenticatedUser | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.auth.currentUser;
-}
-
-export async function setCurrentAuthenticatedUser(user: IAuthenticatedUser | undefined): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	storage.auth.currentUser = user;
-
-	await chrome.storage.local.set(storage);
-}
-
-export async function getStoredAuthTokens(): Promise<AuthenticationObject | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.auth.currentUser?.tokens;
-}
-
-/**
- * DO NOT USE WHEN LOGGING IN, USE loginSaveUser(). This is just for refreshing the tokens.
- */
-export async function setStoredAuthTokens(tokens: AuthenticationObject): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	if (storage.auth.currentUser == undefined) {
-		throw new Error("No user is logged in.");
-	}
-
-	storage.auth.currentUser.tokens = tokens;
-
-	await chrome.storage.local.set(storage);
-}

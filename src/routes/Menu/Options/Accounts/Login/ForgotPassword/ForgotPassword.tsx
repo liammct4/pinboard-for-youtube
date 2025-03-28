@@ -9,9 +9,10 @@ import { IUserDetailsForm } from "../../UserDetailsForm/UserDetailsFormPage";
 import { UserDetailsFormPrimitive } from "../../UserDetailsForm/UserDetailsFormPrimitive";
 import { HttpResponse } from "../../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../../lib/util/http";
-import { endResetPasswordPersistentState, getResetPasswordPersistentState, setResetPasswordPersistentState, startResetPasswordPersistentState } from "../../../../../../lib/storage/persistentState/resetPassword";
+import { endResetPasswordPersistentState, setResetPasswordPersistentState, startResetPasswordPersistentState } from "../../../../../../lib/storage/persistentState/resetPassword";
 import { TextInputContext } from "../../../../../../components/input/TextInput/TextInput";
 import "./ForgotPassword.css"
+import { getItemFromStorage } from "../../../../../../lib/storage/storage";
 
 interface IResetPasswordForm extends IErrorFieldValues {
 	verificationCode: string;
@@ -45,7 +46,7 @@ function useEmailSubmit() {
 			8000
 		);
 
-		let state = await getResetPasswordPersistentState();
+		let state = getItemFromStorage(s => s.persistentState.resetPasswordState);
 
 		if (state == undefined) {
 			await startResetPasswordPersistentState({ email: value.email });
@@ -64,7 +65,7 @@ function useCodePasswordSubmit() {
 	const navigate = useNavigate();
 
 	const onCodePasswordSubmit = async (value: IResetPasswordForm) => {
-		let state = await getResetPasswordPersistentState();
+		let state = await getItemFromStorage(s => s.persistentState.resetPasswordState);
 
 		if (state == undefined) {
 			activateMessage(undefined, "Please send a verification code first.", "Warning", "Warning", 5000);
@@ -107,7 +108,7 @@ export function ForgotPassword(): React.ReactNode {
 	// Use effects are needed because async functions cannot be used directly in component level.
 	useEffect(() => {
 		const checkCodeSent = async () => {
-			let state = await getResetPasswordPersistentState();
+			let state = await getItemFromStorage(s => s.persistentState.resetPasswordState);
 			setNewPasswordVisible(state != undefined);
 		};
 

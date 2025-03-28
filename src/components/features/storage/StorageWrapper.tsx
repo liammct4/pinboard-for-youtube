@@ -8,7 +8,7 @@ export interface IStorageWrappperProperties {
 export function StorageWrapper({ children }: IStorageWrappperProperties) {
 	const [ storageCache, setStorageCache ] = useState<IStorage>(BLANK_STORAGE_TEMPLATE);
 
-	useEffect(() => {
+	useEffect(() => {		
 		chrome.storage.local.onChanged.addListener(() => {
 			chrome.storage.local.get().then(storage => setStorageCache(storage as IStorage))
 		});

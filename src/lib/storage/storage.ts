@@ -1,4 +1,3 @@
-import { IConfig } from "./config/config"
 import { ITagDefinition, IVideo } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
@@ -12,6 +11,7 @@ import { IDirectoryNode } from "../../components/video/navigation/directory.ts"
 import { DataMutation } from "../../components/features/useAccountInfo.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IDirectoryModificationAction } from "../../components/features/useDirectoryResource.ts"
+import { IConfig } from "./config.ts"
 
 export interface IStorage {
 	user_data: {
@@ -102,4 +102,18 @@ export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T):
 	let storage = await chrome.storage.local.get() as IStorage;
 
 	return accessor(storage);
+}
+
+export async function accessStorage(): Promise<IStorage> {
+	let storage = await chrome.storage.local.get() as IStorage;
+
+	return storage;
+}
+
+export async function modifyStorage(modifier: (s: IStorage) => void): Promise<void> {
+	let storage = await accessStorage();
+
+	modifier(storage);
+
+	await chrome.storage.local.set(storage);
 }

@@ -3,15 +3,17 @@ import { IconContainer } from "../../../../../../components/images/svgAsset";
 import { ReactComponent as CrossIcon } from "./../../../../../../../assets/symbols/cross.svg" 
 import { useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { resendEmailVerificationLink } from "../../../../../../lib/user/accounts";
-import { endResendVerfiyEmailState, getResendVerfiyEmailState } from "../../../../../../lib/storage/persistentState/resendVerificationEmail";
+import { endResendVerfiyEmailState } from "../../../../../../lib/storage/persistentState/resendVerificationEmail";
 import { HttpStatusCode } from "../../../../../../lib/util/http";
 import "./RegisterSuccess.css"
+import { useLocalStorage } from "../../../../../../components/features/storage/useLocalStorage";
 
 export function RegisterSuccess(): React.ReactNode {
 	const navigate = useNavigate();
 	const { activateMessage } = useNotificationMessage();
+	const { storage } = useLocalStorage();
 	const onResendVerification = async () => {
-		let state = await getResendVerfiyEmailState();
+		let state = storage.persistentState.resendVerificationEmailState;
 
 		// Should only happen if another persistent state is activated.
 		if (state == undefined) {

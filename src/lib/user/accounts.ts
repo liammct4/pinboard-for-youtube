@@ -216,10 +216,3 @@ export async function resendEmailVerificationLink(email: string): Promise<HttpRe
 
 	return response;
 }
-
-// Only for use outside of react.
-export async function userIsLoggedIn(): Promise<boolean> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.auth.currentUser != undefined;
-} 

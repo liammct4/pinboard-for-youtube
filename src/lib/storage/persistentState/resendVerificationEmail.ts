@@ -22,12 +22,6 @@ export async function setResendVerfiyEmailState(state: IResendVerificationEmailS
 	await chrome.storage.local.set(storage);
 }
 
-export async function getResendVerfiyEmailState(): Promise<IResendVerificationEmailState | undefined> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	return storage.persistentState.resendVerificationEmailState;
-}
-
 export async function endResendVerfiyEmailState(): Promise<void> {
 	let storage: IStorage = await chrome.storage.local.get() as IStorage;
 

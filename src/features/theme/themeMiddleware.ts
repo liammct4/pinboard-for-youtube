@@ -1,8 +1,8 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { addCustomTheme, deleteCustomTheme, setCurrentTheme, setCustomThemes } from "./themeSlice.ts";
-import { setStorageCustomThemes, setStorageTheme } from "../../lib/storage/config/theme/theme.ts";
 import { swapAppTheme as changeAppTheme } from "../../lib/browser/extension/theme.ts";
 import { RootState } from "../../app/store.ts";
+import { modifyStorage } from "../../lib/storage/storage.ts";
 
 export const updateThemeMiddleware = createListenerMiddleware();
 export const updateStorageMiddleware = createListenerMiddleware();
@@ -18,7 +18,7 @@ updateThemeMiddleware.startListening({
 updateStorageMiddleware.startListening({
 	actionCreator: setCurrentTheme,
 	effect: async (action, _listenerApi) => {
-		setStorageTheme(action.payload);
+		modifyStorage(s => s.user_data.config.theme = action.payload);
 	}
 });
 
@@ -27,6 +27,6 @@ updateCustomThemeStorageMiddleware.startListening({
 	effect: (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		setStorageCustomThemes(state.theme.customThemes);
+		modifyStorage(s => s.user_data.config.customThemes = state.theme.customThemes);
 	}
 });

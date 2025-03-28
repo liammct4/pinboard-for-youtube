@@ -6,7 +6,6 @@ import settingsSlice from "../features/settings/settingsSlice.ts"
 import cacheSlice from "../features/cache/cacheSlice.ts"
 import { authAccountDataMiddleware } from "../features/auth/authAccountDataMiddleware.ts"
 import { settingsStorageMiddleware } from "../features/settings/settingsStorageMiddleware.ts"
-import { themeQueueSyncMiddleware } from "../features/theme/themeQueueSyncMiddleware.ts"
 import { addIDMiddleware, layoutStateUpdateMiddleware, removeIDMiddleware } from "../features/state/stateStorageMiddleware.ts"
 import { updateCustomThemeStorageMiddleware, updateStorageMiddleware, updateThemeMiddleware } from "../features/theme/themeMiddleware.ts"
 import { authChangeUserStorageMiddleware, authTokenChangedMiddleware } from "../features/auth/authStorageMiddleware.ts"
@@ -27,7 +26,6 @@ export let store = configureStore({
 		.prepend(layoutStateUpdateMiddleware.middleware)
 		.prepend(updateThemeMiddleware.middleware)
 		.prepend(updateStorageMiddleware.middleware)
-		.prepend(themeQueueSyncMiddleware.middleware)
 		.prepend(updateCustomThemeStorageMiddleware.middleware)
 		.prepend(authChangeUserStorageMiddleware.middleware)
 		.prepend(authTokenChangedMiddleware.middleware)
