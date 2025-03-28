@@ -1,11 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import { BLANK_STORAGE_TEMPLATE, IStorage } from "../../../lib/storage/storage";
+import { IWrapperProperties } from "../wrapper";
 
-export interface IStorageWrappperProperties {
-	children: JSX.Element;
-}
-
-export function StorageWrapper({ children }: IStorageWrappperProperties) {
+export function StorageWrapper({ children }: IWrapperProperties) {
 	const [ storageCache, setStorageCache ] = useState<IStorage>(BLANK_STORAGE_TEMPLATE);
 
 	useEffect(() => {		

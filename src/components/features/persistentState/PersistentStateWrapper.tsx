@@ -1,18 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { To, useNavigate } from "react-router-dom";
-import { ITagDefinition, IVideo } from "../../../lib/video/video";
-import { IAppTheme } from "../../../lib/config/theming/appTheme";
-import { setCustomThemesWithoutQueue } from "../../../features/theme/themeSlice";
 import { useUserAccount } from "../useUserAccount";
 import { useLocalStorage } from "../storage/useLocalStorage";
-import { getAccountResourceData } from "../../../lib/user/resource";
+import { IWrapperProperties } from "../wrapper";
 
-export interface IPersistentStateWrapperProperties {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function PersistentStateWrapper({ children }: IPersistentStateWrapperProperties) {
+export function PersistentStateWrapper({ children }: IWrapperProperties) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { user, isSignedIn } = useUserAccount();
@@ -31,24 +24,6 @@ export function PersistentStateWrapper({ children }: IPersistentStateWrapperProp
 		}
 
 		checkPersistentState();
-
-		// Account storage.
-		const getAccountVideos = async () => {
-			if (!isSignedIn) {
-				return;
-			}
-
-			let token = user.tokens.IdToken;
-			let retrievedVideos = await getAccountResourceData<IVideo>("VIDEO", token);
-			let retrievedTagDefinitions = await getAccountResourceData<ITagDefinition>("TAG", token);
-			let retrievedCustomThemes = await getAccountResourceData<IAppTheme>("THEME", token);
-
-			if (retrievedCustomThemes != undefined) {
-				dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
-			}
-		}
-
-		getAccountVideos();
 	}, []);
 
 	return children;

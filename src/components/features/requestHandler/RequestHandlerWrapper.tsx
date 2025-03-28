@@ -4,13 +4,10 @@ import { regenerateTokensWithRefreshToken } from "../../../lib/user/accounts";
 import { HttpStatusCode } from "../../../lib/util/http";
 import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../../../lib/util/request";
 import { useNotificationMessage } from "../notifications/useNotificationMessage";
+import { IWrapperProperties } from "../wrapper";
 import { useUserAccount } from "../useUserAccount";
 
-export interface IRequestHandlerWrapper {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function RequestHandlerWrapper({ children }: IRequestHandlerWrapper) {
+export function RequestHandlerWrapper({ children }: IWrapperProperties) {
 	const { activateMessage } = useNotificationMessage();
 	const { isSignedIn, user } = useUserAccount();
 	const dispatch = useDispatch();

@@ -3,12 +3,9 @@ import { GlobalNotificationContext, IGlobalNotification } from "./useNotificatio
 import { NotificationToast } from "../../events/NotificationToast";
 import { useEffect, useRef, useState } from "react";
 import { SyncTimer } from "../../../lib/util/generic/timeUtil";
+import { IWrapperProperties } from "../wrapper";
 
-export interface INotificationWrapperProperties {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function NotificationWrapper({ children }: INotificationWrapperProperties) {
+export function NotificationWrapper({ children }: IWrapperProperties) {
 	const [currentNotification, setCurrentNotification] = useState<IGlobalNotification | undefined>();
 	const [notificationOpen, setNotificationOpen] = useState<boolean>(false);
 	const { current: notificationExpiryTimer } = useRef<SyncTimer>(new SyncTimer());

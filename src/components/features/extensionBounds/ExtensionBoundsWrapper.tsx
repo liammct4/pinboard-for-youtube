@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { IWrapperProperties } from "../wrapper";
 
-export interface IExtensionBoundsWrapperProperties {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function ExtensionBoundsWrapper({ children }: IExtensionBoundsWrapperProperties) {
+export function ExtensionBoundsWrapper({ children }: IWrapperProperties) {
 	const location = useLocation();
 	const [expanded, setExpanded] = useState<boolean>();
 	useEffect(() => {

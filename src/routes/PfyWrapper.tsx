@@ -7,23 +7,26 @@ import { EventWrapper } from "../components/features/events/EventWrapper.tsx";
 import "./HomePage.css"
 import "./PfyWrapper.css"
 import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
+import { AccountDataWrapper } from "../components/features/accountData/AccountDataWrapper.tsx";
 
 export function PfyWrapper(): React.ReactNode {
 	return (
 		<StorageWrapper>
-				<div className="pfy-style-context">
-					<ExtensionBoundsWrapper>
-						<EventWrapper>
-							<NotificationWrapper>
-								<RequestHandlerWrapper>
-									<VideoWrapper>
+			<div className="pfy-style-context">
+				<ExtensionBoundsWrapper>
+					<EventWrapper>
+						<NotificationWrapper>
+							<RequestHandlerWrapper>
+								<VideoWrapper>
+									<AccountDataWrapper>
 										<Outlet/>
-									</VideoWrapper>
-								</RequestHandlerWrapper>
-							</NotificationWrapper>
-						</EventWrapper>
-					</ExtensionBoundsWrapper>
-				</div>
+									</AccountDataWrapper>
+								</VideoWrapper>
+							</RequestHandlerWrapper>
+						</NotificationWrapper>
+					</EventWrapper>
+				</ExtensionBoundsWrapper>
+			</div>
 		</StorageWrapper>
 	)
 }

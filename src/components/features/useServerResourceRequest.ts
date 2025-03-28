@@ -1,8 +1,5 @@
-import { current } from "@reduxjs/toolkit";
 import { GlobalRequestHandler, HttpResponse, Method } from "../../lib/util/request";
-import { useUserAccount } from "./useUserAccount"
-
-const EXPIRED_TOKEN_MESSAGE = "The incoming token has expired";
+import { useUserAccount } from "./useUserAccount";
 
 export function useServerResourceRequest(endpoint: string) {
 	const { isSignedIn, user } = useUserAccount();

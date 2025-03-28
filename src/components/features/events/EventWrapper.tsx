@@ -1,12 +1,8 @@
 import React, { useRef } from "react";
-import { Outlet } from "react-router-dom";
 import { GlobalEventContext, EventType, INamedGlobalEventHandler } from "./useGlobalEvent";
+import { IWrapperProperties } from "../wrapper";
 
-export interface IEventWrapperProperties {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function EventWrapper({ children }: IEventWrapperProperties): React.ReactNode {
+export function EventWrapper({ children }: IWrapperProperties): React.ReactNode {
 	const handlers = useRef<INamedGlobalEventHandler[]>([]);
 
 	const filterTriggerEvent = (e: React.MouseEvent<HTMLElement>, eventType: EventType) =>

@@ -2,14 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { IVideo } from "../../../lib/video/video";
 import { VideoDirectoryContext } from "../../../context/video";
 import { IDirectoryNode } from "../../video/navigation/directory";
-import { accessStorage, getItemFromStorage } from "../../../lib/storage/storage";
+import { accessStorage } from "../../../lib/storage/storage";
 import { addParentPass } from "../../../lib/storage/userData/userData";
+import { IWrapperProperties } from "../wrapper";
 
-export interface IVideoWrapperProperties {
-	children: JSX.Element | JSX.Element[];
-}
-
-export function VideoWrapper({ children }: IVideoWrapperProperties): React.ReactNode {
+export function VideoWrapper({ children }: IWrapperProperties): React.ReactNode {
 	const videos = useRef<Map<string, IVideo>>(new Map<string, IVideo>());
 	const [ directoryRoot, setDirectoryRoot ] = useState<IDirectoryNode>(null!);
 	const [ counter, setCounter ] = useState<number>(0);
