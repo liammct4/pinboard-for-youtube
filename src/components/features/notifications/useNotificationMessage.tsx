@@ -1,10 +1,12 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { createContext, useContext } from "react";
-import { ReactComponent as BlankSVG } from "./../../../../assets/blankSVG.svg"
-import { ReactComponent as ErrorIcon } from "./../../../../assets/icons/status/error.svg"
-import { ReactComponent as InfoIcon } from "./../../../../assets/icons/status/info.svg"
-import { ReactComponent as TickIcon } from "./../../../../assets/icons/status/tick.svg"
-import { ReactComponent as WarningIcon } from "./../../../../assets/icons/status/warning.svg"
-import { ReactComponent as InternetGlobeIcon } from "./../../../../assets/icons/status/internet.svg" 
+import BlankSVG from "./../../../../assets/blankSVG.svg?react"
+import ErrorIcon from "./../../../../assets/icons/status/error.svg?react"
+import InfoIcon from "./../../../../assets/icons/status/info.svg?react"
+import TickIcon from "./../../../../assets/icons/status/tick.svg?react"
+import WarningIcon from "./../../../../assets/icons/status/warning.svg?react"
+import InternetGlobeIcon from "./../../../../assets/icons/status/internet.svg?react"
 import { Asset } from "../../images/svgAsset";
 
 export type ColourType = "Blank" | "Success" | "Warning" | "Info" | "Error";

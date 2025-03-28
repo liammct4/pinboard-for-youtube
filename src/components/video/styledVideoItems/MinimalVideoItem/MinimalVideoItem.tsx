@@ -1,10 +1,10 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useContext, useState } from "react";
 import { useVideoInfo } from "../../../features/useVideoInfo";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
-import { VideoTimestamp } from "../../timestamps/VideoTimestamp/VideoTimestamp";
-import { Timestamp } from "../../../../lib/video/video";
-import { ReactComponent as PlusIcon } from "./../../../../../assets/symbols/plus.svg"
-import { ReactComponent as PlayIcon } from "./../../../../../assets/icons/jump_icon.svg"
+import PlusIcon from "./../../../../../assets/symbols/plus.svg?react"
+import PlayIcon from "./../../../../../assets/icons/jump_icon.svg?react"
 import { IconContainer } from "../../../images/svgAsset";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { getYouTubeLinkFromVideoID, getYoutubeVideoInfoFromLink } from "../../../../lib/util/youtube/youtubeUtil";

@@ -2,8 +2,8 @@ import { useContext, useState } from "react";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { VideoThumbnail } from "../../VideoThumbnail/VideoThumbnail";
 import { useVideoInfo } from "../../../features/useVideoInfo";
-import { ReactComponent as PlayIcon } from "./../../../../../assets/icons/jump_icon.svg"
-import { ReactComponent as PlusIcon } from "./../../../../../assets/symbols/plus.svg"
+import PlayIcon from "./../../../../../assets/icons/jump_icon.svg?react"
+import PlusIcon from "./../../../../../assets/symbols/plus.svg?react"
 import "./CompactVideoItem.css"
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
 import { TimestampList } from "../../timestamps/TimestampList/TimestampList";

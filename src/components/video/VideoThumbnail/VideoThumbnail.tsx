@@ -1,5 +1,7 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useVideoInfo } from "../../features/useVideoInfo";
-import { ReactComponent as ThumbnailMissingImage } from "./../../../../assets/thumb_missing.svg"
+import ThumbnailMissingImage from "./../../../../assets/thumb_missing.svg?react"
 
 import "./VideoThumbnail.css"
 

@@ -1,8 +1,10 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useContext, useState } from "react";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { VideoThumbnail } from "../../VideoThumbnail/VideoThumbnail";
-import { ReactComponent as PlayIcon } from "./../../../../../assets/icons/jump_icon.svg";
-import { ReactComponent as PlusIcon } from "./../../../../../assets/symbols/plus.svg";
+import PlayIcon from "./../../../../../assets/icons/jump_icon.svg?react";
+import PlusIcon from "./../../../../../assets/symbols/plus.svg?react";
 import "./RegularVideoItem.css";
 import { useVideoInfo } from "../../../features/useVideoInfo";
 import { IconContainer } from "../../../images/svgAsset";

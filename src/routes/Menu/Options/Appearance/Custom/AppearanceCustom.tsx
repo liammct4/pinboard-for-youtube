@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { ThemeContext } from "../../../../../context/theme";
@@ -6,7 +8,7 @@ import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appT
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
-import { ReactComponent as ArrowIcon } from "./../../../../../../assets/symbols/arrows/arrowhead.svg"
+import ArrowIcon from "./../../../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearanceCustom.css"

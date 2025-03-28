@@ -1,7 +1,9 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useContext } from "react";
 import { AnimationName, ColourType, GlobalNotificationContext, IGlobalNotificationContext, ImageName, useMappedAssetIcon } from "../features/notifications/useNotificationMessage";
 import { Asset, IconContainer } from "../images/svgAsset";
-import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg"
+import CloseIcon from "./../../../assets/symbols/cross.svg?react"
 import * as Toast from "@radix-ui/react-toast";
 import "./NotificationToast.css"
 

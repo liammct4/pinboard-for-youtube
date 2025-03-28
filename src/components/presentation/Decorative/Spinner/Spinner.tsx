@@ -1,5 +1,7 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { IconContainer } from "../../../images/svgAsset";
-import { ReactComponent as SpinnerIcon } from "./../../../../../assets/symbols/spinner.svg"
+import SpinnerIcon from "./../../../../../assets/symbols/spinner.svg?react"
 import "./Spinner.css"
 
 export interface ISpinnerProperties {

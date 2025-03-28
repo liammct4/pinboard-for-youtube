@@ -1,5 +1,7 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import { ReactComponent as CrossIcon } from "./../../../assets/symbols/cross.svg"
+import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 

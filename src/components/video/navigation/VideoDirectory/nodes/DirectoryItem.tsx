@@ -1,6 +1,8 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useContext, useState } from "react";
-import { ReactComponent as CategoryIcon } from "./../../../../../../assets/icons/category.svg"
-import { ReactComponent as DropIcon } from "./../../../../../../assets/icons/drop_in.svg"
+import CategoryIcon from "./../../../../../../assets/icons/category.svg?react"
+import DropIcon from "./../../../../../../assets/icons/drop_in.svg?react"
 import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../../directory";
 import { IconContainer } from "../../../../images/svgAsset";
 import { Keys, useHotkeys } from "react-hotkeys-hook";

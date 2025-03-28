@@ -1,18 +1,20 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
-import { ReactComponent as ArrowIcon } from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg"
-import { ReactComponent as SettingsIcon } from "./../../../../../assets/icons/settings_icon.svg";
-import { ReactComponent as MinimalViewIcon } from "./../../../../../assets/icons/view/minimal_option.svg"
-import { ReactComponent as CompactViewIcon } from "./../../../../../assets/icons/view/compact_option.svg"
-import { ReactComponent as RegularViewIcon } from "./../../../../../assets/icons/view/regular_option.svg"
-import { ReactComponent as HomeIcon } from "./../../../../../assets/icons/home.svg"
-import { ReactComponent as LongArrow } from "./../../../../../assets/symbols/arrows/long_arrow.svg"
-import { ReactComponent as CategoryDiamond } from "./../../../../../assets/icons/category_diamond.svg"
-import { DragEvent, DragList, DragListItemData } from "../../../../lib/dragList/DragList";
+import ArrowIcon from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg?react"
+import SettingsIcon from "./../../../../../assets/icons/settings_icon.svg?react";
+import MinimalViewIcon from "./../../../../../assets/icons/view/minimal_option.svg?react"
+import CompactViewIcon from "./../../../../../assets/icons/view/compact_option.svg?react"
+import RegularViewIcon from "./../../../../../assets/icons/view/regular_option.svg?react"
+import HomeIcon from "./../../../../../assets/icons/home.svg?react"
+import LongArrow from "./../../../../../assets/symbols/arrows/long_arrow.svg?react"
+import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
+import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";

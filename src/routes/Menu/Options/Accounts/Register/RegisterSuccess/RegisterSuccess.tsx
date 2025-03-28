@@ -1,6 +1,8 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useNavigate } from "react-router-dom";
 import { IconContainer } from "../../../../../../components/images/svgAsset";
-import { ReactComponent as CrossIcon } from "./../../../../../../../assets/symbols/cross.svg" 
+import CrossIcon from "./../../../../../../../assets/symbols/cross.svg?react"
 import { useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { resendEmailVerificationLink } from "../../../../../../lib/user/accounts";
 import { endResendVerfiyEmailState } from "../../../../../../lib/storage/persistentState/resendVerificationEmail";

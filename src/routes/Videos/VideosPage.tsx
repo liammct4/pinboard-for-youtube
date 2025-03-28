@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useState } from "react";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
@@ -10,10 +12,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store.ts";
 import { IconContainer } from "../../components/images/svgAsset.tsx";
 import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggleLayoutExpander/TwoToggleLayoutExpander.tsx";
-import { ReactComponent as OpenLayoutIcon } from "./../../../assets/icons/layout_expander_open.svg"
-import { ReactComponent as CloseLayoutIcon } from "./../../../assets/icons/layout_expander_close.svg"
-import { ReactComponent as SearchIcon } from "./../../../assets/symbols/search.svg"
-import { ReactComponent as BinIcon } from "./../../../assets/icons/bin.svg"
+import OpenLayoutIcon from "./../../../assets/icons/layout_expander_open.svg?react"
+import CloseLayoutIcon from "./../../../assets/icons/layout_expander_close.svg?react"
+import SearchIcon from "./../../../assets/symbols/search.svg?react"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";

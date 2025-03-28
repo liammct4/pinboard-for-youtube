@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useCallback } from "react"
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
@@ -6,8 +8,8 @@ import { Timestamp, cloneModifyTimestamp } from "../../../../lib/video/video.ts"
 import { IErrorFieldValues, useValidatedForm } from "../../../forms/validated-form.ts";
 import { FormField } from "../../../forms/FormField/FormField.tsx";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
-import { ReactComponent as BinIcon } from "./../../../../../assets/icons/bin.svg"
-import { ReactComponent as JumpVideoIcon } from "./../../../../../assets/icons/jump_icon.svg"
+import BinIcon from "./../../../../../assets/icons/bin.svg?react"
+import JumpVideoIcon from "./../../../../../assets/icons/jump_icon.svg?react"
 import { IconContainer } from "../../../images/svgAsset.tsx";
 import "src/styling/dialog.css"
 import "./VideoTimestamp.css"

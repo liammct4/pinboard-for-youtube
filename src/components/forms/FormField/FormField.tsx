@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useState, useEffect } from "react";
 import { Path, RegisterOptions, UseFormRegister } from "react-hook-form";
 import { MultiEvent } from "../../../lib/events/Event"
@@ -5,8 +7,8 @@ import { SizeOption } from "../../input/formStyleContext";
 import { FormValidator, IErrorFieldValues } from "../validated-form";
 import { InputMethodType } from "../../../lib/config/configurationOption";
 import { getInputComponent } from "../../input/componentLocator";
-import { ReactComponent as WarningIcon } from "./../../../../assets/icons/status/warning.svg"
-import { ReactComponent as CrossIcon } from "./../../../../assets/symbols/cross.svg"
+import WarningIcon from "./../../../../assets/icons/status/warning.svg?react"
+import CrossIcon from "./../../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../../images/svgAsset";
 import "./FormField.css"
 

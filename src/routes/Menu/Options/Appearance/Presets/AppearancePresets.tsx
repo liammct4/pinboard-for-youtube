@@ -9,7 +9,7 @@ import { Reorder } from "framer-motion";
 import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
-import { ReactComponent as DeleteIcon } from "./../../../../../../assets/icons/bin.svg"
+import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearancePresets.css"
@@ -21,7 +21,7 @@ interface IThemePresetProperties {
 function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 	const { currentTheme, actions: { setCurrentTheme, deleteCustomTheme } } = useContext(ThemeContext);
 	const navigate = useNavigate();
-
+	
 	return (
 		<Reorder.Item value={theme}>
 			<div className="theme-row">

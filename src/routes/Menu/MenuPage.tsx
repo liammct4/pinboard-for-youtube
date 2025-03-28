@@ -1,5 +1,7 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { ReactComponent as CloseIcon } from "./../../../assets/symbols/cross.svg"
+import CloseIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../../components/images/svgAsset";
 import { toTitleCase } from "../../lib/util/generic/stringUtil";
 import "./MenuPage.css"

@@ -1,21 +1,13 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ReactComponent as PfyLogo } from "./../../assets/logo/logo.svg"
+import PfyLogo from "./../../assets/logo/logo.svg?react"
 import { useNotificationMessage } from "../components/features/notifications/useNotificationMessage";
-import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../lib/util/request";
 import { useDispatch } from "react-redux";
-import { setAccessAndIDTokens } from "../features/auth/authSlice";
-import { regenerateTokensWithRefreshToken } from "../lib/user/accounts";
-import { HttpStatusCode } from "../lib/util/http";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
-	const { activateMessage } = useNotificationMessage();
-	const dispatch = useDispatch();
-	// Setup offline network handler.
-	useEffect(() => {
-		
-	}, []);
 
 	return (
 		<div className="outer-body">

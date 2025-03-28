@@ -15,7 +15,7 @@ export interface ISVGContainerProperties {
  * defined in common-definitions.css (prefixed by 'icon-colour') for conforming
  * to the app theme.
  * @param asset The asset to include, this is an imported SVG file as. 
- * For example, @example import { ReactComponent as SomeIcon } from "../../".
+ * For example, @example import SomeIcon from "../../SomeIcon.svg?react".
  * @param className The class name which will be applied to the <svg/>. Use this to specify a colour class.
  * @param manual-fill Overrides the provided colour class with a manual fill. (This can be a css variable).
  * @param manual-stroke Overrides the provided colour class with a manual stroke. (This can be a css variable).

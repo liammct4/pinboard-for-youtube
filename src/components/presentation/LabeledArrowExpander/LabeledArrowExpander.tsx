@@ -1,6 +1,8 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useState } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
-import { ReactComponent as ArrowIcon } from "./../../../../assets/symbols/arrows/arrowhead.svg"
+import ArrowIcon from "./../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../images/svgAsset";
 import "./../../../styling/elements/expander.css"
 import "./LabeledArrowExpander.css"
