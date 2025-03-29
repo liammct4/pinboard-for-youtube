@@ -10,7 +10,7 @@ import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
 import { IDirectoryNode } from "../../components/video/navigation/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
-import { IDirectoryModificationAction } from "../../components/features/useDirectoryResource.ts"
+import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource.ts"
 import { IConfig } from "./config.ts"
 
 export interface IStorage {

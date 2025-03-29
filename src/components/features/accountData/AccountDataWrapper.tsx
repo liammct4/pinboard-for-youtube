@@ -1,49 +1,53 @@
 import { useDispatch } from "react-redux";
 import { setCustomThemesWithoutQueue } from "../../../features/theme/themeSlice";
-import { IAppTheme } from "../../../lib/config/theming/appTheme";
-import { getAccountResourceData } from "../../../lib/user/resource";
-import { ITagDefinition, IVideo } from "../../../lib/video/video";
 import { useUserAccount } from "../useUserAccount";
 import { IWrapperProperties } from "../wrapper";
-import { directoriesEndpoint, themesEndpoint, videosEndpoint } from "../../../lib/api/pinboardApi";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../../context/video";
-import { IDirectoryNode } from "../../video/navigation/directory";
-import { useServerResourceRequest } from "../useServerResourceRequest";
+import { useDirectoryResource } from "../resources/useDirectoryResource";
+import { useVideosResource } from "../resources/useVideosResource";
+import { useThemesResource } from "../resources/useThemesResource";
+import { disableControlsLock, enableControlsLock } from "../../../features/state/tempStateSlice";
 
 export function AccountDataWrapper({ children }: IWrapperProperties) {
-	const { user, isSignedIn } = useUserAccount();
-	const { directoryRoot, counter, setCounter, videoData } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { isSignedIn, user } = useUserAccount();
+	const { directoryRoot, setCounter, videoData } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { fetchDirectoryRoot } = useDirectoryResource();
+	const { fetchVideos } = useVideosResource();
+	const { fetchCustomThemes } = useThemesResource();
 	const dispatch = useDispatch();
 
-	// Account storage.
-	const getAccountVideos = async () => {
-		if (!isSignedIn) {
-			return;
+	useEffect(() => {
+		// Account storage.
+		const getAccountData = async () => {
+			if (!isSignedIn) {
+				return;
+			}
+			
+			dispatch(enableControlsLock());
+
+			let retrievedVideos = await fetchVideos();
+			let retrievedDirectoryRoot = await fetchDirectoryRoot();
+			let retrievedCustomThemes = await fetchCustomThemes();
+
+			if (retrievedVideos == undefined || retrievedDirectoryRoot == undefined || retrievedCustomThemes == undefined) {
+				// Should never happen.
+				console.error(`Account data missing: ${retrievedVideos}, ${retrievedDirectoryRoot}, ${retrievedCustomThemes}`);
+				return;
+			}
+
+			dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
+
+			retrievedVideos?.forEach(x => videoData.set(x.id, x));
+			directoryRoot.subNodes = retrievedDirectoryRoot.subNodes;
+
+			setCounter(Math.random());
+
+			dispatch(disableControlsLock());
 		}
 
-		/*
-		
-		// TODO: Implement hooks for each resource. (i.e. useDirectoryResource)
-
-		let token = user.tokens.IdToken;
-		let retrievedVideos = await getAccountResourceData<IVideo>(videosEndpoint, token);
-		let retrievedDirectoryRoot = await getAccountResourceData<IDirectoryNode>(directoriesEndpoint, token);
-		let retrievedCustomThemes = await getAccountResourceData<IAppTheme>(themesEndpoint, token);
-
-		if (retrievedVideos == undefined || retrievedDirectoryRoot == undefined || retrievedCustomThemes == undefined) {
-			// Should never happen.
-			console.error(`Account data missing: ${retrievedVideos}, ${retrievedDirectoryRoot}, ${retrievedCustomThemes}`);
-			return;
-		}
-
-		dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
-
-		retrievedVideos?.forEach(x => videoData.set(x.id, x));
-		directoryRoot.subNodes = retrievedDirectoryRoot*/
-	}
-
-	getAccountVideos();
+		getAccountData();
+	}, [isSignedIn ? user.tokens : false]);
 	
 	return children;
 }

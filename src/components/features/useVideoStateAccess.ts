@@ -4,7 +4,7 @@ import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConca
 import { removeParentPass } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
-import { useDirectoryResource } from "./useDirectoryResource";
+import { useDirectoryResource } from "./resources/useDirectoryResource";
 import { useLocalStorage } from "./storage/useLocalStorage";
 
 export function useVideoStateAccess() {

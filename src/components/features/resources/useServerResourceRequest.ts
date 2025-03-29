@@ -1,11 +1,11 @@
-import { GlobalRequestHandler, HttpResponse, Method } from "../../lib/util/request";
-import { useUserAccount } from "./useUserAccount";
+import { GlobalRequestHandler, HttpResponse, Method } from "../../../lib/util/request";
+import { useUserAccount } from "../useUserAccount";
 
 export function useServerResourceRequest(endpoint: string) {
 	const { isSignedIn, user } = useUserAccount();
 
 	return {
-		sendRequest: async (method: Method, body: string): Promise<HttpResponse | undefined> => {
+		sendRequest: async (method: Method, body?: any): Promise<HttpResponse | undefined> => {
 			if (!isSignedIn) {
 				return undefined;
 			}

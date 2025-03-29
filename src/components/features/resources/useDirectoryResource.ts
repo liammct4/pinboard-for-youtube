@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { directoriesEndpoint } from "../../lib/api/pinboardApi";
-import { HttpStatusCode } from "../../lib/util/http";
-import { HttpResponse } from "../../lib/util/request";
-import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubDirectory, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../video/navigation/directory";
-import { useLocalStorage } from "./storage/useLocalStorage";
+import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
+import { HttpStatusCode } from "../../../lib/util/http";
+import { HttpResponse } from "../../../lib/util/request";
+import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubDirectory, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
+import { useLocalStorage } from "../storage/useLocalStorage";
 import { useServerResourceRequest } from "./useServerResourceRequest";
-import { DataMutation, useUserAccount } from "./useUserAccount";
+import { DataMutation, useUserAccount } from "../useUserAccount";
+import { addParentPass } from "../../../lib/storage/userData/userData";
+import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -22,7 +24,7 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 }
 
 export function useDirectoryResource() {
-	const { isSignedIn } = useUserAccount();
+	const { isSignedIn, user } = useUserAccount();
 	const { storage, setStorage } = useLocalStorage();
 	const { sendRequest } = useServerResourceRequest(directoriesEndpoint);
 
@@ -50,6 +52,8 @@ export function useDirectoryResource() {
 				setStorage(storage);
 			});
 	}, [storage.account.mutationQueues.directoryPendingQueue]);
+
+	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
 
 	const updateMutationQueue = (mutation: DataMutation<IDirectoryModificationAction>) => {
 		if (!isSignedIn) {
@@ -109,5 +113,5 @@ export function useDirectoryResource() {
 		updateMutationQueue(mutation);
 	}
 
-	return { createAction, deleteAction, renameAction }
+	return { fetchDirectoryRoot, createAction, deleteAction, renameAction }
 }
