@@ -8,7 +8,6 @@
  * enable the state (with values) and end the state.
  */
 
-import { IStorage } from "../storage";
 import { IResendVerificationEmailState } from "./resendVerificationEmail";
 import { IResetPasswordState } from "./resetPassword";
 
