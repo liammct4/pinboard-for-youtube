@@ -33,8 +33,7 @@ export function useVideoStateAccess() {
 			
 			videoData.set(videoID, {
 				id: videoID,
-				timestamps: [],
-				appliedTags: []
+				timestamps: []
 			});
 
 			let desiredDirectory = getItemFromNode(path, directoryRoot) as IDirectoryNode;

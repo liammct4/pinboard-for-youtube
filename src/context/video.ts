@@ -1,5 +1,5 @@
 import { createContext, Context } from "react"
-import { ITagDefinition, IVideo } from "../lib/video/video";
+import { IVideo } from "../lib/video/video";
 import { ActionCreatorWithPayload, ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { IDirectoryNode } from "../components/video/navigation/directory";
 
@@ -14,7 +14,6 @@ export interface IVideoContext {
 	activeVideoID: string | undefined,
 	videos: IVideo[],
 	openVideos: string[],
-	tagDefinitions: ITagDefinition[],
 	deleteMode: boolean
 	actions: {
 		addVideo: ActionCreatorWithPayload<IVideo, "video/addVideo">,

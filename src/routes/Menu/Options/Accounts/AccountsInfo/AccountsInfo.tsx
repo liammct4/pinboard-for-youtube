@@ -21,7 +21,7 @@ export function AccountsInfo(): React.ReactNode {
 			<p className="paragraph-big account-info-text">
 				Create an account to backup and sync your data between devices!
 				Every change you make will be saved automatically. With an account,
-				you can store and sync saved videos, tags and themes.<br/>
+				you can store and sync saved videos and themes.<br/>
 				<br/>
 				This is optional however, so you can continue to use
 				Pinboard for YouTube without an account and save the data locally. The extension

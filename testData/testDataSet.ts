@@ -9,8 +9,7 @@ export const sampleVideoData: IVideo[] = [
 		"timestamps": [
 			generateTimestamp(63, "Timestamp expands to this end margin." ),
 			generateTimestamp(4351, "Timestamp in the middle..."),
-		],
-		"appliedTags": []
+		]
 	},
 	{
 		"id": "njX2bu-_Vw4",
@@ -19,35 +18,30 @@ export const sampleVideoData: IVideo[] = [
 			generateTimestamp(1200, "Nunc dui dolor, feugiat id eros feugiat."),
 			generateTimestamp(354, "Nulla ornare arcu tellus."),
 			generateTimestamp(1354, "Praesent eu nulla lacus."),
-		],
-		"appliedTags": []
+		]
 	},
 	{
 		"id": "AKeUssuu3Is",
 		"timestamps": [
 			generateTimestamp(16, "Maecenas lectus nisl, pretium.")
-		],
-		"appliedTags": []
+		]
 	},
 	{
 		"id": "ZjVAsJOl8SM",
 		"timestamps": [
 			generateTimestamp(1063, "Another timestamp.")
-		],
-		"appliedTags": []
+		]
 	},
 	{
 		"id": "PnvkrBXmLSI",
 		"timestamps": [
 			generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
 			generateTimestamp(0, "Maximus quis purus."),
-		],
-		"appliedTags": []
+		]
 	},
 	{
 		"id": "ERYG3NE1DO8",
-		"timestamps": [],
-		"appliedTags": []
+		"timestamps": []
 	}
 ];
 

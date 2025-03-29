@@ -25,8 +25,7 @@ async function saveCurrentTimestampToVideo() {
 	if (index == -1) {	
 		storage.user_data.videos.push({
 			id: videoID,
-			timestamps: [ newTimestamp ],
-			appliedTags: []
+			timestamps: [ newTimestamp ]
 		});
 	}
 	else {

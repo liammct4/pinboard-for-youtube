@@ -1,4 +1,4 @@
-import { ITagDefinition, IVideo } from "./../video/video.ts"
+import { IVideo } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
 import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
@@ -17,8 +17,6 @@ export interface IStorage {
 	user_data: {
 		videos: IVideo[];
 		directoryRoot: IDirectoryNode;
-		tagDefinitions: ITagDefinition[];
-		tagFilter: string;
 		config: IConfig;
 	},
 	temp_state: ITempState;
@@ -59,9 +57,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 			theme: AppThemes == undefined ? sampleConfigData.theme : AppThemes[0],
 			customThemes: [],
 			userSettings: defaultUserSettings
-		},
-		tagDefinitions: [],
-		tagFilter: ""
+		}
 	},
 	temp_state: {
 		expandedVideos: [],

@@ -4,7 +4,7 @@ import { useCallback } from "react"
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
-import { Timestamp, cloneModifyTimestamp } from "../../../../lib/video/video.ts";
+import { Timestamp } from "../../../../lib/video/video.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../../forms/validated-form.ts";
 import { FormField } from "../../../forms/FormField/FormField.tsx";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
@@ -49,7 +49,7 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 	const onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 
-		onChange(timestamp, cloneModifyTimestamp(timestamp, inputTime, data.message));
+		onChange(timestamp, { ...timestamp, time: inputTime, message: data.message });
 	}, []);
 
 	const onDelete: () => void = () => {

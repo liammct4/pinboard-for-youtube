@@ -37,7 +37,6 @@
 		"react-router-dom": "^6.15.0",
 		"semver": "^7.5.3",
 		"url": "^0.11.1",
-		"uuid": "^9.0.0",
 		"vite-plugin-svgr": "^4.3.0"
 	},
 	"devDependencies": {
