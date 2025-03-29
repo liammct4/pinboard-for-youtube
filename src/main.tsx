@@ -37,7 +37,7 @@ checkAndImplementLocalStorage();
 async function setupState() {
 	await ensureInitialized();
 
-	let activeID;
+	let activeID: string | undefined = undefined;
 
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -156,6 +156,7 @@ async function setupState() {
 	await modifyStorage(s => {
 		s.user_data.videos = Array.from(videos.values());
 		s.user_data.directoryRoot = removeParentPass(testDirectoryRoot);
+		s.youtubeInjector.activeVideoID = activeID;
 	});
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

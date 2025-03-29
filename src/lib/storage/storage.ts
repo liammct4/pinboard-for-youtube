@@ -23,7 +23,6 @@ export interface IStorage {
 	},
 	temp_state: ITempState;
 	auth: {
-		// This field indicates whether the user has logged in. If not logged in, this is null.
 		currentUser: IAuthenticatedUser | undefined;
 	},
 	persistentState: IPersistentState;
@@ -36,6 +35,9 @@ export interface IStorage {
 	},
 	cache: {
 		videos: IYoutubeVideoInfo[]
+	},
+	youtubeInjector: {
+		activeVideoID: string | undefined;
 	}
 }
 
@@ -83,7 +85,10 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		}
 	},
 	cache: {
-		videos: []
+		videos: [],
+	},
+	youtubeInjector: {
+		activeVideoID: undefined
 	}
 };
 

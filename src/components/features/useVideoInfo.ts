@@ -35,7 +35,7 @@ export function useVideoInfo(videoID: string | undefined) {
 				dispatch(saveVideoToCache(info));
 			}
 
-			setTimeout(getVideoInfo, 50);
+			getVideoInfo();
 		}
 	}, []);
 

@@ -26,6 +26,7 @@ import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getRa
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
+import { useLocalStorage } from "../../components/features/storage/useLocalStorage.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -45,6 +46,7 @@ export function VideosPage(): React.ReactNode {
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
 	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd } = useVideoStateAccess();
+	const { storage: { youtubeInjector: { activeVideoID } } } = useLocalStorage();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 
@@ -63,8 +65,11 @@ export function VideosPage(): React.ReactNode {
 	});
 
 	// TODO
-	const activeVideoID = "7twgitxn1AE";
 	const onSaveActiveVideo = () => {
+		if (activeVideoID == undefined) {
+			return;
+		}
+
 		if (videoData.has(activeVideoID)) {
 			let location = findItemPathFromName(root, activeVideoID, false, true, true);
 
