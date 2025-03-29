@@ -25,6 +25,7 @@ export function EnterLoginDetails(): React.ReactNode {
 			}
 
 			activateMessage("Success!", "You have now been logged in.", "Success", "Tick", 4000, "Slide");
+			navigate(-1);
 		}, 200);
 	}
 
