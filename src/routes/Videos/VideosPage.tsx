@@ -27,6 +27,8 @@ import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
 import { useLocalStorage } from "../../components/features/storage/useLocalStorage.ts";
+import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
+import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -64,7 +66,6 @@ export function VideosPage(): React.ReactNode {
 		}
 	});
 
-	// TODO
 	const onSaveActiveVideo = () => {
 		if (activeVideoID == undefined) {
 			return;
@@ -108,7 +109,24 @@ export function VideosPage(): React.ReactNode {
 
 		directoryAddVideo(activeVideoID, directoryPath);
 	};
-	const onPinCurrentTimestamp = () => { };
+	const onPinCurrentTimestamp = async () => {
+		if (activeVideoID == undefined || !videoData.has(activeVideoID)) {
+			return;
+		}
+
+		let result = await getActiveVideoInfo();
+		let video = videoData.get(activeVideoID) as IVideo;
+		
+		let activeVideo: IVideo = {
+			id: activeVideoID,
+			timestamps: [
+				...video.timestamps,
+				generateTimestamp(Math.floor(result!.currentTime), "Current time")
+			]
+		}
+		
+		directoryUpdateVideo(activeVideo);
+	};
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
 			directoryRemove("$", root.subNodes.map(x => getSectionPrefix(x)));
