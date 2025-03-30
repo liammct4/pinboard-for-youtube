@@ -24,6 +24,17 @@ export function useVideosResource() {
 		updateMutationQueue(mutation);
 	}
 
+	const removeAccountVideo = (id: string) => {
+		let mutation: DataMutation<IVideo> = {
+			dataID: id,
+			position: -1,
+			timestamp: Date.now(),
+			data: null
+		};
+
+		updateMutationQueue(mutation);
+	}
+
 	const clearAllVideos = async () => {
 		if (!isSignedIn) {
 			return;
@@ -35,6 +46,7 @@ export function useVideosResource() {
 	return {
 		fetchVideos,
 		updateAccountVideo,
+		removeAccountVideo,
 		clearAllVideos
 	}
 }

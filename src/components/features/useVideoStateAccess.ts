@@ -11,7 +11,7 @@ import { useVideosResource } from "./resources/useVideosResource";
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
-	const { updateAccountVideo, clearAllVideos } = useVideosResource();
+	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
@@ -68,13 +68,14 @@ export function useVideoStateAccess() {
 			updateAccountVideo(newVideo);
 			setCounter(Math.random());
 		},
-		directoryRemoveVideo: (videoIDs: string[]) => {			
+		directoryRemoveVideo: (videoIDs: string[]) => {
 			for (let video of videoIDs) {
 				if (videoData.has(video)){
 					videoData.delete(video);
+					removeAccountVideo(video);
 				}
 			}
-		
+			
 			setCounter(Math.random());
 		},
 		directoryUpdateVideo: (video: IVideo) => {

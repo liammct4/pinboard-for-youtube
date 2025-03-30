@@ -12,7 +12,7 @@ export type DataMutation<T> = {
 	dataID: string;
 	timestamp: number;
 	position: number;
-	data: T;
+	data: T | null;
 }
 
 interface ISignedIn extends IUseUserAccount { user: IAuthenticatedUser, isSignedIn: true };
