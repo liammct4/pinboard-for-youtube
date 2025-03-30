@@ -42,6 +42,10 @@ export function MouseTooltip({ horizontal, vertical, show, children }: IMouseToo
 		}
 
 		new ResizeObserver(() => {
+			if (frame.current == undefined) {
+				return;
+			}
+
 			let bounds = frame.current.getBoundingClientRect();
 
 			setSize({ width: bounds.width, height: bounds.height });

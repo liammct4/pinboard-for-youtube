@@ -32,7 +32,7 @@ export function DragListItem({ id, children }: IDragListItemProperties) {
 			ref={bounds}
 			onMouseDown={() => setStartDragID(id)}
 			data-box-id={id}
-			data-y-box-position={itemY}
+			data-y-box-position={Number.isNaN(itemY) ? 0 : itemY}
 			data-box-height={itemHeight}
 			data-drag-list-name={dragListName}>
 			<>

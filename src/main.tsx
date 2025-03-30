@@ -39,6 +39,9 @@ async function setupState() {
 
 	let activeID: string | undefined = undefined;
 
+	let storage: IStorage = await accessStorage();
+	let videos = new Map<string, IVideo>(storage.user_data.videos.map(x => [x.id, x]));
+
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
 
@@ -51,9 +54,55 @@ async function setupState() {
 	}
 	else {
 		activeID = "xcJtL7QggTI";
-	}
 
-	let storage: IStorage = await accessStorage();
+		let testDirectoryRoot: IDirectoryNode = {
+			nodeID: crypto.randomUUID(),
+			type: "DIRECTORY",
+			parent: null,
+			slice: "$",
+			subNodes: []
+		}
+
+		let nodeA: IDirectoryNode = {
+			nodeID: crypto.randomUUID(),
+			type: "DIRECTORY",
+			parent: testDirectoryRoot,
+			slice: "test",
+			subNodes: []
+		}
+	
+		let nodeB: IDirectoryNode = {
+			nodeID: crypto.randomUUID(),
+			type: "DIRECTORY",
+			parent: testDirectoryRoot,
+			slice: "random",
+			subNodes: []
+		}
+	
+		let videoA: IVideoNode = {
+			nodeID: crypto.randomUUID(),
+			type: "VIDEO",
+			parent: testDirectoryRoot,
+			videoID: sampleVideoData[0].id
+		}
+	
+		let videoB: IVideoNode = {
+			nodeID: crypto.randomUUID(),
+			type: "VIDEO",
+			parent: testDirectoryRoot,
+			videoID: sampleVideoData[1].id
+		}
+	
+		videos.set(videoA.videoID, sampleVideoData[0]);
+		videos.set(videoB.videoID, sampleVideoData[1]);
+		
+		testDirectoryRoot.subNodes = [nodeA, nodeB, videoA, videoB];
+
+		await modifyStorage(s => {
+			s.user_data.videos = Array.from(videos.values());
+			s.user_data.directoryRoot = removeParentPass(testDirectoryRoot)
+		});
+	}
 
 	let tempState: IStateSlice = {
 		expandedVideoIDs: storage.temp_state.expandedVideos,
@@ -76,88 +125,7 @@ async function setupState() {
 		store.dispatch(setCurrentUser(currentUser));
 	}
 
-	let videos = new Map<string, IVideo>(storage.user_data.videos.map(x => [x.id, x]));
-
-	let testDirectoryRoot: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: null,
-		slice: "$",
-		subNodes: []
-	}
-
-	let nodeA: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: testDirectoryRoot,
-		slice: "test",
-		subNodes: []
-	}
-
-	let nodeB: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: testDirectoryRoot,
-		slice: "random",
-		subNodes: []
-	}
-
-	let nodeC: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: testDirectoryRoot,
-		slice: "videos",
-		subNodes: []
-	}
-
-	let nodeD: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "other" };
-	let nodeE: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "stuff" };
-	let nodeF: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "tutorial" };
-	let nodeG: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "folder" };
-	let nodeH: IDirectoryNode = { ...nodeC, nodeID: crypto.randomUUID(), slice: "directory" };
-
-	let nodeCA: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: nodeC,
-		slice: "other",
-		subNodes: []
-	}
-
-	let nodeCB: IDirectoryNode = {
-		nodeID: crypto.randomUUID(),
-		type: "DIRECTORY",
-		parent: nodeC,
-		slice: "unused",
-		subNodes: []
-	}
-
-	let videoA: IVideoNode = {
-		nodeID: crypto.randomUUID(),
-		type: "VIDEO",
-		parent: testDirectoryRoot,
-		videoID: sampleVideoData[0].id
-	}
-
-	let videoB: IVideoNode = {
-		nodeID: crypto.randomUUID(),
-		type: "VIDEO",
-		parent: testDirectoryRoot,
-		videoID: sampleVideoData[1].id
-	}
-
-	videos.set(videoA.videoID, sampleVideoData[0]);
-	videos.set(videoB.videoID, sampleVideoData[1]);
-
-	nodeC.subNodes = [nodeCA, nodeCB]
-
-	testDirectoryRoot.subNodes = [nodeA, nodeB, nodeC, nodeD, nodeE, nodeF, nodeG, nodeH, videoA, videoB];
-
-	await modifyStorage(s => {
-		s.user_data.videos = Array.from(videos.values());
-		s.user_data.directoryRoot = removeParentPass(testDirectoryRoot);
-		s.youtubeInjector.activeVideoID = activeID;
-	});
+	await modifyStorage(s => s.youtubeInjector.activeVideoID = activeID);
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
