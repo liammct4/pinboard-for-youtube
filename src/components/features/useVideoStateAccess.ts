@@ -105,7 +105,7 @@ export function useVideoStateAccess() {
 
 				if (section.type == "DIRECTORY") {
 					let node = getItemFromNode(newDirectory, directoryRoot) as IDirectoryNode;
-					renameAction(node, section.type);
+					renameAction(node, section.slices[0]);
 				}
 			}
 			else {
