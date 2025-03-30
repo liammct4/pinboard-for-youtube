@@ -153,7 +153,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				"Shake"
 			);
 		}
-		else {
+		else if (currentlyEditing?.trim() != getSectionPrefixManual(newSliceName.trim(), "DIRECTORY")) {
 			let result = await directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string), "DIRECTORY"), directoryPathConcat(directoryPath, newSliceName.trim(), "DIRECTORY"));
 
 			if (result != null) {
@@ -321,7 +321,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			<MouseTooltip show={dragging != null && !timestampActivelyDragging} horizontal="START" vertical="CENTRE">
 				<ul className="drag-list-tooltip">
 					{
-						selectedItems.map(x => getSectionType(x) == "DIRECTORY" ?
+						selectedItems.filter(x => x != null).map(x => getSectionType(x) == "DIRECTORY" ?
 							<DragDirectoryTooltipItem key={x} sliceSection={x}/> :
 							<DragVideoTooltipItem key={x} idSection={x}/>
 						)
@@ -360,7 +360,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 										if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
 											setSelectedItems([ e.startDragID ]);
 										}
-									}} onDragEnd={dragEnd}>
+									}} onDragEnd={() => setTimeout(dragEnd, 10)}>
 										{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
 										<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
 									</DragList>

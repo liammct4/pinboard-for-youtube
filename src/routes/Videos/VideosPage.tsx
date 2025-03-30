@@ -54,9 +54,7 @@ export function VideosPage(): React.ReactNode {
 
 		directoryAddVideo(id, directoryPath);
 	});
-	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => {
-		let result = directoryAdd(directoryPath, data.directoryName);
-	});
+	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => directoryAdd(directoryPath, data.directoryName));
 
 	// Hotkeys for directory browser.
 	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
