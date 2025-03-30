@@ -8,6 +8,7 @@ import "./HomePage.css"
 import "./PfyWrapper.css"
 import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
 import { AccountDataWrapper } from "../components/features/accountData/AccountDataWrapper.tsx";
+import { MutationWrapper } from "../components/features/mutations/MutationWrapper.tsx";
 
 export function PfyWrapper(): React.ReactNode {
 	return (
@@ -19,7 +20,9 @@ export function PfyWrapper(): React.ReactNode {
 							<RequestHandlerWrapper>
 								<VideoWrapper>
 									<AccountDataWrapper>
-										<Outlet/>
+										<MutationWrapper>
+											<Outlet/>
+										</MutationWrapper>
 									</AccountDataWrapper>
 								</VideoWrapper>
 							</RequestHandlerWrapper>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
 import { HttpStatusCode } from "../../../lib/util/http";
 import { HttpResponse } from "../../../lib/util/request";
@@ -26,32 +26,6 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 export function useDirectoryResource() {
 	const { isSignedIn, user } = useUserAccount();
 	const { storage, setStorage } = useLocalStorage();
-	const { sendRequest } = useServerResourceRequest(directoriesEndpoint);
-
-	useEffect(() => {
-		let mutationQueue = storage.account.mutationQueues.directoryPendingQueue;
-
-		if (mutationQueue.length == 0) {
-			return;
-		}
-
-		sendRequest("PATCH", JSON.stringify(mutationQueue))
-			.then((response) => {
-				if (response != undefined) {
-					if (response.status == HttpStatusCode.OK) {
-						storage.account.mutationQueues.directoryPendingQueue = [];
-						setStorage(storage);
-						return;
-					}
-		
-					// TODO: Add proper error handling.
-					console.error(`Could not perform the action. ${response.status}: ${response.body}`);
-				}
-
-				storage.account.mutationQueues.directoryPendingQueue = mutationQueue;
-				setStorage(storage);
-			});
-	}, [storage.account.mutationQueues.directoryPendingQueue]);
 
 	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
 

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
+import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getParentPathFromPath, getRawSectionFromPrefix, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
 import { removeParentPass } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -94,7 +94,23 @@ export function useVideoStateAccess() {
 		},
 		directoryMove: function (oldDirectory: string, newDirectory: string): RelocateItemError | null {
 			setCounter(Math.random());
-			return relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
+
+			let oldParent = reformatDirectoryPath(getParentPathFromPath(oldDirectory));
+			let newParent = reformatDirectoryPath(getParentPathFromPath(newDirectory));
+			
+			let error = relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
+			
+			if (oldParent == newParent) {
+				// Rename
+				let node = getItemFromNode(newDirectory, directoryRoot) as IDirectoryNode;
+
+				renameAction(node, getSectionFromPath(oldDirectory));
+			}
+			else {
+				// TODO.
+			}
+
+			return error;
 		},
 		directoryRemove: (path: string, sections: string[]) => {
 			let parentNode = getItemFromNode(path, directoryRoot) as IDirectoryNode;

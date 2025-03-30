@@ -12,8 +12,8 @@ export type HeaderArray = [string, string][];
 export type RequestInfo = {
 	method: Method;
 	url: string;
-	body: any;
-	headers: [string, string][] | null;
+	body?: string;
+	headers?: [string, string][] | null;
 }
 export type ResolveAttempt = {
 	success: boolean;
@@ -56,8 +56,8 @@ export class RequestHandler {
 	async sendRequest(
 			method: Method,
 			url: string,
-			body: any = null,
-			headers: [string, string][] | null = null
+			body?: string | undefined,
+			headers?: [string, string][] | null
 		): Promise<HttpResponse | undefined> {
 		if (!navigator.onLine) { 
 			this._offlineHandler("NoConnection");
@@ -70,7 +70,7 @@ export class RequestHandler {
 			response = await fetch(url, {
 				method: method,
 				headers: new Headers(headers ?? []),
-				body: body == undefined ? undefined : JSON.stringify(body)
+				body: body == undefined ? undefined : body
 			});
 		}
 		catch (e) {

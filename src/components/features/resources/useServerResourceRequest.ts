@@ -5,7 +5,7 @@ export function useServerResourceRequest(endpoint: string) {
 	const { isSignedIn, user } = useUserAccount();
 
 	return {
-		sendRequest: async (method: Method, body?: any): Promise<HttpResponse | undefined> => {
+		sendRequest: async (method: Method, body?: string | undefined): Promise<HttpResponse | undefined> => {
 			if (!isSignedIn) {
 				return undefined;
 			}

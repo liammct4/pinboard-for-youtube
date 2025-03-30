@@ -25,36 +25,36 @@ export interface IAuthenticatedUser  {
  * @returns Response from API.
  */
 export async function registerAccount(email: string, password: string): Promise<HttpResponse | undefined> {
-	return GlobalRequestHandler.sendRequest("PUT", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PUT", accountsEndpoint, JSON.stringify({
 		email: email,
 		password: password
-	});
+	}));
 }
 
 export async function invalidateRefreshToken(refreshToken: string, idToken: string): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", idToken]];
 
-	return GlobalRequestHandler.sendRequest("DELETE", sessionEndpoint, {
+	return GlobalRequestHandler.sendRequest("DELETE", sessionEndpoint, JSON.stringify({
 		refreshToken: refreshToken
-	}, headers);
+	}), headers);
 }
 
 export async function deleteUserAccount(email: string, password: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return GlobalRequestHandler.sendRequest("DELETE", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("DELETE", accountsEndpoint, JSON.stringify({
 		userDetails: {
 			email: email,
 			password: password
 		},
 		accessToken: tokens.AccessToken
-	}, headers);
+	}), headers);
 }
 
 export async function changeUserEmail(currentEmail: string, newEmail: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, JSON.stringify({
 		userDetails: {
 			email: currentEmail,
 			password: null
@@ -64,13 +64,13 @@ export async function changeUserEmail(currentEmail: string, newEmail: string, to
 			password: null
 		},
 		accessToken: tokens.AccessToken
-	}, headers);
+	}), headers);
 }
 
 export async function changeUserPassword(email: string, previousPassword: string, newPassword: string, tokens: AuthenticationObject): Promise<HttpResponse | undefined> {
 	const headers: HeaderArray = [["Authorization", tokens.IdToken]];
 
-	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("PATCH", accountsEndpoint, JSON.stringify({
 		userDetails: {
 			email: email,
 			password: previousPassword
@@ -80,7 +80,7 @@ export async function changeUserPassword(email: string, previousPassword: string
 			password: newPassword
 		},
 		accessToken: tokens.AccessToken
-	}, headers);
+	}), headers);
 }
 
 /**
@@ -90,13 +90,13 @@ export async function changeUserPassword(email: string, previousPassword: string
  * @returns The response from the server.
  */
 export async function startResetPassword(email: string): Promise<HttpResponse | undefined> {
-	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, JSON.stringify({
 		type: "RESET_PASSWORD",
 		getCode: {
 			email: email
 		},
 		setPassword: null
-	});
+	}));
 }
 
 /**
@@ -108,7 +108,7 @@ export async function startResetPassword(email: string): Promise<HttpResponse | 
  * @returns The response from the server.
  */
 export async function confirmResetPassword(email: string, newPassword: string, code: string): Promise<HttpResponse | undefined> {
-	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+	return GlobalRequestHandler.sendRequest("POST", accountsEndpoint, JSON.stringify({
 		type: "RESET_PASSWORD",
 		getCode: null,
 		setPassword: {
@@ -116,7 +116,7 @@ export async function confirmResetPassword(email: string, newPassword: string, c
 			email: email,
 			password: newPassword
 		}
-	});
+	}));
 }
 
 /**
@@ -147,7 +147,7 @@ export async function loginGetTokens(email: string,password: string): Promise<Au
  * @returns A new set of id and access tokens.
  */
 export async function regenerateTokensWithRefreshToken(refreshToken: string): Promise<TemporaryTokens | undefined> {
-	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", sessionEndpoint, { refreshToken });
+	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", sessionEndpoint, JSON.stringify({ refreshToken }));
 
 	if (response == undefined || response.status != HttpStatusCode.OK) {
 		return undefined;
@@ -162,10 +162,10 @@ export async function regenerateTokensWithRefreshToken(refreshToken: string): Pr
  * @returns OK (200) if everything was successful.
  */
 export async function resendEmailVerificationLink(email: string): Promise<HttpResponse | undefined> {
-	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", accountsEndpoint, {
+	let response: HttpResponse | undefined = await GlobalRequestHandler.sendRequest("POST", accountsEndpoint, JSON.stringify({
 		type: "RESEND_VERIFY_EMAIL",
 		requestedEmail: email
-	});
+	}));
 
 	if (response == undefined || response.status == HttpStatusCode.UNAUTHORIZED) {
 		return undefined;

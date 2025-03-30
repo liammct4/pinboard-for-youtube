@@ -62,7 +62,6 @@ export function getItemFromNode(path: string, node: IDirectoryNode): VideoBrowse
 }
 
 // A section is either a slice, or a video ID.
-
 export function getSectionRaw(node: VideoBrowserNode): string {
 	if (node.type == "VIDEO") {
 		return node.videoID;
@@ -70,6 +69,12 @@ export function getSectionRaw(node: VideoBrowserNode): string {
 	else {
 		return node.slice;
 	}
+}
+
+export function getSectionFromPath(path: string): string {
+	let sections = splitPathIntoSlices(path);
+
+	return sections[sections.length - 1];
 }
 
 export function getSectionPrefix(node: VideoBrowserNode): string {
