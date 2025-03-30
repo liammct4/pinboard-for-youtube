@@ -6,10 +6,12 @@ import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";
 import { useLocalStorage } from "./storage/useLocalStorage";
+import { useVideosResource } from "./resources/useVideosResource";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction } = useDirectoryResource();
+	const { createAccountVideo } = useVideosResource();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
@@ -31,10 +33,11 @@ export function useVideoStateAccess() {
 				return;
 			}
 			
-			videoData.set(videoID, {
+			let newVideo: IVideo = {
 				id: videoID,
 				timestamps: []
-			});
+			};
+			videoData.set(videoID, newVideo);
 
 			let desiredDirectory = getItemFromNode(path, directoryRoot) as IDirectoryNode;
 
@@ -62,6 +65,7 @@ export function useVideoStateAccess() {
 			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
 
 			createAction(newVideoNode);
+			createAccountVideo(newVideo);
 			setCounter(Math.random());
 		},
 		directoryRemoveVideo: (videoIDs: string[]) => {			

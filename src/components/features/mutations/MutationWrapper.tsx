@@ -1,17 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { IWrapperProperties } from "../wrapper";
 import { useServerResourceRequest } from "../resources/useServerResourceRequest";
-import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
+import { directoriesEndpoint, themesEndpoint, videosEndpoint } from "../../../lib/api/pinboardApi";
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { HttpStatusCode } from "../../../lib/util/http";
 import { DataMutation } from "../useUserAccount";
+import { HttpResponse, Method } from "../../../lib/util/request";
 
 export function MutationWrapper({ children }: IWrapperProperties) {
 	const { storage, setStorage } = useLocalStorage();
-	const { sendRequest } = useServerResourceRequest(directoriesEndpoint);
+	const { sendRequest: sendDirectoryRequest } = useServerResourceRequest(directoriesEndpoint);
+	const { sendRequest: sendVideosRequest } = useServerResourceRequest(videosEndpoint);
+	const { sendRequest: sendThemesRequest } = useServerResourceRequest(themesEndpoint);
 	const lastRequest = useRef<string>("");
 
-	function syncMutations<T>(mutationQueue: DataMutation<T>[], setMutationQueue: (queue: DataMutation<T>[]) => void) {
+	async function syncMutations<T>(
+			mutationQueue: DataMutation<T>[],
+			setMutationQueue: (queue: DataMutation<T>[]) => void,
+			sendRequest: (method: Method, body?: string | undefined) => Promise<HttpResponse | undefined>
+		) {
 		if (mutationQueue.length == 0) {
 			return;
 		}
@@ -24,43 +31,46 @@ export function MutationWrapper({ children }: IWrapperProperties) {
 
 		lastRequest.current = request;
 
-		sendRequest("PATCH", request)
-			.then((response) => {
-				if (response != undefined) {
-					if (response.status == HttpStatusCode.OK) {
-						setMutationQueue([]);
-						setStorage(storage);
-						return;
-					}
+		let response = await sendRequest("PATCH", request);
 
-					// TODO: Add proper error handling.
-					console.error(`Could not perform the action. ${response.status}: ${response.body}`);
-				}
-
-				setMutationQueue(mutationQueue);
+		if (response != undefined) {
+			if (response.status == HttpStatusCode.OK) {
+				setMutationQueue([]);
 				setStorage(storage);
-			});
+				return;
+			}
+
+			// TODO: Add proper error handling.
+			console.error(`Could not perform the action. ${response.status}: ${response.body}`);
+		}
+
+		setMutationQueue(mutationQueue);
+		setStorage(storage);
 	};
 
 	useEffect(() => {
-		// Directory.
 		syncMutations(
 			storage.account.mutationQueues.directoryPendingQueue,
-			(queue) => storage.account.mutationQueues.directoryPendingQueue = queue
+			(queue) => storage.account.mutationQueues.directoryPendingQueue = queue,
+			sendDirectoryRequest
 		);
+	}, [JSON.stringify(storage.account.mutationQueues.directoryPendingQueue)]);
 
-		// Videos.
+	useEffect(() => {
 		syncMutations(
 			storage.account.mutationQueues.videoPendingQueue,
-			(queue) => storage.account.mutationQueues.videoPendingQueue = queue
+			(queue) => storage.account.mutationQueues.videoPendingQueue = queue,
+			sendVideosRequest
 		);
+	}, [JSON.stringify(storage.account.mutationQueues.videoPendingQueue)]);
 
-		// Custom themes.
+	useEffect(() => {
 		syncMutations(
 			storage.account.mutationQueues.themePendingQueue,
-			(queue) => storage.account.mutationQueues.themePendingQueue = queue
+			(queue) => storage.account.mutationQueues.themePendingQueue = queue,
+			sendThemesRequest
 		);
-	}, [storage.account.mutationQueues]);
+	}, [JSON.stringify(storage.account.mutationQueues.themePendingQueue)]);
 	
 	return children;
 }

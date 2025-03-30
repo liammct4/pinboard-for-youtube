@@ -2,6 +2,7 @@ import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSub
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
+import { useMutationQueue } from "../mutations/useMutationQueue";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -19,18 +20,10 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 
 export function useDirectoryResource() {
 	const { isSignedIn, user } = useUserAccount();
-	const { storage, setStorage } = useLocalStorage();
+	const { storage } = useLocalStorage();
+	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.directoryPendingQueue);
 
 	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
-
-	const updateMutationQueue = (mutation: DataMutation<IDirectoryModificationAction>) => {
-		if (!isSignedIn) {
-			return;
-		}
-
-		storage.account.mutationQueues.directoryPendingQueue.push(mutation);
-		setStorage(storage);
-	}
 
 	const createAction = (node: VideoBrowserNode) => {
 		let mutation: DataMutation<IDirectoryModificationAction> = {
