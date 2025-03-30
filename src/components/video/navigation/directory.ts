@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil";
+import { accessStorage } from "../../../lib/storage/storage";
 
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
@@ -230,9 +231,11 @@ export function getRootDirectoryPathFromSubNode(node: VideoBrowserNode): string 
 
 export type RelocateItemError = 
 	"RENAME_ALREADY_EXISTS" |
+	"TARGET_DOESNT_EXIST" |
+	"NEW_LOCATION_DOESNT_EXIST" |
 	"MOVE_ALREADY_EXISTS";
 
-export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string): RelocateItemError | null {
+export async function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: string, newDirectory: string): Promise<RelocateItemError | null> {
 	let oldSplit = splitPathIntoSlices(oldDirectory);
 	let newSplit = splitPathIntoSlices(newDirectory);
 
@@ -266,13 +269,21 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	}
 
 	// Otherwise, move as normal.
-	let itemToMove = getItemFromNode(oldDirectory, root) as IDirectoryNode;
+	let itemToMove = getItemFromNode(oldDirectory, root) as VideoBrowserNode;
+
+	if (itemToMove == undefined || itemToMove == null) {
+		return "TARGET_DOESNT_EXIST";
+	}
 
 	// Getting new location.
 	let newParentPath = [ ...newSplit.slices ];
 	newParentPath.splice(newSplit.slices.length - 1, 1);
 
-	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
+	let newParent = getItemFromNode(newParentPath.join(" > "), root);
+
+	if (newParent == null || newParent.type != "DIRECTORY") {
+		return "NEW_LOCATION_DOESNT_EXIST";
+	}
 
 	let alreadyExistingIndex = newParent.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(itemToMove));
 
@@ -281,7 +292,7 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	}
 
 	// Remove from old location.
-	let oldParentIndex = itemToMove?.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(itemToMove)) as number;
+	let oldParentIndex = itemToMove.parent!.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefix(itemToMove)) as number;
 	itemToMove.parent?.subNodes.splice(oldParentIndex, 1);
 
 	// Place in new location.
@@ -293,11 +304,16 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 
 	let insertIndex: number;
 
+	
 	if (itemToMove.type == "DIRECTORY") {
-		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, itemToMove, getSectionRaw, 0, directoryEndIndex);
+		insertIndex = await getAlphanumericInsertIndex(newParent.subNodes, itemToMove, getSectionRaw, 0, directoryEndIndex);
 	}
 	else {
-		insertIndex = getAlphanumericInsertIndex(newParent.subNodes, itemToMove, getSectionRaw, directoryEndIndex, newParent.subNodes.length);
+		// TypeScript acts up so it needs to be separate.
+		let itemToMoveID = itemToMove.videoID;
+		
+		let storage = await accessStorage();
+		insertIndex = await getAlphanumericInsertIndex(newParent.subNodes, itemToMove, () => storage.cache.videos.find(x => x.video_id == itemToMoveID)!.title, directoryEndIndex, newParent.subNodes.length);
 	}
 
 	newParent.subNodes.splice(insertIndex, 0, itemToMove);
@@ -313,7 +329,7 @@ export type AddDirectorySuccess = [true, string];
 export type AddDirectoryFail = [false, AddDirectoryResult];
 
 // TODO: Replace with actual result type.
-export function addDirectory(root: IDirectoryNode, targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
+export async function addDirectory(root: IDirectoryNode, targetPath: string, name: string): Promise<AddDirectorySuccess | AddDirectoryFail> {
 	let newParent = getItemFromNode(targetPath, root) as IDirectoryNode;
 
 	if (newParent == undefined) {
@@ -340,7 +356,7 @@ export function addDirectory(root: IDirectoryNode, targetPath: string, name: str
 	};
 
 	let videoStartIndex = newParent.subNodes.findIndex(x => x.type == "VIDEO");
-	let insertIndex = getAlphanumericInsertIndex(newParent.subNodes, newDirectory, (item) => getSectionPrefix(item), 0, videoStartIndex);
+	let insertIndex = await getAlphanumericInsertIndex(newParent.subNodes, newDirectory, (item) => getSectionPrefix(item), 0, videoStartIndex);
 
 	newParent.subNodes.splice(insertIndex, 0, newDirectory);
 

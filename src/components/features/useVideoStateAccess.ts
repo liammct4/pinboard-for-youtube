@@ -7,11 +7,13 @@ import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";
 import { useLocalStorage } from "./storage/useLocalStorage";
 import { useVideosResource } from "./resources/useVideosResource";
+import { useVideoCache, useVideoInfo } from "./useVideoInfo";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
 	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource();
+	const { retrieveInfo } = useVideoCache();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
@@ -28,7 +30,7 @@ export function useVideoStateAccess() {
 	return {
 		videoData,
 		root: directoryRoot,
-		directoryAddVideo: (videoID: string, path: string) => {
+		directoryAddVideo: async (videoID: string, path: string) => {
 			if (videoData.has(videoID)) {
 				return;
 			}
@@ -54,10 +56,10 @@ export function useVideoStateAccess() {
 				directoryStartIndex = desiredDirectory.subNodes.length;
 			}
 
-			let insertIndex = getAlphanumericInsertIndex(
+			let insertIndex = await getAlphanumericInsertIndex(
 				desiredDirectory.subNodes,
 				newVideoNode,
-				getSectionRaw,
+				async (n) => n.type == "VIDEO" ? (await retrieveInfo(n.videoID))!.title : "",
 				directoryStartIndex,
 				desiredDirectory.subNodes.length
 			);
@@ -88,8 +90,8 @@ export function useVideoStateAccess() {
 			updateAccountVideo(video);
 			setCounter(Math.random());
 		},
-		directoryAdd: function (targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
-			let result = addDirectory(directoryRoot, targetPath, name);
+		directoryAdd: async function (targetPath: string, name: string): Promise<AddDirectorySuccess | AddDirectoryFail> {
+			let result = await addDirectory(directoryRoot, targetPath, name);
 
 			let newNode = getItemFromNode(directoryPathConcat(targetPath, name, "DIRECTORY"), directoryRoot) as VideoBrowserNode;
 
@@ -98,13 +100,13 @@ export function useVideoStateAccess() {
 			setCounter(Math.random());
 			return result;
 		},
-		directoryMove: function (oldDirectory: string, newDirectory: string): RelocateItemError | null {
+		directoryMove: async function (oldDirectory: string, newDirectory: string): Promise<RelocateItemError | null> {
 			setCounter(Math.random());
 
 			let oldParent = reformatDirectoryPath(getParentPathFromPath(oldDirectory));
 			let newParent = reformatDirectoryPath(getParentPathFromPath(newDirectory));
 			
-			let error = relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
+			let error = await relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
 			
 			if (error != null) {
 				console.error(

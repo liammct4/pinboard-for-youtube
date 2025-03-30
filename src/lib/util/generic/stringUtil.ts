@@ -24,9 +24,9 @@ export function toTitleCase(text: string): string {
  * @param valueAccessor Retrieves the string value for an item.
  * @returns An index of where to insert "item".
  */
-export function getAlphanumericInsertIndex<T>(items: T[], item: T, valueAccessor: (item: T) => string, startIndex: number, endIndex: number): number {
+export async function getAlphanumericInsertIndex<T>(items: T[], item: T, valueAccessor: (item: T) => Promise<string> | string, startIndex: number, endIndex: number): Promise<number> {
 	for (let i = startIndex; i < endIndex; i++) {
-		if (isStringGreaterThan(valueAccessor(item), valueAccessor(items[i]))) {
+		if (isStringGreaterThan(await valueAccessor(item), await valueAccessor(items[i]))) {
 			return i;
 		}
 	}

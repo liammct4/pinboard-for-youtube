@@ -32,7 +32,7 @@ export interface IYoutubeVideoInfo {
 	version: string;
 }
 
-export const YOUTUBE_EXTRACT_VIDEO_ID_REGEX: RegExp = /.*\?v=(?<VideoID>[\w\d\-\_]*)/
+export const YOUTUBE_EXTRACT_VIDEO_ID_REGEX: RegExp = /(?<VideoID>[A-z0-9\-_]{11})/
 
 export function getVideoIdFromYouTubeLink(url: string): string {
 	const match = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(url);

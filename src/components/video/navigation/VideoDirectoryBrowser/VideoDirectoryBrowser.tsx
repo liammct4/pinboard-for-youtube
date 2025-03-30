@@ -39,6 +39,11 @@ export function getDirectoryMoveUserMessage(error: RelocateItemError): string {
 			return "That name already exists in the target directory."
 		case "MOVE_ALREADY_EXISTS":
 			return "That directory already exists in the target directory.";
+		case "NEW_LOCATION_DOESNT_EXIST":
+			return "The new location could not be found.";
+		case "TARGET_DOESNT_EXIST":
+			return "The target item does not exist.";
+		
 	}
 }
 
@@ -118,7 +123,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		setSelectedItems([]);
 	}, [directory]);
 
-	const requestEditEnd = (newSliceName: string) => {
+	const requestEditEnd = async (newSliceName: string) => {
 		let result = validateDirectoryName(newSliceName);
 
 		if (result != null && result != "STARTS_ENDS_IN_WHITESPACE") {
@@ -148,7 +153,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			);
 		}
 		else {
-			let result = directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string), "DIRECTORY"), directoryPathConcat(directoryPath, newSliceName.trim(), "DIRECTORY"));
+			let result = await directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string), "DIRECTORY"), directoryPathConcat(directoryPath, newSliceName.trim(), "DIRECTORY"));
 
 			if (result != null) {
 				let message = getDirectoryMoveUserMessage(result);

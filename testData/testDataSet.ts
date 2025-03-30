@@ -66,6 +66,8 @@ export const sampleConfigData: IConfig = {
 			"text-normal": "rgb(47, 47, 47)",
 			"text-light": "rgb(68, 68, 68)",
 			"text-lighter": "rgb(88, 88, 88)",
+			"field-background": "rgb(219, 227, 206)",
+			"field-content": "rgb(0, 0, 0)",
 			"shade-01": "rgb(40, 40, 40)",
 			"shade-02": "rgb(107, 107, 107)",
 			"shade-03": "rgb(136, 136, 136)",

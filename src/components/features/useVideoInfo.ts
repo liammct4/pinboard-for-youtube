@@ -4,6 +4,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { saveVideoToCache } from "../../features/cache/cacheSlice";
 
+export function useVideoCache() {
+	const cache = useSelector((state: RootState) => state.cache.videoCache);
+	const dispatch = useDispatch();
+
+	const retrieveInfo = async (videoID: string): Promise<IYoutubeVideoInfo | undefined> => {
+		let index = cache.findIndex(x => x.video_id == videoID);
+
+		if (index != -1) {
+			return cache[index];
+		}
+
+		let info = await getYoutubeVideoInfoFromVideoID(videoID);
+
+		if (info == undefined) {
+			return undefined;
+		}
+
+		dispatch(saveVideoToCache(info));
+
+		return info;
+	}
+
+	return { retrieveInfo };
+}
+
 export function useVideoInfo(videoID: string | undefined) {
 	const cache = useSelector((state: RootState) => state.cache.videoCache);
 	const [ video, setVideo ] = useState<IYoutubeVideoInfo>();
