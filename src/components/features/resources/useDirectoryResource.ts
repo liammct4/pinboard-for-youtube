@@ -3,6 +3,8 @@ import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 import { useMutationQueue } from "../mutations/useMutationQueue";
+import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
+import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -90,5 +92,13 @@ export function useDirectoryResource() {
 		updateMutationQueue(mutation);
 	}
 
-	return { fetchDirectoryRoot, createAction, deleteAction, renameAction, moveAction }
+	const clearAllDirectories = async () => {
+		if (!isSignedIn) {
+			return;
+		}
+
+		await sendApiRequestWithAuthorization(user.tokens.IdToken, "DELETE", directoriesEndpoint);
+	};
+
+	return { fetchDirectoryRoot, createAction, deleteAction, renameAction, moveAction, clearAllDirectories }
 }

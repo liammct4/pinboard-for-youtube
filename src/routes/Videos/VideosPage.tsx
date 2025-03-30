@@ -47,7 +47,7 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
-	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd } = useVideoStateAccess();
+	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
 	const { storage: { youtubeInjector: { activeVideoID } } } = useLocalStorage();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
@@ -129,9 +129,7 @@ export function VideosPage(): React.ReactNode {
 	};
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
-			directoryRemove("$", root.subNodes.map(x => getSectionPrefix(x)));
-			
-			directoryRemoveVideo(Array.from(videoData.keys()));
+			directoryClearAll();
 		}
 	};
 
