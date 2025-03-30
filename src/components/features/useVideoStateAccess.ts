@@ -100,6 +100,17 @@ export function useVideoStateAccess() {
 			
 			let error = relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
 			
+			if (error != null) {
+				console.error(
+					`Could not move the item.
+						'${error}'
+						'${oldDirectory}'
+						'${newDirectory}'
+					`
+				);
+				return error;
+			}
+
 			if (oldParent == newParent) {
 				let section = getSectionFromPath(oldDirectory);
 
