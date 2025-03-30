@@ -16,6 +16,8 @@
 	--pfy-text-normal: rgb(47, 47, 47);
 	--pfy-text-light: rgb(68, 68, 68);
 	--pfy-text-lighter: rgb(88, 88, 88);
+	--pfy-field-background: rgb(232, 232, 232);
+	--pfy-field-content: rgb(43, 43, 43);
 	/* Dependent on the current theme. */
 	--pfy-shade-01: rgb(40, 40, 40);
 	--pfy-shade-02: rgb(107, 107, 107);

@@ -23,6 +23,8 @@ export type ColourPalette = {
 	"text-normal": string;
 	"text-light": string;
 	"text-lighter": string;
+	"field-background": string;
+	"field-content": string;
 	"shade-01": string;
 	"shade-02": string;
 	"shade-03": string;

@@ -47,8 +47,8 @@
 	.button-base {
 		box-shadow: var(--pfy-box-shadow-standard);
 		font-family: var(--pfy-font-scheme-standard);
-		background: var(--pfy-shade-06);
-		color: var(--pfy-text-light);
+		background: var(--pfy-field-background);
+		color: var(--pfy-field-content);
 		border-style: solid;
 		border-color: var(--pfy-primary-dark);
 		font-weight: bold;
@@ -184,8 +184,8 @@
 		padding: 0;
 		padding-left: var(--pfy-spacing-standard-compact);
 		padding-right: var(--pfy-spacing-standard-compact);
-		background: var(--pfy-shade-light-02);
-		color: var(--pfy-shade-dark-02);
+		background: var(--pfy-field-background);
+		color: var(--pfy-field-content);
 		height: var(--pfy-element-button-size-regular);
 		outline: 0;
 		border: 1px solid var(--pfy-primary-ultradark);
