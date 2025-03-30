@@ -9,7 +9,7 @@ import { useLocalStorage } from "./storage/useLocalStorage";
 
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
-	const { createAction, deleteAction, renameAction } = useDirectoryResource();
+	const { createAction, deleteAction, renameAction, moveAction } = useDirectoryResource();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
@@ -101,13 +101,12 @@ export function useVideoStateAccess() {
 			let error = relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
 			
 			if (oldParent == newParent) {
-				// Rename
 				let node = getItemFromNode(newDirectory, directoryRoot) as IDirectoryNode;
-
 				renameAction(node, getSectionFromPath(oldDirectory));
 			}
 			else {
-				// TODO.
+				let node = getItemFromNode(newDirectory, directoryRoot) as IVideoNode;
+				moveAction(node, oldDirectory);
 			}
 
 			return error;

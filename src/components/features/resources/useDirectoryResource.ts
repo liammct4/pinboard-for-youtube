@@ -1,15 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
-import { HttpStatusCode } from "../../../lib/util/http";
-import { HttpResponse } from "../../../lib/util/request";
 import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubDirectory, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
 import { useLocalStorage } from "../storage/useLocalStorage";
-import { useServerResourceRequest } from "./useServerResourceRequest";
 import { DataMutation, useUserAccount } from "../useUserAccount";
-import { addParentPass } from "../../../lib/storage/userData/userData";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 
-export type DirectoryAction = "Create" | "Rename" | "Delete";
+export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
 
 export interface IDirectoryModificationAction {
@@ -87,5 +81,21 @@ export function useDirectoryResource() {
 		updateMutationQueue(mutation);
 	}
 
-	return { fetchDirectoryRoot, createAction, deleteAction, renameAction }
+	const moveAction = (node: VideoBrowserNode, oldDirectory: string) => {
+		let mutation: DataMutation<IDirectoryModificationAction> = {
+			dataID: node.nodeID,
+			position: node.parent?.subNodes.indexOf(node) as number,
+			timestamp: Date.now(),
+			data: {
+				path: oldDirectory,
+				data: getRootDirectoryPathFromSubDirectory(node),
+				action: "Move",
+				type: convertNodeType(node.type)
+			}
+		}
+
+		updateMutationQueue(mutation);
+	}
+
+	return { fetchDirectoryRoot, createAction, deleteAction, renameAction, moveAction }
 }
