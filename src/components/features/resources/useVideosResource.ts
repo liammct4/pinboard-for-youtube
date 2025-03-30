@@ -13,7 +13,7 @@ export function useVideosResource() {
 
 	const fetchVideos = async () => isSignedIn ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
 
-	const createAccountVideo = (video: IVideo) => {
+	const updateAccountVideo = (video: IVideo) => {
 		let mutation: DataMutation<IVideo> = {
 			dataID: video.id,
 			timestamp: Date.now(),
@@ -34,7 +34,7 @@ export function useVideosResource() {
 	
 	return {
 		fetchVideos,
-		createAccountVideo,
+		updateAccountVideo,
 		clearAllVideos
 	}
 }

@@ -11,7 +11,7 @@ import { useVideosResource } from "./resources/useVideosResource";
 export function useVideoStateAccess() {
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
-	const { createAccountVideo, clearAllVideos } = useVideosResource();
+	const { updateAccountVideo, clearAllVideos } = useVideosResource();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
@@ -65,7 +65,7 @@ export function useVideoStateAccess() {
 			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
 
 			createAction(newVideoNode);
-			createAccountVideo(newVideo);
+			updateAccountVideo(newVideo);
 			setCounter(Math.random());
 		},
 		directoryRemoveVideo: (videoIDs: string[]) => {			
@@ -84,6 +84,7 @@ export function useVideoStateAccess() {
 
 			videoData.set(video.id, video);
 
+			updateAccountVideo(video);
 			setCounter(Math.random());
 		},
 		directoryAdd: function (targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
