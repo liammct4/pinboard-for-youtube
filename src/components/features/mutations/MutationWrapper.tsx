@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IWrapperProperties } from "../wrapper";
 import { useServerResourceRequest } from "../resources/useServerResourceRequest";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
@@ -9,6 +9,7 @@ import { DataMutation } from "../useUserAccount";
 export function MutationWrapper({ children }: IWrapperProperties) {
 	const { storage, setStorage } = useLocalStorage();
 	const { sendRequest } = useServerResourceRequest(directoriesEndpoint);
+	const lastRequest = useRef<string>("");
 
 	function syncMutations<T>(mutationQueue: DataMutation<T>[], setMutationQueue: (queue: DataMutation<T>[]) => void) {
 		if (mutationQueue.length == 0) {
@@ -16,6 +17,12 @@ export function MutationWrapper({ children }: IWrapperProperties) {
 		}
 
 		let request = JSON.stringify(mutationQueue);
+
+		if (request == lastRequest.current) {
+			return;
+		}
+
+		lastRequest.current = request;
 
 		sendRequest("PATCH", request)
 			.then((response) => {
