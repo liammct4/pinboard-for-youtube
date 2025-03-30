@@ -1,4 +1,4 @@
-import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubDirectory, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
+import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubNode, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
@@ -38,7 +38,7 @@ export function useDirectoryResource() {
 			position: node.parent?.subNodes.indexOf(node) as number,
 			timestamp: Date.now(),
 			data: {
-				path: getParentPathFromPath(getRootDirectoryPathFromSubDirectory(node)),
+				path: getParentPathFromPath(getRootDirectoryPathFromSubNode(node)),
 				data: getSectionRaw(node),
 				action: "Create",
 				type: convertNodeType(node.type)
@@ -54,7 +54,7 @@ export function useDirectoryResource() {
 			position: 0,
 			timestamp: Date.now(),
 			data: {
-				path: getRootDirectoryPathFromSubDirectory(node),
+				path: getRootDirectoryPathFromSubNode(node),
 				action: "Delete",
 				type: convertNodeType(node.type)
 			}
@@ -64,14 +64,14 @@ export function useDirectoryResource() {
 	}
 
 	const renameAction = (renamedNode: IDirectoryNode, oldName: string) => {
-		let parentPath = getParentPathFromPath(getRootDirectoryPathFromSubDirectory(renamedNode));
+		let parentPath = getParentPathFromPath(getRootDirectoryPathFromSubNode(renamedNode));
 		
 		let mutation: DataMutation<IDirectoryModificationAction> = {
 			dataID: renamedNode.nodeID,
 			position: renamedNode.parent?.subNodes.indexOf(renamedNode) as number,
 			timestamp: Date.now(),
 			data: {
-				path: directoryPathConcat(parentPath, oldName),
+				path: directoryPathConcat(parentPath, oldName, "DIRECTORY"),
 				data: getSectionRaw(renamedNode),
 				action: "Rename",
 				type: "Directory"
@@ -88,7 +88,7 @@ export function useDirectoryResource() {
 			timestamp: Date.now(),
 			data: {
 				path: oldDirectory,
-				data: getRootDirectoryPathFromSubDirectory(node),
+				data: getParentPathFromPath(getRootDirectoryPathFromSubNode(node)),
 				action: "Move",
 				type: convertNodeType(node.type)
 			}

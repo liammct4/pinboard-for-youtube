@@ -4,6 +4,11 @@ import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
 
+export type NodePath = {
+	slices: string[],
+	type: NodeType;
+}
+
 export interface INode {
 	parent: IDirectoryNode | null;
 	nodeID: string;
@@ -28,14 +33,14 @@ export function getItemFromNode(path: string, node: IDirectoryNode): VideoBrowse
 
 	let current: VideoBrowserNode = node;
 
-	if (node.slice.trim() == slices[0].trim()) {
-		slices.splice(0, 1);
+	if (node.slice.trim() == slices.slices[0].trim()) {
+		slices.slices.splice(0, 1);
 	}
 	else {
 		return null;
 	}
 
-	for (let slice of slices) {
+	for (let slice of slices.slices) {
 		let found = false;
 
 		if (current.type == "VIDEO") {
@@ -71,10 +76,10 @@ export function getSectionRaw(node: VideoBrowserNode): string {
 	}
 }
 
-export function getSectionFromPath(path: string): string {
+export function getSectionFromPath(path: string): NodePath {
 	let sections = splitPathIntoSlices(path);
 
-	return sections[sections.length - 1];
+	return { ...sections, slices: [sections.slices[sections.slices.length - 1]] };
 }
 
 export function getSectionPrefix(node: VideoBrowserNode): string {
@@ -146,39 +151,66 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
 	return null;
 }
 
-export function splitPathIntoSlices(path: string): string[] {
-	return path.split('>').map(x => x.trim());
+/**
+ * Splits a provided path into their individual sections.
+ * 
+ * Returns whether the last item
+ * is a video ID or not. In the format "$ > Random > Other:LXb3EKWsInQ".
+ */
+export function splitPathIntoSlices(path: string): NodePath {
+	let sections = path.split(">").map(x => x.trim());
+
+	let potentialVideoReference: string[] = sections[sections.length - 1].split(":");
+
+	if (potentialVideoReference.length == 2)
+	{
+		sections.splice(sections.length - 1, 1, ...potentialVideoReference);
+
+		return { slices: sections, type: "VIDEO" };
+	}
+
+	return { slices: sections, type: "DIRECTORY" };
 }
 
 export function getParentPathFromPath(path: string): string {
-	let slices = splitPathIntoSlices(path);
+	let pathSlices = splitPathIntoSlices(path);
 
-	slices.splice(slices.length - 1, 1);
+	pathSlices.slices.splice(pathSlices.slices.length - 1, 1);
 
-	return slices.join(" > ");
+	return pathSlices.slices.join(" > ");
 }
 
 export function reformatDirectoryPath(path: string): string {
-	const slices = splitPathIntoSlices(path);
+	const pathSlices = splitPathIntoSlices(path);
 
-	return slices.join(" > ");
+	if (pathSlices.type == "DIRECTORY") {
+		return pathSlices.slices.join(" > ");
+	}
+	else {
+		let video = pathSlices.slices[pathSlices.slices.length - 1];
+		let base = pathSlices.slices.join(" > ");
+
+		return `${base}:${video}`;
+	}
 }
 
-export function directoryPathConcat(base: string, slice: string): string {
+export function directoryPathConcat(base: string, slice: string, type: NodeType): string {
 	let slim = base.trim();
 
-	if (slim.endsWith(">", )) {
+	if (slim.endsWith(">")) {
 		slim = slim.slice(0, slim.length - 2);
 	}
 
 	slim = slim.trimEnd();
 
-	return slim + " > " + slice.trim();
+	return type == "DIRECTORY" ?
+		`${slim} > ${slice.trim()}` :
+		`${slim}:${slice}`;
 }
 
-export function getRootDirectoryPathFromSubDirectory(directory: VideoBrowserNode): string {
-	let slices: string[] = [ getSectionRaw(directory) ];
-	let current = directory.parent;
+export function getRootDirectoryPathFromSubNode(node: VideoBrowserNode): string {
+	let slices: string[] = [ getSectionRaw(node) ];
+	let current = node.parent;
 
 	while (current != null) {
 		slices.unshift(current.slice);
@@ -186,9 +218,14 @@ export function getRootDirectoryPathFromSubDirectory(directory: VideoBrowserNode
 		current = current.parent;
 	}
 
-	let fullPath = slices.join(" > ");
+	if (node.type == "DIRECTORY") {
+		return slices.join(" > ");
+	}
 
-	return fullPath;
+	slices.splice(slices.length - 1, 1);
+	let path = slices.join(" > ");
+
+	return `${path}:${node.videoID}`;
 }
 
 export type RelocateItemError = 
@@ -200,11 +237,11 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	let newSplit = splitPathIntoSlices(newDirectory);
 
 	// Incase of just renaming the directory. No need to traverse.
-	if (oldSplit.length == newSplit.length) {
+	if (oldSplit.slices.length == newSplit.slices.length && newSplit.type == "DIRECTORY" && oldSplit.type == "DIRECTORY") {
 		let equal = true;
 
-		for (let i = 0; i < newSplit.length - 1; i++) {
-			if (oldSplit[i] == newSplit[i]) {
+		for (let i = 0; i < newSplit.slices.length - 1; i++) {
+			if (oldSplit.slices[i] == newSplit.slices[i]) {
 				continue;
 			}
 
@@ -216,7 +253,7 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 		if (equal) {
 			let item = getItemFromNode(oldDirectory, root) as IDirectoryNode;
 
-			let newName = newSplit[newSplit.length - 1];
+			let newName = newSplit.slices[newSplit.slices.length - 1];
 			let alreadyExistingIndex = item.parent?.subNodes.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(newName, "DIRECTORY"));
 
 			if (alreadyExistingIndex != -1) {
@@ -232,8 +269,8 @@ export function relocateItemToDirectory(root: IDirectoryNode, oldDirectory: stri
 	let itemToMove = getItemFromNode(oldDirectory, root) as IDirectoryNode;
 
 	// Getting new location.
-	let newParentPath = [ ...newSplit ];
-	newParentPath.splice(newSplit.length - 1, 1);
+	let newParentPath = [ ...newSplit.slices ];
+	newParentPath.splice(newSplit.slices.length - 1, 1);
 
 	let newParent = getItemFromNode(newParentPath.join(" > "), root) as IDirectoryNode;
 
@@ -327,14 +364,14 @@ export function findItemPathFromName(
 			return;
 		}
 
-		accumulated = accumulated == "" ? getSectionRaw(node) : directoryPathConcat(accumulated, getSectionRaw(node));
+		accumulated = accumulated == "" ? getSectionRaw(node) : directoryPathConcat(accumulated, getSectionRaw(node), node.type);
 
 		for (let subNode of node.subNodes) {
 			let sectionPrefix = getSectionPrefix(subNode);
 
 			if (subNode.type == "DIRECTORY") {
 				if (includeDirectories && sectionPrefix == itemNameDirectory) {
-					result.push(directoryPathConcat(accumulated, getSectionRaw(subNode)));
+					result.push(directoryPathConcat(accumulated, getSectionRaw(subNode), "DIRECTORY"));
 				}
 
 				pass(subNode as IDirectoryNode, accumulated);

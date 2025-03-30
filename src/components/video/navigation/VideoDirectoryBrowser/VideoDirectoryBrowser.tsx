@@ -3,7 +3,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubDirectory, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
+import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubNode, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import ArrowIcon from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg?react"
@@ -148,7 +148,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			);
 		}
 		else {
-			let result = directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string)), directoryPathConcat(directoryPath, newSliceName.trim()));
+			let result = directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string), "DIRECTORY"), directoryPathConcat(directoryPath, newSliceName.trim(), "DIRECTORY"));
 
 			if (result != null) {
 				let message = getDirectoryMoveUserMessage(result);
@@ -171,8 +171,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			for (let i of selectedItems) {	
 				let section = getRawSectionFromPrefix(i);
 	
-				let oldPath = directoryPathConcat(directoryPath, section);
-				let newPath = directoryPathConcat(directoryBarHoverPath, section);
+				let oldPath = directoryPathConcat(directoryPath, section, getSectionType(i));
+				let newPath = directoryPathConcat(directoryBarHoverPath, section, getSectionType(i));
 	
 				directoryMove(oldPath, newPath);
 			}
@@ -189,7 +189,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			return;
 		}
 
-		let targetDirectory = directoryPathConcat(directoryPath, getRawSectionFromPrefix(slice));
+		let targetDirectory = directoryPathConcat(directoryPath, getRawSectionFromPrefix(slice), getSectionType(slice));
 		let overlappingTargetSelected = selectedItems.findIndex(x => x == slice);
 
 		// Means that a directory to move to one that is also selected, and you can't move a directory into itself. 
@@ -205,8 +205,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 			let section = getRawSectionFromPrefix(i);
 
-			let oldPath = directoryPathConcat(directoryPath, section);
-			let newPath = directoryPathConcat(targetDirectory, section);
+			let oldPath = directoryPathConcat(directoryPath, section, getSectionType(i));
+			let newPath = directoryPathConcat(targetDirectory, section, getSectionType(i));
 
 			directoryMove(oldPath, newPath);
 		}
@@ -226,7 +226,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			<div className="directory-navigator">
 				<div className="navigation-buttons">
 					<button className="button-base button-small square-button" onClick={() => {
-						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(directory!.parent!))
+						onDirectoryPathChanged(getRootDirectoryPathFromSubNode(directory!.parent!))
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
 					}} disabled={directory?.parent == null}>
 						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
@@ -241,7 +241,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 						let stackRemovedSlice = [ ...navigationStack ];
 						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
 
-						onDirectoryPathChanged(directoryPathConcat(directoryPath, slice));
+						onDirectoryPathChanged(directoryPathConcat(directoryPath, slice, "DIRECTORY"));
 						setNavigationStack(stackRemovedSlice);
 					}} disabled={navigationStack.length == 0}>
 						<IconContainer className="icon-colour-standard" asset={LongArrow} use-stroke/>
@@ -326,7 +326,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			<VideoDirectoryInteractionContext.Provider
 				value={{
 					navigateRequest: (requester) => {
-						onDirectoryPathChanged(getRootDirectoryPathFromSubDirectory(requester));
+						onDirectoryPathChanged(getRootDirectoryPathFromSubNode(requester));
 						setNavigationStack([]);
 					},
 					selectedItems,

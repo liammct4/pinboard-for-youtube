@@ -85,7 +85,7 @@ export function useVideoStateAccess() {
 		directoryAdd: function (targetPath: string, name: string): AddDirectorySuccess | AddDirectoryFail {
 			let result = addDirectory(directoryRoot, targetPath, name);
 
-			let newNode = getItemFromNode(directoryPathConcat(targetPath, name), directoryRoot) as VideoBrowserNode;
+			let newNode = getItemFromNode(directoryPathConcat(targetPath, name, "DIRECTORY"), directoryRoot) as VideoBrowserNode;
 
 			createAction(newNode);
 
@@ -101,8 +101,12 @@ export function useVideoStateAccess() {
 			let error = relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
 			
 			if (oldParent == newParent) {
-				let node = getItemFromNode(newDirectory, directoryRoot) as IDirectoryNode;
-				renameAction(node, getSectionFromPath(oldDirectory));
+				let section = getSectionFromPath(oldDirectory);
+
+				if (section.type == "DIRECTORY") {
+					let node = getItemFromNode(newDirectory, directoryRoot) as IDirectoryNode;
+					renameAction(node, section.type);
+				}
 			}
 			else {
 				let node = getItemFromNode(newDirectory, directoryRoot) as IVideoNode;
