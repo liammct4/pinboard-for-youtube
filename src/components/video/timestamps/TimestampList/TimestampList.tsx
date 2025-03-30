@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { DragListItem } from "../../../../lib/dragList/DragListItem";
 import { Timestamp } from "../../../../lib/video/video";
 import { VideoTimestamp } from "../VideoTimestamp/VideoTimestamp";
 import "./TimestampList.css"
+import { ITimestampListStateContext, TimestampListStateContext } from "../../navigation/VideoDirectoryBrowser/VideoDirectoryBrowser";
 
 export interface ITimestampListProperties {
 	videoID: string;
@@ -15,6 +16,7 @@ export interface ITimestampListProperties {
 export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTimestampChanged }: ITimestampListProperties): React.ReactNode {
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
+	const { activelyDragging, setActivelyDragging } = useContext<ITimestampListStateContext>(TimestampListStateContext);
 
 	// When dragging ends, reorder the list.
 	useEffect(() => {
@@ -51,22 +53,24 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 				onDrag={(e) => {
 					setDragging(e);
 					setIsDragging(true);
+					setActivelyDragging(true);
 				}}
 				onDragEnd={() => {
 					setIsDragging(false);
+					setActivelyDragging(false);
 				}}>
 				{
-					timestamps.length != 0 && dragging != "NOT_IN_BOUNDS" ?
+					timestamps.length != 0 ?
 						timestamps.map(x =>
 							<DragListItem id={x.id} key={x.id}>
 								<>
 									{
 										<hr
 											className="move-line bold-separator"
-											data-is-visible={x.id == timestamps[0].id && dragging?.inbetweenEndID == x.id && isDragging}/>
+											data-is-visible={x.id == timestamps[0].id && dragging != "NOT_IN_BOUNDS" && dragging?.inbetweenEndID == x.id && isDragging}/>
 									}
 									<VideoTimestamp
-										className={isDragging && dragging?.startDragID == x.id ? "drag-list-active-timestamp" : "drag-list-timestamp"}
+										className={isDragging && dragging != "NOT_IN_BOUNDS" && dragging?.startDragID == x.id ? "drag-list-active-timestamp" : "drag-list-timestamp"}
 										key={x.id}
 										videoID={videoID}
 										timestamp={x}
@@ -75,7 +79,7 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 									{
 										<hr
 											className="move-line"
-											data-is-visible={dragging?.inbetweenStartID == x.id && isDragging}/>
+											data-is-visible={dragging != "NOT_IN_BOUNDS" && dragging?.inbetweenStartID == x.id && isDragging}/>
 									}
 								</>
 							</DragListItem>

@@ -12,7 +12,7 @@ export interface IVideoDirectoryProperties {
 export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): React.ReactNode {
 	return (
 		directoryData.subNodes.length > 0 ?
-			<ul className="video-directory-list">
+			<div className="video-directory-list">
 				{
 					directoryData.subNodes.map(x => 
 						<DragListItem key={getSectionPrefix(x)} id={getSectionPrefix(x)}>
@@ -20,7 +20,7 @@ export function VideoDirectory({ directoryData }: IVideoDirectoryProperties): Re
 						</DragListItem>
 					)	
 				}
-			</ul>
+			</div>
 			:
 			<span className="empty-directory-message">Nothing to find here...</span>
 	)

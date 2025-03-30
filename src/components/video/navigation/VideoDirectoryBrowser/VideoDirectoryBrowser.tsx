@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
 import { directoryPathConcat, getItemFromNode, getSectionType, getRootDirectoryPathFromSubNode, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
@@ -78,6 +78,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
+	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -317,7 +318,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				</div>
 			</ToggleExpander>
 			{/* For dragging */}
-			<MouseTooltip show={dragging != null} horizontal="START" vertical="CENTRE">
+			<MouseTooltip show={dragging != null && !timestampActivelyDragging} horizontal="START" vertical="CENTRE">
 				<ul className="drag-list-tooltip">
 					{
 						selectedItems.map(x => getSectionType(x) == "DIRECTORY" ?
@@ -328,40 +329,55 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				</ul>
 			</MouseTooltip>
 			{/* Item list */}
-			<VideoDirectoryInteractionContext.Provider
-				value={{
-					navigateRequest: (requester) => {
-						onDirectoryPathChanged(getRootDirectoryPathFromSubNode(requester));
-						setNavigationStack([]);
-					},
-					selectedItems,
-					setSelectedItems,
-					currentlyEditing,
-					requestEditEnd,
-					draggingID: dragging != "NOT_IN_BOUNDS" ? dragging?.overlappingID ?? null : null
+			<TimestampListStateContext.Provider value={{
+					activelyDragging: timestampActivelyDragging, 
+					setActivelyDragging: setTimestampActivelyDragging 
 				}}>
-				<VideoDirectoryPresentationContext.Provider
+				<VideoDirectoryInteractionContext.Provider
 					value={{
-						videoItemStyle: currentViewStyle
+						navigateRequest: (requester) => {
+							onDirectoryPathChanged(getRootDirectoryPathFromSubNode(requester));
+							setNavigationStack([]);
+						},
+						selectedItems,
+						setSelectedItems,
+						currentlyEditing,
+						requestEditEnd,
+						draggingID: dragging != "NOT_IN_BOUNDS" ? dragging?.overlappingID ?? null : null
 					}}>
-						<SelectionList
-							className="video-directory-list separated-scrollbox"
-							boxClassName="video-selection-box"
-							allowSelection={!isDragging}
-							setSelectedItems={setSelectedItems}>
-								<DragList dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
-									setDragging(e);
+					<VideoDirectoryPresentationContext.Provider
+						value={{
+							videoItemStyle: currentViewStyle
+						}}>
+							<SelectionList
+								className="video-directory-list separated-scrollbox"
+								boxClassName="video-selection-box"
+								allowSelection={!isDragging}
+								setSelectedItems={setSelectedItems}>
+									<DragList className="directory-drag-list" dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
+										setDragging(e);
 
-									if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
-										setSelectedItems([ e.startDragID ]);
-									}
-								}} onDragEnd={dragEnd}>
-									{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-									<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
-								</DragList>
-						</SelectionList>
-				</VideoDirectoryPresentationContext.Provider>
-			</VideoDirectoryInteractionContext.Provider>
+										if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
+											setSelectedItems([ e.startDragID ]);
+										}
+									}} onDragEnd={dragEnd}>
+										{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+										<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+									</DragList>
+							</SelectionList>
+					</VideoDirectoryPresentationContext.Provider>
+				</VideoDirectoryInteractionContext.Provider>
+			</TimestampListStateContext.Provider>
 		</>
 	)
 }
+
+export interface ITimestampListStateContext {
+	activelyDragging: boolean;
+	setActivelyDragging: (isDragging: boolean) => void;
+}
+
+export const TimestampListStateContext = createContext<ITimestampListStateContext>({
+	activelyDragging: false,
+	setActivelyDragging: () => console.error("TimestampListStateContext.setActivelyDragging: No context provided.")
+});

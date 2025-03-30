@@ -8,6 +8,12 @@
 	padding-bottom: calc(var(--pfy-spacing-very-large) * 2);
 	gap: 5px;
 
+	.directory-drag-list {
+		padding: 0;
+		margin: 0;
+		list-style-type: none;
+	}
+
 	.directory-node-item {
 		display: flex;
 		flex-direction: column;

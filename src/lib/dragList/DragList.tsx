@@ -21,7 +21,7 @@ export interface IDragListProperties {
 export type InbetweenIDEventType = -1 | string | 1;
 
 export function DragList({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties) {
-	const listBox = useRef<HTMLDivElement>(null);
+	const listBox = useRef<HTMLUListElement>(null);
 	const [ startDragID, setStartDragID ] = useState<string | null>(null);
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
 	const [ yScroll, setYScroll ] = useState<number>(0);
@@ -116,11 +116,11 @@ export function DragList({ className, dragListName, children, onDragStart, onDra
 				baseY: yBasePosition,
 				scrollY: yScroll
 			}}>
-			<div
+			<ul
 				className={className}
 				ref={listBox}>
 				{children}
-			</div>
+			</ul>
 		</DragListContext.Provider>
 	)
 }

@@ -4,6 +4,8 @@
 	padding: 0;
 	user-select: none;
 	overflow: hidden;
+	list-style-type: none;
+	padding-left: none;
 
 	.move-line {
 		margin: 0 !important;
