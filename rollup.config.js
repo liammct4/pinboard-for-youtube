@@ -3,6 +3,7 @@ import babel from "@rollup/plugin-babel"
 import commonjs from "@rollup/plugin-commonjs"
 import replace from "@rollup/plugin-replace"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
+import css from "rollup-plugin-import-css"
 import webpack from "webpack"
 
 export default {
@@ -15,7 +16,7 @@ export default {
 		typescript(),
 		babel({
 			extensions: [".ts", ".tsx", ".js", ".jsx"],
-			presets: [ "@babel/preset-react", "@babel/preset-typescript" ]
+			presets: [ "@babel/preset-react", "@babel/preset-typescript" ],
 		}),
 		commonjs(),
 		nodeResolve(),
@@ -26,6 +27,9 @@ export default {
 		}),
 		replace({
 			'process.env.NODE_ENV': JSON.stringify('production')
+		}),
+		css({
+			inject: true
 		})
 	]
 }
