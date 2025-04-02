@@ -1,0 +1,43 @@
+.timeline-box-outer {
+	display: flex;
+	flex-direction: column;
+	grid-column: 1;
+	grid-row: 1;
+	
+	.timeline-box-inner {
+		padding-left: var(--pfy-spacing-standard);
+		padding-right: var(--pfy-spacing-standard);
+		background: var(--pfy-empty-01-raised);
+		border: 1px solid var(--pfy-primary-dark);
+		border-radius: var(--pfy-spacing-standard);
+		transform: translateX(-50%);
+		flex-grow: 1;
+		cursor: pointer;
+		position: absolute;
+		transition: width var(--pfy-timing-fast);
+	}
+
+	.arrow-icon-container {
+		cursor: pointer;
+		position: absolute;
+		transform: translate(-50%, 98%);
+	}
+	
+	.arrow-fill {
+		fill: var(--pfy-empty-01-raised)
+	}
+	
+	.arrow-border {
+		stroke: var(--pfy-primary-dark);
+	}
+	
+	.timeline-inner-text {
+		text-align: center;
+		text-wrap: nowrap;
+		font-size: var(--pfy-font-text-standard);
+		color: var(--pfy-text-normal);
+		overflow: hidden;
+		margin: auto 0;
+		margin-top: 1px;
+	}
+}

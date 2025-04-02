@@ -7,7 +7,7 @@
    viewBox="0 0 2.1166667 1.5874999"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
    sodipodi:docname="arrow_down_timeline.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,10 +24,10 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:zoom="45.254834"
-     inkscape:cx="3.4139999"
+     inkscape:cx="3.4029514"
      inkscape:cy="0.67396115"
-     inkscape:window-width="1920"
-     inkscape:window-height="991"
+     inkscape:window-width="2560"
+     inkscape:window-height="1351"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
@@ -48,12 +48,12 @@
     <path
        class="arrow-fill"
        id="rect2294"
-       style="fill:#fbdecd;fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
+       style="fill-opacity:1;stroke:none;stroke-width:0.264583;stroke-dasharray:none;stroke-opacity:1"
        d="M 0,0.26467518 V 0 h 2.1166666 l 1e-7,0.26467518 -1.0583333,1.32291662 z"
        sodipodi:nodetypes="cccccc" />
     <path
        class="arrow-border"
-       style="fill:none;stroke:#c64a15;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;stroke-width:0.26458333;stroke-dasharray:none"
        d="M 0,0.26467518 1.0583334,1.5875918 2.1166667,0.26467518"
        id="path1006"
        sodipodi:nodetypes="ccc" />

@@ -5,9 +5,11 @@ import replace from "@rollup/plugin-replace"
 import { nodeResolve } from "@rollup/plugin-node-resolve"
 import css from "rollup-plugin-import-css"
 import webpack from "webpack"
+import json from "@rollup/plugin-json";
+import svgr from "vite-plugin-svgr";
 
 export default {
-	input: "contentScripts/test.tsx",
+	input: "src/injectedScripts/timeline/timeline.tsx",
 	output: {
 		dir: "dist",
 		format: "iife"
@@ -18,6 +20,7 @@ export default {
 			extensions: [".ts", ".tsx", ".js", ".jsx"],
 			presets: [ "@babel/preset-react", "@babel/preset-typescript" ],
 		}),
+		svgr(),
 		commonjs(),
 		nodeResolve(),
 		new webpack.DefinePlugin({
@@ -25,11 +28,12 @@ export default {
 				NODE_ENV: JSON.stringify("production")
 			}
 		}),
+		json(),
 		replace({
 			'process.env.NODE_ENV': JSON.stringify('production')
 		}),
 		css({
 			inject: true
-		})
+		}),
 	]
 }

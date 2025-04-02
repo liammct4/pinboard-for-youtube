@@ -1,0 +1,9 @@
+.pfy-timeline-container {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	flex-direction: row;
+	position: relative;
+	transform: translateY(-40px);
+}
