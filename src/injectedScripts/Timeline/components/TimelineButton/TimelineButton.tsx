@@ -4,6 +4,7 @@ import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil";
 import { useLocalVideoData } from "../../../features/useLocalVideoData";
 import { IconContainer } from "../../../../components/images/svgAsset";
 import ArrowDown from "./../../../../../assets/misc/arrow_down_timeline.svg?react"
+import { useLocalVideoControls } from "../../../features/useLocalVideoControls";
 import "./TimelineButton.css"
 
 export interface ITimelineButtonProperties {
@@ -12,6 +13,7 @@ export interface ITimelineButtonProperties {
 
 export function TimelineButton({ timestamp }: ITimelineButtonProperties) {
 	const videoData = useLocalVideoData();
+	const { setCurrentTime } = useLocalVideoControls();
 	const secondTime = useMemo(() => getTimestampFromSeconds(timestamp.time), [timestamp.time]);
 	const [ hover, setHover ] = useState<boolean>(false);
 
@@ -25,6 +27,7 @@ export function TimelineButton({ timestamp }: ITimelineButtonProperties) {
 		<div className="timeline-box-outer">
 			<button
 				className="timeline-box-inner"
+				onClick={() => setCurrentTime(timestamp.time)}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
 				style={{ left: `${offsetPercentage}%` }}>
