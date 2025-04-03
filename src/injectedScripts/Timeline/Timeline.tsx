@@ -1,23 +1,30 @@
-import { createRoot } from "react-dom/client"
+import { createRoot } from "react-dom/client";
+import * as React from "react";
 import { TimelineApp } from "./TimelineApp";
 
 let container = document.createElement("div");
+
 container.id = "pfy-timeline-root";
-let root = createRoot(container);
+
+let lastLink = "";
 
 function timelineSetup() {
-	// React entry point.
-	if (document.querySelector("#pfy-timeline-root") == null) {
-		let progressBar = document.querySelector(".ytp-chrome-bottom");
-		progressBar?.insertBefore(container, progressBar.childNodes[0]);
-	
-		root.render(<TimelineApp/>);
+	if (window.location.href == lastLink) {
+		setTimeout(timelineSetup, 200);
 		return;
 	}
-}
 
-window.addEventListener("navigate", () => {
-	setTimeout(timelineSetup, 100);
-});
+	lastLink = window.location.href;
+	let timeline = document.querySelector(".ytp-chrome-bottom");
+
+	if (timeline == null) {
+		setTimeout(timelineSetup, 200);
+		return;
+	}
+
+	timeline.insertBefore(container, timeline.childNodes[0]);
+	let root = createRoot(container);
+	root.render(<TimelineApp/>);
+}
 
 timelineSetup();
