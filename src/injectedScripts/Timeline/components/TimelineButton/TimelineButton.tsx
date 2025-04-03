@@ -33,6 +33,8 @@ export function TimelineButton({ timestamp, timelineWidth }: ITimelineButtonProp
 	const offsetPercentage = Math.max(buttonMarginWallPercentage, Math.min(100 - buttonMarginWallPercentage, timestamp.time / videoData.data.length * 100));
 	const arrowOffsetPercentage = Math.max(arrowMarginWallPercentage, Math.min(100 - arrowMarginWallPercentage, timestamp.time / videoData.data.length * 100));
 
+	const spaceRemaining = Math.max((timelineWidth - ((Math.min(1, (timestamp.time / videoData.data.length)) * timelineWidth))) - (arrowSize.width / 2), 0);
+
 	return (
 		<div className="timeline-box-outer">
 			<button
@@ -40,7 +42,7 @@ export function TimelineButton({ timestamp, timelineWidth }: ITimelineButtonProp
 				onClick={() => setCurrentTime(timestamp.time)}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
-				style={{ left: `${offsetPercentage}%` }}
+				style={{ left: `${offsetPercentage}%`, borderBottomRightRadius: `${Math.min(6, spaceRemaining)}px` }}
 				ref={buttonRef}>
 					<p className="timeline-inner-text">{hover ? timestamp.message : secondTime}</p>
 			</button>
