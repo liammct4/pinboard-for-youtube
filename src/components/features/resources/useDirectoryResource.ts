@@ -5,6 +5,7 @@ import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 import { useMutationQueue } from "../mutations/useMutationQueue";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
+import { IAuthenticatedUser } from "../../../lib/user/accounts";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -20,12 +21,11 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 	return type == "DIRECTORY" ? "Directory" : "Video"; 
 }
 
-export function useDirectoryResource() {
-	const { isSignedIn, user } = useUserAccount();
+export function useDirectoryResource(user: IAuthenticatedUser | null) {
 	const { storage } = useLocalStorage();
 	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.directoryPendingQueue);
 
-	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
+	const fetchDirectoryRoot = async () => user != null ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
 
 	const createAction = (node: VideoBrowserNode) => {
 		let mutation: DataMutation<IDirectoryModificationAction> = {
@@ -93,7 +93,7 @@ export function useDirectoryResource() {
 	}
 
 	const clearAllDirectories = async () => {
-		if (!isSignedIn) {
+		if (user == null) {
 			return;
 		}
 

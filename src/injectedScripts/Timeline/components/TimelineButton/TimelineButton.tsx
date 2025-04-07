@@ -13,11 +13,10 @@ import "./TimelineButton.css"
 export interface ITimelineButtonProperties {
 	timestamp: Timestamp;
 	timelineBounds: Rect;
+	onChange?: (newTimestamp: Timestamp) => void;
 }
 
-export function TimelineButton({ timestamp: initT, timelineBounds }: ITimelineButtonProperties) {
-	// TODO: Replace.
-	const [ timestamp, setTimestamp ] = useState<Timestamp>(initT); 
+export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelineButtonProperties) {
 	const buttonRef = useRef<HTMLButtonElement>(null!);
 	const arrowRef = useRef<HTMLDivElement>(null!);
 	const videoData = useLocalVideoData();
@@ -42,7 +41,7 @@ export function TimelineButton({ timestamp: initT, timelineBounds }: ITimelineBu
 			let secondLength = Math.round(multiplier * videoData.data.length);
 
 			if (secondLength != timestamp.time) {
-				setTimestamp({ ...timestamp, time: secondLength });
+				onChange?.({ ...timestamp, time: secondLength })
 			}
 		}
 

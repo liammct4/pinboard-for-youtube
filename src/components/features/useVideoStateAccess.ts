@@ -1,31 +1,56 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
 import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getParentPathFromPath, getRawSectionFromPrefix, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
-import { removeParentPass } from "../../lib/storage/userData/userData";
+import { addParentPass, removeParentPass } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";
 import { useLocalStorage } from "./storage/useLocalStorage";
 import { useVideosResource } from "./resources/useVideosResource";
-import { useVideoCache, useVideoInfo } from "./useVideoInfo";
+import { useVideoCache } from "./useVideoInfo";
+import { accessStorage } from "../../lib/storage/storage";
+import { IAuthenticatedUser } from "../../lib/user/accounts";
 
-export function useVideoStateAccess() {
+export function useVideoStateAccess(user: IAuthenticatedUser | null) {
+	const preventUpdate = useRef<boolean>(false);
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
-	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
-	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource();
+	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource(user);
+	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource(user);
 	const { retrieveInfo } = useVideoCache();
 	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
-		if (directoryRoot == null) {
+		if (counter == 0) {
 			return;
 		}
 
+		preventUpdate.current = true;
 		storage.user_data.videos = Array.from(videoData.values());
 		storage.user_data.directoryRoot = removeParentPass(directoryRoot);
 
 		setStorage(storage);
 	}, [counter]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (preventUpdate.current) {
+				preventUpdate.current = false;
+				return;
+			}
+	
+			// Means an external source modified the storage, so update the state.
+			const update = async () => {
+				let storage = await accessStorage();
+				videoData.clear();
+				storage.user_data.videos.forEach(x => videoData.set(x.id, x));
+				directoryRoot.subNodes = storage.user_data.directoryRoot.subNodes;
+
+				addParentPass(storage.user_data.directoryRoot);
+			}
+	
+			update();
+		}, 100);
+	}, [counter, JSON.stringify(storage.user_data)]);
 
 	return {
 		videoData,

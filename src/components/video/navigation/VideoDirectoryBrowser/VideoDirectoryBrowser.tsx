@@ -24,6 +24,7 @@ import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
 import { SelectionBoxScrollbox } from "../../../interactive/SelectionBoxScrollbox/SelectionBoxScrollbox";
 import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
+import { useUserAccount } from "../../../features/useUserAccount";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -68,7 +69,8 @@ function DragVideoTooltipItem({ idSection }: { idSection: string }) {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { videoData, root, directoryMove } = useVideoStateAccess();
+	const { user, isSignedIn } = useUserAccount();
+	const { videoData, root, directoryMove } = useVideoStateAccess(isSignedIn ? user : null);
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);

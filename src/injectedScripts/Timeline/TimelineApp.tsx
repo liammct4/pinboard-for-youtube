@@ -1,12 +1,13 @@
 import { StorageWrapper } from "../../components/features/storage/StorageWrapper";
-import { useLocalStorage } from "../../components/features/storage/useLocalStorage";
-import { useLocalVideoData } from "../features/useLocalVideoData";
+import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
 import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
 
 export function TimelineApp() {
 	return (
 		<StorageWrapper>
-			<TimelineContainer/>
+			<VideoWrapper>
+				<TimelineContainer/>
+			</VideoWrapper>
 		</StorageWrapper>
 	);
 }

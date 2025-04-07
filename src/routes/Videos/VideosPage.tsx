@@ -29,6 +29,7 @@ import { useNotificationMessage } from "../../components/features/notifications/
 import { useLocalStorage } from "../../components/features/storage/useLocalStorage.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
+import { useUserAccount } from "../../components/features/useUserAccount.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -40,6 +41,7 @@ interface IAddDirectoryForm extends IErrorFieldValues {
 
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
+	const { isSignedIn, user } = useUserAccount();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
-	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
+	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess(isSignedIn ? user : null);
 	const { storage: { youtubeInjector: { activeVideoID } } } = useLocalStorage();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);

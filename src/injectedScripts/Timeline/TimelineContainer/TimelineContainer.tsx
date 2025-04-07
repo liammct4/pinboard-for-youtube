@@ -1,14 +1,17 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useLocalStorage } from "../../../components/features/storage/useLocalStorage"
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
+import { useVideoStateAccess } from "../../../components/features/useVideoStateAccess";
+import { IVideo, Timestamp } from "../../../lib/video/video";
 import "./TimelineContainer.css"
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
 	const { storage } = useLocalStorage();
 	const videoData = useLocalVideoData();
+	const { directoryUpdateVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 
 	if (!videoData.isVideoPage) {
@@ -21,10 +24,29 @@ export function TimelineContainer() {
 		return <></>;
 	}
 
+	const onTimestampChange = (timestamp: Timestamp) => {
+		let timestamps = [ ...video.timestamps ];
+		let index = timestamps.findIndex(x => x.id == timestamp.id);
+		
+		timestamps[index] = timestamp;
+
+		let newVideo: IVideo = {
+			...video,
+			timestamps
+		};
+
+		directoryUpdateVideo(newVideo);
+	}
+
 	return (
 		<div className="pfy-timeline-container" ref={timelineContainerRef}>
 			{
-				video.timestamps.map(x => <TimelineButton timestamp={x} timelineBounds={timelineBounds}/>)
+				video.timestamps.map(x => 
+					<TimelineButton
+						timestamp={x}
+						timelineBounds={timelineBounds}
+						onChange={onTimestampChange}/>
+				)
 			}
 		</div>
 	)

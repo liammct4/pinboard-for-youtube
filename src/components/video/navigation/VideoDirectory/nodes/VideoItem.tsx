@@ -7,6 +7,7 @@ import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
 import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
+import { useUserAccount } from "../../../../features/useUserAccount";
 
 interface IVideoItemProperties {
 	node: IVideoNode;
@@ -15,7 +16,8 @@ interface IVideoItemProperties {
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess();
+	const { isSignedIn, user } = useUserAccount();
+	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess(isSignedIn ? user : null);
 
 	if (!videoData.has(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);

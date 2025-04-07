@@ -1,4 +1,5 @@
 import { videosEndpoint } from "../../../lib/api/pinboardApi";
+import { IAuthenticatedUser } from "../../../lib/user/accounts";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { fetchVideosFromAPI } from "../../../lib/user/resources/videos";
 import { IVideo } from "../../../lib/video/video";
@@ -6,12 +7,11 @@ import { useMutationQueue } from "../mutations/useMutationQueue";
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 
-export function useVideosResource() {
-	const { isSignedIn, user } = useUserAccount();
+export function useVideosResource(user: IAuthenticatedUser | null) {
 	const { storage } = useLocalStorage();
 	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.videoPendingQueue);
 
-	const fetchVideos = async () => isSignedIn ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
+	const fetchVideos = async () => user != null ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
 
 	const updateAccountVideo = (video: IVideo) => {
 		let mutation: DataMutation<IVideo> = {
@@ -36,7 +36,7 @@ export function useVideosResource() {
 	}
 
 	const clearAllVideos = async () => {
-		if (!isSignedIn) {
+		if (user == null) {
 			return;
 		}
 

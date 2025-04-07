@@ -3,10 +3,11 @@ import { doesVideoExist, getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID, g
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { saveVideoToCache } from "../../features/cache/cacheSlice";
+import { useLocalStorage } from "./storage/useLocalStorage";
 
 export function useVideoCache() {
-	const cache = useSelector((state: RootState) => state.cache.videoCache);
-	const dispatch = useDispatch();
+	const { storage, setStorage } = useLocalStorage();
+	const cache = storage.cache.videos;
 
 	const retrieveInfo = async (videoID: string): Promise<IYoutubeVideoInfo | undefined> => {
 		let index = cache.findIndex(x => x.video_id == videoID);
@@ -21,7 +22,8 @@ export function useVideoCache() {
 			return undefined;
 		}
 
-		dispatch(saveVideoToCache(info));
+		storage.cache.videos.push(info);
+		setStorage(storage);
 
 		return info;
 	}

@@ -1,5 +1,5 @@
 export function useLocalVideoControls() {
-	let video = document.querySelector("video");
+	let video = document.querySelector("video") as HTMLVideoElement;
 
 	if (video == null) {
 		return {
