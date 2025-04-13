@@ -9,6 +9,7 @@ import { Coordinates, Rect } from "../../../../lib/util/objects/types";
 import { useDomEvent } from "../../../features/useDomEvent";
 import { useBoundsChangeEvent } from "../../../features/useBoundsChangeEvent";
 import "./TimelineButton.css"
+import { useTextMeasurer } from "../../../../components/features/useTextMeasurer";
 
 export interface ITimelineButtonProperties {
 	timestamp: Timestamp;
@@ -30,6 +31,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	const buttonMarginWallPercentage = useMemo<number>(() => ((buttonSize.width / 2) / timelineBounds.size.width) * 100, [buttonSize.width, timelineBounds.size.width]);
 	const arrowMarginWallPercentage = useMemo<number>(() => ((arrowSize.width / 2) / timelineBounds.size.width) * 100, [arrowSize.width, timelineBounds.size.width]);
 	const [ mousePosition, setMousePosition ] = useState<Coordinates>({ x: 0, y: 0 });
+	const { measureText } = useTextMeasurer();
 	useDomEvent("mouseup", () => {
 		if (!videoData.isVideoPage) {
 			console.error("No video page.");
@@ -82,6 +84,9 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	const spaceRemainingRight = Math.max((timelineBounds.size.width - (rawPixelsAlong)) - (arrowSize.width / 2), 0);
 	const spaceRemainingLeft = Math.max(rawPixelsAlong - (arrowSize.width / 2), 0);
 
+	const content = hover && !isDragging ? timestamp.message : secondTime;
+	const textWidth = measureText(content, `9pt "Roboto"`).width + 14;
+
 	return (
 		<div className="timeline-box-outer">
 			<button
@@ -91,6 +96,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 				onMouseLeave={() => setHover(false)}
 				style={{
 					left: `${offsetPercentage}%`,
+					width: `${textWidth}px`,
 					borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
 					borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
 				}}
@@ -101,7 +107,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 					}
 				}}
 				ref={buttonRef}>
-					<p className="timeline-inner-text">{hover && !isDragging ? timestamp.message : secondTime}</p>
+					<p className="timeline-inner-text">{content}</p>
 			</button>
 			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef}>
 				<IconContainer asset={ArrowDown}/>
