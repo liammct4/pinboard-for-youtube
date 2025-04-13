@@ -31,6 +31,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	const buttonMarginWallPercentage = useMemo<number>(() => ((buttonSize.width / 2) / timelineBounds.size.width) * 100, [buttonSize.width, timelineBounds.size.width]);
 	const arrowMarginWallPercentage = useMemo<number>(() => ((arrowSize.width / 2) / timelineBounds.size.width) * 100, [arrowSize.width, timelineBounds.size.width]);
 	const [ mousePosition, setMousePosition ] = useState<Coordinates>({ x: 0, y: 0 });
+	const changed = useRef<boolean>(false); 
 	const { measureText } = useTextMeasurer();
 	useDomEvent("mouseup", () => {
 		if (!videoData.isVideoPage) {
@@ -43,12 +44,21 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 			let secondLength = Math.round(multiplier * videoData.data.length);
 
 			if (secondLength != timestamp.time) {
-				onChange?.({ ...timestamp, time: secondLength })
+				onChange?.({ ...timestamp, time: secondLength });
+				changed.current = true;
+			}
+			else {
+				changed.current = false;
 			}
 		}
+		else {
+			changed.current = false;
+		}
 
-		setStartIsDragging(false);
-		setIsDragging(false);
+		setTimeout(() => {
+			setStartIsDragging(false);
+			setIsDragging(false);
+		}, 50);
 	});
 	useDomEvent<"mousemove">("mousemove", (e) => {
 		if (isDragging) {
@@ -91,7 +101,11 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 		<div className="timeline-box-outer">
 			<button
 				className="timeline-box-inner"
-				onClick={() => setCurrentTime(timestamp.time)}
+				onClick={() => setTimeout(() => {
+					if (!changed.current) {
+						setCurrentTime(timestamp.time)
+					}
+				}, 50)}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
 				style={{
@@ -100,7 +114,13 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 					borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
 					borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
 				}}
-				onMouseDown={() => setStartIsDragging(true)}
+				onMouseDown={(e) => {
+					setStartIsDragging(true)
+					setMousePosition({
+						x: e.clientX,
+						y: e.clientY
+					});
+				}}
 				onMouseMove={() => {
 					if (startIsDragging) {
 						setIsDragging(true)
