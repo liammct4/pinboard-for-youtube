@@ -125,7 +125,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 				left: `${offsetPercentage}%`,
 			}}
 			{...mouseEvents}
-			data-hover={hover}>
+			data-hover={hover && !isDragging}>
 				<button
 					className="timeline-box-inner"
 					style={{
@@ -137,7 +137,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 						<p className="timeline-inner-text">{content}</p>
 				</button>
 			</div>
-			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover}>
+			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover && !isDragging}>
 				<IconContainer asset={ArrowDown}/>
 			</div>
 		</div>
