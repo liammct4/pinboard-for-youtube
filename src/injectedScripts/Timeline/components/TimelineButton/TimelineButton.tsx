@@ -121,19 +121,23 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 
 	return (
 		<div className="timeline-box-outer">
-			<button
-				className="timeline-box-inner"
-				style={{
-					left: `${offsetPercentage}%`,
-					width: `${textWidth}px`,
-					borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
-					borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
-				}}
-				ref={buttonRef}
-				{...mouseEvents}>
-					<p className="timeline-inner-text">{content}</p>
-			</button>
-			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents}>
+			<div className="box-interaction-area" style={{
+				left: `${offsetPercentage}%`,
+			}}
+			{...mouseEvents}
+			data-hover={hover}>
+				<button
+					className="timeline-box-inner"
+					style={{
+						width: `${textWidth}px`,
+						borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
+						borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
+					}}
+					ref={buttonRef}>
+						<p className="timeline-inner-text">{content}</p>
+				</button>
+			</div>
+			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover}>
 				<IconContainer asset={ArrowDown}/>
 			</div>
 		</div>

@@ -1,26 +1,42 @@
 .timeline-box-outer {
+	--hover-move-distance: -16px;
+	--hover-move-distance-positive: calc(var(--hover-move-distance) * -1);
 	display: flex;
 	flex-direction: column;
 	grid-column: 1;
 	grid-row: 1;
-	
-	.timeline-box-inner {
-		padding-left: var(--pfy-spacing-standard);
-		padding-right: var(--pfy-spacing-standard);
-		background: var(--pfy-empty-01-raised);
-		border: 1px solid var(--pfy-primary-dark);
-		border-radius: var(--pfy-spacing-standard);
-		transform: translateX(-50%);
-		flex-grow: 1;
-		cursor: pointer;
+
+	.box-interaction-area {
 		position: absolute;
-		transition: width var(--pfy-timing-fast);
+		transform: translateX(-50%);
+		transition: padding var(--pfy-timing-fast), transform var(--pfy-timing-fast);
+
+		.timeline-box-inner {
+			padding-left: var(--pfy-spacing-standard);
+			padding-right: var(--pfy-spacing-standard);
+			background: var(--pfy-empty-01-raised);
+			border: 1px solid var(--pfy-primary-dark);
+			border-radius: var(--pfy-spacing-standard);
+			flex-grow: 1;
+			cursor: pointer;
+			transition: width var(--pfy-timing-fast);		
+		}
+
+		&[data-hover="true"] {
+			padding-bottom: var(--hover-move-distance-positive);
+			transform: translate(-50%, var(--hover-move-distance));
+		}
 	}
 
 	.arrow-icon-container {
 		cursor: pointer;
 		position: absolute;
 		transform: translate(-50%, 14.5px);
+		transition: transform var(--pfy-timing-fast);
+
+		&[data-hover="true"] {
+			transform: translate(-50%, calc(14.5px + var(--hover-move-distance)));
+		}
 	}
 	
 	.arrow-fill {
