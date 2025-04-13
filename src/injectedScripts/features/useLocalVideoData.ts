@@ -29,7 +29,7 @@ function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist 
 
 	return {
 		isVideoPage: true,
-		isAdvertisement: adContainer.hasChildNodes(),
+		isAdvertisement: adContainer != null && adContainer.hasChildNodes(),
 		data: {
 			videoID: result.groups["videoID"],
 			paused: video.paused,
