@@ -97,39 +97,43 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	const content = hover && !isDragging ? timestamp.message : secondTime;
 	const textWidth = measureText(content, `9pt "Roboto"`) + 14;
 
+	let mouseEvents: React.HTMLAttributes<HTMLElement> = {
+		onClick: () => setTimeout(() => {
+			if (!changed.current) {
+				setCurrentTime(timestamp.time)
+			}
+		}, 50),
+		onMouseEnter: () => setHover(true),
+		onMouseLeave: () => setHover(false),
+		onMouseDown: (e) => {
+			setStartIsDragging(true)
+			setMousePosition({
+				x: e.clientX,
+				y: e.clientY
+			});
+		},
+		onMouseMove: () => {
+			if (startIsDragging) {
+				setIsDragging(true)
+			}
+		}
+	}
+
 	return (
 		<div className="timeline-box-outer">
 			<button
 				className="timeline-box-inner"
-				onClick={() => setTimeout(() => {
-					if (!changed.current) {
-						setCurrentTime(timestamp.time)
-					}
-				}, 50)}
-				onMouseEnter={() => setHover(true)}
-				onMouseLeave={() => setHover(false)}
 				style={{
 					left: `${offsetPercentage}%`,
 					width: `${textWidth}px`,
 					borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
 					borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
 				}}
-				onMouseDown={(e) => {
-					setStartIsDragging(true)
-					setMousePosition({
-						x: e.clientX,
-						y: e.clientY
-					});
-				}}
-				onMouseMove={() => {
-					if (startIsDragging) {
-						setIsDragging(true)
-					}
-				}}
-				ref={buttonRef}>
+				ref={buttonRef}
+				{...mouseEvents}>
 					<p className="timeline-inner-text">{content}</p>
 			</button>
-			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef}>
+			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents}>
 				<IconContainer asset={ArrowDown}/>
 			</div>
 		</div>
