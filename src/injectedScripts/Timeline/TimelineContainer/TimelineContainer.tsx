@@ -14,7 +14,7 @@ export function TimelineContainer() {
 	const { directoryUpdateVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 
-	if (!videoData.isVideoPage) {
+	if (!videoData.isVideoPage || videoData.isAdvertisement) {
 		return <></>
 	}
 
