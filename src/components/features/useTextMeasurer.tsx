@@ -5,11 +5,11 @@ import { Size } from "../../lib/util/objects/types";
 export function useTextMeasurer() {
 	const { cache, setCache, context } = useContext<ITextMeasureWrapperContext>(TextMeasureWrapperContext);
 
-	const measureText = (text: string, font: string): Size => {
+	const measureText = (text: string, font: string): number => {
 		let cached = cache.find(x => x.font == font && x.text == text);
 
 		if (cached != null) {
-			return cached.size;
+			return cached.width;
 		}
 		
 		context.font = font;
@@ -18,15 +18,12 @@ export function useTextMeasurer() {
 		let measure: MeasureredText = {
 			font: font,
 			text: text,
-			size: {
-				width: result.width,
-				height: result.emHeightDescent
-			}
+			width: result.width
 		}
 
 		setCache([ ...cache, measure ]);
 
-		return measure.size;
+		return measure.width;
 	};
 
 	return { measureText };
@@ -57,7 +54,7 @@ export function TextMeasurerWrapper({ children }: IWrapperProperties) {
 type MeasureredText = {
 	text: string;
 	font: string;
-	size: Size;
+	width: number;
 }
 
 interface ITextMeasureWrapperContext {

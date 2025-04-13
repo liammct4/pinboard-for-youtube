@@ -4,16 +4,17 @@ import { NotificationWrapper } from "../components/features/notifications/Notifi
 import { ExtensionBoundsWrapper } from "../components/features/extensionBounds/ExtensionBoundsWrapper.tsx";
 import { VideoWrapper } from "../components/features/videoAccess/VideoWrapper.tsx";
 import { EventWrapper } from "../components/features/events/EventWrapper.tsx";
-import "./HomePage.css"
-import "./PfyWrapper.css"
 import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
 import { AccountDataWrapper } from "../components/features/accountData/AccountDataWrapper.tsx";
 import { MutationWrapper } from "../components/features/mutations/MutationWrapper.tsx";
+import { StyleContextWrapper } from "../components/features/styleContext/StyleContextWrapper.tsx";
+import "./PfyWrapper.css"
+import "./HomePage.css"
 
 export function PfyWrapper(): React.ReactNode {
 	return (
 		<StorageWrapper>
-			<div className="pfy-style-context">
+			<StyleContextWrapper>
 				<ExtensionBoundsWrapper>
 					<EventWrapper>
 						<NotificationWrapper>
@@ -29,7 +30,7 @@ export function PfyWrapper(): React.ReactNode {
 						</NotificationWrapper>
 					</EventWrapper>
 				</ExtensionBoundsWrapper>
-			</div>
+			</StyleContextWrapper>
 		</StorageWrapper>
 	)
 }

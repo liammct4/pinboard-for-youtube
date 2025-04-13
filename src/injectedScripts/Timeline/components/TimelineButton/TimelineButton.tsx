@@ -95,7 +95,7 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	const spaceRemainingLeft = Math.max(rawPixelsAlong - (arrowSize.width / 2), 0);
 
 	const content = hover && !isDragging ? timestamp.message : secondTime;
-	const textWidth = measureText(content, `9pt "Roboto"`).width + 14;
+	const textWidth = measureText(content, `9pt "Roboto"`) + 14;
 
 	return (
 		<div className="timeline-box-outer">
