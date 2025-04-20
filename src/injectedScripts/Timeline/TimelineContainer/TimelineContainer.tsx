@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useLocalStorage } from "../../../components/features/storage/useLocalStorage"
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
@@ -9,6 +9,7 @@ import "./TimelineContainer.css"
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
+	const [ hover, setHover ] = useState<string | null>(null);
 	const { storage } = useLocalStorage();
 	const videoData = useLocalVideoData();
 	const { directoryUpdateVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
@@ -45,7 +46,11 @@ export function TimelineContainer() {
 					<TimelineButton
 						timestamp={x}
 						timelineBounds={timelineBounds}
-						onChange={onTimestampChange}/>
+						data-hover-highlight={hover != null}
+						data-active-hover-highlight={hover == x.id}
+						onChange={onTimestampChange}
+						activeHover={hover}
+						onHoverChanged={setHover}/>
 				)
 			}
 		</div>

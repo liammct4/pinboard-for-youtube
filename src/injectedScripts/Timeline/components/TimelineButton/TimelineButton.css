@@ -5,6 +5,11 @@
 	flex-direction: column;
 	grid-column: 1;
 	grid-row: 1;
+	transition: opacity var(--pfy-timing-fast);
+
+	&[data-hover-highlight="inactive"] {
+		opacity: 0;
+	}
 
 	.box-interaction-area {
 		position: absolute;

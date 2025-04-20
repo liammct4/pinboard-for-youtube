@@ -15,9 +15,11 @@ export interface ITimelineButtonProperties {
 	timestamp: Timestamp;
 	timelineBounds: Rect;
 	onChange?: (newTimestamp: Timestamp) => void;
+	activeHover: string | null;
+	onHoverChanged: (hover: string | null) => void;
 }
 
-export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelineButtonProperties) {
+export function TimelineButton({ timestamp, timelineBounds, onChange, activeHover, onHoverChanged }: ITimelineButtonProperties) {
 	const buttonRef = useRef<HTMLButtonElement>(null!);
 	const arrowRef = useRef<HTMLDivElement>(null!);
 	const videoData = useLocalVideoData();
@@ -103,8 +105,14 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 				setCurrentTime(timestamp.time)
 			}
 		}, 50),
-		onMouseEnter: () => setHover(true),
-		onMouseLeave: () => setHover(false),
+		onMouseEnter: () => {
+			setHover(true)
+			onHoverChanged(timestamp.id);
+		},
+		onMouseLeave: () => {
+			setHover(false);
+			onHoverChanged(null);
+		},
 		onMouseDown: (e) => {
 			setStartIsDragging(true)
 			setMousePosition({
@@ -120,7 +128,12 @@ export function TimelineButton({ timestamp, timelineBounds, onChange }: ITimelin
 	}
 
 	return (
-		<div className="timeline-box-outer">
+		<div className="timeline-box-outer"
+			data-hover-highlight={
+				activeHover == null ? "none" :
+				activeHover == timestamp.id ? "active" :
+				"inactive"
+			}>
 			<div className="box-interaction-area" style={{
 				left: `${offsetPercentage}%`,
 			}}
