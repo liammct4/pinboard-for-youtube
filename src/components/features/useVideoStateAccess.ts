@@ -11,7 +11,7 @@ import { useVideoCache } from "./useVideoInfo";
 import { accessStorage } from "../../lib/storage/storage";
 import { IAuthenticatedUser } from "../../lib/user/accounts";
 
-export function useVideoStateAccess(user: IAuthenticatedUser | null) {
+export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
 	const preventUpdate = useRef<boolean>(false);
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource(user);
@@ -55,9 +55,9 @@ export function useVideoStateAccess(user: IAuthenticatedUser | null) {
 	return {
 		videoData,
 		root: directoryRoot,
-		directoryAddVideo: async (videoID: string, path: string) => {
+		directoryAddVideo: async (videoID: string, path: string): Promise<IVideo> => {
 			if (videoData.has(videoID)) {
-				return;
+				return videoData.get(videoID) as IVideo;
 			}
 			
 			let newVideo: IVideo = {
@@ -94,6 +94,8 @@ export function useVideoStateAccess(user: IAuthenticatedUser | null) {
 			createAction(newVideoNode);
 			updateAccountVideo(newVideo);
 			setCounter(Math.random());
+
+			return newVideo;
 		},
 		directoryRemoveVideo: (videoIDs: string[]) => {
 			for (let video of videoIDs) {

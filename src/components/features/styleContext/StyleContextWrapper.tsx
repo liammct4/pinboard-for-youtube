@@ -2,18 +2,26 @@ import { useEffect, useRef } from "react";
 import { IWrapperProperties } from "../wrapper";
 import { useLocalStorage } from "../storage/useLocalStorage";
 
-export function StyleContextWrapper({ children }: IWrapperProperties) {
+export interface IStyleContextWrapper extends IWrapperProperties {
+	"update-theme"?: boolean;
+}
+
+export function StyleContextWrapper({ children, "update-theme": updateTheme }: IStyleContextWrapper) {
 	const styleContextRef = useRef<HTMLDivElement>(null!);
 	const { storage } = useLocalStorage();
 
 	useEffect(() => {
+		if (!updateTheme) {
+			return;
+		}
+
 		let theme = storage.user_data.config.theme;
 
 		Object.keys(theme.palette).forEach(key => {
 			// @ts-ignore
 			let value = theme.palette[key] as string;
 
-			document.documentElement.style.setProperty(`--pfy-${key}`, value);
+			styleContextRef.current.style.setProperty(`--pfy-${key}`, value);
 		});
 	}, [JSON.stringify(storage.user_data.config.theme)]);
 

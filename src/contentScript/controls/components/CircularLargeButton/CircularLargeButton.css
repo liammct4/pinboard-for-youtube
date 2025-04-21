@@ -1,0 +1,17 @@
+.pfy-save-video-button {
+	--pfy-control-size: 38px;
+	
+	width: var(--pfy-control-size);
+	height: var(--pfy-control-size);
+	border-radius: var(--pfy-control-size);
+	margin-right: var(--pfy-spacing-large);
+	box-shadow: none !important;
+	padding: 0px;
+
+	& img {
+		--pfy-image-size: calc(var(--pfy-control-size) - var(--pfy-spacing-large));
+
+		width: var(--pfy-image-size);
+		height: var(--pfy-image-size);
+	}
+}

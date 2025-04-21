@@ -2,17 +2,15 @@ import { StorageWrapper } from "../../components/features/storage/StorageWrapper
 import { StyleContextWrapper } from "../../components/features/styleContext/StyleContextWrapper";
 import { TextMeasurerWrapper } from "../../components/features/useTextMeasurer";
 import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
-import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
+import { VideoTimestampButton } from "./components/VideoTimestampButton/VideoTimestampButton";
 
-export function TimelineApp() {
+export function ControlsApp() {
 	return (
 		<StorageWrapper>
-			<StyleContextWrapper update-theme>
-				<TextMeasurerWrapper>
-					<VideoWrapper>
-						<TimelineContainer/>
-					</VideoWrapper>
-				</TextMeasurerWrapper>
+			<StyleContextWrapper>
+				<VideoWrapper>
+					<VideoTimestampButton/>
+				</VideoWrapper>
 			</StyleContextWrapper>
 		</StorageWrapper>
 	);

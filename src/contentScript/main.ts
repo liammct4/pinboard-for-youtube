@@ -1,7 +1,9 @@
+import { controlsSetup } from "./controls/controls";
 import { timelineSetup } from "./timeline/timeline";
 import { videoSetup } from "./video";
 
 let isTimelineSetup = false;
+let isControlsSetup = false;
 let lastLink = "";
 
 function injectionSetup() {
@@ -16,7 +18,11 @@ function injectionSetup() {
 		isTimelineSetup = timelineSetup();
 	}
 
-	if (!isTimelineSetup) {
+	if (!isControlsSetup) {
+		isControlsSetup = controlsSetup();
+	}
+
+	if (!isTimelineSetup || !isControlsSetup) {
 		setTimeout(injectionSetup, 200);
 	}
 }

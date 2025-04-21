@@ -15,7 +15,7 @@ import { ActiveVideoWrapper } from "../components/features/activeVideo/useActive
 export function PfyWrapper(): React.ReactNode {
 	return (
 		<StorageWrapper>
-			<StyleContextWrapper>
+			<StyleContextWrapper update-theme>
 				<ExtensionBoundsWrapper>
 					<EventWrapper>
 						<NotificationWrapper>
