@@ -1,4 +1,5 @@
 import { timelineSetup } from "./timeline/timeline";
+import { videoSetup } from "./video";
 
 let isTimelineSetup = false;
 let lastLink = "";
@@ -21,3 +22,4 @@ function injectionSetup() {
 }
 
 injectionSetup();
+videoSetup();

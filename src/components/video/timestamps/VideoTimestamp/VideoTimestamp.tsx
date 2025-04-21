@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useCallback } from "react"
+import { useCallback, useContext } from "react"
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
@@ -13,6 +13,7 @@ import JumpVideoIcon from "./../../../../../assets/icons/jump_icon.svg?react"
 import { IconContainer } from "../../../images/svgAsset.tsx";
 import "src/styling/dialog.css"
 import "./VideoTimestamp.css"
+import { useActiveVideoID } from "../../../features/activeVideo/useActiveVideo.tsx";
 
 interface IEditTimestampForm extends IErrorFieldValues {
 	time: string
@@ -44,8 +45,7 @@ function validateTimestamp(value: string): string | null {
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ className, videoID, timestamp, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
-	const activeVideoID = "";
-	
+	const activeVideoID = useActiveVideoID();
 	const onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 

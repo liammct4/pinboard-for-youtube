@@ -34,9 +34,6 @@ export interface IStorage {
 	cache: {
 		videos: IYoutubeVideoInfo[]
 	},
-	youtubeInjector: {
-		activeVideoID: string | undefined;
-	}
 }
 
 let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
@@ -82,9 +79,6 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	},
 	cache: {
 		videos: [],
-	},
-	youtubeInjector: {
-		activeVideoID: undefined
 	}
 };
 

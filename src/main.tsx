@@ -124,9 +124,7 @@ async function setupState() {
 	if (currentUser != undefined) {
 		store.dispatch(setCurrentUser(currentUser));
 	}
-
-	await modifyStorage(s => s.youtubeInjector.activeVideoID = activeID);
-
+	
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>

@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
@@ -30,6 +30,7 @@ import { useLocalStorage } from "../../components/features/storage/useLocalStora
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
 import { useUserAccount } from "../../components/features/useUserAccount.ts";
+import { useActiveVideoID } from "../../components/features/activeVideo/useActiveVideo.tsx";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -50,14 +51,15 @@ export function VideosPage(): React.ReactNode {
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
 	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess(isSignedIn ? user : null);
-	const { storage: { youtubeInjector: { activeVideoID } } } = useLocalStorage();
+	const { storage } = useLocalStorage();
+	const activeVideoID = useActiveVideoID();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
-
+		
 		directoryAddVideo(id, directoryPath);
 	});
 	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => directoryAdd(directoryPath, data.directoryName));
-
+	
 	// Hotkeys for directory browser.
 	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
 	useHotkeys("F2", () => {
@@ -65,14 +67,16 @@ export function VideosPage(): React.ReactNode {
 			setCurrentlyEditing(selectedItems[0]);
 		}
 	});
+	
+	const onSaveActiveVideo = async () => {
+		const activeVideo = await getActiveVideoInfo();
 
-	const onSaveActiveVideo = () => {
-		if (activeVideoID == undefined) {
+		if (activeVideo == null) {
 			return;
 		}
 
-		if (videoData.has(activeVideoID)) {
-			let location = findItemPathFromName(root, activeVideoID, false, true, true);
+		if (videoData.has(activeVideo.id)) {
+			let location = findItemPathFromName(root, activeVideo.id, false, true, true);
 
 			// Should never happen since there should always be a location for a video.
 			if (location.length == 0) {
@@ -85,10 +89,10 @@ export function VideosPage(): React.ReactNode {
 					"Shake"
 				);
 
-				let video = videoData.get(activeVideoID);
+				let video = videoData.get(activeVideo.id);
 				videoData.delete(video!.id);
 
-				directoryAddVideo(activeVideoID, "$");
+				directoryAddVideo(activeVideo.id, "$");
 
 				// Override the newly "added" video.
 				directoryUpdateVideo(video!);
@@ -107,25 +111,26 @@ export function VideosPage(): React.ReactNode {
 			return;
 		}
 
-		directoryAddVideo(activeVideoID, directoryPath);
+		directoryAddVideo(activeVideo.id, directoryPath);
 	};
 	const onPinCurrentTimestamp = async () => {
-		if (activeVideoID == undefined || !videoData.has(activeVideoID)) {
+		const activeVideo = await getActiveVideoInfo();
+
+		if (activeVideo == null || !videoData.has(activeVideo.id)) {
 			return;
 		}
 
-		let result = await getActiveVideoInfo();
-		let video = videoData.get(activeVideoID) as IVideo;
+		let video = videoData.get(activeVideo.id) as IVideo;
 		
-		let activeVideo: IVideo = {
-			id: activeVideoID,
+		let newActiveVideo: IVideo = {
+			id: activeVideo.id,
 			timestamps: [
 				...video.timestamps,
-				generateTimestamp(Math.floor(result!.currentTime), "Current time")
+				generateTimestamp(Math.floor(activeVideo!.currentTime), "Current time")
 			]
 		}
 		
-		directoryUpdateVideo(activeVideo);
+		directoryUpdateVideo(newActiveVideo);
 	};
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
@@ -171,11 +176,11 @@ export function VideosPage(): React.ReactNode {
 					align="right">
 						{/* Current video */}
 						<SplitHeading className="current-video-heading" text="Current video"/>
-						<VideoCard className="current-video-card" videoID={activeVideoID} placeholderTitle="No video found!"/>
+						<VideoCard className="current-video-card" videoID={activeVideoID ?? undefined} placeholderTitle="No video found!"/>
 						{/* Current video controls */}
 						<div className="current-video-buttons">
 							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-							<button className="button-base button-small" onClick={onPinCurrentTimestamp}>Pin timestamp</button>
+							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={activeVideoID == null}>Pin timestamp</button>
 						</div>
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}

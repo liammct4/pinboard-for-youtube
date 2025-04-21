@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { usePageLink } from "./usePageLink";
 
-let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
+export let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
 
 export type VideoData = {
 	videoID: string;
