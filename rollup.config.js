@@ -9,10 +9,10 @@ import json from "@rollup/plugin-json";
 import svgr from "vite-plugin-svgr";
 
 export default {
-	input: "src/injectedScripts/timeline/timeline.tsx",
+	input: "src/contentScript/main.ts",
 	output: {
-		dir: "dist",
-		format: "iife"
+		format: "iife",
+		file: "dist/pfyContentScript.js"
 	},
 	plugins: [
 		typescript(),
