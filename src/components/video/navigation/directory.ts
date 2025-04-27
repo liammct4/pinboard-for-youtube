@@ -427,6 +427,26 @@ export function removeItems(root: IDirectoryNode, basePath: string, targetSectio
 	}
 }
 
+export function cloneDirectory(root: IDirectoryNode): IDirectoryNode {
+	const pass = (node: IDirectoryNode, parent: IDirectoryNode | null) => {
+		const newNode = { ...node, parent }
+
+		newNode.subNodes = node.subNodes.map(x => {
+			if (x.type == "DIRECTORY") {
+				return pass(x, newNode);
+			}
+
+			return { ...x, parent: newNode };
+		})
+
+		return newNode;
+	}
+
+	let newRoot = pass(root, null);
+
+	return newRoot;
+}
+
 export interface IVideoDirectoryInteractionContext {
 	navigateRequest: (requester: IDirectoryNode) => void;
 	selectedItems: string[];

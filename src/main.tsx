@@ -25,7 +25,7 @@ import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
+import { cloneDirectory, IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
 import { IVideo } from "./lib/video/video.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
@@ -102,7 +102,10 @@ async function setupState() {
 			s.user_data.videos = Array.from(videos.values());
 			s.user_data.directoryRoot = removeParentPass(testDirectoryRoot)
 		});
+
+		let copy = cloneDirectory(testDirectoryRoot);
 	}
+
 
 	let tempState: IStateSlice = {
 		expandedVideoIDs: storage.temp_state.expandedVideos,

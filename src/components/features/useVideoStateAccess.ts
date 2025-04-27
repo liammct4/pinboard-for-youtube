@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromNode, getParentPathFromPath, getRawSectionFromPrefix, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
+import { addDirectory, AddDirectoryFail, AddDirectorySuccess, cloneDirectory, directoryPathConcat, getItemFromNode, getParentPathFromPath, getRawSectionFromPrefix, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
 import { addParentPass, removeParentPass } from "../../lib/storage/userData/userData";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -43,9 +43,12 @@ export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
 				let storage = await accessStorage();
 				videoData.clear();
 				storage.user_data.videos.forEach(x => videoData.set(x.id, x));
-				directoryRoot.subNodes = storage.user_data.directoryRoot.subNodes;
+				directoryRoot.subNodes = cloneDirectory(storage.user_data.directoryRoot).subNodes;
 
-				addParentPass(storage.user_data.directoryRoot);
+				// Update so the parent references the same object.
+				directoryRoot.subNodes.forEach(x => x.parent = directoryRoot);
+
+				addParentPass(directoryRoot);
 			}
 	
 			update();
