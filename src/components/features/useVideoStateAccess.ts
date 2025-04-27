@@ -12,7 +12,7 @@ import { accessStorage } from "../../lib/storage/storage";
 import { IAuthenticatedUser } from "../../lib/user/accounts";
 
 export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
-	const preventUpdate = useRef<boolean>(false);
+	const preventUpdate = useRef<boolean>(true);
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource(user);
 	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource(user);
