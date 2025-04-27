@@ -25,6 +25,10 @@ import "./VideoDirectoryBrowser.css"
 import { SelectionBoxScrollbox } from "../../../interactive/SelectionBoxScrollbox/SelectionBoxScrollbox";
 import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
 import { useUserAccount } from "../../../features/useUserAccount";
+import { setVideoBrowserScrollDistance } from "../../../../features/state/tempStateSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../app/store";
+import { useLocalStorage } from "../../../features/storage/useLocalStorage";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -81,6 +85,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
+	const { storage } = useLocalStorage();
+	const dispatch = useDispatch();
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -125,6 +131,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 		setSelectedItems([]);
 	}, [directory]);
+
+	const scrollPosition = storage.temp_state.videoBrowserScrollDistance;
 
 	const requestEditEnd = async (newSliceName: string) => {
 		let result = validateDirectoryName(newSliceName);
@@ -355,7 +363,9 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 								className="video-directory-list separated-scrollbox"
 								boxClassName="video-selection-box"
 								allowSelection={!isDragging}
-								setSelectedItems={setSelectedItems}>
+								setSelectedItems={setSelectedItems}
+								startingScrollPosition={scrollPosition}
+								onScroll={(e) => dispatch(setVideoBrowserScrollDistance(e.currentTarget.scrollTop))}>
 									<DragList className="directory-drag-list" dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
 										setDragging(e);
 

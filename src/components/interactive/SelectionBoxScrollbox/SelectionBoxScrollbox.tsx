@@ -8,10 +8,12 @@ import { DragListItemData } from "../../../lib/dragList/DragList";
 export interface ISelectionBoxScrollboxProperties {
 	frameClassName?: string;
 	boxClassName?: string;
-	children: JSX.Element | JSX.Element[];
 	onSelectBegin?: (startingPoint: Coordinates) => void;
 	onSelectMove?: (box: Rect) => void;
 	onSelectEnd?: (box: Rect) => void;
+	onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+	startingScrollPosition?: number; 
+	children: JSX.Element | JSX.Element[];
 }
 
 export function SelectionBoxScrollbox({
@@ -20,6 +22,8 @@ export function SelectionBoxScrollbox({
 		onSelectBegin,
 		onSelectMove,
 		onSelectEnd,
+		onScroll,
+		startingScrollPosition,
 		children
 	}: ISelectionBoxScrollboxProperties) {
 	const frameRef = useRef<HTMLDivElement>(null!);
@@ -98,6 +102,10 @@ export function SelectionBoxScrollbox({
 		}
 	}, [selectionBox]);
 
+	useEffect(() => {
+		frameRef.current.scrollTo({ top: startingScrollPosition, behavior: "instant" });
+	}, [startingScrollPosition]);
+
 	return (
 		<div
 			className={`${frameClassName} selection-box-frame`}
@@ -112,6 +120,7 @@ export function SelectionBoxScrollbox({
 				setSelectionAnchor(anchor);
 				onSelectBegin?.(anchor);
 			}}
+			onScroll={onScroll}
 			ref={frameRef}>
 				{ selectionAnchor != null ?
 					<div

@@ -10,6 +10,8 @@ export interface ISelectionDragListProperties {
 	boxClassName?: string;
 	allowSelection?: boolean;
 	setSelectedItems: (items: string[]) => void;
+	onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
+	startingScrollPosition?: number;
 	children: JSX.Element | JSX.Element[];
 }
 
@@ -18,6 +20,8 @@ export function SelectionList({
 		boxClassName,
 		setSelectedItems,
 		allowSelection,
+		onScroll,
+		startingScrollPosition,
 		children,
 	}: ISelectionDragListProperties) {
 	const outerListBox = useRef<HTMLDivElement>(null!);
@@ -64,7 +68,9 @@ export function SelectionList({
 			frameClassName={className}
 			boxClassName={allowSelection ? boxClassName : ""}
 			onSelectBegin={() => setElementItems([ ...outerListBox.current.querySelectorAll(".drag-list-item") ])}
-			onSelectMove={onSelectMove}>
+			onSelectMove={onSelectMove}
+			startingScrollPosition={startingScrollPosition}
+			onScroll={onScroll}>
 			<div ref={outerListBox}>
 				{children}
 			</div>

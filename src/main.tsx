@@ -102,13 +102,12 @@ async function setupState() {
 			s.user_data.videos = Array.from(videos.values());
 			s.user_data.directoryRoot = removeParentPass(testDirectoryRoot)
 		});
-
-		let copy = cloneDirectory(testDirectoryRoot);
 	}
 
 
 	let tempState: IStateSlice = {
 		expandedVideoIDs: storage.temp_state.expandedVideos,
+		videoBrowserScrollDistance: storage.temp_state.videoBrowserScrollDistance,
 		layout: storage.temp_state.layout,
 		temporarySingleState: {
 			onRequestIsVideoControlLocked: false
