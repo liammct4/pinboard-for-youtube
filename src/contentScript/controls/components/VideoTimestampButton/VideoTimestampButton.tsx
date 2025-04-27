@@ -9,7 +9,7 @@ export function VideoTimestampButton() {
 	const { videoData, directoryUpdateVideo, directoryAddVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
 
 	const onSaveVideo = async () => {
-		let videoID = document.querySelector(`meta[metaprop="identifier"]`)?.getAttribute("content") as string;
+		let videoID = document.querySelector(`meta[itemprop="identifier"]`)?.getAttribute("content") as string;
 		let video = document.querySelector("video") as HTMLVideoElement;
 	
 		let existingVideo = videoData.get(videoID);
