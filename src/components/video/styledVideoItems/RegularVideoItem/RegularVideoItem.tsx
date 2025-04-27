@@ -13,9 +13,8 @@ import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
 
 export function RegularVideoItem(): React.ReactNode {
-	const { video, onTimestampAdded, onTimestampChanged, setTimestamps } = useContext<IVideoItemContext>(VideoItemContext);
+	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo } = useVideoInfo(video.id);
-	const [ expanded, setExpanded ] = useState<boolean>(false);
 
 	return (
 		<div className="regular-video-item">

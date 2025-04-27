@@ -11,9 +11,8 @@ import { IconContainer } from "../../../images/svgAsset";
 import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeUtil";
 
 export function CompactVideoItem(): React.ReactNode {
-	const { video, onTimestampAdded, onTimestampChanged, setTimestamps } = useContext<IVideoItemContext>(VideoItemContext);
+	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo, videoExists } = useVideoInfo(video.id);
-	const [ expanded, setExpanded ] = useState<boolean>(false);
 
 	return (
 		<div className="compact-video-item">

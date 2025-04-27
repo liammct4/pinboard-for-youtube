@@ -8,6 +8,9 @@ import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoD
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
 import { useUserAccount } from "../../../../features/useUserAccount";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../../app/store";
+import { addExpandedID, removeExpandedID } from "../../../../../features/state/tempStateSlice";
 
 interface IVideoItemProperties {
 	node: IVideoNode;
@@ -18,6 +21,8 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
 	const { isSignedIn, user } = useUserAccount();
 	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess(isSignedIn ? user : null);
+	const isExpanded = useSelector((state: RootState) => state.tempState.expandedVideoIDs).includes(node.videoID);
+	const dispatch = useDispatch();
 
 	if (!videoData.has(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
@@ -59,6 +64,16 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		updateVideo(newVideo);
 	};
 
+	const onExpanded = (expanded: boolean) => {
+		if (expanded) {
+			dispatch(addExpandedID(video.id));
+			return;
+		}
+
+		dispatch(removeExpandedID(video.id));
+	}
+
+
 	return (
 		<div onMouseDown={(e) => {
 			let section = getSectionPrefix(node);
@@ -76,7 +91,9 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 				video,
 				onTimestampAdded,
 				onTimestampChanged,
-				setTimestamps
+				setTimestamps,
+				expanded: isExpanded,
+				setExpanded: onExpanded
 			}}>
 				{
 					videoItemStyle == "MINIMAL" ? <MinimalVideoItem/> :

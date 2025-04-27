@@ -12,17 +12,16 @@ import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import "./MinimalVideoItem.css"
 
 export function MinimalVideoItem(): React.ReactNode {
-	const { video, onTimestampAdded, onTimestampChanged, setTimestamps } = useContext<IVideoItemContext>(VideoItemContext);
+	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo } = useVideoInfo(video.id);
-	const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
 	return (
 		<div className="compact-video-item-outer">
 			<LabeledArrowExpander
 				openMessage={videoInfo?.title ?? ""}
 				closeMessage={videoInfo?.title ?? ""}
-				expanded={isExpanded}
-				onExpanded={setIsExpanded}>
+				expanded={expanded}
+				onExpanded={setExpanded}>
 				<div className="compact-video-item-inner">
 					<TimestampList
 						videoID={video.id}
