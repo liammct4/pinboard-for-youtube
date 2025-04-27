@@ -1,5 +1,5 @@
 .timeline-box-outer {
-	--hover-move-distance: -16px;
+	--hover-move-distance: -7px;
 	--hover-move-distance-positive: calc(var(--hover-move-distance) * -1);
 	display: flex;
 	flex-direction: column;
@@ -34,13 +34,14 @@
 	}
 
 	.arrow-icon-container {
+		--arrow-offset-align-distance: calc(100% - 2px);
 		cursor: pointer;
 		position: absolute;
-		transform: translate(-50%, 14.5px);
+		transform: translate(-50%, var(--arrow-offset-align-distance));
 		transition: transform var(--pfy-timing-fast);
 
 		&[data-hover="true"] {
-			transform: translate(-50%, calc(14.5px + var(--hover-move-distance)));
+			transform: translate(-50%, calc(var(--arrow-offset-align-distance) + var(--hover-move-distance)));
 		}
 	}
 	
