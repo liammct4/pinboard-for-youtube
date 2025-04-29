@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LayoutState } from "../../lib/storage/tempState/layoutState";
+import { IStorage } from "../../lib/storage/storage";
 
 export interface IStateSlice {
 	expandedVideoIDs: string[];
@@ -25,9 +26,10 @@ export const tempStateSlice = createSlice({
 	name: "tempState",
 	initialState,
 	reducers: {
-		setTempState: (state, action: PayloadAction<IStateSlice>) => {
-			state.expandedVideoIDs = action.payload.expandedVideoIDs;
-			state.layout = action.payload.layout;
+		updateTempSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
+			state.expandedVideoIDs = action.payload.tempState.expandedVideos;
+			state.layout = action.payload.tempState.layout;
+			state.videoBrowserScrollDistance = action.payload.tempState.videoBrowserScrollDistance;
 		},
 		setVideoBrowserScrollDistance: (state, action: PayloadAction<number>) => {
 			state.videoBrowserScrollDistance = action.payload;
@@ -57,7 +59,7 @@ export const tempStateSlice = createSlice({
 })
 
 export const {
-	setTempState,
+	updateTempSliceFromStorage,
 	addExpandedID,
 	removeExpandedID,
 	setLayoutState,

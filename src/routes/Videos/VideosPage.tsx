@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage.tsx";
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
@@ -23,14 +23,12 @@ import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDi
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
 import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromNode, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
-import "./../../styling/dialog.css"
-import "./VideosPage.css"
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
-import { useLocalStorage } from "../../components/features/storage/useLocalStorage.ts";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
-import { useUserAccount } from "../../components/features/useUserAccount.ts";
 import { useActiveVideoID } from "../../components/features/activeVideo/useActiveVideo.tsx";
+import "./../../styling/dialog.css"
+import "./VideosPage.css"
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -42,7 +40,6 @@ interface IAddDirectoryForm extends IErrorFieldValues {
 
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
-	const { isSignedIn, user } = useUserAccount();
 	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
@@ -50,8 +47,7 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
-	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess(isSignedIn ? user : null);
-	const { storage } = useLocalStorage();
+	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
 	const activeVideoID = useActiveVideoID();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);

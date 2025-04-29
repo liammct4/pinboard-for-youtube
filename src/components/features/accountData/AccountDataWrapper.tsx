@@ -12,8 +12,8 @@ import { disableControlsLock, enableControlsLock } from "../../../features/state
 export function AccountDataWrapper({ children }: IWrapperProperties) {
 	const { isSignedIn, user } = useUserAccount();
 	const { directoryRoot, setCounter, videoData } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
-	const { fetchDirectoryRoot } = useDirectoryResource(isSignedIn ? user : null);
-	const { fetchVideos } = useVideosResource(isSignedIn ? user : null);
+	const { fetchDirectoryRoot } = useDirectoryResource();
+	const { fetchVideos } = useVideosResource();
 	const { fetchCustomThemes } = useThemesResource();
 	const dispatch = useDispatch();
 

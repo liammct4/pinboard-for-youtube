@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { IWrapperProperties } from "../wrapper";
-import { useLocalStorage } from "../storage/useLocalStorage";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
 
 export interface IStyleContextWrapper extends IWrapperProperties {
 	"update-theme"?: boolean;
@@ -8,22 +9,20 @@ export interface IStyleContextWrapper extends IWrapperProperties {
 
 export function StyleContextWrapper({ children, "update-theme": updateTheme }: IStyleContextWrapper) {
 	const styleContextRef = useRef<HTMLDivElement>(null!);
-	const { storage } = useLocalStorage();
+	const currentTheme = useSelector((state: RootState) => state.theme.currentTheme);
 
 	useEffect(() => {
 		if (!updateTheme) {
 			return;
 		}
 
-		let theme = storage.user_data.config.theme;
-
-		Object.keys(theme.palette).forEach(key => {
+		Object.keys(currentTheme.palette).forEach(key => {
 			// @ts-ignore
-			let value = theme.palette[key] as string;
+			let value = currentTheme.palette[key] as string;
 
 			styleContextRef.current.style.setProperty(`--pfy-${key}`, value);
 		});
-	}, [JSON.stringify(storage.user_data.config.theme)]);
+	}, [JSON.stringify(currentTheme)]);
 
 	return (
 		<div className="pfy-style-context" ref={styleContextRef}>

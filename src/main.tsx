@@ -5,7 +5,6 @@ import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
 import { accessStorage, ensureInitialized, IStorage, modifyStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
-import { IStateSlice, setTempState } from "./features/state/tempStateSlice.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
@@ -16,31 +15,29 @@ import { GeneralPage } from "./routes/Menu/Options/General/GeneralPage.tsx"
 import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.tsx"
 import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
 import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
-import { setCurrentTheme, setCustomThemes } from "./features/theme/themeSlice.ts"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
-import { setCurrentUser } from "./features/auth/authSlice.ts"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
-import { initializeAndSetSettingsDefault, setSettingValues } from "./features/settings/settingsSlice.ts"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
-import { ICacheSlice, setCacheState } from "./features/cache/cacheSlice.ts"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { cloneDirectory, IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
+import { IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
 import { IVideo } from "./lib/video/video.ts"
+import { removeParentPass } from "./lib/storage/userData/userData.ts"
+import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
-import { removeParentPass } from "./lib/storage/userData/userData.ts"
 
 checkAndImplementLocalStorage();
 
 async function setupState() {
 	await ensureInitialized();
+	setupStorageAndStoreSync();
 
 	let activeID: string | undefined = undefined;
 
 	let storage: IStorage = await accessStorage();
-	let videos = new Map<string, IVideo>(storage.user_data.videos.map(x => [x.id, x]));
+	let videos = new Map<string, IVideo>(storage.userData.videos.map(x => [x.id, x]));
 
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -99,34 +96,13 @@ async function setupState() {
 		testDirectoryRoot.subNodes = [nodeA, nodeB, videoA, videoB];
 
 		await modifyStorage(s => {
-			s.user_data.videos = Array.from(videos.values());
-			s.user_data.directoryRoot = removeParentPass(testDirectoryRoot)
+			s.userData.videos = Array.from(videos.values());
+			s.userData.directoryRoot = removeParentPass(testDirectoryRoot)
 		});
 	}
 
+	syncStoreToStorage();
 
-	let tempState: IStateSlice = {
-		expandedVideoIDs: storage.temp_state.expandedVideos,
-		videoBrowserScrollDistance: storage.temp_state.videoBrowserScrollDistance,
-		layout: storage.temp_state.layout,
-		temporarySingleState: {
-			onRequestIsVideoControlLocked: false
-		}
-	}
-
-	let cacheState: ICacheSlice = {
-		videoCache: storage.cache.videos
-	};
-
-	store.dispatch(setTempState(tempState));
-	store.dispatch(setCacheState(cacheState));
-
-	const currentUser = storage.auth.currentUser;
-
-	if (currentUser != undefined) {
-		store.dispatch(setCurrentUser(currentUser));
-	}
-	
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
@@ -153,13 +129,6 @@ async function setupState() {
 			</Provider>
 		</React.StrictMode>
 	);
-	
-	// Retrieve the current theme from storage since it cannot be loaded in initial state.
-	store.dispatch(setCurrentTheme(storage.user_data.config.theme));
-	store.dispatch(setCustomThemes(storage.user_data.config.customThemes));
-	store.dispatch(setSettingValues(storage.user_data.config.userSettings));
-
-	store.dispatch(initializeAndSetSettingsDefault());
 }
 
 await setupState();

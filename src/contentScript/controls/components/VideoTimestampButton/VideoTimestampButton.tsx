@@ -5,8 +5,7 @@ import { CircularLargeButton } from "../CircularLargeButton/CircularLargeButton"
 
 export function VideoTimestampButton() {
 	let logoUrl = chrome.runtime.getURL("/assets/logo/logo.svg");
-	const { storage } = useLocalStorage();
-	const { videoData, directoryUpdateVideo, directoryAddVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
+	const { videoData, directoryUpdateVideo, directoryAddVideo } = useVideoStateAccess();
 
 	const onSaveVideo = async () => {
 		let videoID = document.querySelector(`meta[itemprop="identifier"]`)?.getAttribute("content") as string;

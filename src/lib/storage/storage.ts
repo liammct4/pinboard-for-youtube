@@ -14,12 +14,12 @@ import { IDirectoryModificationAction } from "../../components/features/resource
 import { IConfig } from "./config.ts"
 
 export interface IStorage {
-	user_data: {
+	userData: {
 		videos: IVideo[];
 		directoryRoot: IDirectoryNode;
 		config: IConfig;
 	},
-	temp_state: ITempState;
+	tempState: ITempState;
 	auth: {
 		currentUser: IAuthenticatedUser | undefined;
 	},
@@ -41,7 +41,7 @@ let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
 });
 
 export const BLANK_STORAGE_TEMPLATE: IStorage = {
-	user_data: {
+	userData: {
 		videos: [],
 		directoryRoot: {
 			nodeID: crypto.randomUUID(),
@@ -56,7 +56,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 			userSettings: defaultUserSettings
 		}
 	},
-	temp_state: {
+	tempState: {
 		expandedVideos: [],
 		videoBrowserScrollDistance: 0,
 		layout: {

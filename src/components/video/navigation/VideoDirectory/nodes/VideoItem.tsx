@@ -19,8 +19,7 @@ interface IVideoItemProperties {
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	const { isSignedIn, user } = useUserAccount();
-	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess(isSignedIn ? user : null);
+	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess();
 	const isExpanded = useSelector((state: RootState) => state.tempState.expandedVideoIDs).includes(node.videoID);
 	const dispatch = useDispatch();
 

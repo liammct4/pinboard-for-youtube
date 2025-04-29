@@ -12,14 +12,14 @@ export function TimelineContainer() {
 	const [ hover, setHover ] = useState<string | null>(null);
 	const { storage } = useLocalStorage();
 	const videoData = useLocalVideoData();
-	const { directoryUpdateVideo } = useVideoStateAccess(storage.auth.currentUser ?? null);
+	const { directoryUpdateVideo } = useVideoStateAccess();
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 
 	if (!videoData.isVideoPage || videoData.isAdvertisement) {
 		return <></>
 	}
 
-	const video = storage.user_data.videos.find(x => x.id == videoData.data.videoID);
+	const video = storage.userData.videos.find(x => x.id == videoData.data.videoID);
 
 	if (video == null) {
 		return <></>;

@@ -10,12 +10,13 @@ import { useVideosResource } from "./resources/useVideosResource";
 import { useVideoCache } from "./useVideoInfo";
 import { accessStorage } from "../../lib/storage/storage";
 import { IAuthenticatedUser } from "../../lib/user/accounts";
+import { useUserAccount } from "./useUserAccount";
 
-export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
+export function useVideoStateAccess() {
 	const preventUpdate = useRef<boolean>(true);
 	const { videoData, directoryRoot, counter, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
-	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource(user);
-	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource(user);
+	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
+	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource();
 	const { retrieveInfo } = useVideoCache();
 	const { storage, setStorage } = useLocalStorage();
 
@@ -25,8 +26,8 @@ export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
 		}
 
 		preventUpdate.current = true;
-		storage.user_data.videos = Array.from(videoData.values());
-		storage.user_data.directoryRoot = removeParentPass(directoryRoot);
+		storage.userData.videos = Array.from(videoData.values());
+		storage.userData.directoryRoot = removeParentPass(directoryRoot);
 
 		setStorage(storage);
 	}, [counter]);
@@ -42,8 +43,8 @@ export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
 			const update = async () => {
 				let storage = await accessStorage();
 				videoData.clear();
-				storage.user_data.videos.forEach(x => videoData.set(x.id, x));
-				directoryRoot.subNodes = cloneDirectory(storage.user_data.directoryRoot).subNodes;
+				storage.userData.videos.forEach(x => videoData.set(x.id, x));
+				directoryRoot.subNodes = cloneDirectory(storage.userData.directoryRoot).subNodes;
 
 				// Update so the parent references the same object.
 				directoryRoot.subNodes.forEach(x => x.parent = directoryRoot);
@@ -53,7 +54,7 @@ export function  useVideoStateAccess(user: IAuthenticatedUser | null) {
 	
 			update();
 		}, 100);
-	}, [counter, JSON.stringify(storage.user_data)]);
+	}, [counter, JSON.stringify(storage.userData)]);
 
 	return {
 		videoData,

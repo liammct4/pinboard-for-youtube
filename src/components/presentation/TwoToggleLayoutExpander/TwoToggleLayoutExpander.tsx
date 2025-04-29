@@ -28,24 +28,16 @@ export function TwoToggleLayoutExpander({
 		closeButtonContent,
 		align
 	}: ITwoToggleLayoutExpanderProperties): React.ReactNode {
-	let [isExpanded, setExpanded] = useState(expanded);
-
 	return (
-		<Collapsible.Root open={isExpanded} onOpenChange={(() => isExpanded)}>
+		<Collapsible.Root open={expanded}>
 			<div className="expander-inner" data-align={align ?? "left"}>
 				<Collapsible.Trigger asChild>
 					<button
 						className="layout-option-button button-base button-small square-button"
 						type="button"
 						title={openTooltip}
-						onClick={() => {
-							setExpanded(true)
-
-							if (onExpandedEvent != null) {
-								onExpandedEvent(true);
-							}
-						}}
-						data-active={isExpanded}>
+						onClick={() => onExpandedEvent?.(true)}
+						data-active={expanded}>
 							{openButtonContent}
 					</button>
 				</Collapsible.Trigger>
@@ -54,18 +46,12 @@ export function TwoToggleLayoutExpander({
 						className="layout-option-button button-base button-small square-button"
 						type="button"
 						title={closeTooltip}
-						onClick={() => {
-							setExpanded(false);
-						
-							if (onExpandedEvent != null) {
-								onExpandedEvent(false);
-							}
-						}}
-						data-active={!isExpanded}>
+						onClick={() => onExpandedEvent?.(false)}
+						data-active={!expanded}>
 							{closeButtonContent}
 					</button>
 				</Collapsible.Trigger>
-				<h3 className="message-text">{isExpanded ? openMessage : closeMessage}</h3>
+				<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>
 			</div>
 			<Collapsible.Content className="expander-content" data-expander-use-slide-animation>
 				{children}

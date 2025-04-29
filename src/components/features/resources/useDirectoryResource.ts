@@ -21,11 +21,12 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 	return type == "DIRECTORY" ? "Directory" : "Video"; 
 }
 
-export function useDirectoryResource(user: IAuthenticatedUser | null) {
+export function useDirectoryResource() {
 	const { storage } = useLocalStorage();
+	const { user, isSignedIn } = useUserAccount();
 	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.directoryPendingQueue);
 
-	const fetchDirectoryRoot = async () => user != null ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
+	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
 
 	const createAction = (node: VideoBrowserNode) => {
 		let mutation: DataMutation<IDirectoryModificationAction> = {

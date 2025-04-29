@@ -7,11 +7,12 @@ import { useMutationQueue } from "../mutations/useMutationQueue";
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 
-export function useVideosResource(user: IAuthenticatedUser | null) {
+export function useVideosResource() {
 	const { storage } = useLocalStorage();
+	const { user, isSignedIn } = useUserAccount();
 	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.videoPendingQueue);
 
-	const fetchVideos = async () => user != null ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
+	const fetchVideos = async () => isSignedIn ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
 
 	const updateAccountVideo = (video: IVideo) => {
 		let mutation: DataMutation<IVideo> = {

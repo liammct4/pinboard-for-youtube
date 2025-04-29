@@ -8,16 +8,16 @@ import { useLocalStorage } from "../storage/useLocalStorage";
 export function VideoWrapper({ children }: IWrapperProperties): React.ReactNode {
 	const videos = useRef<Map<string, IVideo>>(new Map<string, IVideo>());
 	const { storage } = useLocalStorage();
-	const directoryRoot = useRef<IDirectoryNode>(cloneDirectory(storage.user_data.directoryRoot));
+	const directoryRoot = useRef<IDirectoryNode>(cloneDirectory(storage.userData.directoryRoot));
 	const [ counter, setCounter ] = useState<number>(0);
 	const [ updateCount, setUpdateCount ] = useState<number>(0);
 
 	useEffect(() => {
-		directoryRoot.current = cloneDirectory(storage.user_data.directoryRoot);
-		storage.user_data.videos.forEach(x => videos.current.set(x.id, x));
+		directoryRoot.current = cloneDirectory(storage.userData.directoryRoot);
+		storage.userData.videos.forEach(x => videos.current.set(x.id, x));
 
 		setUpdateCount(updateCount + 1);
-	}, [JSON.stringify(storage.user_data.directoryRoot)]);
+	}, [JSON.stringify(storage.userData.directoryRoot)]);
 
 	return (
 		<VideoDirectoryContext.Provider value={{

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { InputMethodType } from "../../lib/config/configurationOption";
 import settingDefinitions from "./../../lib/config/settingDefinitions.json"
+import { IStorage } from "../../lib/storage/storage";
 
 export type SettingPrimitiveValue = string | number | boolean | bigint;
 
@@ -18,7 +19,7 @@ export type SettingValue = {
 }
 
 export interface ISettingsSlice {
-	settingValues: SettingValue[]
+	settingValues: SettingValue[];
 }
 
 const initialState: ISettingsSlice = {
@@ -29,6 +30,9 @@ export const settingsSlice = createSlice({
 	name: "settings",
 	initialState,
 	reducers: {
+		updateSettingsSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
+			state.settingValues = action.payload.userData.config.userSettings;
+		},
 		initializeAndSetSettingsDefault: (state) => {
 			for (let settingDefinition of settingDefinitions) {
 				let index = state.settingValues.findIndex(value => value.settingName == settingDefinition.settingName);
@@ -50,6 +54,7 @@ export const settingsSlice = createSlice({
 
 export const {
 	initializeAndSetSettingsDefault,
+	updateSettingsSliceFromStorage,
 	setSettingValues
 } = settingsSlice.actions;
 export default settingsSlice.reducer;

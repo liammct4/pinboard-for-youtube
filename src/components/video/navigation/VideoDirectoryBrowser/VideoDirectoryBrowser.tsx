@@ -73,8 +73,7 @@ function DragVideoTooltipItem({ idSection }: { idSection: string }) {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { user, isSignedIn } = useUserAccount();
-	const { videoData, root, directoryMove } = useVideoStateAccess(isSignedIn ? user : null);
+	const { videoData, root, directoryMove } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
@@ -132,7 +131,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		setSelectedItems([]);
 	}, [directory]);
 
-	const scrollPosition = storage.temp_state.videoBrowserScrollDistance;
+	const scrollPosition = storage.tempState.videoBrowserScrollDistance;
 
 	const requestEditEnd = async (newSliceName: string) => {
 		let result = validateDirectoryName(newSliceName);
