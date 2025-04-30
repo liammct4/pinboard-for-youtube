@@ -13,6 +13,12 @@ import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource.ts"
 import { IConfig } from "./config.ts"
 
+export interface IMutationQueues {
+	videoPendingQueue: DataMutation<IVideo>[],
+	themePendingQueue: DataMutation<IAppTheme>[],
+	directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
+}
+
 export interface IStorage {
 	userData: {
 		videos: IVideo[];
@@ -25,11 +31,7 @@ export interface IStorage {
 	},
 	persistentState: IPersistentState;
 	account: {
-		mutationQueues: {
-			videoPendingQueue: DataMutation<IVideo>[],
-			themePendingQueue: DataMutation<IAppTheme>[],
-			directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
-		}
+		mutationQueues: IMutationQueues;
 	},
 	cache: {
 		videos: IYoutubeVideoInfo[]

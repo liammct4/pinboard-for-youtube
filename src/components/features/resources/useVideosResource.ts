@@ -1,16 +1,14 @@
+import { useDispatch } from "react-redux";
 import { videosEndpoint } from "../../../lib/api/pinboardApi";
-import { IAuthenticatedUser } from "../../../lib/user/accounts";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { fetchVideosFromAPI } from "../../../lib/user/resources/videos";
 import { IVideo } from "../../../lib/video/video";
-import { useMutationQueue } from "../mutations/useMutationQueue";
-import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
+import { appendRequestToVideos } from "../../../features/mutation/mutationSlice";
 
 export function useVideosResource() {
-	const { storage } = useLocalStorage();
 	const { user, isSignedIn } = useUserAccount();
-	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.videoPendingQueue);
+	const dispatch = useDispatch();
 
 	const fetchVideos = async () => isSignedIn ? await fetchVideosFromAPI(user.tokens.IdToken) : undefined;
 
@@ -22,7 +20,7 @@ export function useVideosResource() {
 			position: -1
 		};
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToVideos(mutation));
 	}
 
 	const removeAccountVideo = (id: string) => {
@@ -33,7 +31,7 @@ export function useVideosResource() {
 			data: null
 		};
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToVideos(mutation));
 	}
 
 	const clearAllVideos = async () => {

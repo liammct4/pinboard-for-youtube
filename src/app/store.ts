@@ -4,6 +4,8 @@ import themeReducer from "../features/theme/themeSlice.ts"
 import authSlice from "../features/auth/authSlice.ts"
 import settingsSlice from "../features/settings/settingsSlice.ts"
 import cacheSlice from "../features/cache/cacheSlice.ts"
+import mutationSlice from "../features/mutation/mutationSlice.ts"
+import { mutationRequestMiddleware } from "../features/mutation/mutationRequestMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -12,9 +14,11 @@ export let store = configureStore({
 		auth: authSlice,
 		settings: settingsSlice,
 		cache: cacheSlice,
+		mutation: mutationSlice, 
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+		.prepend(mutationRequestMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

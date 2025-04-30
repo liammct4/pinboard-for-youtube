@@ -9,8 +9,6 @@ import { useLocalStorage } from "./storage/useLocalStorage";
 import { useVideosResource } from "./resources/useVideosResource";
 import { useVideoCache } from "./useVideoInfo";
 import { accessStorage } from "../../lib/storage/storage";
-import { IAuthenticatedUser } from "../../lib/user/accounts";
-import { useUserAccount } from "./useUserAccount";
 
 export function useVideoStateAccess() {
 	const preventUpdate = useRef<boolean>(true);

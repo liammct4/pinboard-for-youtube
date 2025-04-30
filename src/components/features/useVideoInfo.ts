@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import { doesVideoExist, getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID, getYoutubeVideoInfoFromLink, getYoutubeVideoInfoFromVideoID, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
+import { getYoutubeVideoInfoFromVideoID, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { saveVideoToCache } from "../../features/cache/cacheSlice";
-import { useLocalStorage } from "./storage/useLocalStorage";
 
 export function useVideoCache() {
-	const { storage, setStorage } = useLocalStorage();
-	const cache = storage.cache.videos;
+	const cache = useSelector((state: RootState) => state.cache.videoCache);
+	const dispatch = useDispatch();
 
 	const retrieveInfo = async (videoID: string): Promise<IYoutubeVideoInfo | undefined> => {
-		let index = cache.findIndex(x => x.video_id == videoID);
+		let existingCached = cache.find(x => x.video_id == videoID);
 
-		if (index != -1) {
-			return cache[index];
+		if (existingCached != undefined) {
+			return existingCached;
 		}
 
 		let info = await getYoutubeVideoInfoFromVideoID(videoID);
@@ -22,8 +21,8 @@ export function useVideoCache() {
 			return undefined;
 		}
 
-		storage.cache.videos.push(info);
-		setStorage(storage);
+
+		dispatch(saveVideoToCache(info));
 
 		return info;
 	}

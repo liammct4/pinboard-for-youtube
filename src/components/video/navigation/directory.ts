@@ -418,11 +418,11 @@ export function removeItems(root: IDirectoryNode, basePath: string, targetSectio
 
 	for (let target of targetSections) {
 		let targetIndex = baseNode.subNodes.findIndex(x => getSectionPrefix(x) == target);
-
+		
 		if (targetIndex == -1) {
 			continue;
 		}
-
+		
 		baseNode.subNodes.splice(targetIndex, 1);
 	}
 }

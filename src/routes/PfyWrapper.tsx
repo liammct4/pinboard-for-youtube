@@ -6,7 +6,6 @@ import { VideoWrapper } from "../components/features/videoAccess/VideoWrapper.ts
 import { EventWrapper } from "../components/features/events/EventWrapper.tsx";
 import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
 import { AccountDataWrapper } from "../components/features/accountData/AccountDataWrapper.tsx";
-import { MutationWrapper } from "../components/features/mutations/MutationWrapper.tsx";
 import { StyleContextWrapper } from "../components/features/styleContext/StyleContextWrapper.tsx";
 import "./PfyWrapper.css"
 import "./HomePage.css"
@@ -22,11 +21,9 @@ export function PfyWrapper(): React.ReactNode {
 							<RequestHandlerWrapper>
 								<VideoWrapper>
 									<AccountDataWrapper>
-										<MutationWrapper>
-											<ActiveVideoWrapper>
-												<Outlet/>
-											</ActiveVideoWrapper>
-										</MutationWrapper>
+										<ActiveVideoWrapper>
+											<Outlet/>
+										</ActiveVideoWrapper>
 									</AccountDataWrapper>
 								</VideoWrapper>
 							</RequestHandlerWrapper>

@@ -2,10 +2,11 @@ import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSub
 import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
-import { useMutationQueue } from "../mutations/useMutationQueue";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
 import { IAuthenticatedUser } from "../../../lib/user/accounts";
+import { useDispatch } from "react-redux";
+import { appendRequestToDirectory } from "../../../features/mutation/mutationSlice";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -22,9 +23,8 @@ function convertNodeType(type: NodeType): DirectoryActionType {
 }
 
 export function useDirectoryResource() {
-	const { storage } = useLocalStorage();
 	const { user, isSignedIn } = useUserAccount();
-	const { updateMutationQueue } = useMutationQueue(storage.account.mutationQueues.directoryPendingQueue);
+	const dispatch = useDispatch();
 
 	const fetchDirectoryRoot = async () => isSignedIn ? await fetchDirectoryFromAPI(user.tokens.IdToken) : undefined;
 
@@ -41,7 +41,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToDirectory(mutation));
 	}
 
 	const deleteAction = async (node: VideoBrowserNode) => {
@@ -56,7 +56,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToDirectory(mutation));
 	}
 
 	const renameAction = (renamedNode: IDirectoryNode, oldName: string) => {
@@ -74,7 +74,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToDirectory(mutation));
 	}
 
 	const moveAction = (node: VideoBrowserNode, oldDirectory: string) => {
@@ -90,7 +90,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		updateMutationQueue(mutation);
+		dispatch(appendRequestToDirectory(mutation));
 	}
 
 	const clearAllDirectories = async () => {
