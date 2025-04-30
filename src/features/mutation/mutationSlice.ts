@@ -34,7 +34,16 @@ export const mutationSlice = createSlice({
 			state.videoPendingQueue = [];
 			state.directoryPendingQueue = [];
 			state.themePendingQueue = [];
-		}
+		},
+		clearVideoQueue: (state) => {
+			state.videoPendingQueue = [];
+		},
+		clearDirectoryQueue: (state) => {
+			state.directoryPendingQueue = [];
+		},
+		clearThemeQueue: (state) => {
+			state.themePendingQueue = [];
+		},
 	}
 })
 
@@ -42,6 +51,9 @@ export const {
 	appendRequestToVideos,
 	appendRequestToDirectory,
 	appendRequestToThemes,
-	clearMutationQueues
+	clearMutationQueues,
+	clearVideoQueue,
+	clearDirectoryQueue,
+	clearThemeQueue
 } = mutationSlice.actions;
 export default mutationSlice.reducer;
