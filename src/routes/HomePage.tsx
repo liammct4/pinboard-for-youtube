@@ -1,22 +1,13 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import PfyLogo from "./../../assets/logo/logo.svg?react"
-import { useNotificationMessage } from "../components/features/notifications/useNotificationMessage";
-import { useDispatch } from "react-redux";
-import { modifyStorage } from "../lib/storage/storage";
+import PfyLogo from "./../../assets/logo/logo.svg?react";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
 
 	return (
 		<div className="outer-body">
-			<button onClick={() => {
-				modifyStorage(s => s.tempState.layout.isCurrentVideosSectionExpanded = false);
-			}}>
-				Test
-			</button>
 			<div className="header-area">
 				<PfyLogo className="extension-logo"/>
 				<h1 className="extension-title">Pinboard for YouTube</h1>
