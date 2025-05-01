@@ -2,8 +2,12 @@ import { createContext, useEffect, useState } from "react";
 import { BLANK_STORAGE_TEMPLATE, IStorage } from "../../../lib/storage/storage";
 import { IWrapperProperties } from "../wrapper";
 
-export function StorageWrapper({ children }: IWrapperProperties) {
-	const [ storageCache, setStorageCache ] = useState<IStorage>(BLANK_STORAGE_TEMPLATE);
+export interface IStorageWrapperProperties extends IWrapperProperties {
+	startValue: IStorage
+} 
+
+export function StorageWrapper({ children, startValue }: IStorageWrapperProperties) {
+	const [ storageCache, setStorageCache ] = useState<IStorage>(startValue);
 
 	useEffect(() => {		
 		chrome.storage.local.onChanged.addListener(() => {

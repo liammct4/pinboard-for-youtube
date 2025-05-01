@@ -5,11 +5,16 @@ import { TextMeasurerWrapper } from "../../components/features/useTextMeasurer";
 import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
 import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
 import { store } from "../../app/store";
+import { IStorage } from "../../lib/storage/storage";
 
-export function TimelineApp() {
+export interface ITimelineAppProperties {
+	storage: IStorage;
+}
+
+export function TimelineApp({ storage }: ITimelineAppProperties) {
 	return (
 		<Provider store={store}>
-			<StorageWrapper>
+			<StorageWrapper startValue={storage}>
 				<StyleContextWrapper update-theme>
 					<TextMeasurerWrapper>
 						<VideoWrapper>

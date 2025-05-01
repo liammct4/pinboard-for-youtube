@@ -24,6 +24,8 @@ import { IDirectoryNode, IVideoNode } from "./components/video/navigation/direct
 import { IVideo } from "./lib/video/video.ts"
 import { removeParentPass } from "./lib/storage/userData/userData.ts"
 import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
+import { StorageWrapper } from "./components/features/storage/StorageWrapper.tsx"
+import { VideoWrapper } from "./components/features/videoAccess/VideoWrapper.tsx"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -105,28 +107,32 @@ async function setupState() {
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
-			<Provider store={store}>
-				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
-					<Route path="/*" element={<PfyWrapper/>}>
-						<Route path="app" element={<HomePage/>}>
-							<Route path="videos" element={<VideosPage/>}/>
-							<Route path="menu" element={<MenuPage/>}>
-								<Route path="options/*" element={<OptionsPage/>}>
-									<Route path="general" element={<GeneralPage/>}/>
-									<Route path="accounts/*" element={<AccountsPage/>}/>
-									<Route path="appearance/*" element={<AppearancePage/>}/>
-									<Route path="debug/*" element={<DebugPage/>}/>
-									<Route path="*" element={<OptionsNavigator/>}/>
+			<StorageWrapper startValue={storage}>
+				<VideoWrapper>
+					<Provider store={store}>
+						<RouterProvider router={createBrowserRouter(createRoutesFromElements(
+							<Route path="/*" element={<PfyWrapper/>}>
+								<Route path="app" element={<HomePage/>}>
+									<Route path="videos" element={<VideosPage/>}/>
+									<Route path="menu" element={<MenuPage/>}>
+										<Route path="options/*" element={<OptionsPage/>}>
+											<Route path="general" element={<GeneralPage/>}/>
+											<Route path="accounts/*" element={<AccountsPage/>}/>
+											<Route path="appearance/*" element={<AppearancePage/>}/>
+											<Route path="debug/*" element={<DebugPage/>}/>
+											<Route path="*" element={<OptionsNavigator/>}/>
+										</Route>
+										<Route path="help" element={<HelpPage/>}/>				
+									</Route>
+									<Route path="" element={<Navigate to="videos" replace/>}/>
+									<Route path="error" element={<ErrorPage/>}/>
 								</Route>
-								<Route path="help" element={<HelpPage/>}/>				
+								<Route path="*" element={<Navigate to="app" replace/>}/>
 							</Route>
-							<Route path="" element={<Navigate to="videos" replace/>}/>
-							<Route path="error" element={<ErrorPage/>}/>
-						</Route>
-						<Route path="*" element={<Navigate to="app" replace/>}/>
-					</Route>
-				))}/>
-			</Provider>
+						))}/>
+					</Provider>
+				</VideoWrapper>
+			</StorageWrapper>
 		</React.StrictMode>
 	);
 }

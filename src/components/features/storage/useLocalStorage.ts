@@ -4,7 +4,7 @@ import { ILocalStorageContext, LocalStorageContext } from "./StorageWrapper";
 
 export function useLocalStorage() {
 	const { storageCache, setStorageCache } = useContext<ILocalStorageContext>(LocalStorageContext);
-	
+
 	return {
 		storage: storageCache,
 		setStorage: setStorageCache

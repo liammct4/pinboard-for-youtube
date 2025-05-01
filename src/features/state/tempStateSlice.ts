@@ -5,6 +5,7 @@ import { IStorage } from "../../lib/storage/storage";
 export interface IStateSlice {
 	expandedVideoIDs: string[];
 	videoBrowserScrollDistance: number;
+	currentDirectory: string;
 	layout: LayoutState;
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: boolean;
@@ -13,6 +14,7 @@ export interface IStateSlice {
 
 const initialState: IStateSlice = {
 	expandedVideoIDs: [],
+	currentDirectory: "$",
 	videoBrowserScrollDistance: 0,
 	layout: {
 		isCurrentVideosSectionExpanded: true
@@ -28,6 +30,7 @@ export const tempStateSlice = createSlice({
 	reducers: {
 		updateTempSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.expandedVideoIDs = action.payload.tempState.expandedVideos;
+			state.currentDirectory = action.payload.tempState.currentDirectoryPath;
 			state.layout = action.payload.tempState.layout;
 			state.videoBrowserScrollDistance = action.payload.tempState.videoBrowserScrollDistance;
 		},
@@ -54,6 +57,9 @@ export const tempStateSlice = createSlice({
 		},
 		disableControlsLock: (state) => {
 			state.temporarySingleState.onRequestIsVideoControlLocked = false;
+		},
+		setDirectoryPath: (state, action: PayloadAction<string>) => {
+			state.currentDirectory = action.payload;
 		}
 	}
 })
@@ -65,6 +71,7 @@ export const {
 	setLayoutState,
 	enableControlsLock,
 	disableControlsLock,
-	setVideoBrowserScrollDistance
+	setVideoBrowserScrollDistance,
+	setDirectoryPath
 } = tempStateSlice.actions;
 export default tempStateSlice.reducer;

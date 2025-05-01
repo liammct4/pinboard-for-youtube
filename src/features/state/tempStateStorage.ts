@@ -6,6 +6,7 @@ import { IStateSlice } from "./tempStateSlice";
 export function saveTempStateSliceToStorage(storage: IStorage, tempStateSlice: IStateSlice) {
 	storage.tempState = {
 		expandedVideos: tempStateSlice.expandedVideoIDs,
+		currentDirectoryPath: tempStateSlice.currentDirectory,
 		layout: tempStateSlice.layout,
 		videoBrowserScrollDistance: tempStateSlice.videoBrowserScrollDistance
 	};

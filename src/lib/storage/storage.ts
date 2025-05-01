@@ -61,6 +61,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	tempState: {
 		expandedVideos: [],
 		videoBrowserScrollDistance: 0,
+		currentDirectoryPath: "$",
 		layout: {
 			isCurrentVideosSectionExpanded: true
 		}

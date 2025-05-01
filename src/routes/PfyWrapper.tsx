@@ -13,24 +13,20 @@ import { ActiveVideoWrapper } from "../components/features/activeVideo/useActive
 
 export function PfyWrapper(): React.ReactNode {
 	return (
-		<StorageWrapper>
-			<StyleContextWrapper update-theme>
-				<ExtensionBoundsWrapper>
-					<EventWrapper>
-						<NotificationWrapper>
-							<RequestHandlerWrapper>
-								<VideoWrapper>
-									<AccountDataWrapper>
-										<ActiveVideoWrapper>
-											<Outlet/>
-										</ActiveVideoWrapper>
-									</AccountDataWrapper>
-								</VideoWrapper>
-							</RequestHandlerWrapper>
-						</NotificationWrapper>
-					</EventWrapper>
-				</ExtensionBoundsWrapper>
-			</StyleContextWrapper>
-		</StorageWrapper>
+		<StyleContextWrapper update-theme>
+			<ExtensionBoundsWrapper>
+				<EventWrapper>
+					<NotificationWrapper>
+						<RequestHandlerWrapper>
+							<AccountDataWrapper>
+								<ActiveVideoWrapper>
+									<Outlet/>
+								</ActiveVideoWrapper>
+							</AccountDataWrapper>
+						</RequestHandlerWrapper>
+					</NotificationWrapper>
+				</EventWrapper>
+			</ExtensionBoundsWrapper>
+		</StyleContextWrapper>
 	)
 }

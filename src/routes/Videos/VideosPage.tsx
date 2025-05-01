@@ -5,7 +5,7 @@ import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessag
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
 import { VideoCard } from "../../components/video/VideoCard/VideoCard.tsx";
-import { setLayoutState } from "../../features/state/tempStateSlice.ts";
+import { setDirectoryPath, setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
 import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,7 +40,7 @@ interface IAddDirectoryForm extends IErrorFieldValues {
 
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
-	const [ directoryPath, setDirectoryPath ] = useState<string>("$");
+	const directoryPath = useSelector((state: RootState) => state.tempState.currentDirectory);
 	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
@@ -203,7 +203,7 @@ export function VideosPage(): React.ReactNode {
 					<VideoDirectoryBrowser
 						defaultVideoStyle="MINIMAL"
 						directoryPath={directoryPath}
-						onDirectoryPathChanged={setDirectoryPath}/>
+						onDirectoryPathChanged={(newPath) => dispatch(setDirectoryPath(newPath))}/>
 				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">

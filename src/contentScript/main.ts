@@ -16,7 +16,7 @@ function contentScriptMain() {
 	videoSetup();
 }
 
-function injectionSetup() {
+async function injectionSetup() {
 	if (window.location.href == lastLink) {
 		setTimeout(injectionSetup, 200);
 		return;
@@ -25,7 +25,7 @@ function injectionSetup() {
 	lastLink = window.location.href;
 
 	if (!isTimelineSetup) {
-		isTimelineSetup = timelineSetup();
+		isTimelineSetup = await timelineSetup();
 	}
 
 	if (!isControlsSetup) {

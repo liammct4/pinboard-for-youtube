@@ -4,11 +4,16 @@ import { StyleContextWrapper } from "../../components/features/styleContext/Styl
 import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
 import { VideoTimestampButton } from "./components/VideoTimestampButton/VideoTimestampButton";
 import { store } from "../../app/store";
+import { IStorage } from "../../lib/storage/storage";
 
-export function ControlsApp() {
+export interface IControlsAppProperties {
+	storage: IStorage;
+}
+
+export function ControlsApp({ storage }: IControlsAppProperties) {
 	return (
 		<Provider store={store}>
-			<StorageWrapper>
+			<StorageWrapper startValue={storage}>
 				<StyleContextWrapper>
 					<VideoWrapper>
 						<VideoTimestampButton/>
