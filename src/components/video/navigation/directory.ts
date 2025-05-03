@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import { getAlphanumericInsertIndex } from "../../../lib/util/generic/stringUtil";
 import { accessStorage } from "../../../lib/storage/storage";
+import { GUID } from "../../../lib/util/objects/types";
 
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
@@ -11,22 +12,27 @@ export type NodePath = {
 }
 
 export interface INode {
-	parent: IDirectoryNode | null;
-	nodeID: string;
-	type: NodeType;
+	/* parent: GUID | null;*/ // Maybe?
+	nodeID: GUID;
 }
-
-export type VideoBrowserNode = IVideoNode | IDirectoryNode; 
 
 export interface IVideoNode extends INode {
 	videoID: string;
-	type: "VIDEO";
 }
 
 export interface IDirectoryNode extends INode {
 	slice: string;
-	subNodes: VideoBrowserNode[];
-	type: "DIRECTORY";
+	subNodes: GUID[];
+}
+
+export type DirectoryTree = {
+	rootNode: GUID;
+	directoryNodes: {
+		[key: GUID]: IDirectoryNode;
+	},
+	videoNodes: {
+		[key: GUID]: IVideoNode;
+	}
 }
 
 export function getItemFromNode(path: string, node: IDirectoryNode): VideoBrowserNode | null {

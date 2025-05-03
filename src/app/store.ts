@@ -6,6 +6,7 @@ import settingsSlice from "../features/settings/settingsSlice.ts"
 import cacheSlice from "../features/cache/cacheSlice.ts"
 import mutationSlice from "../features/mutation/mutationSlice.ts"
 import videoSlice from "../features/video/videoSlice.ts"
+import directorySlice from "../features/directory/directorySlice.ts"
 import { mutationRequestMiddleware } from "../features/mutation/mutationRequestMiddleware.ts"
 
 export let store = configureStore({
@@ -16,7 +17,8 @@ export let store = configureStore({
 		settings: settingsSlice,
 		cache: cacheSlice,
 		mutation: mutationSlice,
-		video: videoSlice
+		video: videoSlice,
+		directory: directorySlice
 	},
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
