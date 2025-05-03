@@ -1,4 +1,4 @@
-import { IDirectoryNode } from "../../../components/video/navigation/directory";
+import { IDirectoryNode } from "../../directory/directory";
 import { directoriesEndpoint } from "../../api/pinboardApi";
 import { addParentPass } from "../../storage/userData/userData";
 import { HttpStatusCode } from "../../util/http";

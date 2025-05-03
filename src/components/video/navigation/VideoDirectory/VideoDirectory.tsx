@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { getSectionPrefix, IDirectoryNode } from "../directory"
+import { getSectionPrefix, IDirectoryNode } from "../../../../lib/directory/directory"
 import "./VideoDirectory.css"
 import { VideoPresentationStyle } from "../VideoDirectoryBrowser/VideoDirectoryBrowser";
 import { DragListItem } from "../../../../lib/dragList/DragListItem";

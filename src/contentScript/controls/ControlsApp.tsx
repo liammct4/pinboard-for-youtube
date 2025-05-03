@@ -4,7 +4,7 @@ import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper
 import { VideoTimestampButton } from "./components/VideoTimestampButton/VideoTimestampButton";
 import { store } from "../../app/store";
 import { IStorage } from "../../lib/storage/storage";
-import { cloneDirectory } from "../../components/video/navigation/directory";
+import { cloneDirectory } from "../../lib/directory/directory";
 
 export interface IControlsAppProperties {
 	storage: IStorage;

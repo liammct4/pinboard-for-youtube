@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { IVideo } from "../../../lib/video/video";
 import { VideoDirectoryContext } from "../../../context/video";
-import { cloneDirectory, IDirectoryNode } from "../../video/navigation/directory";
+import { cloneDirectory, IDirectoryNode } from "../../../lib/directory/directory";
 import { IWrapperProperties } from "../wrapper";
 import { removeParentPass } from "../../../lib/storage/userData/userData";
 import { modifyStorage } from "../../../lib/storage/storage";

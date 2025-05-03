@@ -3,7 +3,7 @@
 import { useContext, useState } from "react";
 import CategoryIcon from "./../../../../../../assets/icons/category.svg?react"
 import DropIcon from "./../../../../../../assets/icons/drop_in.svg?react"
-import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../../directory";
+import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { IconContainer } from "../../../../images/svgAsset";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
 

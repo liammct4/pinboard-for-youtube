@@ -1,6 +1,6 @@
 import { createContext, Context } from "react"
 import { IVideo } from "../lib/video/video";
-import { IDirectoryNode } from "../components/video/navigation/directory";
+import { IDirectoryNode } from "../lib/directory/directory";
 
 export interface IVideoDirectoryContext {
 	updateCount: number;

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromPath, getParentPathFromPath, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../video/navigation/directory";
+import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromPath, getParentPathFromPath, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../../lib/directory/directory";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";

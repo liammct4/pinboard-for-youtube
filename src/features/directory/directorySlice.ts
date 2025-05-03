@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
-import { DirectoryTree } from "../../components/video/navigation/directory";
+import { DirectoryTree } from "../../lib/directory/directory";
 
 export interface IDirectorySlice {
 	videoBrowser: DirectoryTree;

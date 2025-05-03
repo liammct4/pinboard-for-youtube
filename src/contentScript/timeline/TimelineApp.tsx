@@ -4,7 +4,7 @@ import { TextMeasurerWrapper } from "../../components/features/useTextMeasurer";
 import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
 import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
 import { store } from "../../app/store";
-import { cloneDirectory } from "../../components/video/navigation/directory";
+import { cloneDirectory } from "../../lib/directory/directory";
 import { IStorage } from "../../lib/storage/storage";
 
 export interface ITimelineAppProperties {

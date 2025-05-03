@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { getSectionPrefix, IDirectoryNode, IVideoDirectoryInteractionContext, IVideoNode, VideoBrowserNode, VideoDirectoryInteractionContext } from "../../directory";
+import { getSectionPrefix, IDirectoryNode, IVideoDirectoryInteractionContext, IVideoNode, VideoBrowserNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
 import "./InteractableBrowserNode.css"

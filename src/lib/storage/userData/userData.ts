@@ -1,4 +1,4 @@
-import { IDirectoryNode, IVideoNode, VideoBrowserNode } from "../../../components/video/navigation/directory";
+import { IDirectoryNode, IVideoNode, VideoBrowserNode } from "../../directory/directory";
 
 export function addParentPass(root: IDirectoryNode) {
 	for (let node of (root as IDirectoryNode).subNodes) {

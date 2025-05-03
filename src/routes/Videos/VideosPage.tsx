@@ -22,7 +22,7 @@ import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID } from "../../lib/
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
-import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromPath, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../components/video/navigation/directory.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getItemFromPath, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../lib/directory/directory.ts";
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";

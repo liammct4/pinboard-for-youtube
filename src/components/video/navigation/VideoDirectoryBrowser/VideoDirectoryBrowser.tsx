@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getItemFromPath, getSectionType, getRootDirectoryPathFromSubNode, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../directory";
+import { directoryPathConcat, getItemFromPath, getSectionType, getRootDirectoryPathFromSubNode, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../../../../lib/directory/directory";
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import ArrowIcon from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg?react"

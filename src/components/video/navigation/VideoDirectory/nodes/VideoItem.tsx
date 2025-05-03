@@ -4,7 +4,7 @@ import { CompactVideoItem } from "../../../styledVideoItems/CompactVideoItem/Com
 import { MinimalVideoItem } from "../../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
 import { RegularVideoItem } from "../../../styledVideoItems/RegularVideoItem/RegularVideoItem";
 import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
-import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
+import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
 import { useDispatch, useSelector } from "react-redux";

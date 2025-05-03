@@ -20,7 +20,7 @@ import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { cloneDirectory, IDirectoryNode, IVideoNode } from "./components/video/navigation/directory.ts"
+import { cloneDirectory, IDirectoryNode, IVideoNode } from "./lib/directory/directory.ts"
 import { IVideo } from "./lib/video/video.ts"
 import { removeParentPass } from "./lib/storage/userData/userData.ts"
 import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"

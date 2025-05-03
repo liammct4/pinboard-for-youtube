@@ -1,4 +1,4 @@
-import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubNode, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
+import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubNode, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../../lib/directory/directory";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
