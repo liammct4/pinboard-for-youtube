@@ -8,6 +8,8 @@ import { updateTempSliceFromStorage } from "../features/state/tempStateSlice";
 import { saveTempStateSliceToStorage } from "../features/state/tempStateStorage";
 import { updateThemeSliceFromStorage } from "../features/theme/themeSlice";
 import { saveThemeSliceToStorage } from "../features/theme/themeStorage";
+import { updateVideoSliceFromStorage } from "../features/video/videoSlice";
+import { saveVideoSliceToStorage } from "../features/video/videoStorage";
 import { accessStorage, modifyStorage } from "../lib/storage/storage";
 import { RootState, store } from "./store";
 
@@ -19,6 +21,7 @@ export async function syncStoreToStorage() {
 	store.dispatch(updateAuthSliceFromStorage(storage));
 	store.dispatch(updateSettingsSliceFromStorage(storage));
 	store.dispatch(updateCacheSliceFromStorage(storage));
+	store.dispatch(updateVideoSliceFromStorage(storage));
 }
 
 
@@ -40,6 +43,7 @@ export function setupStorageAndStoreSync() {
 		saveSettingsSliceToStorage(storage, state.settings);
 		saveTempStateSliceToStorage(storage, state.tempState);
 		saveThemeSliceToStorage(storage, state.theme);
+		saveVideoSliceToStorage(storage, state.video);
 
 		setTimeout(() => freeze = false, 100)
 	}));

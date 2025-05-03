@@ -8,13 +8,13 @@ import { resendEmailVerificationLink } from "../../../../../../lib/user/accounts
 import { endResendVerfiyEmailState } from "../../../../../../lib/storage/persistentState/resendVerificationEmail";
 import { HttpStatusCode } from "../../../../../../lib/util/http";
 import "./RegisterSuccess.css"
-import { useLocalStorage } from "../../../../../../components/features/storage/useLocalStorage";
+import { accessStorage } from "../../../../../../lib/storage/storage";
 
 export function RegisterSuccess(): React.ReactNode {
 	const navigate = useNavigate();
 	const { activateMessage } = useNotificationMessage();
-	const { storage } = useLocalStorage();
 	const onResendVerification = async () => {
+		let storage = await accessStorage();
 		let state = storage.persistentState.resendVerificationEmailState;
 
 		// Should only happen if another persistent state is activated.

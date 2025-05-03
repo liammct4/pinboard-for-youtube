@@ -8,10 +8,11 @@ import { useDirectoryResource } from "../resources/useDirectoryResource";
 import { useVideosResource } from "../resources/useVideosResource";
 import { useThemesResource } from "../resources/useThemesResource";
 import { disableControlsLock, enableControlsLock } from "../../../features/state/tempStateSlice";
+import { setVideos } from "../../../features/video/videoSlice";
 
 export function AccountDataWrapper({ children }: IWrapperProperties) {
 	const { isSignedIn, user } = useUserAccount();
-	const { directoryRoot, setCounter, videoData } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { directoryRoot, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { fetchDirectoryRoot } = useDirectoryResource();
 	const { fetchVideos } = useVideosResource();
 	const { fetchCustomThemes } = useThemesResource();
@@ -37,8 +38,8 @@ export function AccountDataWrapper({ children }: IWrapperProperties) {
 			}
 
 			dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
+			dispatch(setVideos(retrievedVideos));
 
-			retrievedVideos?.forEach(x => videoData.set(x.id, x));
 			directoryRoot.subNodes = retrievedDirectoryRoot.subNodes;
 
 			setCounter(Math.random());

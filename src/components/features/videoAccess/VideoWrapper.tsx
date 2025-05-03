@@ -3,14 +3,17 @@ import { IVideo } from "../../../lib/video/video";
 import { VideoDirectoryContext } from "../../../context/video";
 import { cloneDirectory, IDirectoryNode } from "../../video/navigation/directory";
 import { IWrapperProperties } from "../wrapper";
-import { useLocalStorage } from "../storage/useLocalStorage";
 import { removeParentPass } from "../../../lib/storage/userData/userData";
+import { modifyStorage } from "../../../lib/storage/storage";
 
-export function VideoWrapper({ children }: IWrapperProperties): React.ReactNode {
+export interface IVideoWrapperProperties extends IWrapperProperties {
+	initialDirectory: IDirectoryNode;
+}
+
+export function VideoWrapper({ initialDirectory, children }: IVideoWrapperProperties): React.ReactNode {
 	const videos = useRef<Map<string, IVideo>>(new Map<string, IVideo>());
-	const { storage, setStorage } = useLocalStorage();
 	const preventUpdateCounter = useRef<number>(0);
-	const directoryRoot = useRef<IDirectoryNode>(cloneDirectory(storage.userData.directoryRoot));
+	const directoryRoot = useRef<IDirectoryNode>(initialDirectory);
 	const [ counter, setCounter ] = useState<number>(0);
 	const [ updateCount, setUpdateCount ] = useState<number>(0);
 
@@ -20,10 +23,10 @@ export function VideoWrapper({ children }: IWrapperProperties): React.ReactNode 
 		}
 
 		preventUpdateCounter.current = 2;
-		storage.userData.videos = Array.from(videos.current.values());
-		storage.userData.directoryRoot = removeParentPass(directoryRoot.current);
 
-		setStorage(storage);
+		modifyStorage(storage => {
+			storage.userData.directoryRoot = removeParentPass(directoryRoot.current);
+		});
 	}, [counter]);
 
 	useEffect(() => {
@@ -32,16 +35,17 @@ export function VideoWrapper({ children }: IWrapperProperties): React.ReactNode 
 			return;
 		}
 
-		directoryRoot.current = cloneDirectory(storage.userData.directoryRoot);
-		storage.userData.videos.forEach(x => videos.current.set(x.id, x));
-		
+		modifyStorage(storage => {
+			directoryRoot.current = cloneDirectory(storage.userData.directoryRoot);
+		});
+
 		setUpdateCount(updateCount + 1);
-	}, [JSON.stringify(storage.userData.directoryRoot), JSON.stringify(storage.userData.videos)]);
+		// TODO: Replace.
+	}, [/*JSON.stringify(storage.userData.directoryRoot), JSON.stringify(storage.userData.videos)*/]);
 
 	return (
 		<VideoDirectoryContext.Provider value={{
 				updateCount,
-				videoData: videos.current,
 				directoryRoot: directoryRoot.current,
 				counter,
 				setCounter

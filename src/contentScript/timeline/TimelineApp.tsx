@@ -1,10 +1,10 @@
 import { Provider } from "react-redux";
-import { StorageWrapper } from "../../components/features/storage/StorageWrapper";
 import { StyleContextWrapper } from "../../components/features/styleContext/StyleContextWrapper";
 import { TextMeasurerWrapper } from "../../components/features/useTextMeasurer";
 import { VideoWrapper } from "../../components/features/videoAccess/VideoWrapper";
 import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
 import { store } from "../../app/store";
+import { cloneDirectory } from "../../components/video/navigation/directory";
 import { IStorage } from "../../lib/storage/storage";
 
 export interface ITimelineAppProperties {
@@ -14,15 +14,13 @@ export interface ITimelineAppProperties {
 export function TimelineApp({ storage }: ITimelineAppProperties) {
 	return (
 		<Provider store={store}>
-			<StorageWrapper startValue={storage}>
-				<StyleContextWrapper update-theme>
-					<TextMeasurerWrapper>
-						<VideoWrapper>
-							<TimelineContainer/>
-						</VideoWrapper>
-					</TextMeasurerWrapper>
-				</StyleContextWrapper>
-			</StorageWrapper>
+			<StyleContextWrapper update-theme>
+				<TextMeasurerWrapper>
+					<VideoWrapper initialDirectory={cloneDirectory(storage.userData.directoryRoot)}>
+						<TimelineContainer/>
+					</VideoWrapper>
+				</TextMeasurerWrapper>
+			</StyleContextWrapper>
 		</Provider>
 	);
 }

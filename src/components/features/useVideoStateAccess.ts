@@ -6,26 +6,32 @@ import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";
 import { useVideosResource } from "./resources/useVideosResource";
 import { useVideoCache } from "./useVideoInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { useVideo } from "./useVideo";
+import { addOrReplaceVideo, clearVideos, removeVideo } from "../../features/video/videoSlice";
 
 export function useVideoStateAccess() {
-	const { videoData, directoryRoot, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
+	const { directoryRoot, setCounter } = useContext<IVideoDirectoryContext>(VideoDirectoryContext);
 	const { createAction, deleteAction, renameAction, moveAction, clearAllDirectories } = useDirectoryResource();
 	const { updateAccountVideo, removeAccountVideo, clearAllVideos } = useVideosResource();
 	const { retrieveInfo } = useVideoCache();
+	const dispatch = useDispatch();
+	const { videoExists, getVideo } = useVideo();
 
 	return {
-		videoData,
 		root: directoryRoot,
 		directoryAddVideo: async (videoID: string, path: string): Promise<IVideo> => {
-			if (videoData.has(videoID)) {
-				return videoData.get(videoID) as IVideo;
+			if (videoExists(videoID)) {
+				return getVideo(videoID) as IVideo;
 			}
 			
 			let newVideo: IVideo = {
 				id: videoID,
 				timestamps: []
 			};
-			videoData.set(videoID, newVideo);
+
+			dispatch(addOrReplaceVideo(newVideo));
 
 			let desiredDirectory = getItemFromNode(path, directoryRoot) as IDirectoryNode;
 
@@ -60,8 +66,8 @@ export function useVideoStateAccess() {
 		},
 		directoryRemoveVideo: (videoIDs: string[]) => {
 			for (let video of videoIDs) {
-				if (videoData.has(video)){
-					videoData.delete(video);
+				if (videoExists(video)){
+					dispatch(removeVideo(video));
 					removeAccountVideo(video);
 				}
 			}
@@ -69,11 +75,11 @@ export function useVideoStateAccess() {
 			setCounter(Math.random());
 		},
 		directoryUpdateVideo: (video: IVideo) => {
-			if (!videoData.has(video.id)) {
+			if (!videoExists(video.id)) {
 				return;
 			}
 
-			videoData.set(video.id, video);
+			dispatch(addOrReplaceVideo(video));
 
 			updateAccountVideo(video);
 			setCounter(Math.random());
@@ -138,7 +144,7 @@ export function useVideoStateAccess() {
 		},
 		directoryClearAll: () => {
 			directoryRoot.subNodes.splice(0, directoryRoot.subNodes.length);
-			videoData.clear();
+			dispatch(clearVideos());
 
 			clearAllVideos();
 			clearAllDirectories();

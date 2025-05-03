@@ -17,5 +17,5 @@ export async function fetchVideosFromAPI(idToken: string) {
 
 	let videos = JSON.parse(response.body) as IVideo[];
 	
-	return new Map<string, IVideo>(videos.map(x => [x.id, x]));
+	return videos;
 }

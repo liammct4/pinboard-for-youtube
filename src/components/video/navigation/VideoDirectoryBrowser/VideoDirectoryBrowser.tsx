@@ -20,15 +20,12 @@ import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGro
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";
-import "./../VideoDirectory/VideoDirectory.css"
-import "./VideoDirectoryBrowser.css"
-import { SelectionBoxScrollbox } from "../../../interactive/SelectionBoxScrollbox/SelectionBoxScrollbox";
 import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
-import { useUserAccount } from "../../../features/useUserAccount";
 import { setVideoBrowserScrollDistance } from "../../../../features/state/tempStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
-import { useLocalStorage } from "../../../features/storage/useLocalStorage";
+import "./../VideoDirectory/VideoDirectory.css"
+import "./VideoDirectoryBrowser.css"
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
@@ -73,7 +70,7 @@ function DragVideoTooltipItem({ idSection }: { idSection: string }) {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { videoData, root, directoryMove } = useVideoStateAccess();
+	const { root, directoryMove } = useVideoStateAccess();
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
@@ -84,8 +81,9 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
-	const { storage } = useLocalStorage();
 	const dispatch = useDispatch();
+	const videos = useSelector((state: RootState) => state.video.videos);
+	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const directory = useMemo<IDirectoryNode | null>(() => {
 		if (root == null) {
 			return null;
@@ -118,7 +116,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		}
 
 		return node as IDirectoryNode;
-	}, [directoryPath, root, videoData]);
+	}, [directoryPath, root, JSON.stringify(videos)]);
 
 	useEffect(() => {
 		if (directory == null) {
@@ -130,8 +128,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 
 		setSelectedItems([]);
 	}, [directory]);
-
-	const scrollPosition = storage.tempState.videoBrowserScrollDistance;
 
 	const requestEditEnd = async (newSliceName: string) => {
 		let result = validateDirectoryName(newSliceName);

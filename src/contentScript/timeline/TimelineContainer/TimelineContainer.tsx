@@ -1,29 +1,33 @@
 import { useMemo, useRef, useState } from "react";
-import { useLocalStorage } from "../../../components/features/storage/useLocalStorage"
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
 import { useVideoStateAccess } from "../../../components/features/useVideoStateAccess";
 import { IVideo, Timestamp } from "../../../lib/video/video";
 import "./TimelineContainer.css"
+import { useSelector } from "react-redux";
+import { useVideo } from "../../../components/features/useVideo";
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
 	const [ hover, setHover ] = useState<string | null>(null);
-	const { storage } = useLocalStorage();
 	const videoData = useLocalVideoData();
 	const { directoryUpdateVideo } = useVideoStateAccess();
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
+	const { getVideo, videoExists } = useVideo();
+
+	// TODO: Replace.
 
 	if (!videoData.isVideoPage || videoData.isAdvertisement) {
 		return <></>
 	}
 
-	const video = storage.userData.videos.find(x => x.id == videoData.data.videoID);
-
-	if (video == null) {
+	
+	if (!videoExists(videoData.data.videoID)) {
 		return <></>;
 	}
+	
+	const video = getVideo(videoData.data.videoID) as IVideo;
 
 	const onTimestampChange = (timestamp: Timestamp) => {
 		let timestamps = [ ...video.timestamps ];

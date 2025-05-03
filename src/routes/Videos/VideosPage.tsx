@@ -29,6 +29,8 @@ import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
 import { useActiveVideoID } from "../../components/features/activeVideo/useActiveVideo.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
+import { useVideo } from "../../components/features/useVideo.ts";
+import { removeVideo } from "../../features/video/videoSlice.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -47,8 +49,9 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const { activateMessage } = useNotificationMessage();
-	const { root, videoData, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
+	const { root, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
 	const activeVideoID = useActiveVideoID();
+	const { getVideo, videoExists } = useVideo();
 	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 		
@@ -71,8 +74,9 @@ export function VideosPage(): React.ReactNode {
 			return;
 		}
 
-		if (videoData.has(activeVideo.id)) {
+		if (videoExists(activeVideo.id)) {
 			let location = findItemPathFromName(root, activeVideo.id, false, true, true);
+			let video = getVideo(activeVideo.id);
 
 			// Should never happen since there should always be a location for a video.
 			if (location.length == 0) {
@@ -85,9 +89,7 @@ export function VideosPage(): React.ReactNode {
 					"Shake"
 				);
 
-				let video = videoData.get(activeVideo.id);
-				videoData.delete(video!.id);
-
+				dispatch(removeVideo(video!.id));
 				directoryAddVideo(activeVideo.id, "$");
 
 				// Override the newly "added" video.
@@ -112,11 +114,11 @@ export function VideosPage(): React.ReactNode {
 	const onPinCurrentTimestamp = async () => {
 		const activeVideo = await getActiveVideoInfo();
 
-		if (activeVideo == null || !videoData.has(activeVideo.id)) {
+		if (activeVideo == null || !videoExists(activeVideo.id)) {
 			return;
 		}
 
-		let video = videoData.get(activeVideo.id) as IVideo;
+		let video = getVideo(activeVideo.id) as IVideo;
 		
 		let newActiveVideo: IVideo = {
 			id: activeVideo.id,

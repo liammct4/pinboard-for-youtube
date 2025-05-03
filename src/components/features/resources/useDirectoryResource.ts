@@ -1,10 +1,8 @@
 import { directoryPathConcat, getParentPathFromPath, getRootDirectoryPathFromSubNode, getSectionRaw, IDirectoryNode, NodeType, VideoBrowserNode } from "../../video/navigation/directory";
-import { useLocalStorage } from "../storage/useLocalStorage";
 import { DataMutation, useUserAccount } from "../useUserAccount";
 import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
-import { IAuthenticatedUser } from "../../../lib/user/accounts";
 import { useDispatch } from "react-redux";
 import { appendRequestToDirectory } from "../../../features/mutation/mutationSlice";
 

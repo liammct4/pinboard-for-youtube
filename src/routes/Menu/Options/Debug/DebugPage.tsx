@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { SwitchInputPrimitive } from "../../../../components/input/SwitchInput/SwitchInput";
-import { BLANK_STORAGE_TEMPLATE, IStorage } from "../../../../lib/storage/storage";
+import { accessStorage, BLANK_STORAGE_TEMPLATE, IStorage } from "../../../../lib/storage/storage";
 import { useNotificationMessage } from "../../../../components/features/notifications/useNotificationMessage";
-import { useLocalStorage } from "../../../../components/features/storage/useLocalStorage";
 import "./DebugPage.css";
 
 export function DebugPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
 	const [ toolsActivated, setToolsActivated ] = useState<boolean>(false);
-	const { storage, setStorage } = useLocalStorage();
 
 	useEffect(() => {
 		activateMessage(
@@ -38,18 +36,20 @@ export function DebugPage(): React.ReactNode {
 					{/* Print storage */}
 					<button className="button-small button-base" onClick={async () => {
 						console.log("Printing storage:")
+						let storage = await accessStorage();
 						console.log(storage);
 						
 						activateMessage(undefined, "Sent to console.", "Success", "Tick", -1);
 					}}>Storage to console</button>
 					<button className="button-small button-base" onClick={async () => {
+						let storage = await accessStorage();
 						navigator.clipboard.writeText(JSON.stringify(storage, null, 4));
 
 						activateMessage(undefined, "Copied to clipboard.", "Success", "Tick", -1);
 					}}>Copy storage to clipboard</button>
 					{/* Wipe storage. */}
 					<button className="button-small button-base" onClick={async () => {
-						setStorage(BLANK_STORAGE_TEMPLATE);
+						await chrome.storage.local.set(BLANK_STORAGE_TEMPLATE);
 					}}>Wipe storage</button>
 				</div>
 			: <></>}

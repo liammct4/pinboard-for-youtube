@@ -4,23 +4,22 @@ import { SplitHeading } from "../../components/presentation/Decorative/Headings/
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage";
 import { LabeledArrowExpander } from "../../components/presentation/LabeledArrowExpander/LabeledArrowExpander";
 import "./ErrorPage.css"
-import { BLANK_STORAGE_TEMPLATE } from "../../lib/storage/storage";
-import { useLocalStorage } from "../../components/features/storage/useLocalStorage";
+import { accessStorage, BLANK_STORAGE_TEMPLATE, modifyStorage } from "../../lib/storage/storage";
 
 export function ErrorPage(): React.ReactNode {
 	// useRouteError() doesn't work, returns undefined always.
 	const navigate = useNavigate();
 	const [ detailsExpanded, setDetailsExpanded ] = useState<boolean>(false);
-	const { storage, setStorage } = useLocalStorage();
 
 	const onConfirm = async (result: string) => {
 		if (result == "Wipe local data") {
-			setStorage(BLANK_STORAGE_TEMPLATE);
+			await chrome.storage.local.set(BLANK_STORAGE_TEMPLATE);
 		}
 	}
 
 	const onCopyToClipboard = async () => {
-		window.navigator.clipboard.writeText(JSON.stringify(storage, null, 4));
+		accessStorage()
+			.then((storage) => window.navigator.clipboard.writeText(JSON.stringify(storage, null, 4)));
 	}
 
 	return (

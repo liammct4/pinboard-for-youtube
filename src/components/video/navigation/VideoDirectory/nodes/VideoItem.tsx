@@ -7,10 +7,10 @@ import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
 import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../directory";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
-import { useUserAccount } from "../../../../features/useUserAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../app/store";
 import { addExpandedID, removeExpandedID } from "../../../../../features/state/tempStateSlice";
+import { useVideo } from "../../../../features/useVideo";
 
 interface IVideoItemProperties {
 	node: IVideoNode;
@@ -19,19 +19,20 @@ interface IVideoItemProperties {
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	const { videoData, directoryUpdateVideo: updateVideo } = useVideoStateAccess();
+	const { directoryUpdateVideo: updateVideo } = useVideoStateAccess();
 	const isExpanded = useSelector((state: RootState) => state.tempState.expandedVideoIDs).includes(node.videoID);
+	const { getVideo, videoExists } = useVideo();
 	const dispatch = useDispatch();
 
-	if (!videoData.has(node.videoID)) {
+	if (!videoExists(node.videoID)) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
 		return <p>ERROR</p>;
 	}
 	
-	let video = videoData.get(node.videoID) as IVideo;
+	let video = getVideo(node.videoID) as IVideo;
 
 	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		let newVideo = { ...videoData.get(node.videoID)! };
+		let newVideo = { ...getVideo(node.videoID) as IVideo };
 		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
 
 		if (index == -1) {
