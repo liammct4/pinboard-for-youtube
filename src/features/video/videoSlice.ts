@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
 import { IVideo } from "../../lib/video/video";
 
-export interface IvideoSlice {
+export interface IVideoSlice {
 	videos: IVideo[];
 }
 
-const initialState: IvideoSlice = {
+const initialState: IVideoSlice = {
 	videos: []
 }
 

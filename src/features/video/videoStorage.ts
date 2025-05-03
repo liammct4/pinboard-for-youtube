@@ -1,7 +1,7 @@
 import { store } from "../../app/store";
 import { IStorage } from "../../lib/storage/storage";
-import { IvideoSlice } from "./videoSlice";
+import { IVideoSlice } from "./videoSlice";
 
-export function saveVideoSliceToStorage(storage: IStorage, videoSlice: IvideoSlice) {
+export function saveVideoSliceToStorage(storage: IStorage, videoSlice: IVideoSlice) {
 	storage.userData.videos = videoSlice.videos;
 }

@@ -27,7 +27,7 @@ export const directorySlice = createSlice({
 	initialState,
 	reducers: {
 		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
-			state.videoBrowser = action.payload.userData.directoryRoot;
+			state.videoBrowser = action.payload.userData.directory;
 		},
 	}
 });

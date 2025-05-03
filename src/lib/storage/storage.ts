@@ -7,7 +7,7 @@ import AppThemes from "./../../styling/theme.json"
 import settingDefinitions from "./../config/settingDefinitions.json"
 import { SettingValue } from "../../features/settings/settingsSlice.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
-import { IDirectoryNode } from "../../components/video/navigation/directory.ts"
+import { DirectoryTree, IDirectoryNode } from "../../components/video/navigation/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource.ts"
@@ -22,7 +22,7 @@ export interface IMutationQueues {
 export interface IStorage {
 	userData: {
 		videos: IVideo[];
-		directoryRoot: IDirectoryNode;
+		directory: DirectoryTree;
 		config: IConfig;
 	},
 	tempState: ITempState;
@@ -42,15 +42,19 @@ let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
 	return { settingName: x.settingName, value: x.defaultValue.toString() };
 });
 
+let rootNode: IDirectoryNode = {
+	slice: "$",
+	nodeID: crypto.randomUUID(),
+	subNodes: []
+}
+
 export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	userData: {
 		videos: [],
-		directoryRoot: {
-			nodeID: crypto.randomUUID(),
-			slice: "$",
-			type: "DIRECTORY",
-			parent: null,
-			subNodes: []
+		directory: {
+			rootNode: rootNode.nodeID,
+			directoryNodes: {},
+			videoNodes: {}
 		},
 		config: {
 			theme: AppThemes == undefined ? sampleConfigData.theme : AppThemes[0],
@@ -85,6 +89,8 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		videos: [],
 	}
 };
+
+BLANK_STORAGE_TEMPLATE.userData.directory.directoryNodes[rootNode.nodeID] = rootNode;
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.

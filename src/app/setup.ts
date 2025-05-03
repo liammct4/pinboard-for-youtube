@@ -2,6 +2,7 @@ import { updateAuthSliceFromStorage } from "../features/auth/authSlice";
 import { saveAuthSliceToStorage } from "../features/auth/authStorage";
 import { updateCacheSliceFromStorage } from "../features/cache/cacheSlice";
 import { saveCacheSliceToStorage } from "../features/cache/cacheStorage";
+import { saveDirectorySliceToStorage } from "../features/directory/directoryStorage";
 import { updateSettingsSliceFromStorage } from "../features/settings/settingsSlice";
 import { saveSettingsSliceToStorage } from "../features/settings/settingsStorage";
 import { updateTempSliceFromStorage } from "../features/state/tempStateSlice";
@@ -44,6 +45,7 @@ export function setupStorageAndStoreSync() {
 		saveTempStateSliceToStorage(storage, state.tempState);
 		saveThemeSliceToStorage(storage, state.theme);
 		saveVideoSliceToStorage(storage, state.video);
+		saveDirectorySliceToStorage(storage, state.directory);
 
 		setTimeout(() => freeze = false, 100)
 	}));
