@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import { StorageWrapper } from "../components/features/storage/StorageWrapper.tsx";
 import { NotificationWrapper } from "../components/features/notifications/NotificationWrapper.tsx";
 import { ExtensionBoundsWrapper } from "../components/features/extensionBounds/ExtensionBoundsWrapper.tsx";
 import { VideoWrapper } from "../components/features/videoAccess/VideoWrapper.tsx";
