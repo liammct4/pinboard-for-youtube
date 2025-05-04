@@ -8,6 +8,7 @@ import mutationSlice from "../features/mutation/mutationSlice.ts"
 import videoSlice from "../features/video/videoSlice.ts"
 import directorySlice from "../features/directory/directorySlice.ts"
 import { mutationRequestMiddleware } from "../features/mutation/mutationRequestMiddleware.ts"
+import { addVideoMiddleware } from "../features/directory/directoryAccountMiddleware.ts"
 
 export let store = configureStore({
 	reducer: {
@@ -23,6 +24,7 @@ export let store = configureStore({
 	devTools: true,
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware()
 		.prepend(mutationRequestMiddleware.middleware)
+		.prepend(addVideoMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;

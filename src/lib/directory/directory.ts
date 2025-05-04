@@ -1,5 +1,5 @@
 import { GUID } from "../util/objects/types";
-import { splitPathIntoSlices } from "./path";
+import { NodePath } from "./path";
 
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
@@ -28,25 +28,23 @@ export type DirectoryTree = {
 	}
 }
 
-export function getItemFromPath(tree: DirectoryTree, path: string): GUID | null {
-	const pathSlices = splitPathIntoSlices(path);
-	
+export function getItemFromPath(tree: DirectoryTree, path: NodePath): GUID | null {	
 	let currentNode: GUID = tree.rootNode;
 
-	if (pathSlices.slices[0] != tree.directoryNodes[tree.rootNode].slice) {
+	if (path.slices[0] != tree.directoryNodes[tree.rootNode].slice) {
 		return null;
 	}
 
-	for (let i = 1; i < pathSlices.slices.length; i++) {
+	for (let i = 1; i < path.slices.length; i++) {
 		let nodeData: IDirectoryNode = tree.directoryNodes[currentNode];
 		
 		// The item should be in the current node.
-		if (i == pathSlices.slices.length - 1 && pathSlices.type == "VIDEO") {
+		if (i == path.slices.length - 1 && path.type == "VIDEO") {
 			for (let j = nodeData.subNodes.length - 1; j > -1; j--) {
 				let subNode: GUID = nodeData.subNodes[j];
 				let videoNode: IVideoNode = tree.videoNodes[subNode];
 
-				if (videoNode.videoID == pathSlices.slices[i]) {
+				if (videoNode != null && videoNode.videoID == path.slices[i]) {
 					return subNode;
 				}
 			}
@@ -59,10 +57,10 @@ export function getItemFromPath(tree: DirectoryTree, path: string): GUID | null 
 		for (let subNode of nodeData.subNodes) {
 			let subNodeData = tree.directoryNodes[subNode];
 			
-			if (subNodeData != undefined && subNodeData.slice == pathSlices.slices[i]) {
+			if (subNodeData != undefined && subNodeData.slice == path.slices[i]) {
 				currentNode = subNode;
 				
-				if (i == pathSlices.slices.length - 1) {
+				if (i == path.slices.length - 1) {
 					return currentNode;
 				}
 				

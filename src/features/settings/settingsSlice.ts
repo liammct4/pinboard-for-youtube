@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { InputMethodType } from "../../lib/config/configurationOption";
-import settingDefinitions from "./../../lib/config/settingDefinitions.json"
+import { settingDefinitions } from "../../lib/config/settingDefinitions"
 import { IStorage } from "../../lib/storage/storage";
 
 export type SettingPrimitiveValue = string | number | boolean | bigint;

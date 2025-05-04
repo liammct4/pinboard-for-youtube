@@ -61,7 +61,7 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
  * Returns whether the last item
  * is a video ID or not. In the format "$ > Random > Other:LXb3EKWsInQ".
  */
-export function splitPathIntoSlices(path: string): NodePath {
+export function parseStringToPath(path: string): NodePath {
 	let sections = path.split(">").map(x => x.trim());
 
 	let potentialVideoReference: string[] = sections[sections.length - 1].split(":");
@@ -76,38 +76,36 @@ export function splitPathIntoSlices(path: string): NodePath {
 	return { slices: sections, type: "DIRECTORY" };
 }
 
-export function getParentPathFromPath(path: string): string {
-	let pathSlices = splitPathIntoSlices(path);
+export function getParentPathFromPath(path: NodePath): NodePath {
+	let newPath = [ ...path.slices ];
+	newPath.splice(newPath.length - 1, 1);
 
-	pathSlices.slices.splice(pathSlices.slices.length - 1, 1);
-
-	return pathSlices.slices.join(" > ");
+	return {
+		slices: newPath,
+		type: "DIRECTORY"
+	};
 }
 
 export function reformatDirectoryPath(path: string): string {
-	const pathSlices = splitPathIntoSlices(path);
+	const pathSlices = parseStringToPath(path);
 
-	if (pathSlices.type == "DIRECTORY") {
-		return pathSlices.slices.join(" > ");
-	}
-	else {
-		let video = pathSlices.slices[pathSlices.slices.length - 1];
-		let base = pathSlices.slices.join(" > ");
+	return pathToString(pathSlices);
+}
 
-		return `${base}:${video}`;
+export function directoryPathConcat(path: NodePath, section: string, type: NodeType): NodePath {
+	return {
+		slices: [ ...path.slices, section ],
+		type
 	}
 }
 
-export function directoryPathConcat(base: string, slice: string, type: NodeType): string {
-	let slim = base.trim();
-
-	if (slim.endsWith(">")) {
-		slim = slim.slice(0, slim.length - 2);
+export function pathToString(path: NodePath): string {
+	if (path.type == "DIRECTORY") {
+		return path.slices.join(" > ");
 	}
 
-	slim = slim.trimEnd();
+	let videoID = path.slices.splice(path.slices.length - 1, 1)[0];
+	let basePath = path.slices.join(" > ");
 
-	return type == "DIRECTORY" ?
-		`${slim} > ${slice.trim()}` :
-		`${slim}:${slice}`;
+	return `${basePath}:${videoID}`;
 }

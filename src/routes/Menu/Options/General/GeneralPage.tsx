@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { FormField } from "../../../../components/forms/FormField/FormField";
 import { IErrorFieldValues, useValidatedForm } from "../../../../components/forms/validated-form";
-import settingDefinitions from "./../../../../lib/config/settingDefinitions.json"
+import settingDefinitions from "../../../../lib/config/settingDefinitions"
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
 import settingsLayout from "./settingsLayout.json"

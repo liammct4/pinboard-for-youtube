@@ -21,49 +21,6 @@ export function useVideoStateAccess() {
 
 	return {
 		root: directoryRoot,
-		directoryAddVideo: async (videoID: string, path: string): Promise<IVideo> => {
-			if (videoExists(videoID)) {
-				return getVideo(videoID) as IVideo;
-			}
-			
-			let newVideo: IVideo = {
-				id: videoID,
-				timestamps: []
-			};
-
-			dispatch(addOrReplaceVideo(newVideo));
-
-			let desiredDirectory = getItemFromPath(path, directoryRoot) as IDirectoryNode;
-
-			let newVideoNode: IVideoNode = {
-				nodeID: crypto.randomUUID(),
-				type: "VIDEO",
-				parent: desiredDirectory,
-				videoID: videoID,
-			};
-
-			let directoryStartIndex = desiredDirectory.subNodes.findIndex(x => x.type == "VIDEO");
-
-			if (directoryStartIndex == -1) {
-				directoryStartIndex = desiredDirectory.subNodes.length;
-			}
-
-			let insertIndex = await getAlphanumericInsertIndex(
-				desiredDirectory.subNodes,
-				newVideoNode,
-				async (n) => n.type == "VIDEO" ? (await retrieveInfo(n.videoID))!.title : "",
-				directoryStartIndex,
-				desiredDirectory.subNodes.length
-			);
-
-			desiredDirectory.subNodes.splice(insertIndex, 0, newVideoNode);
-
-			createAction(newVideoNode);
-			updateAccountVideo(newVideo);
-			setCounter(Math.random());
-
-			return newVideo;
-		},
 		directoryRemoveVideo: (videoIDs: string[]) => {
 			for (let video of videoIDs) {
 				if (videoExists(video)){
