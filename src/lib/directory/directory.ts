@@ -134,3 +134,46 @@ export function getPathOfNode(tree: DirectoryTree, targetNode: NodeRef): NodePat
 
 	return pass(parsePath("$"), tree.rootNode);
 }
+
+export function stringifyNode(tree: DirectoryTree, node: NodeRef, withGuidelines: boolean): string {
+	let lines: string[] = [
+		`D:${tree.directoryNodes[node].slice}`
+	];
+	
+	const pass = (node: NodeRef, indent: number) => {
+		let nodeData = tree.directoryNodes[node];
+
+		for (let i = 0; i < nodeData.subNodes.length; i++) {
+			let node = nodeData.subNodes[i];
+
+			let indentTabs: string;
+
+			if (withGuidelines) {
+				let character = i == nodeData.subNodes.length - 1 ? '├' : '├';
+				indentTabs = `│\t`.repeat(indent - 1) + `${character}── `;
+			}
+			else {
+				indentTabs = `\t`.repeat(indent);
+			}
+			
+			if (getNodeType(tree, node) == "DIRECTORY") {
+				let line = indentTabs + `D:${tree.directoryNodes[node].slice}`;
+				lines.push(line);
+
+				pass(node, indent + 1);
+			}
+			else {
+				let line = indentTabs + `V:${tree.videoNodes[node].videoID}`;
+				lines.push(line);
+			}
+		}
+	}
+
+	pass(node, 1);
+
+	return lines.join("\n");
+}
+
+export function stringifyTree(tree: DirectoryTree, withGuidelines: boolean): string {
+	return stringifyNode(tree, tree.rootNode, withGuidelines);
+}

@@ -21,26 +21,6 @@ export function useVideoStateAccess() {
 
 	return {
 		root: directoryRoot,
-		directoryUpdateVideo: (video: IVideo) => {
-			if (!videoExists(video.id)) {
-				return;
-			}
-
-			dispatch(addOrReplaceVideo(video));
-
-			updateAccountVideo(video);
-			setCounter(Math.random());
-		},
-		directoryAdd: async function (targetPath: string, name: string): Promise<AddDirectorySuccess | AddDirectoryFail> {
-			let result = await addDirectory(directoryRoot, targetPath, name);
-
-			let newNode = getNodeFromPath(directoryPathConcat(targetPath, name, "DIRECTORY"), directoryRoot) as VideoBrowserNode;
-
-			createAction(newNode);
-
-			setCounter(Math.random());
-			return result;
-		},
 		directoryMove: async function (oldDirectory: string, newDirectory: string): Promise<RelocateItemError | null> {
 			setCounter(Math.random());
 
