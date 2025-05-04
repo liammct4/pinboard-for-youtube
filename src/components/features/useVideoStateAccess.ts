@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { IVideoDirectoryContext, VideoDirectoryContext } from "../../context/video";
-import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getItemFromPath, getParentPathFromPath, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../../lib/directory/directory";
+import { addDirectory, AddDirectoryFail, AddDirectorySuccess, directoryPathConcat, getNodeFromPath, getParentPathFromPath, getSectionFromPath, getSectionPrefix, getSectionRaw, getSectionType, IDirectoryNode, IVideoNode, reformatDirectoryPath, RelocateItemError, relocateItemToDirectory as relocateItemToDirectory, removeItems, VideoBrowserNode } from "../../lib/directory/directory";
 import { IVideo } from "../../lib/video/video";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { useDirectoryResource } from "./resources/useDirectoryResource";
@@ -34,7 +34,7 @@ export function useVideoStateAccess() {
 		directoryAdd: async function (targetPath: string, name: string): Promise<AddDirectorySuccess | AddDirectoryFail> {
 			let result = await addDirectory(directoryRoot, targetPath, name);
 
-			let newNode = getItemFromPath(directoryPathConcat(targetPath, name, "DIRECTORY"), directoryRoot) as VideoBrowserNode;
+			let newNode = getNodeFromPath(directoryPathConcat(targetPath, name, "DIRECTORY"), directoryRoot) as VideoBrowserNode;
 
 			createAction(newNode);
 
@@ -64,19 +64,19 @@ export function useVideoStateAccess() {
 				let section = getSectionFromPath(oldDirectory);
 
 				if (section.type == "DIRECTORY") {
-					let node = getItemFromPath(newDirectory, directoryRoot) as IDirectoryNode;
+					let node = getNodeFromPath(newDirectory, directoryRoot) as IDirectoryNode;
 					renameAction(node, section.slices[0]);
 				}
 			}
 			else {
-				let node = getItemFromPath(newDirectory, directoryRoot) as IVideoNode;
+				let node = getNodeFromPath(newDirectory, directoryRoot) as IVideoNode;
 				moveAction(node, oldDirectory);
 			}
 
 			return error;
 		},
 		directoryRemove: (path: string, sections: string[]) => {
-			let parentNode = getItemFromPath(path, directoryRoot) as IDirectoryNode;
+			let parentNode = getNodeFromPath(path, directoryRoot) as IDirectoryNode;
 
 			for (let section of sections) {
 				for (let node of parentNode.subNodes) {

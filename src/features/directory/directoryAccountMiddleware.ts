@@ -4,8 +4,8 @@ import { RootState } from "../../app/store";
 import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource";
 import { directoryAddVideo } from "./directorySlice";
 import { appendRequestToDirectory } from "../mutation/mutationSlice";
-import { getItemFromPath } from "../../lib/directory/directory";
-import { directoryPathConcat, getParentPathFromPath, NodePath, parsePathFromString, pathToString } from "../../lib/directory/path";
+import { getNodeFromPath } from "../../lib/directory/directory";
+import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString } from "../../lib/directory/path";
 
 export const addVideoMiddleware = createListenerMiddleware();
 
@@ -13,14 +13,14 @@ addVideoMiddleware.startListening({
 	actionCreator: directoryAddVideo,
 	effect: (action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		let parentPath = parsePathFromString(action.payload.path);
-		let parent = getItemFromPath(state.directory.videoBrowser, parentPath);
+		let parentPath = parsePath(action.payload.path);
+		let parent = getNodeFromPath(state.directory.videoBrowser, parentPath);
 
 		if (parentPath.type != "DIRECTORY" || parent == null) {
 			return;
 		}
 
-		let item = getItemFromPath(state.directory.videoBrowser, directoryPathConcat(parentPath, action.payload.videoID, "VIDEO"));
+		let item = getNodeFromPath(state.directory.videoBrowser, directoryPathConcat(parentPath, action.payload.videoID, "VIDEO"));
 
 		// Means it was not created successfully.
 		if (item == null) {

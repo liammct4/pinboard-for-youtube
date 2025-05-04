@@ -1,12 +1,14 @@
 import { GUID } from "../util/objects/types";
-import { directoryPathConcat, NodePath, parsePathFromString } from "./path";
+import { directoryPathConcat, NodePath, parsePath } from "./path";
 
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
 export type NodeType = "VIDEO" | "DIRECTORY";
 
+export type NodeRef = `${GUID}:NODE`;
+
 export interface INode {
-	/* parent: GUID | null;*/ // Maybe?
-	nodeID: GUID;
+	/* parent: NodeRef | null;*/ // Maybe?
+	nodeID: NodeRef;
 }
 
 export interface IVideoNode extends INode {
@@ -15,21 +17,31 @@ export interface IVideoNode extends INode {
 
 export interface IDirectoryNode extends INode {
 	slice: string;
-	subNodes: GUID[];
+	subNodes: NodeRef[];
 }
 
 export type DirectoryTree = {
-	rootNode: GUID;
+	rootNode: NodeRef;
 	directoryNodes: {
-		[key: GUID]: IDirectoryNode;
+		[key: NodeRef]: IDirectoryNode;
 	},
 	videoNodes: {
-		[key: GUID]: IVideoNode;
+		[key: NodeRef]: IVideoNode;
 	}
 }
 
-export function getItemFromPath(tree: DirectoryTree, path: NodePath): GUID | null {	
-	let currentNode: GUID = tree.rootNode;
+/**
+ * Creates a unique unchangable ID exclusively used for nodes.
+ */
+export function createNode(): NodeRef {
+	return `${crypto.randomUUID()}:NODE`;
+}
+
+/**
+ * Retrieves the node ID of the node referenced at the provided path.
+ */
+export function getNodeFromPath(tree: DirectoryTree, path: NodePath): NodeRef | null {	
+	let currentNode: NodeRef = tree.rootNode;
 
 	if (path.slices[0] != tree.directoryNodes[tree.rootNode].slice) {
 		return null;
@@ -41,7 +53,7 @@ export function getItemFromPath(tree: DirectoryTree, path: NodePath): GUID | nul
 		// The item should be in the current node.
 		if (i == path.slices.length - 1 && path.type == "VIDEO") {
 			for (let j = nodeData.subNodes.length - 1; j > -1; j--) {
-				let subNode: GUID = nodeData.subNodes[j];
+				let subNode: NodeRef = nodeData.subNodes[j];
 				let videoNode: IVideoNode = tree.videoNodes[subNode];
 
 				if (videoNode != null && videoNode.videoID == path.slices[i]) {
@@ -78,21 +90,27 @@ export function getItemFromPath(tree: DirectoryTree, path: NodePath): GUID | nul
 	return currentNode;
 }
 
-export function getNodeType(tree: DirectoryTree, node: GUID): NodeType {
+/**
+ * Returns the type of node which is referenced by the provided node ID.
+ */
+export function getNodeType(tree: DirectoryTree, node: NodeRef): NodeType {
 	return tree.directoryNodes[node] != null ? "DIRECTORY" : "VIDEO";
 }
 
-export function getPathOfItem(tree: DirectoryTree, targetItem: GUID): NodePath | null {
-	if (targetItem == tree.rootNode) {
-		return parsePathFromString("$");
+/**
+ * Retrieves the full path of an item from its node ID.
+ */
+export function getPathOfNode(tree: DirectoryTree, targetNode: NodeRef): NodePath | null {
+	if (targetNode == tree.rootNode) {
+		return parsePath("$");
 	}
 
-	const pass = (current: NodePath, item: GUID): NodePath | null => {
-		let data = tree.directoryNodes[item] as IDirectoryNode;
+	const pass = (current: NodePath, node: NodeRef): NodePath | null => {
+		let data = tree.directoryNodes[node] as IDirectoryNode;
 
 		for (let i of data.subNodes) {
-			if (i == targetItem) {
-				if (getNodeType(tree, targetItem) == "DIRECTORY") {
+			if (i == targetNode) {
+				if (getNodeType(tree, targetNode) == "DIRECTORY") {
 					return directoryPathConcat(current, tree.directoryNodes[i].slice, "DIRECTORY");
 				}
 				else {
@@ -114,5 +132,5 @@ export function getPathOfItem(tree: DirectoryTree, targetItem: GUID): NodePath |
 		return null;
 	}
 
-	return pass(parsePathFromString("$"), tree.rootNode);
+	return pass(parsePath("$"), tree.rootNode);
 }

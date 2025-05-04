@@ -61,7 +61,7 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
  * Returns whether the last item
  * is a video ID or not. In the format "$ > Random > Other:LXb3EKWsInQ".
  */
-export function parsePathFromString(path: string): NodePath {
+export function parsePath(path: string): NodePath {
 	let sections = path.split(">").map(x => x.trim());
 
 	let potentialVideoReference: string[] = sections[sections.length - 1].split(":");
@@ -87,7 +87,7 @@ export function getParentPathFromPath(path: NodePath): NodePath {
 }
 
 export function reformatDirectoryPath(path: string): string {
-	const pathSlices = parsePathFromString(path);
+	const pathSlices = parsePath(path);
 
 	return pathToString(pathSlices);
 }

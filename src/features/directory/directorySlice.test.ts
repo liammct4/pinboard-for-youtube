@@ -12,8 +12,8 @@ Object.defineProperty(globalThis, "crypto", {
 
 import reducer, { IDirectorySlice, directorySlice } from "./directorySlice";
 import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
-import { parsePathFromString } from "../../lib/directory/path";
-import { getItemFromPath } from "../../lib/directory/directory";
+import { parsePath } from "../../lib/directory/path";
+import { getNodeFromPath } from "../../lib/directory/directory";
 
 describe("Redux store: 'directory' slice actions.", () => {
 	describe("directoryAddVideo()", () => {
@@ -34,11 +34,12 @@ describe("Redux store: 'directory' slice actions.", () => {
 				]
 			}));
 
-			let path = parsePathFromString("$:ZjVAsJOl8SM");
-			let item = getItemFromPath(state.videoBrowser, path);
+			let path = parsePath("$:ZjVAsJOl8SM");
+			let item = getNodeFromPath(state.videoBrowser, path);
 			
 			expect(item).not.toBeNull();
 			expect(state.videoBrowser.videoNodes[item!].videoID).toBe("ZjVAsJOl8SM");
+			console.log(state.videoBrowser);
 		});
 		test("Adding a nested video node.", () => {
 			let state: IDirectorySlice = {
@@ -57,8 +58,8 @@ describe("Redux store: 'directory' slice actions.", () => {
 				]
 			}));
 
-			let path = parsePathFromString("$ > Tutorials 2 > Other:ZjVAsJOl8SM");
-			let item = getItemFromPath(state.videoBrowser, path);
+			let path = parsePath("$ > Tutorials 2 > Other:ZjVAsJOl8SM");
+			let item = getNodeFromPath(state.videoBrowser, path);
 			
 			expect(item).not.toBeNull();
 			expect(state.videoBrowser.videoNodes[item!].videoID).toBe("ZjVAsJOl8SM");
@@ -71,14 +72,14 @@ describe("Redux store: 'directory' slice actions.", () => {
 			};
 
 			let pathString = "$:LXb3EKWsInQ";
-			let path = parsePathFromString(pathString);
+			let path = parsePath(pathString);
 			
-			let node = getItemFromPath(state.videoBrowser, path);
+			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
 			state = reducer(state, directorySlice.actions.directoryRemoveVideos([Video1.videoID]));
 
-			let removedNode = getItemFromPath(state.videoBrowser, path);
+			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();
 		});
 		it("Removes a deeply nested video node.", () => {
@@ -87,14 +88,14 @@ describe("Redux store: 'directory' slice actions.", () => {
 			};
 
 			let pathString = "$ > Tutorials 2 > Other:AKeUssuu3Is";
-			let path = parsePathFromString(pathString);
+			let path = parsePath(pathString);
 			
-			let node = getItemFromPath(state.videoBrowser, path);
+			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
 			state = reducer(state, directorySlice.actions.directoryRemoveVideos([Tutorials2_Other_Video2.videoID]));
 
-			let removedNode = getItemFromPath(state.videoBrowser, path);
+			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();
 		});
 	});

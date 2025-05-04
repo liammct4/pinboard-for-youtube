@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
-import { DirectoryTree, getItemFromPath, getPathOfItem, IDirectoryNode, IVideoNode } from "../../lib/directory/directory";
-import { getParentPathFromPath, NodePath, parsePathFromString } from "../../lib/directory/path";
+import { createNode, DirectoryTree, getNodeFromPath, getPathOfNode, IDirectoryNode, IVideoNode, NodeRef } from "../../lib/directory/directory";
+import { getParentPathFromPath, NodePath, parsePath } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
-import { GUID } from "../../lib/util/objects/types";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
 export interface IDirectorySlice {
 	videoBrowser: DirectoryTree;
 }
 
-let rootNodeID = crypto.randomUUID();
+let rootNodeID = createNode();
 
 const initialState: IDirectorySlice = {
 	videoBrowser: {
@@ -40,14 +39,14 @@ export const directorySlice = createSlice({
 			state.videoBrowser = action.payload.userData.directory;
 		},
 		directoryAddVideo: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
-			let path = parsePathFromString(action.payload.path);
+			let path = parsePath(action.payload.path);
 
 			if (path.type != "DIRECTORY") {
 				console.error(`directoryAddVideo: Provided path was not a directory path: "${action.payload}".`);
 				return;
 			}
 			
-			let targetDirectoryID = getItemFromPath(state.videoBrowser, path);
+			let targetDirectoryID = getNodeFromPath(state.videoBrowser, path);
 
 			if (targetDirectoryID == null) {
 				console.error("directoryAddVideo: targetDirectoryID is null.");
@@ -64,11 +63,11 @@ export const directorySlice = createSlice({
 
 			// Get index of where the new node should be.
 			let newNode: IVideoNode = {
-				nodeID: crypto.randomUUID(),
+				nodeID: createNode(),
 				videoID: action.payload.videoID
 			};
 
-			const accessor = (nodeID: GUID): string => {
+			const accessor = (nodeID: NodeRef): string => {
 				if (nodeID == newNode.nodeID) {
 					return action.payload.videoData.find(x => x.video_id == action.payload.videoID)?.title ?? action.payload.videoID;
 				}
@@ -104,8 +103,8 @@ export const directorySlice = createSlice({
 					continue;
 				}
 
-				let parentPath = getParentPathFromPath(getPathOfItem(state.videoBrowser, nodeID) as NodePath);
-				let parentNodeID = getItemFromPath(state.videoBrowser, parentPath) as GUID;
+				let parentPath = getParentPathFromPath(getPathOfNode(state.videoBrowser, nodeID) as NodePath);
+				let parentNodeID = getNodeFromPath(state.videoBrowser, parentPath) as NodeRef;
 				let parentNode = state.videoBrowser.directoryNodes[parentNodeID] as IDirectoryNode;
 				
 				let targetIndex = parentNode.subNodes.findIndex(x => x == nodeID);
