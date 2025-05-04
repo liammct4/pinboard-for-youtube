@@ -5,7 +5,7 @@ import { IDirectoryModificationAction } from "../../components/features/resource
 import { directoryAddVideo } from "./directorySlice";
 import { appendRequestToDirectory } from "../mutation/mutationSlice";
 import { getItemFromPath } from "../../lib/directory/directory";
-import { directoryPathConcat, getParentPathFromPath, NodePath, parseStringToPath, pathToString } from "../../lib/directory/path";
+import { directoryPathConcat, getParentPathFromPath, NodePath, parsePathFromString, pathToString } from "../../lib/directory/path";
 
 export const addVideoMiddleware = createListenerMiddleware();
 
@@ -13,7 +13,7 @@ addVideoMiddleware.startListening({
 	actionCreator: directoryAddVideo,
 	effect: (action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		let parentPath = parseStringToPath(action.payload.path);
+		let parentPath = parsePathFromString(action.payload.path);
 		let parent = getItemFromPath(state.directory.videoBrowser, parentPath);
 
 		if (parentPath.type != "DIRECTORY" || parent == null) {

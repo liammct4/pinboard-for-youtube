@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
-import { DirectoryTree, getItemFromPath, IVideoNode } from "../../lib/directory/directory";
-import { parseStringToPath } from "../../lib/directory/path";
+import { DirectoryTree, getItemFromPath, getPathOfItem, IDirectoryNode, IVideoNode } from "../../lib/directory/directory";
+import { getParentPathFromPath, NodePath, parsePathFromString } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { GUID } from "../../lib/util/objects/types";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
@@ -40,7 +40,7 @@ export const directorySlice = createSlice({
 			state.videoBrowser = action.payload.userData.directory;
 		},
 		directoryAddVideo: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
-			let path = parseStringToPath(action.payload.path);
+			let path = parsePathFromString(action.payload.path);
 
 			if (path.type != "DIRECTORY") {
 				console.error(`directoryAddVideo: Provided path was not a directory path: "${action.payload}".`);
@@ -93,11 +93,33 @@ export const directorySlice = createSlice({
 			targetDirectory.subNodes.splice(insertIndex, 0, newNode.nodeID);
 			state.videoBrowser.videoNodes[newNode.nodeID] = newNode;
 		},
+		directoryRemoveVideos: (state, action: PayloadAction<string[]>) => {
+			let videoNodes = Object.values(state.videoBrowser.videoNodes);
+
+			for (let video of action.payload) {
+				let nodeID = videoNodes.find(x => x.videoID == video)?.nodeID;
+	
+				if (nodeID == null) {
+					console.error(`directory.directoryRemoveVideos: provided nodeID for video to remove was null: "${action.payload}"`);
+					continue;
+				}
+
+				let parentPath = getParentPathFromPath(getPathOfItem(state.videoBrowser, nodeID) as NodePath);
+				let parentNodeID = getItemFromPath(state.videoBrowser, parentPath) as GUID;
+				let parentNode = state.videoBrowser.directoryNodes[parentNodeID] as IDirectoryNode;
+				
+				let targetIndex = parentNode.subNodes.findIndex(x => x == nodeID);
+
+				parentNode.subNodes.splice(targetIndex, 1);
+				delete state.videoBrowser.directoryNodes[nodeID];
+			}
+		},
 	}
 });
 
 export const {
 	updateDirectorySliceFromStorage,
-	directoryAddVideo
+	directoryAddVideo,
+	directoryRemoveVideos
 } = directorySlice.actions;
 export default directorySlice.reducer;

@@ -21,16 +21,6 @@ export function useVideoStateAccess() {
 
 	return {
 		root: directoryRoot,
-		directoryRemoveVideo: (videoIDs: string[]) => {
-			for (let video of videoIDs) {
-				if (videoExists(video)){
-					dispatch(removeVideo(video));
-					removeAccountVideo(video);
-				}
-			}
-			
-			setCounter(Math.random());
-		},
 		directoryUpdateVideo: (video: IVideo) => {
 			if (!videoExists(video.id)) {
 				return;

@@ -11,8 +11,8 @@ Object.defineProperty(globalThis, "crypto", {
 })
 
 import reducer, { IDirectorySlice, directorySlice } from "./directorySlice";
-import { testDirectory } from "../../../testData/directory";
-import { parseStringToPath } from "../../lib/directory/path";
+import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
+import { parsePathFromString } from "../../lib/directory/path";
 import { getItemFromPath } from "../../lib/directory/directory";
 
 describe("Redux store: 'directory' slice actions.", () => {
@@ -34,7 +34,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				]
 			}));
 
-			let path = parseStringToPath("$:ZjVAsJOl8SM");
+			let path = parsePathFromString("$:ZjVAsJOl8SM");
 			let item = getItemFromPath(state.videoBrowser, path);
 			
 			expect(item).not.toBeNull();
@@ -57,11 +57,45 @@ describe("Redux store: 'directory' slice actions.", () => {
 				]
 			}));
 
-			let path = parseStringToPath("$ > Tutorials 2 > Other:ZjVAsJOl8SM");
+			let path = parsePathFromString("$ > Tutorials 2 > Other:ZjVAsJOl8SM");
 			let item = getItemFromPath(state.videoBrowser, path);
 			
 			expect(item).not.toBeNull();
 			expect(state.videoBrowser.videoNodes[item!].videoID).toBe("ZjVAsJOl8SM");
+		});
+	});
+	describe("directoryRemoveVideos()", () => {
+		it("Removes a top level video node.", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			};
+
+			let pathString = "$:LXb3EKWsInQ";
+			let path = parsePathFromString(pathString);
+			
+			let node = getItemFromPath(state.videoBrowser, path);
+			expect(node).not.toBeNull();
+
+			state = reducer(state, directorySlice.actions.directoryRemoveVideos([Video1.videoID]));
+
+			let removedNode = getItemFromPath(state.videoBrowser, path);
+			expect(removedNode).toBeNull();
+		});
+		it("Removes a deeply nested video node.", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			};
+
+			let pathString = "$ > Tutorials 2 > Other:AKeUssuu3Is";
+			let path = parsePathFromString(pathString);
+			
+			let node = getItemFromPath(state.videoBrowser, path);
+			expect(node).not.toBeNull();
+
+			state = reducer(state, directorySlice.actions.directoryRemoveVideos([Tutorials2_Other_Video2.videoID]));
+
+			let removedNode = getItemFromPath(state.videoBrowser, path);
+			expect(removedNode).toBeNull();
 		});
 	});
 });
