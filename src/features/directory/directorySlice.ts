@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
-import { createNode, DirectoryTree, getNodeFromPath, getPathOfNode, IDirectoryNode, IVideoNode, NodeRef } from "../../lib/directory/directory";
-import { getParentPathFromPath, NodePath, parsePath, validateDirectoryName } from "../../lib/directory/path";
+import { createNode, DirectoryTree, getNodeFromPath, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef } from "../../lib/directory/directory";
+import { getParentPathFromPath, NodePath, parsePath, pathEquals, validateDirectoryName } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
@@ -36,12 +36,43 @@ type DirectoryAddDirectoryPayload = {
 	slice: string;
 }
 
+type DirectoryMoveNodePayload = {
+	targetNode: string;
+	newDirectory: string;
+	videoData: IYoutubeVideoInfo[];
+}
+
 export const directorySlice = createSlice({
 	name: "directory",
 	initialState,
 	reducers: {
 		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videoBrowser = action.payload.userData.directory;
+		},
+		moveNode: (state, action: PayloadAction<DirectoryMoveNodePayload>) => {
+			let targetPath = parsePath(action.payload.targetNode);
+			let targetParentPath = getParentPathFromPath(targetPath);
+
+			let destinationPath = parsePath(action.payload.newDirectory);
+
+			if (destinationPath.type == "VIDEO") {
+				console.error(`directory.moveNode: New location path was a video path: ${action.payload.newDirectory}`);
+				return;
+			}
+
+			if (pathEquals(targetParentPath, destinationPath)) {
+				console.error("directory.moveNode: Target is already in the same directory.");
+			}
+
+			let currentID = getNodeFromPath(state.videoBrowser, targetPath) as NodeRef;
+			let currentParent = state.videoBrowser.directoryNodes[getNodeFromPath(state.videoBrowser, targetParentPath) as NodeRef];
+			
+			let currentIndex = currentParent.subNodes.findIndex(x => x == currentID);
+			currentParent.subNodes.splice(currentIndex, 1);
+
+			let destinationID = getNodeFromPath(state.videoBrowser, destinationPath) as NodeRef;
+
+			insertNodeInOrder(state.videoBrowser, destinationID, currentID, action.payload.videoData);
 		},
 		createDirectoryNode: (state, action: PayloadAction<DirectoryAddDirectoryPayload>) => {
 			let parentPath = parsePath(action.payload.path);
@@ -64,29 +95,14 @@ export const directorySlice = createSlice({
 				return;
 			}
 
-			let parentNode = state.videoBrowser.directoryNodes[parentNodeID];
 			let newNode: IDirectoryNode = {
 				nodeID: createNode(),
 				slice: action.payload.slice,
 				subNodes: []
 			};
 
-			let directoryStartIndex = parentNode.subNodes.findIndex(x => state.videoBrowser.videoNodes[x] != null);
-
-			if (directoryStartIndex == -1) {
-				directoryStartIndex = parentNode.subNodes.length;
-			}
-
-			let insertIndex = getAlphanumericInsertIndex(
-				parentNode.subNodes,
-				newNode.nodeID,
-				(nID: NodeRef) => nID == newNode.nodeID ? action.payload.slice : state.videoBrowser.directoryNodes[nID].slice,
-				0,
-				directoryStartIndex
-			);
-
-			parentNode.subNodes.splice(insertIndex, 0, newNode.nodeID);
 			state.videoBrowser.directoryNodes[newNode.nodeID] = newNode;
+			insertNodeInOrder(state.videoBrowser, parentNodeID, newNode.nodeID, []);
 		},
 		createVideoNode: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
 			let path = parsePath(action.payload.path);
@@ -103,44 +119,14 @@ export const directorySlice = createSlice({
 				return;
 			}
 
-			let targetDirectory = state.videoBrowser.directoryNodes[targetDirectoryID];
-
-			let directoryStartIndex = targetDirectory.subNodes.findIndex(x => state.videoBrowser.videoNodes[x] != null);
-
-			if (directoryStartIndex == -1) {
-				directoryStartIndex = targetDirectory.subNodes.length;
-			}
-
 			// Get index of where the new node should be.
 			let newNode: IVideoNode = {
 				nodeID: createNode(),
 				videoID: action.payload.videoID
 			};
 
-			const accessor = (nodeID: NodeRef): string => {
-				if (nodeID == newNode.nodeID) {
-					return action.payload.videoData.find(x => x.video_id == action.payload.videoID)?.title ?? action.payload.videoID;
-				}
-
-				let nodeData = state.videoBrowser.videoNodes[nodeID];
-
-				if (nodeData == null) {
-					return "";
-				}
-
-				return action.payload.videoData.find(x => x.video_id == nodeData.videoID)?.title ?? nodeData.videoID;
-			}
-
-			let insertIndex = getAlphanumericInsertIndex(
-				targetDirectory.subNodes,
-				newNode.nodeID,
-				accessor,
-				directoryStartIndex,
-				targetDirectory.subNodes.length
-			);
-
-			targetDirectory.subNodes.splice(insertIndex, 0, newNode.nodeID);
 			state.videoBrowser.videoNodes[newNode.nodeID] = newNode;
+			insertNodeInOrder(state.videoBrowser, targetDirectoryID, newNode.nodeID, action.payload.videoData);
 		},
 		removeVideoNodes: (state, action: PayloadAction<string[]>) => {
 			let videoNodes = Object.values(state.videoBrowser.videoNodes);

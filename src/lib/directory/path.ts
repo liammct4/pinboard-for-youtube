@@ -109,3 +109,17 @@ export function pathToString(path: NodePath): string {
 
 	return `${basePath}:${videoID}`;
 }
+
+export function pathEquals(a: NodePath, b: NodePath): boolean {
+	if (a.slices.length != b.slices.length) {
+		return false;
+	}
+
+	for (let i = 0; i < a.slices.length; i++) {
+		if (a.slices[i] != b.slices[i]) {
+			return false;
+		}
+	}
+
+	return a.type == b.type;
+}

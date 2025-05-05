@@ -21,40 +21,7 @@ export function useVideoStateAccess() {
 
 	return {
 		root: directoryRoot,
-		directoryMove: async function (oldDirectory: string, newDirectory: string): Promise<RelocateItemError | null> {
-			setCounter(Math.random());
 
-			let oldParent = reformatDirectoryPath(getParentPathFromPath(oldDirectory));
-			let newParent = reformatDirectoryPath(getParentPathFromPath(newDirectory));
-			
-			let error = await relocateItemToDirectory(directoryRoot, oldDirectory, newDirectory);
-			
-			if (error != null) {
-				console.error(
-					`Could not move the item.
-						'${error}'
-						'${oldDirectory}'
-						'${newDirectory}'
-					`
-				);
-				return error;
-			}
-
-			if (oldParent == newParent) {
-				let section = getSectionFromPath(oldDirectory);
-
-				if (section.type == "DIRECTORY") {
-					let node = getNodeFromPath(newDirectory, directoryRoot) as IDirectoryNode;
-					renameAction(node, section.slices[0]);
-				}
-			}
-			else {
-				let node = getNodeFromPath(newDirectory, directoryRoot) as IVideoNode;
-				moveAction(node, oldDirectory);
-			}
-
-			return error;
-		},
 		directoryRemove: (path: string, sections: string[]) => {
 			let parentNode = getNodeFromPath(path, directoryRoot) as IDirectoryNode;
 

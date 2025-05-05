@@ -1,4 +1,6 @@
+import { getAlphanumericInsertIndex } from "../util/generic/stringUtil";
 import { GUID } from "../util/objects/types";
+import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil";
 import { directoryPathConcat, NodePath, parsePath } from "./path";
 
 export const DIRECTORY_NAME_MAX_LENGTH = 64;
@@ -135,6 +137,63 @@ export function getPathOfNode(tree: DirectoryTree, targetNode: NodeRef): NodePat
 	return pass(parsePath("$"), tree.rootNode);
 }
 
+export function insertNodeInOrder(tree: DirectoryTree, parent: NodeRef, newNodeRef: NodeRef, videoInfo: IYoutubeVideoInfo[]) {
+	let parentNode: IDirectoryNode = tree.directoryNodes[parent];
+
+	let insertIndex;
+
+	if (getNodeType(tree, newNodeRef) == "DIRECTORY") {
+		let directoryStartIndex = parentNode.subNodes.findIndex(x => tree.videoNodes[x] != null);
+
+		if (directoryStartIndex == -1) {
+			directoryStartIndex = parentNode.subNodes.length;
+		}
+
+		let newNode = tree.directoryNodes[newNodeRef] as IDirectoryNode;
+
+		insertIndex = getAlphanumericInsertIndex(
+			parentNode.subNodes,
+			newNodeRef,
+			(nID: NodeRef) => nID == newNode.nodeID ? newNode.slice : tree.directoryNodes[nID].slice,
+			0,
+			directoryStartIndex
+		);
+	}
+	else {
+		let newNode: IVideoNode = tree.videoNodes[newNodeRef];
+
+		const accessor = (nodeID: NodeRef): string => {
+			if (nodeID == newNodeRef) {
+				return videoInfo.find(x => x.video_id == newNode.videoID)?.title ?? newNode.videoID;
+			}
+
+			let nodeData = tree.videoNodes[nodeID];
+
+			if (nodeData == null) {
+				return "";
+			}
+
+			return videoInfo.find(x => x.video_id == nodeData.videoID)?.title ?? nodeData.videoID;
+		}
+
+		let directoryStartIndex = parentNode.subNodes.findIndex(x => tree.videoNodes[x] != null);
+
+		if (directoryStartIndex == -1) {
+			directoryStartIndex = parentNode.subNodes.length;
+		}
+
+		insertIndex = getAlphanumericInsertIndex(
+			parentNode.subNodes,
+			newNode.nodeID,
+			accessor,
+			directoryStartIndex,
+			parentNode.subNodes.length
+		);
+	}
+
+	parentNode.subNodes.splice(insertIndex, 0, newNodeRef);
+}
+
 export function stringifyNode(tree: DirectoryTree, node: NodeRef, withGuidelines: boolean): string {
 	let lines: string[] = [
 		`D:${tree.directoryNodes[node].slice}`
@@ -150,7 +209,7 @@ export function stringifyNode(tree: DirectoryTree, node: NodeRef, withGuidelines
 
 			if (withGuidelines) {
 				let character = i == nodeData.subNodes.length - 1 ? '├' : '├';
-				indentTabs = `│\t`.repeat(indent - 1) + `${character}── `;
+				indentTabs = `│   `.repeat(indent - 1) + `${character}── `;
 			}
 			else {
 				indentTabs = `\t`.repeat(indent);

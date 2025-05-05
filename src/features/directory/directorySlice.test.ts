@@ -24,6 +24,65 @@ function expectTree(expected: string, received: string) {
 }
 
 describe("Redux store: 'directory' slice actions.", () => {
+	describe("moveNode()", () => {
+		test("Moves a directory node from one folder to another (same level).", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+	
+			state = reducer(state, directorySlice.actions.moveNode({
+				targetNode: "$ > Alphabetical > BTop",
+				newDirectory: "$ > Tutorials 2",
+				videoData: []
+			}));
+
+			let originalPath = parsePath("$ > Alphabetical > BTop");
+			let originalItem = getNodeFromPath(state.videoBrowser, originalPath);
+			
+			expect(originalItem).toBeNull();
+			
+			let path = parsePath("$ > Tutorials 2 > BTop");
+			let item = getNodeFromPath(state.videoBrowser, path);
+			
+			expect(item).not.toBeNull();
+			expect(state.videoBrowser.directoryNodes[item!].slice).toBe("BTop");
+		});
+		test("Moves a video node from one folder to another (different levels).", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+	
+			state = reducer(state, directorySlice.actions.moveNode({
+				targetNode: "$ > Tutorials 2 > Other:AKeUssuu3Is",
+				newDirectory: "$",
+				videoData: [
+					// @ts-ignore
+					{
+						video_id: "AKeUssuu3Is",
+						title: "A"
+					},
+					// @ts-ignore
+					{
+						video_id: "LXb3EKWsInQ",
+						title: "B"
+					}
+				]
+			}));
+
+			let originalPath = parsePath("$ > Tutorials 2 > Other:AKeUssuu3Is");
+			let originalItem = getNodeFromPath(state.videoBrowser, originalPath);
+			
+			expect(originalItem).toBeNull();
+			
+			let path = parsePath("$:AKeUssuu3Is");
+			let item = getNodeFromPath(state.videoBrowser, path);
+			
+			expect(item).not.toBeNull();
+			expect(state.videoBrowser.videoNodes[item!].videoID).toBe("AKeUssuu3Is");
+
+			console.log(stringifyTree(state.videoBrowser, true));
+		});
+	});
 	describe("createDirectoryNode()", () => {
 		test("Adding a root level directory node.", () => {
 			let state: IDirectorySlice = {
