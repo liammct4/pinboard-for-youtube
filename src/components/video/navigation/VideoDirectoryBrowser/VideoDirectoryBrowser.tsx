@@ -125,7 +125,6 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		}
 		
 		// TODO: Renaming.
-
 		setCurrentlyEditing(null);
 	}
 
@@ -144,13 +143,12 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				let type = getNodeType(tree, i);
 		
 				let oldPath = directoryPathConcat(directoryPath, section, type)
-				let newPath = directoryPathConcat(directoryBarHoverPath, section, type);
 	
-				directoryActions.moveNode({
+				dispatch(directoryActions.moveNode({
 					targetPath: oldPath,
-					destinationPath: newPath,
+					destinationPath: directoryBarHoverPath,
 					videoData: videoCache
-				});
+				}));
 			}
 
 			setSelectedItems([]);
@@ -177,17 +175,16 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				continue;
 			}
 
-			let section = getNodeType(tree, i);
+			let section = getNodeSection(tree, getNodeFromRef(tree, i));
 			let type = getNodeType(tree, i);
 
 			let oldPath = directoryPathConcat(directoryPath, section, type);
-			let newPath = directoryPathConcat(targetDirectory, section, type);
 
-			directoryActions.moveNode({
+			dispatch(directoryActions.moveNode({
 				targetPath: oldPath,
-				destinationPath: newPath,
+				destinationPath: targetDirectory,
 				videoData: videoCache
-			});
+			}));
 		}
 
 		setDragging(null);
