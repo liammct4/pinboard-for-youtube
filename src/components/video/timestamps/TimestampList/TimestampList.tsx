@@ -4,7 +4,6 @@ import { DragListItem } from "../../../../lib/dragList/DragListItem";
 import { Timestamp } from "../../../../lib/video/video";
 import { VideoTimestamp } from "../VideoTimestamp/VideoTimestamp";
 import "./TimestampList.css"
-import { ITimestampListStateContext, TimestampListStateContext } from "../../navigation/VideoDirectoryBrowser/VideoDirectoryBrowser";
 
 export interface ITimestampListProperties {
 	videoID: string;
@@ -16,11 +15,13 @@ export interface ITimestampListProperties {
 export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTimestampChanged }: ITimestampListProperties): React.ReactNode {
 	const [ dragging, setDragging ] = useState<DragEvent<string> | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
-	const { activelyDragging, setActivelyDragging } = useContext<ITimestampListStateContext>(TimestampListStateContext);
 
 	// When dragging ends, reorder the list.
-	useEffect(() => {
-		if (isDragging || dragging == null || dragging == "NOT_IN_BOUNDS") {
+	const dragEnd = () => {
+		setIsDragging(false);
+		setDragging(null);
+		
+		if (dragging == null || dragging == "NOT_IN_BOUNDS") {
 			return;
 		}
 
@@ -43,7 +44,7 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 		}
 
 		onTimestampsChanged(newTimestamps);
-	}, [isDragging]);
+	};
 
 	return (
 		<>
@@ -53,12 +54,8 @@ export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTime
 				onDrag={(e) => {
 					setDragging(e);
 					setIsDragging(true);
-					setActivelyDragging(true);
 				}}
-				onDragEnd={() => {
-					setIsDragging(false);
-					setActivelyDragging(false);
-				}}>
+				onDragEnd={dragEnd}>
 				{
 					timestamps.length != 0 ?
 						timestamps.map(x =>

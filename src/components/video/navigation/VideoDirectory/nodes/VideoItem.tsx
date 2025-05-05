@@ -61,7 +61,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const setTimestamps = (timestamps: Timestamp[]) => {
 		let newVideo = { ...video, timestamps: timestamps };
 
-		videoActions.addOrReplaceVideo(newVideo);
+		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const onExpanded = (expanded: boolean) => {
