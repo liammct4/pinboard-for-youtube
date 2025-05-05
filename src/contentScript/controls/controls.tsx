@@ -17,11 +17,9 @@ export function controlsSetup(): boolean {
 			return;
 		}
 
-		let storage = await chrome.storage.local.get() as IStorage;
-
 		controlBar.insertBefore(container, controlBar.childNodes[0]);
 		let root = createRoot(container);
-		root.render(<ControlsApp storage={storage}/>);
+		root.render(<ControlsApp/>);
 	}
 
 	check();

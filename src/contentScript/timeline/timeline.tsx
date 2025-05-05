@@ -15,11 +15,9 @@ export async function timelineSetup(): Promise<boolean> {
 		return false;
 	}
 
-	let storage = await chrome.storage.local.get() as IStorage;
-
 	timeline.insertBefore(container, timeline.childNodes[0]);
 	let root = createRoot(container);
-	root.render(<TimelineApp storage={storage}/>);
+	root.render(<TimelineApp/>);
 
 	return true;
 }
