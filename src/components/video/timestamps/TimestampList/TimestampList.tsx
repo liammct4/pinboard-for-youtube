@@ -14,7 +14,7 @@ export interface ITimestampListProperties {
 }
 
 export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTimestampChanged }: ITimestampListProperties): React.ReactNode {
-	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
+	const [ dragging, setDragging ] = useState<DragEvent<string> | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const { activelyDragging, setActivelyDragging } = useContext<ITimestampListStateContext>(TimestampListStateContext);
 
