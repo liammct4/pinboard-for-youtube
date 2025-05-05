@@ -48,7 +48,7 @@ type DirectoryRenameDirectoryPayload = {
 }
 
 export function optionalStringPath(path: NodePath | string): NodePath {
-	return path instanceof String ? parsePath(path as string) : path as NodePath;
+	return typeof path == "string" ? parsePath(path as string) : path as NodePath;
 }
 
 export const directorySlice = createSlice({
