@@ -26,25 +26,29 @@ initialState.videoBrowser.directoryNodes[rootNodeID] = {
 }
 
 type DirectoryAddVideoPayload = {
-	path: NodePath;
+	parentPath: NodePath | string;
 	videoID: string;
 	videoData: IYoutubeVideoInfo[];
 }
 
 type DirectoryAddDirectoryPayload = {
-	parentPath: NodePath;
+	parentPath: NodePath | string;
 	slice: string;
 }
 
 type DirectoryMoveNodePayload = {
-	targetPath: NodePath;
-	destinationPath: NodePath;
+	targetPath: NodePath | string;
+	destinationPath: NodePath | string;
 	videoData: IYoutubeVideoInfo[];
 }
 
 type DirectoryRenameDirectoryPayload = {
 	targetPath: NodePath;
 	newSlice: string;
+}
+
+function optionalStringPath(path: NodePath | string): NodePath {
+	return path instanceof String ? parsePath(path as string) : path as NodePath;
 }
 
 export const directorySlice = createSlice({
@@ -58,43 +62,48 @@ export const directorySlice = createSlice({
 			// TODO.
 		},
 		moveNode: (state, action: PayloadAction<DirectoryMoveNodePayload>) => {
-			let targetParentPath = getParentPathFromPath(action.payload.targetPath);
+			let targetPath = optionalStringPath(action.payload.targetPath);
+			let destinationPath = optionalStringPath(action.payload.destinationPath);
 
-			if (action.payload.destinationPath.type == "VIDEO") {
-				console.error(`directory.moveNode: New location path was a video path: "${pathToString(action.payload.destinationPath)}"`);
+			let targetParentPath = getParentPathFromPath(targetPath);
+
+			if (destinationPath.type == "VIDEO") {
+				console.error(`directory.moveNode: New location path was a video path: "${pathToString(destinationPath)}"`);
 				return;
 			}
 
-			if (pathEquals(targetParentPath, action.payload.destinationPath)) {
+			if (pathEquals(targetParentPath, destinationPath)) {
 				console.error("directory.moveNode: Target is already in the same directory.");
 			}
 
-			let currentID = getNodeFromPath(state.videoBrowser, action.payload.targetPath) as NodeRef;
+			let currentID = getNodeFromPath(state.videoBrowser, targetPath) as NodeRef;
 			let currentParent = state.videoBrowser.directoryNodes[getNodeFromPath(state.videoBrowser, targetParentPath) as NodeRef];
 			
 			let currentIndex = currentParent.subNodes.findIndex(x => x == currentID);
 			currentParent.subNodes.splice(currentIndex, 1);
 
-			let destinationID = getNodeFromPath(state.videoBrowser, action.payload.destinationPath) as NodeRef;
+			let destinationID = getNodeFromPath(state.videoBrowser, destinationPath) as NodeRef;
 
 			insertNodeInOrder(state.videoBrowser, destinationID, currentID, action.payload.videoData);
 		},
 		createDirectoryNode: (state, action: PayloadAction<DirectoryAddDirectoryPayload>) => {
+			let parentPath = optionalStringPath(action.payload.parentPath);
+
 			let validate = validateDirectoryName(action.payload.slice.trim());
 
 			if (validate != null && validate != "STARTS_ENDS_IN_WHITESPACE") {
 				console.error(`directory.createDirectoryNode: Provided slice was invalid (${validate}).:"${action.payload.slice}".`);
 			}
 
-			if (action.payload.parentPath.type != "DIRECTORY") {
-				console.error(`directory.createDirectoryNode: Provided parent path was a video path. "${pathToString(action.payload.parentPath)}".`)
+			if (parentPath.type != "DIRECTORY") {
+				console.error(`directory.createDirectoryNode: Provided parent path was a video path. "${pathToString(parentPath)}".`)
 				return;
 			}
 
-			let parentNodeID = getNodeFromPath(state.videoBrowser, action.payload.parentPath);
+			let parentNodeID = getNodeFromPath(state.videoBrowser, parentPath);
 
 			if (parentNodeID == null) {
-				console.error(`directory.createDirectoryNode: Provided parent path does not exist in the tree. "${action.payload.parentPath}".`);
+				console.error(`directory.createDirectoryNode: Provided parent path does not exist in the tree. "${pathToString(parentPath)}".`);
 				return;
 			}
 
@@ -108,12 +117,14 @@ export const directorySlice = createSlice({
 			insertNodeInOrder(state.videoBrowser, parentNodeID, newNode.nodeID, []);
 		},
 		createVideoNode: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
-			if (action.payload.path.type != "DIRECTORY") {
+			let path = optionalStringPath(action.payload.parentPath);
+
+			if (path.type != "DIRECTORY") {
 				console.error(`directory.createVideoNode: Provided path was not a directory path: "${action.payload}".`);
 				return;
 			}
 			
-			let targetDirectoryID = getNodeFromPath(state.videoBrowser, action.payload.path);
+			let targetDirectoryID = getNodeFromPath(state.videoBrowser, path);
 
 			if (targetDirectoryID == null) {
 				console.error("directory.createVideoNode: targetDirectoryID is null.");

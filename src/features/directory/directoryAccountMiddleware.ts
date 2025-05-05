@@ -13,7 +13,7 @@ addVideoMiddleware.startListening({
 	actionCreator: directoryActions.createVideoNode,
 	effect: (action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		let parentPath = parsePath(action.payload.path);
+		let parentPath = parsePath(action.payload.parentPath);
 		let parent = getNodeFromPath(state.directory.videoBrowser, parentPath);
 
 		if (parentPath.type != "DIRECTORY" || parent == null) {

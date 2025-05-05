@@ -20,7 +20,6 @@ import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { cloneDirectory, IDirectoryNode, IVideoNode } from "./lib/directory/directory.ts"
 import { IVideo } from "./lib/video/video.ts"
 import { removeParentPass } from "./lib/storage/userData/userData.ts"
 import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
@@ -28,6 +27,9 @@ import { VideoWrapper } from "./components/features/videoAccess/VideoWrapper.tsx
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
+import { directoryActions } from "./features/directory/directorySlice.ts"
+import { parsePath } from "./lib/directory/path.ts"
+import { videoActions } from "./features/video/videoSlice.ts"
 
 checkAndImplementLocalStorage();
 
@@ -36,9 +38,7 @@ async function setupState() {
 	setupStorageAndStoreSync();
 
 	let activeID: string | undefined = undefined;
-
 	let storage: IStorage = await accessStorage();
-	let videos = new Map<string, IVideo>(storage.userData.videos.map(x => [x.id, x]));
 
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -53,53 +53,13 @@ async function setupState() {
 	else {
 		activeID = "xcJtL7QggTI";
 
-		let testDirectoryRoot: IDirectoryNode = {
-			nodeID: crypto.randomUUID(),
-			type: "DIRECTORY",
-			parent: null,
-			slice: "$",
-			subNodes: []
-		}
+		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "test" }));
+		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "random" }));
+		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
+		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
 
-		let nodeA: IDirectoryNode = {
-			nodeID: crypto.randomUUID(),
-			type: "DIRECTORY",
-			parent: testDirectoryRoot,
-			slice: "test",
-			subNodes: []
-		}
-	
-		let nodeB: IDirectoryNode = {
-			nodeID: crypto.randomUUID(),
-			type: "DIRECTORY",
-			parent: testDirectoryRoot,
-			slice: "random",
-			subNodes: []
-		}
-	
-		let videoA: IVideoNode = {
-			nodeID: crypto.randomUUID(),
-			type: "VIDEO",
-			parent: testDirectoryRoot,
-			videoID: sampleVideoData[0].id
-		}
-	
-		let videoB: IVideoNode = {
-			nodeID: crypto.randomUUID(),
-			type: "VIDEO",
-			parent: testDirectoryRoot,
-			videoID: sampleVideoData[1].id
-		}
-	
-		videos.set(videoA.videoID, sampleVideoData[0]);
-		videos.set(videoB.videoID, sampleVideoData[1]);
-		
-		testDirectoryRoot.subNodes = [nodeA, nodeB, videoA, videoB];
-
-		await modifyStorage(s => {
-			s.userData.videos = Array.from(videos.values());
-			s.userData.directoryRoot = removeParentPass(testDirectoryRoot)
-		});
+		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
+		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
 	}
 
 	syncStoreToStorage();

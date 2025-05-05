@@ -298,7 +298,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let path = parsePath("$ > Alphabetical");
 
 			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
-				path: path,
+				parentPath: path,
 				videoID: "PnvkrBXmLSI",
 				videoData: [
 					// @ts-ignore
@@ -335,7 +335,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let path = parsePath("$ > Alphabetical > BTop");
 
 			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
-				path,
+				parentPath: path,
 				videoID: "PnvkrBXmLSI",
 				videoData: [
 					// @ts-ignore
@@ -347,7 +347,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			}))
 
 			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
-				path,
+				parentPath: path,
 				videoID: "ERYG3NE1DO8",
 				videoData: [
 					// @ts-ignore
@@ -382,7 +382,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			}
 	
 			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
-				path: parsePath("$"),
+				parentPath: parsePath("$"),
 				videoID: "ZjVAsJOl8SM",
 				videoData: [
 					// @ts-ignore
@@ -405,7 +405,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			}
 	
 			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
-				path: parsePath("$ > Tutorials 2 > Other"),
+				parentPath: parsePath("$ > Tutorials 2 > Other"),
 				videoID: "ZjVAsJOl8SM",
 				videoData: [
 					// @ts-ignore
