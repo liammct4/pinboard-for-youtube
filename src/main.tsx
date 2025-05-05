@@ -35,6 +35,8 @@ async function setupState() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
 
+	syncStoreToStorage();
+
 	let activeID: string | undefined = undefined;
 	let storage: IStorage = await accessStorage();
 
@@ -50,17 +52,15 @@ async function setupState() {
 	}
 	else {
 		activeID = "xcJtL7QggTI";
+		
+		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
+		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
 
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "test" }));
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "random" }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
-
-		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
-		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
 	}
-
-	syncStoreToStorage();
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
