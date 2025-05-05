@@ -21,7 +21,6 @@ import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
 import { IVideo } from "./lib/video/video.ts"
-import { removeParentPass } from "./lib/storage/userData/userData.ts"
 import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"

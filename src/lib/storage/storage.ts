@@ -7,11 +7,11 @@ import AppThemes from "./../../styling/theme.json"
 import { settingDefinitions } from "../config/settingDefinitions.ts"
 import { SettingValue } from "../../features/settings/settingsSlice.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
-import { DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
+import { createNode, DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
-import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource.ts"
 import { IConfig } from "./config.ts"
+import { IDirectoryModificationAction } from "../user/resources/directory.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
@@ -44,7 +44,7 @@ let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
 
 let rootNode: IDirectoryNode = {
 	slice: "$",
-	nodeID: crypto.randomUUID(),
+	nodeID: createNode(),
 	subNodes: []
 }
 

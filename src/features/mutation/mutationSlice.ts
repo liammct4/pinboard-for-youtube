@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { DataMutation } from "../../components/features/useUserAccount";
 import { IVideo } from "../../lib/video/video";
 import { IAppTheme } from "../../lib/config/theming/appTheme";
-import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource";
 import { IStorage } from "../../lib/storage/storage";
+import { IDirectoryModificationAction } from "../../lib/user/resources/directory";
 
 export interface IMutationSlice {
 	videoPendingQueue: DataMutation<IVideo>[],

@@ -8,8 +8,9 @@ import { HttpStatusCode } from "../../lib/util/http";
 import { RootState, store } from "../../app/store";
 import { directoriesEndpoint, themesEndpoint, videosEndpoint } from "../../lib/api/pinboardApi";
 import { IVideo } from "../../lib/video/video";
-import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource";
 import { IAppTheme } from "../../lib/config/theming/appTheme";
+import { directoryActions } from "../directory/directorySlice";
+import { IDirectoryModificationAction } from "../../lib/user/resources/directory";
 
 export const mutationRequestMiddleware = createListenerMiddleware();
 
@@ -30,7 +31,7 @@ async function pushMutationQueue<T>(
 }
 
 mutationRequestMiddleware.startListening({
-	matcher: isAnyOf(appendRequestToVideos, appendRequestToDirectory, appendRequestToThemes),
+	matcher: isAnyOf(mutationActions.appendRequestToVideos, mutationActions.appendRequestToDirectory, mutationActions.appendRequestToThemes),
 	effect: (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
