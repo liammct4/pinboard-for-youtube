@@ -1,11 +1,11 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { DataMutation } from "../../components/features/useUserAccount";
 import { RootState } from "../../app/store";
-import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource";
-import { directoryActions } from "./directorySlice";
+import { directoryActions, optionalStringPath } from "./directorySlice";
 import { mutationActions } from "../mutation/mutationSlice";
 import { getNodeFromPath } from "../../lib/directory/directory";
-import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString } from "../../lib/directory/path";
+import { directoryPathConcat, pathToString } from "../../lib/directory/path";
+import { IDirectoryModificationAction } from "../../lib/user/resources/directory";
 
 export const addVideoMiddleware = createListenerMiddleware();
 
@@ -13,7 +13,7 @@ addVideoMiddleware.startListening({
 	actionCreator: directoryActions.createVideoNode,
 	effect: (action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		let parentPath = parsePath(action.payload.parentPath);
+		let parentPath = optionalStringPath(action.payload.parentPath);
 		let parent = getNodeFromPath(state.directory.videoBrowser, parentPath);
 
 		if (parentPath.type != "DIRECTORY" || parent == null) {
