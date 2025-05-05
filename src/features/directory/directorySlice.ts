@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
-import { createNode, DirectoryTree, getNodeFromPath, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef } from "../../lib/directory/directory";
+import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
 import { getParentPathFromPath, NodePath, parsePath, pathEquals, validateDirectoryName } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
@@ -128,7 +128,30 @@ export const directorySlice = createSlice({
 			state.videoBrowser.videoNodes[newNode.nodeID] = newNode;
 			insertNodeInOrder(state.videoBrowser, targetDirectoryID, newNode.nodeID, action.payload.videoData);
 		},
-		removeVideoNodes: (state, action: PayloadAction<string[]>) => {
+		removeNodes: (state, action: PayloadAction<string[]>) => {
+			for (let pathString of action.payload) {
+				let path = parsePath(pathString);
+				let nodeID = getNodeFromPath(state.videoBrowser, path) as NodeRef;
+
+				let parentPath = getParentPathFromPath(path);
+
+				let parentID = getNodeFromPath(state.videoBrowser, parentPath) as NodeRef;
+				let parentNode = state.videoBrowser.directoryNodes[parentID];
+
+				let index = parentNode.subNodes.findIndex(x => x == nodeID);
+				
+				parentNode.subNodes.splice(index, 1);
+				
+				if (getNodeType(state.videoBrowser, nodeID) == "DIRECTORY") {
+					removeSubBranches(state.videoBrowser, nodeID);
+					delete state.videoBrowser.directoryNodes[nodeID];
+				}
+				else {
+					delete state.videoBrowser.videoNodes[nodeID];
+				}
+			}
+		},
+		removeVideoNodesByID: (state, action: PayloadAction<string[]>) => {
 			let videoNodes = Object.values(state.videoBrowser.videoNodes);
 
 			for (let video of action.payload) {

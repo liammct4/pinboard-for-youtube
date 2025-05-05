@@ -12,7 +12,7 @@ Object.defineProperty(globalThis, "crypto", {
 
 import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
 import { parsePath } from "../../lib/directory/path";
-import { getNodeFromPath, NodeRef, stringifyNode, stringifyTree } from "../../lib/directory/directory";
+import { getNodeFromPath, getNodeType, NodeRef, stringifyNode, stringifyTree, traverseTreeDF } from "../../lib/directory/directory";
 import { directorySlice, IDirectorySlice } from "./directorySlice";
 
 // Jest, not showing diffs doesnt work.
@@ -24,6 +24,109 @@ function expectTree(expected: string, received: string) {
 }
 
 describe("Redux store: 'directory' slice actions.", () => {
+	describe("removeNodes()", () => {
+		test("Removes a root level node", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+			
+			state = directorySlice.reducer(state, directorySlice.actions.removeNodes([
+				"$ > Alphabetical"	
+			]));
+
+			/* Before:
+				D:$
+					D:Alphabetical
+						D:BTop
+						D:JMiddle
+						D:YBottom
+					D:Tutorials 2
+						D:Other
+							D:Random
+							V:AKeUssuu3Is
+					V:LXb3EKWsInQ
+			*/
+
+			let path = parsePath("$");
+			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
+			let expected = 
+`D:$
+    D:Tutorials 2
+        D:Other
+            D:Random
+            V:AKeUssuu3Is
+    V:LXb3EKWsInQ`
+
+			let tree = stringifyNode(state.videoBrowser, item, false);
+
+			expectTree(expected, tree);
+		});
+		test("Removes a deeply nested node", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+
+			let path = parsePath("$ > Tutorials 2 > Other");
+			let item = getNodeFromPath(state.videoBrowser, path);
+
+			expect(item).not.toBeNull();
+
+			state = directorySlice.reducer(state, directorySlice.actions.removeNodes([
+				"$ > Tutorials 2 > Other"	
+			]));
+
+			item = getNodeFromPath(state.videoBrowser, path);
+
+			expect(item).toBeNull();
+		});
+		test("Removes multiple nodes", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+
+			let path1 = parsePath("$ > Tutorials 2 > Other");
+			let path2 = parsePath("$ > Alphabetical");
+
+			let item1 = getNodeFromPath(state.videoBrowser, path1);
+			let item2 = getNodeFromPath(state.videoBrowser, path2);
+
+			expect(item1).not.toBeNull();
+			expect(item2).not.toBeNull();
+
+			state = directorySlice.reducer(state, directorySlice.actions.removeNodes([
+				"$ > Tutorials 2",
+				"$ > Alphabetical"
+			]));
+
+			item1 = getNodeFromPath(state.videoBrowser, path1);
+			item2 = getNodeFromPath(state.videoBrowser, path2)
+
+			expect(item1).toBeNull();
+			expect(item2).toBeNull();
+		});
+		test("Removes the sub nodes of a specified parent node to delete from the tree (Disconnected nodes).", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			}
+
+			let targetPath = parsePath("$ > Tutorials 2");
+			let subNodePath = parsePath("$ > Tutorials 2 > Other");
+
+			let subNodeID = getNodeFromPath(state.videoBrowser, subNodePath) as NodeRef;
+
+			expect(getNodeFromPath(state.videoBrowser, targetPath)).not.toBeNull();
+			expect(subNodeID).not.toBeNull();
+			expect(state.videoBrowser.directoryNodes[subNodeID]).not.toBeUndefined();
+
+			state = directorySlice.reducer(state, directorySlice.actions.removeNodes([
+				"$ > Tutorials 2",
+			]));
+
+			expect(getNodeFromPath(state.videoBrowser, targetPath)).toBeNull();
+			expect(getNodeFromPath(state.videoBrowser, subNodePath)).toBeNull();
+			expect(state.videoBrowser.directoryNodes[subNodeID]).toBeUndefined();
+		});
+	});
 	describe("moveNode()", () => {
 		test("Moves a directory node from one folder to another (same level).", () => {
 			let state: IDirectorySlice = {
@@ -128,10 +231,10 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 			let expected = 
 `D:Alphabetical
-	D:ATop
-	D:BTop
-	D:JMiddle
-	D:YBottom`
+    D:ATop
+    D:BTop
+    D:JMiddle
+    D:YBottom`
 
 			let tree = stringifyNode(state.videoBrowser, item, false);
 
@@ -151,10 +254,10 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 			let expected = 
 `D:Alphabetical
-	D:BTop
-	D:JMiddle
-	D:YBottom
-	D:ZEnd`
+    D:BTop
+    D:JMiddle
+    D:YBottom
+    D:ZEnd`
 
 			let tree = stringifyNode(state.videoBrowser, item, false);
 
@@ -174,10 +277,10 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 			let expected = 
 `D:Alphabetical
-	D:BTop
-	D:FMid
-	D:JMiddle
-	D:YBottom`
+    D:BTop
+    D:FMid
+    D:JMiddle
+    D:YBottom`
 
 			let tree = stringifyNode(state.videoBrowser, item, false);
 
@@ -209,11 +312,11 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 			let expected = 
 `D:Alphabetical
-	D:BTop
-	D:JMiddle
-	D:YBottom
-	D:ZEnd
-	V:PnvkrBXmLSI`
+    D:BTop
+    D:JMiddle
+    D:YBottom
+    D:ZEnd
+    V:PnvkrBXmLSI`
 
 			let tree = stringifyNode(state.videoBrowser, item, false);
 
@@ -257,9 +360,9 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let item = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 			let expected = 
 `D:BTop
-	D:Test Stuff
-	V:ERYG3NE1DO8
-	V:PnvkrBXmLSI`
+    D:Test Stuff
+    V:ERYG3NE1DO8
+    V:PnvkrBXmLSI`
 
 			let tree = stringifyNode(state.videoBrowser, item, false);
 
@@ -326,7 +429,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
-			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodes([Video1.videoID]));
+			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodesByID([Video1.videoID]));
 
 			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();
@@ -342,7 +445,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
-			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodes([Tutorials2_Other_Video2.videoID]));
+			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodesByID([Tutorials2_Other_Video2.videoID]));
 
 			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();

@@ -137,6 +137,53 @@ export function getPathOfNode(tree: DirectoryTree, targetNode: NodeRef): NodePat
 	return pass(parsePath("$"), tree.rootNode);
 }
 
+export function removeSubBranches(tree: DirectoryTree, nodeID: NodeRef) {
+	let nodes = traverseTreeDF(tree, nodeID);
+
+	if (nodes == null) {
+		return;
+	}
+
+	for (let node of nodes) {
+		if (getNodeType(tree, node) == "DIRECTORY") {
+			delete tree.directoryNodes[node];
+		}
+		else {
+			delete tree.videoNodes[node];
+		}
+	}
+}
+
+export function traverseTreeDF(tree: DirectoryTree, topNodeID: NodeRef): NodeRef[] | null {
+	let topNode = tree.directoryNodes[topNodeID];
+
+	if (topNode == null) {
+		return null;
+	}
+
+	let traversal: NodeRef[] = [];
+
+	const pass = (nodeID: NodeRef) => {
+		let node = tree.directoryNodes[nodeID];
+		
+		if (node == null) {
+			return;
+		}
+
+		for (let subNode of node.subNodes) {
+			traversal.push(subNode);
+
+			if (tree.directoryNodes[subNode] != null) {
+				pass(subNode);
+			}
+		}
+	}
+
+	pass(topNodeID);
+
+	return traversal;
+}
+
 export function insertNodeInOrder(tree: DirectoryTree, parent: NodeRef, newNodeRef: NodeRef, videoInfo: IYoutubeVideoInfo[]) {
 	let parentNode: IDirectoryNode = tree.directoryNodes[parent];
 
@@ -212,7 +259,7 @@ export function stringifyNode(tree: DirectoryTree, node: NodeRef, withGuidelines
 				indentTabs = `│   `.repeat(indent - 1) + `${character}── `;
 			}
 			else {
-				indentTabs = `\t`.repeat(indent);
+				indentTabs = `    `.repeat(indent);
 			}
 			
 			if (getNodeType(tree, node) == "DIRECTORY") {
