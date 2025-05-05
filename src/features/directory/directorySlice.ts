@@ -133,6 +133,21 @@ export const directorySlice = createSlice({
 				let path = parsePath(pathString);
 				let nodeID = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 
+				if (nodeID == state.videoBrowser.rootNode) {
+					let nodeData = state.videoBrowser.directoryNodes[nodeID];
+					
+					nodeData.subNodes = [];
+					state.videoBrowser.directoryNodes = {};
+					state.videoBrowser.videoNodes = {};
+
+					// No point in doing anything else.
+					return;
+				}
+
+				if (nodeID == null) {
+					continue;
+				}
+
 				let parentPath = getParentPathFromPath(path);
 
 				let parentID = getNodeFromPath(state.videoBrowser, parentPath) as NodeRef;

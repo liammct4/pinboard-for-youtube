@@ -20,30 +20,6 @@ export function useVideoStateAccess() {
 	const { videoExists, getVideo } = useVideo();
 
 	return {
-		root: directoryRoot,
-
-		directoryRemove: (path: string, sections: string[]) => {
-			let parentNode = getNodeFromPath(path, directoryRoot) as IDirectoryNode;
-
-			for (let section of sections) {
-				for (let node of parentNode.subNodes) {
-					if (getSectionPrefix(node) == section) {
-						deleteAction(node);
-					}
-				}
-			}
-			
-			removeItems(directoryRoot, path, sections);
-			setCounter(Math.random());
-		},
-		directoryClearAll: () => {
-			directoryRoot.subNodes.splice(0, directoryRoot.subNodes.length);
-			dispatch(clearVideos());
-
-			clearAllVideos();
-			clearAllDirectories();
-
-			setCounter(Math.random());
-		}
+		root: directoryRoot
 	}
 }
