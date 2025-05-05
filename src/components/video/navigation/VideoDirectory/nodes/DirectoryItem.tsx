@@ -1,11 +1,11 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import CategoryIcon from "./../../../../../../assets/icons/category.svg?react"
 import DropIcon from "./../../../../../../assets/icons/drop_in.svg?react"
-import { getSectionPrefix, IDirectoryNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { IconContainer } from "../../../../images/svgAsset";
-import { Keys, useHotkeys } from "react-hotkeys-hook";
+import { VideoDirectoryInteractionContext } from "../../../../../context/directory";
+import { IDirectoryNode } from "../../../../../lib/directory/directory";
 
 interface IDirectoryItemProperties {
 	node: IDirectoryNode;
@@ -18,9 +18,7 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 		requestEditEnd,
 		draggingID
 	} = useContext(VideoDirectoryInteractionContext);
-
-	let section = getSectionPrefix(node);
-	let isHover = draggingID == section;
+	let isHover = draggingID == node.slice;
 
 	return (
 		<>
@@ -32,7 +30,7 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 						<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
 					}
 					{
-						currentlyEditing == section ?
+						currentlyEditing == node.slice ?
 						<input
 							className="medium-text-input"
 							onBlur={(e) => requestEditEnd(e.target.value)}

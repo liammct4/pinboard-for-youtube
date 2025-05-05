@@ -1,42 +1,42 @@
 import { useContext } from "react";
-import { getSectionPrefix, IDirectoryNode, IVideoDirectoryInteractionContext, IVideoNode, VideoBrowserNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
+import { getNodeType, IDirectoryNode, INode, IVideoNode } from "../../../../../lib/directory/directory";
+import { IVideoDirectoryInteractionContext, VideoDirectoryInteractionContext } from "../../../../../context/directory";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../app/store";
 import "./InteractableBrowserNode.css"
 
 export interface IInteractableBrowserNodeProperties {
-	node: VideoBrowserNode;
+	node: INode;
 }
 
 export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	let isDirectoryNode = node.type == "DIRECTORY";
-	let id = getSectionPrefix(node);
+	const nodeType = useSelector((state: RootState) => getNodeType(state.directory.videoBrowser, node.nodeID));
 
 	return (
 		<li
-			className={`node-item ${isDirectoryNode ? "directory-node-item" : "video-node-item"}`}
+			className={`node-item ${nodeType == "DIRECTORY" ? "directory-node-item" : "video-node-item"}`}
 			data-is-hover-highlight={true}
-			data-is-selected={selectedItems.includes(id)}
+			data-is-selected={selectedItems.includes(node.nodeID)}
 			onMouseDown={(e) => {
-				let section = getSectionPrefix(node);
-
 				if (e.ctrlKey) {
-					if (selectedItems.includes(section)) {
-						setSelectedItems([ ...selectedItems ].filter(x => x != section));
+					if (selectedItems.includes(node.nodeID)) {
+						setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));
 					}
 					else {
-						setSelectedItems([ ...selectedItems, section])
+						setSelectedItems([ ...selectedItems, node.nodeID])
 					}
 				}
-				else if (!selectedItems.includes(section)) {
-					setSelectedItems([ section ]);
+				else if (!selectedItems.includes(node.nodeID)) {
+					setSelectedItems([ node.nodeID ]);
 				}
 			}}>
-			{node.type == "DIRECTORY" ?
-				<DirectoryItem node={node} />
+			{nodeType == "DIRECTORY" ?
+				<DirectoryItem node={node as IDirectoryNode} />
 				:
-				<VideoItem node={node}/>}
+				<VideoItem node={node as IVideoNode}/>}
 		</li>
 	);
 }
