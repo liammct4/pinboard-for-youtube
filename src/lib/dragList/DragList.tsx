@@ -2,31 +2,31 @@ import { createContext, useEffect, useMemo, useRef, useState } from "react"
 import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
 import { Rect } from "../util/objects/types";
 
-export type DragEvent = {
-	startDragID: string;
-	inbetweenStartID: string | null;
-	inbetweenEndID: string | null;
-	overlappingID: string | null;
+export type DragEvent<T extends string> = {
+	startDragID: T;
+	inbetweenStartID: T | null;
+	inbetweenEndID: T | null;
+	overlappingID: T | null;
 } | "NOT_IN_BOUNDS";
 
-export interface IDragListProperties {
+export interface IDragListProperties<T extends string> {
 	className?: string;
 	children: JSX.Element | JSX.Element[];
 	dragListName: string;
-	onDragStart?: (startingID: string) => void;
-	onDrag?: (e: DragEvent) => void;
-	onDragEnd?: (e: DragEvent) => void;
+	onDragStart?: (startingID: T) => void;
+	onDrag?: (e: DragEvent<T>) => void;
+	onDragEnd?: (e: DragEvent<T>) => void;
 }
 
 export type InbetweenIDEventType = -1 | string | 1;
 
-export function DragList({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties) {
+export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties<T>) {
 	const listBox = useRef<HTMLUListElement>(null);
-	const [ startDragID, setStartDragID ] = useState<string | null>(null);
+	const [ startDragID, setStartDragID ] = useState<T | null>(null);
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
 	const [ yScroll, setYScroll ] = useState<number>(0);
 	const [ yBasePosition, setYBasePosition ] = useState<number>(0);
-	const dragInfo = useMemo<DragEvent | null>(() => {
+	const dragInfo = useMemo<DragEvent<T> | null>(() => {
 		let children = listBox?.current?.querySelectorAll(`.drag-list-item[data-drag-list-name=${dragListName}]`);
 		
 		if (children == undefined) {
@@ -43,25 +43,25 @@ export function DragList({ className, dragListName, children, onDragStart, onDra
 				yMousePosition > boxYPosition &&
 				yMousePosition < bottomOfBoxItem
 			) {
-				let overlappingID = children[i].getAttribute("data-box-id");
+				let overlappingID = children[i].getAttribute("data-box-id") as T;
 
 				let diffBetweenStart = Math.abs(yMousePosition - boxYPosition);
 				let diffBetweenEnd = Math.abs(yMousePosition - bottomOfBoxItem);
 
-				let startID: string | null;
-				let endID: string | null;
+				let startID: T | null;
+				let endID: T | null;
 
 				if (diffBetweenStart <= diffBetweenEnd) {
-					startID = children[i - 1]?.getAttribute("data-box-id");
-					endID = overlappingID;
+					startID = children[i - 1]?.getAttribute("data-box-id") as T;
+					endID = overlappingID as T;
 				}
 				else {
-					startID = overlappingID;
-					endID = children[i + 1]?.getAttribute("data-box-id");
+					startID = overlappingID as T;
+					endID = children[i + 1]?.getAttribute("data-box-id") as T;
 				}
 
 				return {
-					startDragID: startDragID!,
+					startDragID: startDragID as T,
 					inbetweenStartID: startID,
 					inbetweenEndID: endID,
 					overlappingID: overlappingID
@@ -110,8 +110,8 @@ export function DragList({ className, dragListName, children, onDragStart, onDra
 				inbetweenStartID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenStartID ?? null : null,
 				inbetweenEndID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenEndID ?? null : null,
 				setStartDragID: (e) => {
-					onDragStart?.(e);
-					setStartDragID(e)
+					onDragStart?.(e as T);
+					setStartDragID(e as T)
 				},
 				baseY: yBasePosition,
 				scrollY: yScroll

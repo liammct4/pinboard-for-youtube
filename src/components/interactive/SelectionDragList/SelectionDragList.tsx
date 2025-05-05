@@ -5,17 +5,17 @@ import "./SelectionDragList.css"
 import { Rect } from "../../../lib/util/objects/types";
 import { rectIntersects } from "../../../lib/util/generic/miscUtil";
 
-export interface ISelectionDragListProperties {
+export interface ISelectionDragListProperties<T extends string> {
 	className?: string;
 	boxClassName?: string;
 	allowSelection?: boolean;
-	setSelectedItems: (items: string[]) => void;
+	setSelectedItems: (items: T[]) => void;
 	onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
 	startingScrollPosition?: number;
 	children: JSX.Element | JSX.Element[];
 }
 
-export function SelectionList({
+export function SelectionList<T extends string>({
 		className,
 		boxClassName,
 		setSelectedItems,
@@ -23,7 +23,7 @@ export function SelectionList({
 		onScroll,
 		startingScrollPosition,
 		children,
-	}: ISelectionDragListProperties) {
+	}: ISelectionDragListProperties<T>) {
 	const outerListBox = useRef<HTMLDivElement>(null!);
 	const [ elementItems, setElementItems] = useState<Element[]>([]);
 	const dataItems = useMemo<DragListItemData[]>(() => {
@@ -37,7 +37,7 @@ export function SelectionList({
 			let elementBounds = element.getBoundingClientRect();
 			
 			return {
-				id: element.getAttribute("data-box-id") as string,
+				id: element.getAttribute("data-box-id") as T,
 				bounds: {
 					position: {
 						x: elementBounds.left - listBounds.left,
@@ -59,7 +59,7 @@ export function SelectionList({
 
 		setSelectedItems(dataItems
 			.filter(x => rectIntersects(x.bounds, selectionBox))
-			.map(x => x.id)
+			.map(x => x.id as T)
 		);
 	};
 

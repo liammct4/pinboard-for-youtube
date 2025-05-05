@@ -4,13 +4,14 @@ import { CompactVideoItem } from "../../../styledVideoItems/CompactVideoItem/Com
 import { MinimalVideoItem } from "../../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
 import { RegularVideoItem } from "../../../styledVideoItems/RegularVideoItem/RegularVideoItem";
 import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
-import { getSectionPrefix, IVideoDirectoryInteractionContext, IVideoNode, VideoDirectoryInteractionContext } from "../../../../../lib/directory/directory";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
-import { useVideoStateAccess } from "../../../../features/useVideoStateAccess";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../app/store";
-import { addExpandedID, removeExpandedID } from "../../../../../features/state/tempStateSlice";
+import { tempStateActions } from "../../../../../features/state/tempStateSlice";
+import { videoActions } from "../../../../../features/video/videoSlice";
 import { useVideo } from "../../../../features/useVideo";
+import { IVideoNode } from "../../../../../lib/directory/directory";
+import { IVideoDirectoryInteractionContext, VideoDirectoryInteractionContext } from "../../../../../context/directory";
 
 interface IVideoItemProperties {
 	node: IVideoNode;
@@ -19,7 +20,6 @@ interface IVideoItemProperties {
 export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
-	const { directoryUpdateVideo: updateVideo } = useVideoStateAccess();
 	const isExpanded = useSelector((state: RootState) => state.tempState.expandedVideoIDs).includes(node.videoID);
 	const { getVideo, videoExists } = useVideo();
 	const dispatch = useDispatch();
@@ -47,7 +47,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 			newVideo.timestamps[index] = newTimestamp;
 		}
 
-		updateVideo(newVideo);
+		videoActions.addOrReplaceVideo(newVideo);
 	};
 
 	const onTimestampAdded = (newTimestamp: Timestamp) => {
@@ -55,35 +55,33 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 		newVideo.timestamps.push(newTimestamp);
 
-		updateVideo(newVideo);
+		videoActions.addOrReplaceVideo(newVideo);
 	};
 
 	const setTimestamps = (timestamps: Timestamp[]) => {
 		let newVideo = { ...video, timestamps: timestamps };
 
-		updateVideo(newVideo);
+		videoActions.addOrReplaceVideo(newVideo);
 	};
 
 	const onExpanded = (expanded: boolean) => {
 		if (expanded) {
-			dispatch(addExpandedID(video.id));
+			dispatch(tempStateActions.addExpandedID(video.id));
 			return;
 		}
 
-		dispatch(removeExpandedID(video.id));
+		dispatch(tempStateActions.removeExpandedID(video.id));
 	}
 
 
 	return (
 		<div onMouseDown={(e) => {
-			let section = getSectionPrefix(node);
-
 			if (e.ctrlKey) {
-				if (selectedItems.includes(section)) {
-					setSelectedItems([ ...selectedItems ].filter(x => x != section));
+				if (selectedItems.includes(node.nodeID)) {
+					setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));
 				}
 				else {
-					setSelectedItems([ ...selectedItems, section])
+					setSelectedItems([ ...selectedItems, node.nodeID])
 				}
 			}
 		}}>

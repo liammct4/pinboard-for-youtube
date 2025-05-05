@@ -2,8 +2,6 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
-import { useVideoStateAccess } from "../../../features/useVideoStateAccess";
-import { directoryPathConcat, getNodeFromPath, getSectionType, getRootDirectoryPathFromSubNode, IDirectoryNode, reformatDirectoryPath, relocateItemToDirectory, VideoDirectoryInteractionContext, getRawSectionFromPrefix, getSectionPrefix, validateDirectoryName, DIRECTORY_NAME_MAX_LENGTH, getSectionPrefixManual, RelocateItemError } from "../../../../lib/directory/directory";
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import ArrowIcon from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg?react"
@@ -21,45 +19,35 @@ import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./V
 import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";
 import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
-import { setVideoBrowserScrollDistance } from "../../../../features/state/tempStateSlice";
+import { tempStateActions } from "../../../../features/state/tempStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeFromRef, getNodeSection, getNodeType, getPathOfNode, NodeRef } from "../../../../lib/directory/directory";
+import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString, reformatDirectoryPath, validateDirectoryName } from "../../../../lib/directory/path";
+import { directoryActions } from "../../../../features/directory/directorySlice";
+import { VideoDirectoryInteractionContext } from "../../../../context/directory";
 
 export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
-	directoryPath: string;
-	onDirectoryPathChanged: (newPath: string) => void; 
-}
-
-export function getDirectoryMoveUserMessage(error: RelocateItemError): string {
-	switch (error) {
-		case "RENAME_ALREADY_EXISTS":
-			return "That name already exists in the target directory."
-		case "MOVE_ALREADY_EXISTS":
-			return "That directory already exists in the target directory.";
-		case "NEW_LOCATION_DOESNT_EXIST":
-			return "The new location could not be found.";
-		case "TARGET_DOESNT_EXIST":
-			return "The target item does not exist.";
-		
-	}
+	directoryPath: NodePath;
+	onDirectoryPathChanged: (newPath: NodePath) => void; 
 }
 
 function DragDirectoryTooltipItem({ sliceSection }: { sliceSection: string }) {
 	return (
 		<li className="directory-item">
 			<IconContainer className="icon-colour-standard" asset={CategoryDiamond} use-fill/>
-			<span>{getRawSectionFromPrefix(sliceSection)}</span>
+			<span>{sliceSection}</span>
 		</li>
 	);
 }
 
-function DragVideoTooltipItem({ idSection }: { idSection: string }) {
-	const { video } = useVideoInfo(getRawSectionFromPrefix(idSection));
+function DragVideoTooltipItem({ videoID }: { videoID: string }) {
+	const { video } = useVideoInfo(videoID);
 
 	return (
 		<li className="video-item">
@@ -70,53 +58,30 @@ function DragVideoTooltipItem({ idSection }: { idSection: string }) {
 
 export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
-	const { root, directoryMove } = useVideoStateAccess();
-	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<string>("$");
+	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<NodePath>(parsePath("$"));
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
-	const [ dragging, setDragging ] = useState<DragEvent | null>(null);
-	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<string | null>(null);
+	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
+	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<NodePath | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const dispatch = useDispatch();
 	const videos = useSelector((state: RootState) => state.video.videos);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
-	const directory = useMemo<IDirectoryNode | null>(() => {
-		if (root == null) {
-			return null;
+	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
+	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
+	const directory = useMemo(() => {
+		let nodeID = getNodeFromPath(tree, directoryPath);
+
+		if (nodeID == null) {
+			return tree.directoryNodes[tree.rootNode];
 		}
 
-		let node = getNodeFromPath(directoryPath, root);
-
-		if (node == null) {
-			activateMessage(
-				"Node navigation error",
-				`Path was not valid, reset to last valid directory ${lastKnownValidPath}. Invalid directory was ${directoryPath}`,
-				"Error",
-				"Error",
-				7000
-			);
-
-			return null;
-		}
-
-		if (node.type == "VIDEO") {
-			activateMessage(
-				"Node navigation error",
-				`Path was not valid, path was a video, reset to last valid directory ${lastKnownValidPath}. Invalid directory was ${directoryPath}`,
-				"Error",
-				"Error",
-				7000
-			);
-
-			return null;
-		}
-
-		return node as IDirectoryNode;
-	}, [directoryPath, root, JSON.stringify(videos)]);
+		return tree.directoryNodes[nodeID];
+	}, [directoryPath]);
 
 	useEffect(() => {
 		if (directory == null) {
@@ -158,14 +123,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				"Shake"
 			);
 		}
-		else if (currentlyEditing?.trim() != getSectionPrefixManual(newSliceName.trim(), "DIRECTORY")) {
-			let result = await directoryMove(directoryPathConcat(directoryPath, getRawSectionFromPrefix(currentlyEditing as string), "DIRECTORY"), directoryPathConcat(directoryPath, newSliceName.trim(), "DIRECTORY"));
-
-			if (result != null) {
-				let message = getDirectoryMoveUserMessage(result);
-				activateMessage(undefined, message, "Error", "Error", 8000, "Shake");
-			}
-		}
+		
+		// TODO: Renaming.
 
 		setCurrentlyEditing(null);
 	}
@@ -179,13 +138,19 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				return;
 			}
 
-			for (let i of selectedItems) {	
-				let section = getRawSectionFromPrefix(i);
+			for (let i of selectedItems) {
+				let node = getNodeFromRef(tree, i);
+				let section = getNodeSection(tree, node);
+				let type = getNodeType(tree, i);
+		
+				let oldPath = directoryPathConcat(directoryPath, section, type)
+				let newPath = directoryPathConcat(directoryBarHoverPath, section, type);
 	
-				let oldPath = directoryPathConcat(directoryPath, section, getSectionType(i));
-				let newPath = directoryPathConcat(directoryBarHoverPath, section, getSectionType(i));
-	
-				directoryMove(oldPath, newPath);
+				directoryActions.moveNode({
+					targetPath: oldPath,
+					destinationPath: newPath,
+					videoData: videoCache
+				});
 			}
 
 			setSelectedItems([]);
@@ -193,15 +158,13 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			return;
 		}
 
-		let slice = dragging?.overlappingID;
-
-		if (slice == undefined || getSectionType(slice) == "VIDEO") {
+		if (dragging?.overlappingID == undefined || getNodeType(tree, dragging.overlappingID as NodeRef) == "VIDEO") {
 			setDragging(null);
 			return;
 		}
 
-		let targetDirectory = directoryPathConcat(directoryPath, getRawSectionFromPrefix(slice), getSectionType(slice));
-		let overlappingTargetSelected = selectedItems.findIndex(x => x == slice);
+		let targetDirectory = directoryPathConcat(directoryPath, getNodeSection(tree, getNodeFromRef(tree, dragging.overlappingID)), getNodeType(tree, dragging.overlappingID));
+		let overlappingTargetSelected = selectedItems.findIndex(x => x == dragging.overlappingID);
 
 		// Means that a directory to move to one that is also selected, and you can't move a directory into itself. 
 		if (overlappingTargetSelected != -1) {
@@ -210,26 +173,27 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		}
 
 		for (let i of selectedItems) {
-			if (i == slice) {
+			if (i == dragging.overlappingID) {
 				continue;
 			}
 
-			let section = getRawSectionFromPrefix(i);
+			let section = getNodeType(tree, i);
+			let type = getNodeType(tree, i);
 
-			let oldPath = directoryPathConcat(directoryPath, section, getSectionType(i));
-			let newPath = directoryPathConcat(targetDirectory, section, getSectionType(i));
+			let oldPath = directoryPathConcat(directoryPath, section, type);
+			let newPath = directoryPathConcat(targetDirectory, section, type);
 
-			directoryMove(oldPath, newPath);
+			directoryActions.moveNode({
+				targetPath: oldPath,
+				destinationPath: newPath,
+				videoData: videoCache
+			});
 		}
 
 		setDragging(null);
 		setSelectedItems([]);
 	}
 
-	const slices = directoryPath.split(">");
-	const last = slices[slices.length - 1].trim();
-
-	slices.splice(slices.length - 1, 1);
 	let accumulator = "";
 
 	return (
@@ -237,13 +201,13 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			<div className="directory-navigator">
 				<div className="navigation-buttons">
 					<button className="button-base button-small square-button" onClick={() => {
-						onDirectoryPathChanged(getRootDirectoryPathFromSubNode(directory!.parent!))
+						onDirectoryPathChanged(getParentPathFromPath(directoryPath));
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
-					}} disabled={directory?.parent == null}>
+					}} disabled={directoryPath.slices[0] == "$"}>
 						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
 					</button>
 					<button className="button-base button-small square-button" onClick={() => {
-						onDirectoryPathChanged("$");
+						onDirectoryPathChanged(parsePath("$"));
 						setNavigationStack([]);
 					}}>
 						<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
@@ -263,22 +227,22 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 						<input
 							className="directory-path-bar small-text-input"
 							onBlur={(e) => {
-								onDirectoryPathChanged(reformatDirectoryPath(e.target.value));
+								onDirectoryPathChanged(parsePath(e.target.value));
 								setNavigationStack([]);
 								setIsEditingPathManually(false);
 							}}
 							onKeyDown={(e) => {
 								if (e.key == "Enter") {
-									onDirectoryPathChanged(e.currentTarget.value);
+									onDirectoryPathChanged(parsePath(e.currentTarget.value));
 									setNavigationStack([]);
 								}
 							}}
 							autoFocus
-							defaultValue={directoryPath}/>
+							defaultValue={pathToString(directoryPath)}/>
 						:
 						<ul className="directory-path-bar small-text-input directory-navigator-slices" onClick={() => setIsEditingPathManually(true)}>
 							{
-								slices.map(x => {
+								directoryPath.slices.map(x => {
 									accumulator += x;
 									let directPath = accumulator;
 									
@@ -287,18 +251,18 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 									return (
 										<li key={directPath}>
 											<button className="jump-to-slice-path-button" onClick={(e) => {
-												onDirectoryPathChanged(directPath);
+												onDirectoryPathChanged(parsePath(directPath));
 												setNavigationStack([]);
 												e.stopPropagation();
 											}}
-											onMouseEnter={() => setDirectoryBarHoverPath(directPath)}
+											onMouseEnter={() => setDirectoryBarHoverPath(parsePath(directPath))}
 											onMouseLeave={() => setDirectoryBarHoverPath(null)}>{x}</button>
 											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
 										</li>
 									);
 								})
 							}
-							<li>{last}</li>
+							<li>{directoryPath.slices[directoryPath.slices.length - 1]}</li>
 						</ul>
 				}
 				<button className="settings-button button-base button-small square-button" onClick={() => setSettingsOpen(!settingsOpen)}>
@@ -326,9 +290,9 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 			<MouseTooltip show={dragging != null && !timestampActivelyDragging} horizontal="START" vertical="CENTRE">
 				<ul className="drag-list-tooltip">
 					{
-						selectedItems.filter(x => x != null).map(x => getSectionType(x) == "DIRECTORY" ?
-							<DragDirectoryTooltipItem key={x} sliceSection={x}/> :
-							<DragVideoTooltipItem key={x} idSection={x}/>
+						selectedItems.filter(x => x != null).map(x => getNodeType(tree, x) == "DIRECTORY" ?
+							<DragDirectoryTooltipItem key={x} sliceSection={getNodeSection(tree, getNodeFromRef(tree, x))}/> :
+							<DragVideoTooltipItem key={x} videoID={getNodeSection(tree, getNodeFromRef(tree, x))}/>
 						)
 					}
 				</ul>
@@ -341,7 +305,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				<VideoDirectoryInteractionContext.Provider
 					value={{
 						navigateRequest: (requester) => {
-							onDirectoryPathChanged(getRootDirectoryPathFromSubNode(requester));
+							onDirectoryPathChanged(getPathOfNode(tree, requester.nodeID) as NodePath);
 							setNavigationStack([]);
 						},
 						selectedItems,
@@ -360,8 +324,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 								allowSelection={!isDragging}
 								setSelectedItems={setSelectedItems}
 								startingScrollPosition={scrollPosition}
-								onScroll={(e) => dispatch(setVideoBrowserScrollDistance(e.currentTarget.scrollTop))}>
-									<DragList className="directory-drag-list" dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
+								onScroll={(e) => dispatch(tempStateActions.setVideoBrowserScrollDistance(e.currentTarget.scrollTop))}>
+									<DragList<NodeRef> className="directory-drag-list" dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
 										setDragging(e);
 
 										if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {

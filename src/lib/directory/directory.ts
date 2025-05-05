@@ -39,6 +39,22 @@ export function createNode(): NodeRef {
 	return `${crypto.randomUUID()}:NODE`;
 }
 
+export function getNodeFromRef(tree: DirectoryTree, ref: NodeRef) {
+	if (tree.directoryNodes[ref] != null) {
+		return tree.directoryNodes[ref];
+	}
+
+	return tree.videoNodes[ref];
+}
+
+export function getNodeSection(tree: DirectoryTree, node: INode) {
+	if (getNodeType(tree, node.nodeID) == "DIRECTORY") {
+		return (node as IDirectoryNode).slice;
+	}
+
+	return (node as IVideoNode).videoID;
+}
+
 /**
  * Retrieves the node ID of the node referenced at the provided path.
  */

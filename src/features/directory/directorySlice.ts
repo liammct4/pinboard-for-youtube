@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
-import { getParentPathFromPath, NodePath, parsePath, pathEquals, validateDirectoryName } from "../../lib/directory/path";
+import { getParentPathFromPath, NodePath, parsePath, pathEquals, pathToString, validateDirectoryName } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
@@ -26,20 +26,25 @@ initialState.videoBrowser.directoryNodes[rootNodeID] = {
 }
 
 type DirectoryAddVideoPayload = {
-	path: string;
+	path: NodePath;
 	videoID: string;
 	videoData: IYoutubeVideoInfo[];
 }
 
 type DirectoryAddDirectoryPayload = {
-	path: string;
+	parentPath: NodePath;
 	slice: string;
 }
 
 type DirectoryMoveNodePayload = {
-	targetNode: string;
-	newDirectory: string;
+	targetPath: NodePath;
+	destinationPath: NodePath;
 	videoData: IYoutubeVideoInfo[];
+}
+
+type DirectoryRenameDirectoryPayload = {
+	targetPath: NodePath;
+	newSlice: string;
 }
 
 export const directorySlice = createSlice({
@@ -49,49 +54,47 @@ export const directorySlice = createSlice({
 		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videoBrowser = action.payload.userData.directory;
 		},
+		renameDirectory: (_state, _action: PayloadAction<DirectoryRenameDirectoryPayload>) => {
+			// TODO.
+		},
 		moveNode: (state, action: PayloadAction<DirectoryMoveNodePayload>) => {
-			let targetPath = parsePath(action.payload.targetNode);
-			let targetParentPath = getParentPathFromPath(targetPath);
+			let targetParentPath = getParentPathFromPath(action.payload.targetPath);
 
-			let destinationPath = parsePath(action.payload.newDirectory);
-
-			if (destinationPath.type == "VIDEO") {
-				console.error(`directory.moveNode: New location path was a video path: ${action.payload.newDirectory}`);
+			if (action.payload.destinationPath.type == "VIDEO") {
+				console.error(`directory.moveNode: New location path was a video path: "${pathToString(action.payload.destinationPath)}"`);
 				return;
 			}
 
-			if (pathEquals(targetParentPath, destinationPath)) {
+			if (pathEquals(targetParentPath, action.payload.destinationPath)) {
 				console.error("directory.moveNode: Target is already in the same directory.");
 			}
 
-			let currentID = getNodeFromPath(state.videoBrowser, targetPath) as NodeRef;
+			let currentID = getNodeFromPath(state.videoBrowser, action.payload.targetPath) as NodeRef;
 			let currentParent = state.videoBrowser.directoryNodes[getNodeFromPath(state.videoBrowser, targetParentPath) as NodeRef];
 			
 			let currentIndex = currentParent.subNodes.findIndex(x => x == currentID);
 			currentParent.subNodes.splice(currentIndex, 1);
 
-			let destinationID = getNodeFromPath(state.videoBrowser, destinationPath) as NodeRef;
+			let destinationID = getNodeFromPath(state.videoBrowser, action.payload.destinationPath) as NodeRef;
 
 			insertNodeInOrder(state.videoBrowser, destinationID, currentID, action.payload.videoData);
 		},
 		createDirectoryNode: (state, action: PayloadAction<DirectoryAddDirectoryPayload>) => {
-			let parentPath = parsePath(action.payload.path);
-
 			let validate = validateDirectoryName(action.payload.slice.trim());
 
 			if (validate != null && validate != "STARTS_ENDS_IN_WHITESPACE") {
 				console.error(`directory.createDirectoryNode: Provided slice was invalid (${validate}).:"${action.payload.slice}".`);
 			}
 
-			if (parentPath.type != "DIRECTORY") {
-				console.error(`directory.createDirectoryNode: Provided parent path was a video path. "${action.payload.path}".`)
+			if (action.payload.parentPath.type != "DIRECTORY") {
+				console.error(`directory.createDirectoryNode: Provided parent path was a video path. "${pathToString(action.payload.parentPath)}".`)
 				return;
 			}
 
-			let parentNodeID = getNodeFromPath(state.videoBrowser, parentPath);
+			let parentNodeID = getNodeFromPath(state.videoBrowser, action.payload.parentPath);
 
 			if (parentNodeID == null) {
-				console.error(`directory.createDirectoryNode: Provided parent path does not exist in the tree. "${action.payload.path}".`);
+				console.error(`directory.createDirectoryNode: Provided parent path does not exist in the tree. "${action.payload.parentPath}".`);
 				return;
 			}
 
@@ -105,14 +108,12 @@ export const directorySlice = createSlice({
 			insertNodeInOrder(state.videoBrowser, parentNodeID, newNode.nodeID, []);
 		},
 		createVideoNode: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
-			let path = parsePath(action.payload.path);
-
-			if (path.type != "DIRECTORY") {
+			if (action.payload.path.type != "DIRECTORY") {
 				console.error(`directory.createVideoNode: Provided path was not a directory path: "${action.payload}".`);
 				return;
 			}
 			
-			let targetDirectoryID = getNodeFromPath(state.videoBrowser, path);
+			let targetDirectoryID = getNodeFromPath(state.videoBrowser, action.payload.path);
 
 			if (targetDirectoryID == null) {
 				console.error("directory.createVideoNode: targetDirectoryID is null.");

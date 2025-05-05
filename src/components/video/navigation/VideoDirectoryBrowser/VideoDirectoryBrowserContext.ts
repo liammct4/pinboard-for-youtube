@@ -1,10 +1,11 @@
 import { createContext } from "react";
+import { NodeRef } from "../../../../lib/directory/directory";
 
 export interface IVideoDirectoryBrowserContext {
-	selectedItems: string[];
-	setSelectedItems: (sections: string[]) => void;
-	currentlyEditing: string | null;
-	setCurrentlyEditing: (editing: string | null) => void;
+	selectedItems: NodeRef[];
+	setSelectedItems: (sections: NodeRef[]) => void;
+	currentlyEditing: NodeRef | null;
+	setCurrentlyEditing: (editing: NodeRef | null) => void;
 }
 
 export const VideoDirectoryBrowserContext = createContext<IVideoDirectoryBrowserContext>({

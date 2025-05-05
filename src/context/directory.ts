@@ -1,10 +1,10 @@
 import { createContext } from "react";
-import { IDirectoryNode } from "../lib/directory/directory";
+import { IDirectoryNode, NodeRef } from "../lib/directory/directory";
 
 export interface IVideoDirectoryInteractionContext {
 	navigateRequest: (requester: IDirectoryNode) => void;
-	selectedItems: string[];
-	setSelectedItems: (selectedItems: string[]) => void;
+	selectedItems: NodeRef[];
+	setSelectedItems: (selectedItems: NodeRef[]) => void;
 	currentlyEditing: string | null;
 	requestEditEnd: (newSliceName: string) => void;
 	draggingID: string | null;

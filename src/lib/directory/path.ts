@@ -5,19 +5,6 @@ export type NodePath = {
 	type: NodeType;
 }
 
-export function getRawSectionFromPrefix(section: string): string {
-	if (section.startsWith("vd:")) {
-		return section.substring(3, section.length);
-	}
-	else if (section.startsWith("dir:")) {
-		return section.substring(4, section.length);
-	}
-	else {
-		return section;
-	}
-}
-
-
 export type ValidateDirectoryNameError = 
 	"TOO_LONG" |
 	"EMPTY" |
@@ -34,12 +21,10 @@ export type ValidateDirectoryNameError =
  *  - Cannot begin or end with a whitespace character (Strip if case).
  */
 export function validateDirectoryName(directoryName: string): ValidateDirectoryNameError | null {
-	let stripped = getRawSectionFromPrefix(directoryName);
-
-	if (stripped.length < 1) {
+	if (directoryName.length < 1) {
 		return "EMPTY";
 	}
-	else if (stripped.length > DIRECTORY_NAME_MAX_LENGTH) {
+	else if (directoryName.length > DIRECTORY_NAME_MAX_LENGTH) {
 		return "TOO_LONG";
 	}
 	else if (/[^A-z0-9\s.,()\/\[\]\;\@\~\-=\+]/.test(directoryName)) {
