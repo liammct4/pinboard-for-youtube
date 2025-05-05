@@ -54,12 +54,4 @@ export const videoSlice = createSlice({
 	}
 });
 
-export const {
-	updateVideoSliceFromStorage,
-	addVideo,
-	removeVideo,
-	addOrReplaceVideo,
-	setVideos,
-	clearVideos
-} = videoSlice.actions;
-export default videoSlice.reducer;
+export const videoActions = videoSlice.actions;

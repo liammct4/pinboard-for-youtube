@@ -2,15 +2,15 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { DataMutation } from "../../components/features/useUserAccount";
 import { RootState } from "../../app/store";
 import { IDirectoryModificationAction } from "../../components/features/resources/useDirectoryResource";
-import { directoryAddVideo } from "./directorySlice";
-import { appendRequestToDirectory } from "../mutation/mutationSlice";
+import { directoryActions } from "./directorySlice";
+import { mutationActions } from "../mutation/mutationSlice";
 import { getNodeFromPath } from "../../lib/directory/directory";
 import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString } from "../../lib/directory/path";
 
 export const addVideoMiddleware = createListenerMiddleware();
 
 addVideoMiddleware.startListening({
-	actionCreator: directoryAddVideo,
+	actionCreator: directoryActions.createVideoNode,
 	effect: (action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 		let parentPath = parsePath(action.payload.path);
@@ -39,6 +39,6 @@ addVideoMiddleware.startListening({
 			}
 		}
 
-		listenerApi.dispatch(appendRequestToDirectory(mutation));
+		listenerApi.dispatch(mutationActions.appendRequestToDirectory(mutation));
 	}
 });

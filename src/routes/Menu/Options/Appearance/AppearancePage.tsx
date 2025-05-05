@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AppearancePresets } from "./Presets/AppearancePresets";
 import { AppearanceCustom } from "./Custom/AppearanceCustom";
 import { ThemeContext } from "../../../../context/theme";
-import { addCustomTheme, deleteCustomTheme, setCurrentTheme, setCustomThemes } from "../../../../features/theme/themeSlice";
+import { themeActions } from "../../../../features/theme/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IAppTheme } from "../../../../lib/config/theming/appTheme";
 import { RootState } from "../../../../app/store";
@@ -20,10 +20,10 @@ export function AppearancePage() {
 					customThemes: customThemes, 
 					currentTheme: currentTheme,
 					actions: {
-						setCurrentTheme: (theme: IAppTheme) => dispatch(setCurrentTheme(theme)),
-						addCustomTheme: (theme: IAppTheme) => dispatch(addCustomTheme(theme)),
-						deleteCustomTheme: (themeName: string) => dispatch(deleteCustomTheme(themeName)),
-						setCustomThemes: (themes: IAppTheme[]) => dispatch(setCustomThemes(themes))
+						setCurrentTheme: (theme: IAppTheme) => dispatch(themeActions.setCurrentTheme(theme)),
+						addCustomTheme: (theme: IAppTheme) => dispatch(themeActions.addCustomTheme(theme)),
+						deleteCustomTheme: (themeName: string) => dispatch(themeActions.deleteCustomTheme(themeName)),
+						setCustomThemes: (themes: IAppTheme[]) => dispatch(themeActions.setCustomThemes(themes))
 					}
 				}}>
 				<Routes>

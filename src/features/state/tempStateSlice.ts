@@ -64,14 +64,4 @@ export const tempStateSlice = createSlice({
 	}
 })
 
-export const {
-	updateTempSliceFromStorage,
-	addExpandedID,
-	removeExpandedID,
-	setLayoutState,
-	enableControlsLock,
-	disableControlsLock,
-	setVideoBrowserScrollDistance,
-	setDirectoryPath
-} = tempStateSlice.actions;
-export default tempStateSlice.reducer;
+export const tempStateActions = tempStateSlice.actions;

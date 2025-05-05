@@ -30,8 +30,4 @@ export const cacheSlice = createSlice({
 	}
 })
 
-export const {
-	saveVideoToCache,
-	updateCacheSliceFromStorage
-} = cacheSlice.actions;
-export default cacheSlice.reducer;
+export const cacheActions = cacheSlice.actions;

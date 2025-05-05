@@ -152,10 +152,5 @@ export const directorySlice = createSlice({
 	}
 });
 
-export const {
-	updateDirectorySliceFromStorage,
-	createVideoNode,
-	createDirectoryNode,
-	removeVideoNodes
-} = directorySlice.actions;
-export default directorySlice.reducer;
+export const directoryActions = directorySlice.actions;
+

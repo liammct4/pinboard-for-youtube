@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setAccessAndIDTokens } from "../../../features/auth/authSlice";
+import { authActions } from "../../../features/auth/authSlice";
 import { regenerateTokensWithRefreshToken } from "../../../lib/user/accounts";
 import { HttpStatusCode } from "../../../lib/util/http";
 import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../../../lib/util/request";
@@ -62,7 +62,7 @@ export function RequestHandlerWrapper({ children }: IWrapperProperties) {
 
 		// Successful, replace expired tokens in storage.
 		if (reattemptedRequest.status != HttpStatusCode.UNAUTHORIZED) {
-			dispatch(setAccessAndIDTokens({
+			dispatch(authActions.setAccessAndIDTokens({
 				idToken: newTokens!.idToken,
 				accessToken: newTokens!.accessToken
 			}));

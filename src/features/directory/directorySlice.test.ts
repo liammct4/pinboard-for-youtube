@@ -10,15 +10,15 @@ Object.defineProperty(globalThis, "crypto", {
 	}
 })
 
-import reducer, { IDirectorySlice, directorySlice } from "./directorySlice";
 import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
 import { parsePath } from "../../lib/directory/path";
 import { getNodeFromPath, NodeRef, stringifyNode, stringifyTree } from "../../lib/directory/directory";
+import { directorySlice, IDirectorySlice } from "./directorySlice";
 
 // Jest, not showing diffs doesnt work.
 function expectTree(expected: string, received: string) {
 	if (expected != received) {
-		console.log(`Expected:\n${expected}\n\nReceived:\n${received}`);
+		console.error(`Expected:\n${expected}\n\nReceived:\n${received}`);
 		expect(true).toBe(false);
 	}
 }
@@ -30,7 +30,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 	
-			state = reducer(state, directorySlice.actions.moveNode({
+			state = directorySlice.reducer(state, directorySlice.actions.moveNode({
 				targetNode: "$ > Alphabetical > BTop",
 				newDirectory: "$ > Tutorials 2",
 				videoData: []
@@ -52,7 +52,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 	
-			state = reducer(state, directorySlice.actions.moveNode({
+			state = directorySlice.reducer(state, directorySlice.actions.moveNode({
 				targetNode: "$ > Tutorials 2 > Other:AKeUssuu3Is",
 				newDirectory: "$",
 				videoData: [
@@ -79,8 +79,6 @@ describe("Redux store: 'directory' slice actions.", () => {
 			
 			expect(item).not.toBeNull();
 			expect(state.videoBrowser.videoNodes[item!].videoID).toBe("AKeUssuu3Is");
-
-			console.log(stringifyTree(state.videoBrowser, true));
 		});
 	});
 	describe("createDirectoryNode()", () => {
@@ -89,7 +87,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 	
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$",
 				slice: "Test A"
 			}));
@@ -105,7 +103,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Tutorials 2 > Other",
 				slice: "Test A"
 			}));
@@ -121,7 +119,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Alphabetical",
 				slice: "ATop"
 			}));
@@ -144,7 +142,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Alphabetical",
 				slice: "ZEnd"
 			}));
@@ -167,7 +165,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Alphabetical",
 				slice: "FMid"
 			}));
@@ -190,7 +188,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createVideoNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
 				path: "$ > Alphabetical",
 				videoID: "PnvkrBXmLSI",
 				videoData: [
@@ -202,7 +200,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				],
 			}))
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Alphabetical",
 				slice: "ZEnd"
 			}));
@@ -226,7 +224,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 
-			state = reducer(state, directorySlice.actions.createVideoNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
 				path: "$ > Alphabetical > BTop",
 				videoID: "PnvkrBXmLSI",
 				videoData: [
@@ -238,7 +236,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				],
 			}))
 
-			state = reducer(state, directorySlice.actions.createVideoNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
 				path: "$ > Alphabetical > BTop",
 				videoID: "ERYG3NE1DO8",
 				videoData: [
@@ -250,7 +248,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				],
 			}))
 
-			state = reducer(state, directorySlice.actions.createDirectoryNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createDirectoryNode({
 				path: "$ > Alphabetical > BTop",
 				slice: "Test Stuff"
 			}));
@@ -274,7 +272,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 	
-			state = reducer(state, directorySlice.actions.createVideoNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
 				path: "$",
 				videoID: "ZjVAsJOl8SM",
 				videoData: [
@@ -297,7 +295,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 				videoBrowser: testDirectory
 			}
 	
-			state = reducer(state, directorySlice.actions.createVideoNode({
+			state = directorySlice.reducer(state, directorySlice.actions.createVideoNode({
 				path: "$ > Tutorials 2 > Other",
 				videoID: "ZjVAsJOl8SM",
 				videoData: [
@@ -328,7 +326,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
-			state = reducer(state, directorySlice.actions.removeVideoNodes([Video1.videoID]));
+			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodes([Video1.videoID]));
 
 			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();
@@ -344,7 +342,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			let node = getNodeFromPath(state.videoBrowser, path);
 			expect(node).not.toBeNull();
 
-			state = reducer(state, directorySlice.actions.removeVideoNodes([Tutorials2_Other_Video2.videoID]));
+			state = directorySlice.reducer(state, directorySlice.actions.removeVideoNodes([Tutorials2_Other_Video2.videoID]));
 
 			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();

@@ -4,7 +4,7 @@ import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { fetchVideosFromAPI } from "../../../lib/user/resources/videos";
 import { IVideo } from "../../../lib/video/video";
 import { DataMutation, useUserAccount } from "../useUserAccount";
-import { appendRequestToVideos } from "../../../features/mutation/mutationSlice";
+import { mutationActions } from "../../../features/mutation/mutationSlice";
 
 export function useVideosResource() {
 	const { user, isSignedIn } = useUserAccount();
@@ -20,7 +20,7 @@ export function useVideosResource() {
 			position: -1
 		};
 
-		dispatch(appendRequestToVideos(mutation));
+		dispatch(mutationActions.appendRequestToVideos(mutation));
 	}
 
 	const removeAccountVideo = (id: string) => {
@@ -31,7 +31,7 @@ export function useVideosResource() {
 			data: null
 		};
 
-		dispatch(appendRequestToVideos(mutation));
+		dispatch(mutationActions.appendRequestToVideos(mutation));
 	}
 
 	const clearAllVideos = async () => {

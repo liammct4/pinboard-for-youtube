@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setCustomThemesWithoutQueue } from "../../../features/theme/themeSlice";
+import { themeActions } from "../../../features/theme/themeSlice";
 import { useUserAccount } from "../useUserAccount";
 import { IWrapperProperties } from "../wrapper";
 import { useContext, useEffect } from "react";
@@ -7,8 +7,8 @@ import { IVideoDirectoryContext, VideoDirectoryContext } from "../../../context/
 import { useDirectoryResource } from "../resources/useDirectoryResource";
 import { useVideosResource } from "../resources/useVideosResource";
 import { useThemesResource } from "../resources/useThemesResource";
-import { disableControlsLock, enableControlsLock } from "../../../features/state/tempStateSlice";
-import { setVideos } from "../../../features/video/videoSlice";
+import { tempStateActions } from "../../../features/state/tempStateSlice";
+import { videoActions } from "../../../features/video/videoSlice";
 
 export function AccountDataWrapper({ children }: IWrapperProperties) {
 	const { isSignedIn, user } = useUserAccount();
@@ -25,7 +25,7 @@ export function AccountDataWrapper({ children }: IWrapperProperties) {
 				return;
 			}
 			
-			dispatch(enableControlsLock());
+			dispatch(tempStateActions.enableControlsLock());
 
 			let retrievedVideos = await fetchVideos();
 			let retrievedDirectoryRoot = await fetchDirectoryRoot();
@@ -37,14 +37,14 @@ export function AccountDataWrapper({ children }: IWrapperProperties) {
 				return;
 			}
 
-			dispatch(setCustomThemesWithoutQueue(retrievedCustomThemes));
-			dispatch(setVideos(retrievedVideos));
+			dispatch(themeActions.setCustomThemesWithoutQueue(retrievedCustomThemes));
+			dispatch(videoActions.setVideos(retrievedVideos));
 
 			directoryRoot.subNodes = retrievedDirectoryRoot.subNodes;
 
 			setCounter(Math.random());
 
-			dispatch(disableControlsLock());
+			dispatch(tempStateActions.disableControlsLock());
 		}
 
 		getAccountData();

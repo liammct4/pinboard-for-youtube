@@ -30,7 +30,7 @@ import { useActiveVideoID } from "../../components/features/activeVideo/useActiv
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { useVideo } from "../../components/features/useVideo.ts";
-import { removeVideo } from "../../features/video/videoSlice.ts";
+import { videoActions } from "../../features/video/videoSlice.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -89,7 +89,7 @@ export function VideosPage(): React.ReactNode {
 					"Shake"
 				);
 
-				dispatch(removeVideo(video!.id));
+				dispatch(videoActions.removeVideo(video!.id));
 				directoryAddVideo(activeVideo.id, "$");
 
 				// Override the newly "added" video.

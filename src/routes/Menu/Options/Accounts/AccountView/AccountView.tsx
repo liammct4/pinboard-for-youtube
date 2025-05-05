@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { changeUserEmail, changeUserPassword, deleteUserAccount } from "../../../../../lib/user/accounts";
 import { UserDetailsFormPrimitive } from "../UserDetailsForm/UserDetailsFormPrimitive";
-import { logoutCurrentUser } from "../../../../../features/auth/authSlice";
+import { authActions } from "../../../../../features/auth/authSlice";
 import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../lib/util/http";
@@ -43,7 +43,7 @@ function useAccountDelete() {
 
 			if (response!.status == HttpStatusCode.OK) {
 				activateMessage("Account deleted.", "Your account has been successfully deleted, please log out of any other devices.", "Success", "Tick", 10000);
-				dispatch(logoutCurrentUser());
+				dispatch(authActions.logoutCurrentUser());
 			}
 			else if (response!.status == HttpStatusCode.UNAUTHORIZED) {
 				// Meaning token was invalid.
@@ -178,7 +178,7 @@ export function AccountView(): React.ReactNode {
 	const changePasswordForm = useValidatedForm<IUpdatePasswordForm>(onChangePasswordSubmit);
 
 	const onSignout = () => {
-		dispatch(logoutCurrentUser());
+		dispatch(authActions.logoutCurrentUser());
 
 		activateMessage(undefined, "You have now been logged out.", "Info", "Info", 6500);
 		setTimeout(() => {

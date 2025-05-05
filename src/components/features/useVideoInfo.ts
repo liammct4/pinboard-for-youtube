@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getYoutubeVideoInfoFromVideoID, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { saveVideoToCache } from "../../features/cache/cacheSlice";
+import { cacheActions } from "../../features/cache/cacheSlice";
 
 export function useVideoCache() {
 	const cache = useSelector((state: RootState) => state.cache.videoCache);
@@ -22,7 +22,7 @@ export function useVideoCache() {
 		}
 
 
-		dispatch(saveVideoToCache(info));
+		dispatch(cacheActions.saveVideoToCache(info));
 
 		return info;
 	}
@@ -58,7 +58,7 @@ export function useVideoInfo(videoID: string | undefined) {
 				setVideo(info);
 				setVideoExists(true);
 	
-				dispatch(saveVideoToCache(info));
+				dispatch(cacheActions.saveVideoToCache(info));
 			}
 
 			getVideoInfo();

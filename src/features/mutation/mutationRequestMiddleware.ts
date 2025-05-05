@@ -1,6 +1,6 @@
 import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { IMutationQueues, modifyStorage } from "../../lib/storage/storage";
-import { appendRequestToDirectory, appendRequestToThemes, appendRequestToVideos, clearDirectoryQueue, clearMutationQueues, clearThemeQueue, clearVideoQueue } from "./mutationSlice";
+import { mutationActions } from "./mutationSlice";
 import { DataMutation } from "../../components/features/useUserAccount";
 import { sendApiRequestWithAuthorization } from "../../lib/user/resource";
 import { IAuthenticatedUser } from "../../lib/user/accounts";
@@ -36,7 +36,7 @@ mutationRequestMiddleware.startListening({
 
 		modifyStorage(async storage => {
 			if (state.auth.currentUser == undefined) {
-				listenerApi.dispatch(clearMutationQueues());
+				listenerApi.dispatch(mutationActions.clearMutationQueues());
 				return;
 			}
 
@@ -45,7 +45,7 @@ mutationRequestMiddleware.startListening({
 				let videoQueue: DataMutation<IVideo>[];
 
 				if (await pushMutationQueue(state.auth.currentUser, videosEndpoint, state.mutation.videoPendingQueue)) {
-					listenerApi.dispatch(clearVideoQueue());
+					listenerApi.dispatch(mutationActions.clearVideoQueue());
 					videoQueue = [];
 				}
 				else {
@@ -60,7 +60,7 @@ mutationRequestMiddleware.startListening({
 				let directoryQueue: DataMutation<IDirectoryModificationAction>[];
 
 				if (await pushMutationQueue(state.auth.currentUser, directoriesEndpoint, state.mutation.directoryPendingQueue)) {
-					listenerApi.dispatch(clearDirectoryQueue());
+					listenerApi.dispatch(mutationActions.clearDirectoryQueue());
 					directoryQueue = [];
 				}
 				else {
@@ -75,7 +75,7 @@ mutationRequestMiddleware.startListening({
 				let themeQueue: DataMutation<IAppTheme>[];
 
 				if (await pushMutationQueue(state.auth.currentUser, themesEndpoint, state.mutation.themePendingQueue)) {
-					listenerApi.dispatch(clearThemeQueue());
+					listenerApi.dispatch(mutationActions.clearThemeQueue());
 					themeQueue = [];
 				}
 				else {

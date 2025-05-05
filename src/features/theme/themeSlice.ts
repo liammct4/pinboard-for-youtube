@@ -51,12 +51,4 @@ export const themeSlice = createSlice({
 	}
 });
 
-export const {
-	setCurrentTheme,
-	addCustomTheme,
-	setCustomThemes,
-	deleteCustomTheme,
-	setCustomThemesWithoutQueue,
-	updateThemeSliceFromStorage
-} = themeSlice.actions;
-export default themeSlice.reducer;
+export const themeActions = themeSlice.actions;

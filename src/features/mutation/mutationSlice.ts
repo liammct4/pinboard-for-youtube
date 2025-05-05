@@ -47,13 +47,4 @@ export const mutationSlice = createSlice({
 	}
 })
 
-export const {
-	appendRequestToVideos,
-	appendRequestToDirectory,
-	appendRequestToThemes,
-	clearMutationQueues,
-	clearVideoQueue,
-	clearDirectoryQueue,
-	clearThemeQueue
-} = mutationSlice.actions;
-export default mutationSlice.reducer;
+export const mutationActions = mutationSlice.actions;

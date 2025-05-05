@@ -52,9 +52,4 @@ export const settingsSlice = createSlice({
 	}
 })
 
-export const {
-	initializeAndSetSettingsDefault,
-	updateSettingsSliceFromStorage,
-	setSettingValues
-} = settingsSlice.actions;
-export default settingsSlice.reducer;
+export const settingsActions = settingsSlice.actions;

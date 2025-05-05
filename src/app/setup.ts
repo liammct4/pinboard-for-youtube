@@ -1,28 +1,30 @@
-import { updateAuthSliceFromStorage } from "../features/auth/authSlice";
 import { saveAuthSliceToStorage } from "../features/auth/authStorage";
-import { updateCacheSliceFromStorage } from "../features/cache/cacheSlice";
 import { saveCacheSliceToStorage } from "../features/cache/cacheStorage";
 import { saveDirectorySliceToStorage } from "../features/directory/directoryStorage";
-import { updateSettingsSliceFromStorage } from "../features/settings/settingsSlice";
 import { saveSettingsSliceToStorage } from "../features/settings/settingsStorage";
-import { updateTempSliceFromStorage } from "../features/state/tempStateSlice";
 import { saveTempStateSliceToStorage } from "../features/state/tempStateStorage";
-import { updateThemeSliceFromStorage } from "../features/theme/themeSlice";
 import { saveThemeSliceToStorage } from "../features/theme/themeStorage";
-import { updateVideoSliceFromStorage } from "../features/video/videoSlice";
 import { saveVideoSliceToStorage } from "../features/video/videoStorage";
 import { accessStorage, modifyStorage } from "../lib/storage/storage";
+import { authActions } from "../features/auth/authSlice";
 import { RootState, store } from "./store";
+import { tempStateActions } from "../features/state/tempStateSlice";
+import { themeActions } from "../features/theme/themeSlice";
+import { settingsActions } from "../features/settings/settingsSlice";
+import { cacheActions } from "../features/cache/cacheSlice";
+import { videoActions } from "../features/video/videoSlice";
+import { directoryActions } from "../features/directory/directorySlice";
 
 export async function syncStoreToStorage() {
 	let storage = await accessStorage();
 
-	store.dispatch(updateTempSliceFromStorage(storage));
-	store.dispatch(updateThemeSliceFromStorage(storage));
-	store.dispatch(updateAuthSliceFromStorage(storage));
-	store.dispatch(updateSettingsSliceFromStorage(storage));
-	store.dispatch(updateCacheSliceFromStorage(storage));
-	store.dispatch(updateVideoSliceFromStorage(storage));
+	store.dispatch(tempStateActions.updateTempSliceFromStorage(storage));
+	store.dispatch(themeActions.updateThemeSliceFromStorage(storage));
+	store.dispatch(authActions.updateAuthSliceFromStorage(storage));
+	store.dispatch(settingsActions.updateSettingsSliceFromStorage(storage));
+	store.dispatch(cacheActions.updateCacheSliceFromStorage(storage));
+	store.dispatch(videoActions.updateVideoSliceFromStorage(storage));
+	store.dispatch(directoryActions.updateDirectorySliceFromStorage(storage));
 }
 
 

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { GlobalRequestHandler } from "../../lib/util/request";
 import { IAuthenticatedUser, loginGetTokens } from "../../lib/user/accounts";
-import { setCurrentUser } from "../../features/auth/authSlice";
+import { authActions } from "../../features/auth/authSlice";
 
 export interface IKeyIDItem {
 	id: string;
@@ -36,7 +36,7 @@ export function useUserAccount(): ISignedIn | INotSignedIn {
 
 		let newlyAuthenticatedUser: IAuthenticatedUser = { email, tokens };
 
-		dispatch(setCurrentUser(newlyAuthenticatedUser));
+		dispatch(authActions.setCurrentUser(newlyAuthenticatedUser));
 		return newlyAuthenticatedUser;
 	}
 	

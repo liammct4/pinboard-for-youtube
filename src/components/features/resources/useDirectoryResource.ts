@@ -4,7 +4,7 @@ import { fetchDirectoryFromAPI } from "../../../lib/user/resources/directory";
 import { sendApiRequestWithAuthorization } from "../../../lib/user/resource";
 import { directoriesEndpoint } from "../../../lib/api/pinboardApi";
 import { useDispatch } from "react-redux";
-import { appendRequestToDirectory } from "../../../features/mutation/mutationSlice";
+import { mutationActions } from "../../../features/mutation/mutationSlice";
 
 export type DirectoryAction = "Create" | "Rename" | "Delete" | "Move";
 export type DirectoryActionType = "Video" | "Directory"; 
@@ -39,7 +39,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		dispatch(appendRequestToDirectory(mutation));
+		dispatch(mutationActions.appendRequestToDirectory(mutation));
 	}
 
 	const deleteAction = async (node: VideoBrowserNode) => {
@@ -54,7 +54,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		dispatch(appendRequestToDirectory(mutation));
+		dispatch(mutationActions.appendRequestToDirectory(mutation));
 	}
 
 	const renameAction = (renamedNode: IDirectoryNode, oldName: string) => {
@@ -72,7 +72,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		dispatch(appendRequestToDirectory(mutation));
+		dispatch(mutationActions.appendRequestToDirectory(mutation));
 	}
 
 	const moveAction = (node: VideoBrowserNode, oldDirectory: string) => {
@@ -88,7 +88,7 @@ export function useDirectoryResource() {
 			}
 		}
 
-		dispatch(appendRequestToDirectory(mutation));
+		dispatch(mutationActions.appendRequestToDirectory(mutation));
 	}
 
 	const clearAllDirectories = async () => {

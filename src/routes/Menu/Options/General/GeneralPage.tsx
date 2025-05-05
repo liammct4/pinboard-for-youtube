@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { FormField } from "../../../../components/forms/FormField/FormField";
 import { IErrorFieldValues, useValidatedForm } from "../../../../components/forms/validated-form";
-import settingDefinitions from "../../../../lib/config/settingDefinitions"
+import { settingDefinitions } from "../../../../lib/config/settingDefinitions"
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
 import settingsLayout from "./settingsLayout.json"
 import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { useCallback } from "react";
-import { SettingPrimitiveValue, SettingValue, setSettingValues } from "../../../../features/settings/settingsSlice";
+import { SettingPrimitiveValue, SettingValue, settingsActions } from "../../../../features/settings/settingsSlice";
 import "./GeneralPage.css"
 
 type SettingOption = "Heading" | "Field" | "Separator";
@@ -55,7 +55,7 @@ export function GeneralPage(): React.ReactNode {
 
 				return { settingName: x, value: newValue };
 			});
-		dispatch(setSettingValues(settings));
+		dispatch(settingsActions.setSettingValues(settings));
 	}, []);
 	let { handleSubmit, handler, register, submit } = useValidatedForm<ISettingsForm>(onSaveSettings);
 
