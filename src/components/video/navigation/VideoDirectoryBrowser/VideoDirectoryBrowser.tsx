@@ -194,6 +194,8 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 		setSelectedItems([]);
 	}
 
+	let parentSlices = getParentPathFromPath(directoryPath).slices;
+
 	let accumulator = "";
 
 	return (
@@ -235,6 +237,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 								if (e.key == "Enter") {
 									onDirectoryPathChanged(parsePath(e.currentTarget.value));
 									setNavigationStack([]);
+									setIsEditingPathManually(false);
 								}
 							}}
 							autoFocus
@@ -242,7 +245,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 						:
 						<ul className="directory-path-bar small-text-input directory-navigator-slices" onClick={() => setIsEditingPathManually(true)}>
 							{
-								directoryPath.slices.map(x => {
+								parentSlices.map(x => {
 									accumulator += x;
 									let directPath = accumulator;
 									
