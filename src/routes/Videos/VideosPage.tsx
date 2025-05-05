@@ -5,7 +5,6 @@ import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessag
 import { FormDialog } from "../../components/dialogs/FormDialog.tsx";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading.tsx";
 import { VideoCard } from "../../components/video/VideoCard/VideoCard.tsx";
-import { setDirectoryPath, setLayoutState } from "../../features/state/tempStateSlice.ts";
 import { IErrorFieldValues, useValidatedForm } from "../../components/forms/validated-form.ts";
 import { FormField } from "../../components/forms/FormField/FormField.tsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,12 +16,10 @@ import CloseLayoutIcon from "./../../../assets/icons/layout_expander_close.svg?r
 import SearchIcon from "./../../../assets/symbols/search.svg?react"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
-import { useVideoStateAccess } from "../../components/features/useVideoStateAccess.ts";
-import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID } from "../../lib/util/youtube/youtubeUtil.ts";
+import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil.ts";
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
-import { DIRECTORY_NAME_MAX_LENGTH, findItemPathFromName, getNodeFromPath, getRawSectionFromPrefix, getSectionPrefix, getSectionPrefixManual, getSectionType, IDirectoryNode, validateDirectoryName } from "../../lib/directory/directory.ts";
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
@@ -31,6 +28,11 @@ import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { useVideo } from "../../components/features/useVideo.ts";
 import { videoActions } from "../../features/video/videoSlice.ts";
+import { directoryActions } from "../../features/directory/directorySlice.ts";
+import { useVideoCache } from "../../components/features/useVideoInfo.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, NodeRef } from "../../lib/directory/directory.ts";
+import { parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
+import { tempStateActions, tempStateSlice } from "../../features/state/tempStateSlice.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
 	link: string;
@@ -43,22 +45,39 @@ interface IAddDirectoryForm extends IErrorFieldValues {
 export function VideosPage(): React.ReactNode {
 	const dispatch = useDispatch();
 	const directoryPath = useSelector((state: RootState) => state.tempState.currentDirectory);
-	const [ selectedItems, setSelectedItems ] = useState<string[]>([]);
-	const [ currentlyEditing, setCurrentlyEditing ] = useState<string | null>(null);
+	const [ selectedItems, setSelectedItems ] = useState<NodeRef[]>([]);
+	const [ currentlyEditing, setCurrentlyEditing ] = useState<NodeRef | null>(null);
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const { activateMessage } = useNotificationMessage();
-	const { root, directoryAddVideo, directoryUpdateVideo, directoryRemove, directoryRemoveVideo, directoryAdd, directoryClearAll } = useVideoStateAccess();
 	const activeVideoID = useActiveVideoID();
 	const { getVideo, videoExists } = useVideo();
-	let addVideoForm = useValidatedForm<IAddVideoForm>((data) => {
+	const { retrieveInfo } = useVideoCache();
+	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
+	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
+	let addVideoForm = useValidatedForm<IAddVideoForm>(async (data) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
 		
-		directoryAddVideo(id, directoryPath);
+		let info = await retrieveInfo(id);
+
+		dispatch(videoActions.addVideo({
+			id,
+			timestamps: []
+		}));
+
+		dispatch(directoryActions.createVideoNode({
+			parentPath: directoryPath,
+			videoID: id,
+			videoData: [ ...videoCache, info as IYoutubeVideoInfo ]
+		}));
 	});
-	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => directoryAdd(directoryPath, data.directoryName));
-	
+	let addDirectoryForm = useValidatedForm<IAddDirectoryForm>((data) => dispatch(
+		directoryActions.createDirectoryNode({
+			parentPath: directoryPath,
+			slice: data.directoryName
+		})
+	));
+
 	// Hotkeys for directory browser.
 	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
 	useHotkeys("F2", () => {
@@ -75,41 +94,17 @@ export function VideosPage(): React.ReactNode {
 		}
 
 		if (videoExists(activeVideo.id)) {
-			let location = findItemPathFromName(root, activeVideo.id, false, true, true);
-			let video = getVideo(activeVideo.id);
-
-			// Should never happen since there should always be a location for a video.
-			if (location.length == 0) {
-				activateMessage(
-					"An error has occured",
-					"This video has already been added, however, while attempting to locate the videos directory, it could not be found, so to avoid issues, it has been placed within the root directory.",
-					"Warning",
-					"Warning",
-					10000,
-					"Shake"
-				);
-
-				dispatch(videoActions.removeVideo(video!.id));
-				directoryAddVideo(activeVideo.id, "$");
-
-				// Override the newly "added" video.
-				directoryUpdateVideo(video!);
-			}
-			else {	
-				activateMessage(
-					undefined,
-					`That video already exists. It can be found in the directory "${location[0]}".`,
-					"Info",
-					"Info",
-					undefined,
-					"Slide"
-				);
-			}
-			
 			return;
 		}
 
-		directoryAddVideo(activeVideo.id, directoryPath);
+		let info = await retrieveInfo(activeVideo.id) as IYoutubeVideoInfo;
+
+		dispatch(videoActions.addVideo({ id: activeVideo.id, timestamps: [] }));
+		dispatch(directoryActions.createVideoNode({
+			parentPath: directoryPath,
+			videoID: activeVideo.id,
+			videoData: [ ...videoCache, info ]
+		}));
 	};
 	const onPinCurrentTimestamp = async () => {
 		const activeVideo = await getActiveVideoInfo();
@@ -128,11 +123,11 @@ export function VideosPage(): React.ReactNode {
 			]
 		}
 		
-		directoryUpdateVideo(newActiveVideo);
+		dispatch(videoActions.addOrReplaceVideo(newActiveVideo));
 	};
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
-			directoryClearAll();
+			dispatch(directoryActions.removeNodes([ "$" ]));
 		}
 	};
 
@@ -144,11 +139,8 @@ export function VideosPage(): React.ReactNode {
 				title="Delete selected items"
 				onButtonPressed={(action) => {
 					if (action == "Yes") {
-						directoryRemove(directoryPath, selectedItems);
-						directoryRemoveVideo(selectedItems
-							.filter(x => getSectionType(x) == "VIDEO")
-							.map(x => getRawSectionFromPrefix(x))
-						);
+						dispatch(directoryActions.removeNodes(selectedItems));
+						dispatch(videoActions.removeVideos(selectedItems.map(x => tree.videoNodes[x].videoID)));
 					}
 
 					setDeleteConfirmationOpen(false);
@@ -164,8 +156,8 @@ export function VideosPage(): React.ReactNode {
 			<div className="video-page-inner scrollbar-big" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
 				<TwoToggleLayoutExpander
 					expanded={layoutState.isCurrentVideosSectionExpanded}
-					onExpandedEvent={(value: boolean) => {
-						dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
+					onExpandedEvent={(_value: boolean) => {
+						// TODO: dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
 					}}
 					openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 					closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
@@ -204,8 +196,8 @@ export function VideosPage(): React.ReactNode {
 					}}>
 					<VideoDirectoryBrowser
 						defaultVideoStyle="MINIMAL"
-						directoryPath={directoryPath}
-						onDirectoryPathChanged={(newPath) => dispatch(setDirectoryPath(newPath))}/>
+						directoryPath={parsePath(directoryPath)}
+						onDirectoryPathChanged={(newPath) => dispatch(tempStateActions.setDirectoryPath(pathToString(newPath)))}/>
 				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
@@ -250,10 +242,12 @@ export function VideosPage(): React.ReactNode {
 												return "Name must contain at least one valid character.";
 										}
 
-										let currentDirectory = getNodeFromPath(directoryPath, root) as IDirectoryNode;
-										let existingIndex = currentDirectory
-											.subNodes
-											.findIndex(x => getSectionPrefix(x) == getSectionPrefixManual(data, "DIRECTORY"));
+										let parent = tree.directoryNodes[getNodeFromPath(tree, parsePath(directoryPath))!];
+										let existingIndex = parent.subNodes.findIndex(x => {
+											let directoryNode = tree.directoryNodes[x];
+
+											return directoryNode != undefined && directoryNode.slice == result;
+										})
 
 										if (existingIndex != -1) {
 											return "That directory already exists in this directory.";

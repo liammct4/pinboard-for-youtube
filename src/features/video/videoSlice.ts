@@ -26,14 +26,16 @@ export const videoSlice = createSlice({
 
 			state.videos.push(action.payload);
 		},
-		removeVideo: (state, action: PayloadAction<string>) => {
-			let index = state.videos.findIndex(x => x.id == action.payload);
-
-			if (index == -1) {
-				return;
+		removeVideos: (state, action: PayloadAction<string[]>) => {
+			for (let video of action.payload) {
+				let index = state.videos.findIndex(x => x.id == video);
+				
+				if (index == -1) {
+					continue;
+				}
+				
+				state.videos.splice(index, 1);
 			}
-
-			state.videos.splice(index, 1);
 		},
 		addOrReplaceVideo: (state, action: PayloadAction<IVideo>) => {
 			let index = state.videos.findIndex(x => x.id == action.payload.id);

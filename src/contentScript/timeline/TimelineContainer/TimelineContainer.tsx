@@ -2,19 +2,19 @@ import { useMemo, useRef, useState } from "react";
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
-import { useVideoStateAccess } from "../../../components/features/useVideoStateAccess";
 import { IVideo, Timestamp } from "../../../lib/video/video";
-import "./TimelineContainer.css"
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useVideo } from "../../../components/features/useVideo";
+import { videoActions } from "../../../features/video/videoSlice";
+import "./TimelineContainer.css"
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
 	const [ hover, setHover ] = useState<string | null>(null);
 	const videoData = useLocalVideoData();
-	const { directoryUpdateVideo } = useVideoStateAccess();
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 	const { getVideo, videoExists } = useVideo();
+	const dispatch = useDispatch();
 
 	// TODO: Replace.
 
@@ -40,7 +40,7 @@ export function TimelineContainer() {
 			timestamps
 		};
 
-		directoryUpdateVideo(newVideo);
+		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	}
 
 	return (

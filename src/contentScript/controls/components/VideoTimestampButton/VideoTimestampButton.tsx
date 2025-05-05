@@ -1,12 +1,17 @@
+import { useDispatch, useSelector } from "react-redux";
 import { useVideo } from "../../../../components/features/useVideo";
-import { useVideoStateAccess } from "../../../../components/features/useVideoStateAccess";
 import { IVideo } from "../../../../lib/video/video";
 import { CircularLargeButton } from "../CircularLargeButton/CircularLargeButton";
+import { videoActions } from "../../../../features/video/videoSlice";
+import { directoryActions } from "../../../../features/directory/directorySlice";
+import { RootState } from "../../../../app/store";
 
 export function VideoTimestampButton() {
-	let logoUrl = chrome.runtime.getURL("/assets/logo/logo.svg");
-	const { directoryUpdateVideo, directoryAddVideo } = useVideoStateAccess();
 	const { getVideo } = useVideo();
+	const dispatch = useDispatch();
+	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
+
+	let logoUrl = chrome.runtime.getURL("/assets/logo/logo.svg");
 
 	const onSaveVideo = async () => {
 		let videoID = document.querySelector(`meta[itemprop="identifier"]`)?.getAttribute("content") as string;
@@ -19,14 +24,33 @@ export function VideoTimestampButton() {
 			time: Math.round(video.currentTime),
 			message: "Saved timestamp.",
 		}
+
+		let updatedVideo: IVideo;
 	
 		if (existingVideo == null) {
+			updatedVideo = {
+				id: videoID,
+				timestamps: [ newTimestamp ]
+			}
+			
 			// TODO: Selection menu.
-			existingVideo = await directoryAddVideo(videoID, "$");
+			dispatch(directoryActions.createVideoNode({
+				parentPath: "$",
+				videoID,
+				videoData: videoCache
+			}));
+		}
+		else {
+			updatedVideo = {
+				...existingVideo,
+				timestamps: [
+					...existingVideo.timestamps,
+					newTimestamp
+				]
+			};
 		}
 
-		existingVideo.timestamps.push(newTimestamp);
-		directoryUpdateVideo(existingVideo);
+		dispatch(videoActions.addOrReplaceVideo(updatedVideo));
 	}
 
 	return (
