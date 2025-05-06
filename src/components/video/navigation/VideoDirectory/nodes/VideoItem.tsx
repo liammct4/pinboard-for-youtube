@@ -47,7 +47,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 			newVideo.timestamps[index] = newTimestamp;
 		}
 
-		videoActions.addOrReplaceVideo(newVideo);
+		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const onTimestampAdded = (newTimestamp: Timestamp) => {
@@ -55,7 +55,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 		newVideo.timestamps.push(newTimestamp);
 
-		videoActions.addOrReplaceVideo(newVideo);
+		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const setTimestamps = (timestamps: Timestamp[]) => {
