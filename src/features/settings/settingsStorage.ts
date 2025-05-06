@@ -2,6 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { settingsActions } from "./settingsSlice";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStoarge";
 
 export const settingsSyncStorageMiddleware = createListenerMiddleware();
 
@@ -15,6 +16,16 @@ settingsSyncStorageMiddleware.startListening({
 	},
 	effect: (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		modifyStorage(storage => storage.userData.config.userSettings = state.settings.settingValues);
+
+		ExtensionVirtualStorage.storage = {
+			...ExtensionVirtualStorage.storage,
+			userData: {
+				...ExtensionVirtualStorage.storage.userData,
+				config: {
+					...ExtensionVirtualStorage.storage.userData.config,
+					userSettings: state.settings.settingValues
+				}
+			}
+		};
 	}
 });
