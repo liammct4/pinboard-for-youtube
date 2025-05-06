@@ -1,6 +1,21 @@
 import { IStorage } from "../../lib/storage/storage";
-import { IDirectorySlice } from "./directorySlice";
+import { directoryActions, IDirectorySlice } from "./directorySlice";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+import { modifyStorage } from "../../lib/storage/storage";
 
-export function saveDirectorySliceToStorage(storage: IStorage, videoSlice: IDirectorySlice) {
-	storage.userData.directory = videoSlice.videoBrowser;
-}
+export const directorySyncStorageMiddleware = createListenerMiddleware();
+
+directorySyncStorageMiddleware.startListening({
+	predicate: (action) => {
+		if (action.type == directoryActions.updateDirectorySliceFromStorage.type) {
+			return false;
+		}
+
+		return Object.values(directoryActions).find(x => x.type == action.type) != undefined;
+	},
+	effect: (_action, listenerApi) => {
+		let state = listenerApi.getState() as RootState;
+		modifyStorage(storage => storage.userData.directory = state.directory.videoBrowser);
+	}
+});

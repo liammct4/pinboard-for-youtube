@@ -1,7 +1,20 @@
-import { store } from "../../app/store";
-import { IStorage } from "../../lib/storage/storage";
-import { ICacheSlice } from "./cacheSlice";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+import { modifyStorage } from "../../lib/storage/storage";
+import { cacheActions } from "./cacheSlice";
 
-export function saveCacheSliceToStorage(storage: IStorage, cacheSlice: ICacheSlice) {
-	storage.cache.videos = cacheSlice.videoCache;
-}
+export const cacheSyncStorageMiddleware = createListenerMiddleware();
+
+cacheSyncStorageMiddleware.startListening({
+	predicate: (action) => {
+		if (action.type == cacheActions.updateCacheSliceFromStorage.type) {
+			return false;
+		}
+
+		return Object.values(cacheActions).find(x => x.type == action.type) != undefined;
+	},
+	effect: (_action, listenerApi) => {
+		let state = listenerApi.getState() as RootState;
+		modifyStorage(storage => storage.cache.videos = state.cache.videoCache);
+	}
+});

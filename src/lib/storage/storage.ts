@@ -19,6 +19,8 @@ export interface IMutationQueues {
 	directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
 }
 
+export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION";
+
 export interface IStorage {
 	userData: {
 		videos: IVideo[];
@@ -36,6 +38,9 @@ export interface IStorage {
 	cache: {
 		videos: IYoutubeVideoInfo[]
 	},
+	meta: {
+		author: StorageAuthorSources;
+	}
 }
 
 let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
@@ -87,6 +92,9 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	},
 	cache: {
 		videos: [],
+	},
+	meta: {
+		author: "EXTENSION"
 	}
 };
 
@@ -115,10 +123,20 @@ export async function accessStorage(): Promise<IStorage> {
 	return storage;
 }
 
+export function getApplicationContextType(): StorageAuthorSources {
+	if (chrome.extension != undefined) {
+		return "EXTENSION";
+	}
+
+	return "CONTENT_SCRIPT";
+}
+
 export async function modifyStorage(modifier: (s: IStorage) => void): Promise<void> {
 	let storage = await accessStorage();
 
 	modifier(storage);
+
+	storage.meta.author = getApplicationContextType();
 
 	await chrome.storage.local.set(storage);
 }

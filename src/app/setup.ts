@@ -1,11 +1,4 @@
-import { saveAuthSliceToStorage } from "../features/auth/authStorage";
-import { saveCacheSliceToStorage } from "../features/cache/cacheStorage";
-import { saveDirectorySliceToStorage } from "../features/directory/directoryStorage";
-import { saveSettingsSliceToStorage } from "../features/settings/settingsStorage";
-import { saveTempStateSliceToStorage } from "../features/state/tempStateStorage";
-import { saveThemeSliceToStorage } from "../features/theme/themeStorage";
-import { saveVideoSliceToStorage } from "../features/video/videoStorage";
-import { accessStorage, modifyStorage } from "../lib/storage/storage";
+import { accessStorage, getApplicationContextType, modifyStorage } from "../lib/storage/storage";
 import { authActions } from "../features/auth/authSlice";
 import { RootState, store } from "./store";
 import { tempStateActions } from "../features/state/tempStateSlice";
@@ -29,36 +22,13 @@ export async function syncStoreToStorage() {
 
 
 export function setupStorageAndStoreSync() {
-	// TODO: replace setTimeout.
-	let freeze: boolean = false;
+	chrome.storage.local.onChanged.addListener(async () => {	
+		let storage = await chrome.storage.local.get();
 
-	store.subscribe(() => modifyStorage(storage => {
-		let state: RootState = store.getState();
-	
-		if (freeze) {
+		if (getApplicationContextType() == storage.meta.author) {
 			return;
 		}
 
-		freeze = true;
-	
-		saveAuthSliceToStorage(storage, state.auth);
-		saveCacheSliceToStorage(storage, state.cache);
-		saveSettingsSliceToStorage(storage, state.settings);
-		saveTempStateSliceToStorage(storage, state.tempState);
-		saveThemeSliceToStorage(storage, state.theme);
-		saveVideoSliceToStorage(storage, state.video);
-		saveDirectorySliceToStorage(storage, state.directory);
-
-		setTimeout(() => freeze = false, 100)
-	}));
-
-	chrome.storage.local.onChanged.addListener(async () => {	
-		if (!freeze) {
-			freeze = true;
-
-			syncStoreToStorage();
-
-			setTimeout(() => freeze = false, 100)
-		}
+		syncStoreToStorage();
 	});
 }

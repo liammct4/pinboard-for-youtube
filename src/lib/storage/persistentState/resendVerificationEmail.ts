@@ -1,4 +1,4 @@
-import { IStorage } from "../storage";
+import { IStorage, modifyStorage } from "../storage";
 import { RESEND_VERIFICATION_EMAIL_PATH } from "./persistentState";
 
 export interface IResendVerificationEmailState {
@@ -6,27 +6,19 @@ export interface IResendVerificationEmailState {
 }
 
 export async function startResendVerfiyEmailState(state: IResendVerificationEmailState | undefined): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	storage.persistentState.path = RESEND_VERIFICATION_EMAIL_PATH;
-	storage.persistentState.resendVerificationEmailState = state;
-
-	await chrome.storage.local.set(storage);
+	modifyStorage(storage => {
+		storage.persistentState.path = RESEND_VERIFICATION_EMAIL_PATH;
+		storage.persistentState.resendVerificationEmailState = state;
+	});
 }
 
 export async function setResendVerfiyEmailState(state: IResendVerificationEmailState | undefined): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	storage.persistentState.resendVerificationEmailState = state;
-
-	await chrome.storage.local.set(storage);
+	modifyStorage(storage => storage.persistentState.resendVerificationEmailState = state);
 }
 
 export async function endResendVerfiyEmailState(): Promise<void> {
-	let storage: IStorage = await chrome.storage.local.get() as IStorage;
-
-	storage.persistentState.path = undefined;
-	storage.persistentState.resendVerificationEmailState = undefined;
-
-	await chrome.storage.local.set(storage);
+	modifyStorage(storage => {
+		storage.persistentState.path = undefined;
+		storage.persistentState.resendVerificationEmailState = undefined;
+	});
 }

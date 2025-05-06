@@ -1,8 +1,23 @@
-import { store } from "../../app/store";
-import { IStorage } from "../../lib/storage/storage";
-import { IThemeSlice } from "./themeSlice";
+import { themeActions } from "./themeSlice";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+import { modifyStorage } from "../../lib/storage/storage";
 
-export function saveThemeSliceToStorage(storage: IStorage, themeSlice: IThemeSlice) {
-	storage.userData.config.customThemes = themeSlice.customThemes;
-	storage.userData.config.theme = themeSlice.currentTheme;
-}
+export const themeStorageSyncMiddleware = createListenerMiddleware();
+
+themeStorageSyncMiddleware.startListening({
+	predicate: (action) => {
+		if (action.type == themeActions.updateThemeSliceFromStorage.type) {
+			return false;
+		}
+
+		return Object.values(themeActions).find(x => x.type == action.type) != undefined;
+	},
+	effect: (_action, listenerApi) => {
+		let state = listenerApi.getState() as RootState;
+		modifyStorage(storage => {
+			storage.userData.config.customThemes = state.theme.customThemes;
+			storage.userData.config.theme = state.theme.currentTheme
+		});
+	}
+});

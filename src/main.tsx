@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { accessStorage, ensureInitialized, IStorage, modifyStorage } from "./lib/storage/storage.ts"
+import { accessStorage, ensureInitialized, IStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
