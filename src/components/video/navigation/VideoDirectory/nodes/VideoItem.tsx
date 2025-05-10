@@ -34,27 +34,35 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
 		let newVideo = { ...getVideo(node.videoID) as IVideo };
 		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
-
+		
 		if (index == -1) {
 			console.error("Timestamp doesn't exist.");
 			return;
 		}
 
+		let timestamps: Timestamp[] = [ ...newVideo.timestamps ];
+
 		if (newTimestamp == null) {
-			newVideo.timestamps.splice(index, 1);
+			timestamps.splice(index, 1);
 		}
 		else {
-			newVideo.timestamps[index] = newTimestamp;
+			timestamps[index] = newTimestamp;
 		}
+
+		newVideo.timestamps = timestamps;
 
 		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const onTimestampAdded = (newTimestamp: Timestamp) => {
-		let newVideo = { ...video };
-
-		newVideo.timestamps.push(newTimestamp);
-
+		let newVideo: IVideo = {
+			...video,
+			timestamps: [
+				...video.timestamps,
+				newTimestamp
+			]
+		};
+		
 		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
