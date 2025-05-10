@@ -15,15 +15,9 @@ directorySyncStorageMiddleware.startListening({
 
 		return Object.values(directoryActions).find(x => x.type == action.type) != undefined;
 	},
-	effect: (_action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.storage = {
-			...ExtensionVirtualStorage.storage,
-			userData: {
-				...ExtensionVirtualStorage.storage.userData,
-				directory: state.directory.videoBrowser
-			}
-		};
+		ExtensionVirtualStorage.modifyStorage((storage) => storage.userData.directory = state.directory.videoBrowser);
 	}
 });

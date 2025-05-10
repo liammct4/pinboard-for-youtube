@@ -21,7 +21,13 @@ export interface IMutationQueues {
 
 export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION";
 
-export interface IStorage {
+export interface IMetaStorage {
+	meta: {
+		author: StorageAuthorSources;
+	}
+}
+
+export interface IStorage extends IMetaStorage {
 	userData: {
 		videos: IVideo[];
 		directory: DirectoryTree;
@@ -37,9 +43,6 @@ export interface IStorage {
 	},
 	cache: {
 		videos: IYoutubeVideoInfo[]
-	},
-	meta: {
-		author: StorageAuthorSources;
 	}
 }
 
@@ -58,7 +61,9 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		videos: [],
 		directory: {
 			rootNode: rootNode.nodeID,
-			directoryNodes: {},
+			directoryNodes: {
+				[rootNode.nodeID]: rootNode
+			},
 			videoNodes: {}
 		},
 		config: {
@@ -97,8 +102,6 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		author: "EXTENSION"
 	}
 };
-
-BLANK_STORAGE_TEMPLATE.userData.directory.directoryNodes[rootNode.nodeID] = rootNode;
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.

@@ -14,13 +14,9 @@ cacheSyncStorageMiddleware.startListening({
 
 		return Object.values(cacheActions).find(x => x.type == action.type) != undefined;
 	},
-	effect: (_action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
-		ExtensionVirtualStorage.storage = {
-			...ExtensionVirtualStorage.storage,
-			cache: {
-				videos: state.cache.videoCache
-			}
-		};
+		
+		ExtensionVirtualStorage.modifyStorage((storage) => storage.cache.videos = state.cache.videoCache);
 	}
 });

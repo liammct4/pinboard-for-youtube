@@ -14,14 +14,9 @@ authSyncStorageMiddleware.startListening({
 
 		return Object.values(authActions).find(x => x.type == action.type) != undefined;
 	},
-	effect: (_action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.storage = {
-			...ExtensionVirtualStorage.storage,
-			auth: {
-				currentUser: state.auth.currentUser
-			}
-		};
+		ExtensionVirtualStorage.modifyStorage((storage) => storage.auth.currentUser = state.auth.currentUser);
 	}
 });

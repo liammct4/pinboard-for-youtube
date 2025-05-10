@@ -14,19 +14,12 @@ themeStorageSyncMiddleware.startListening({
 
 		return Object.values(themeActions).find(x => x.type == action.type) != undefined;
 	},
-	effect: (_action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.storage = {
-			...ExtensionVirtualStorage.storage,
-			userData: {
-				...ExtensionVirtualStorage.storage.userData,
-				config: {
-					...ExtensionVirtualStorage.storage.userData.config,
-					customThemes: state.theme.customThemes,
-					theme: state.theme.currentTheme
-				}
-			}
-		};
+		ExtensionVirtualStorage.modifyStorage((storage) => {
+			storage.userData.config.customThemes = state.theme.customThemes;
+			storage.userData.config.theme = state.theme.currentTheme;
+		});
 	}
 });

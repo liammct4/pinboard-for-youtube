@@ -14,15 +14,9 @@ videoSyncStorageMiddleware.startListening({
 
 		return Object.values(videoActions).find(x => x.type == action.type) != undefined;
 	},
-	effect: (_action, listenerApi) => {
+	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.storage = {
-			...ExtensionVirtualStorage.storage,
-			userData: {
-				...ExtensionVirtualStorage.storage.userData,
-				videos: state.video.videos
-			}
-		};
+		ExtensionVirtualStorage.modifyStorage((storage) => storage.userData.videos = state.video.videos);
 	}
 });
