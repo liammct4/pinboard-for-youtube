@@ -33,7 +33,7 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
 	else if (/^\s*$/.test(directoryName)) {
 		return "WHITESPACE_ONLY";
 	}
-	else if (directoryName.trim().length == directoryName.length) {
+	else if (directoryName.trim().length != directoryName.length) {
 		return "STARTS_ENDS_IN_WHITESPACE";
 	}
 
@@ -107,4 +107,8 @@ export function pathEquals(a: NodePath, b: NodePath): boolean {
 	}
 
 	return a.type == b.type;
+}
+
+export function resolvePath(path: NodePath | string): NodePath {
+	return typeof path == "string" ? parsePath(path as string) : path as NodePath;
 }

@@ -120,8 +120,13 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 				"Shake"
 			);
 		}
+
 		
-		// TODO: Renaming.
+		dispatch(directoryActions.renameDirectory({
+			targetPath: directoryPathConcat(directoryPath, tree.directoryNodes[currentlyEditing as NodeRef].slice, "DIRECTORY"),
+			newSlice: newSliceName
+		}));
+
 		setCurrentlyEditing(null);
 	}
 

@@ -13,7 +13,7 @@ Object.defineProperty(globalThis, "crypto", {
 import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
 import { parsePath } from "../../lib/directory/path";
 import { getNodeFromPath, getNodeType, NodeRef, stringifyNode, stringifyTree, traverseTreeDF } from "../../lib/directory/directory";
-import { directorySlice, IDirectorySlice } from "./directorySlice";
+import { directoryActions, directorySlice, IDirectorySlice } from "./directorySlice";
 
 // Jest, not showing diffs doesnt work.
 function expectTree(expected: string, received: string) {
@@ -455,6 +455,58 @@ describe("Redux store: 'directory' slice actions.", () => {
 
 			let removedNode = getNodeFromPath(state.videoBrowser, path);
 			expect(removedNode).toBeNull();
+		});
+	});
+	describe("renameDirectory()", () => {
+		it("Renames a directory node.", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			};
+
+			let pathString = "$ > Tutorials 2 > Other";
+			let path = parsePath(pathString);
+			
+			let node = getNodeFromPath(state.videoBrowser, path) as NodeRef;
+
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Other");
+			expect(state.videoBrowser.directoryNodes[node].slice).not.toBe("Unused");
+			
+			state = directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Unused" }));
+
+			expect(state.videoBrowser.directoryNodes[node].slice).not.toBe("Other");
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Unused");
+		});
+		it("Does not rename the root node.", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			};
+
+			let pathString = "$";
+			let path = parsePath(pathString);
+			
+			let node = getNodeFromPath(state.videoBrowser, path) as NodeRef;
+			
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("$");
+			
+			directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Root" }));
+
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("$");
+		});
+		it("Does not rename a node with a provided name that is invalid.", () => {
+			let state: IDirectorySlice = {
+				videoBrowser: testDirectory
+			};
+
+			let pathString = "$ > Tutorials 2";
+			let path = parsePath(pathString);
+			
+			let node = getNodeFromPath(state.videoBrowser, path) as NodeRef;
+			
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Tutorials 2");
+			
+			directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Tutorials 2 + Other" }));
+
+			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Tutorials 2");
 		});
 	});
 });

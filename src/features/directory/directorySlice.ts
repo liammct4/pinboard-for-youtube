@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IStorage } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
-import { getParentPathFromPath, NodePath, parsePath, pathEquals, pathToString, validateDirectoryName } from "../../lib/directory/path";
+import { getParentPathFromPath, NodePath, parsePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
@@ -47,10 +47,6 @@ type DirectoryRenameDirectoryPayload = {
 	newSlice: string;
 }
 
-export function optionalStringPath(path: NodePath | string): NodePath {
-	return typeof path == "string" ? parsePath(path as string) : path as NodePath;
-}
-
 export const directorySlice = createSlice({
 	name: "directory",
 	initialState,
@@ -58,12 +54,30 @@ export const directorySlice = createSlice({
 		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videoBrowser = action.payload.userData.directory;
 		},
-		renameDirectory: (_state, _action: PayloadAction<DirectoryRenameDirectoryPayload>) => {
-			// TODO.
+		renameDirectory: (state, action: PayloadAction<DirectoryRenameDirectoryPayload>) => {
+			let targetPath = resolvePath(action.payload.targetPath);
+			let newName = action.payload.newSlice.trim();
+
+			if (targetPath.type == "VIDEO") {
+				return;
+			}
+
+			if (validateDirectoryName(newName) != null) {
+				return;
+			}
+
+			let nodeID = getNodeFromPath(state.videoBrowser, targetPath);
+
+			if (nodeID == null || nodeID == state.videoBrowser.rootNode) {
+				return;
+			}
+
+			let node = state.videoBrowser.directoryNodes[nodeID];
+			node.slice = newName;
 		},
 		moveNode: (state, action: PayloadAction<DirectoryMoveNodePayload>) => {
-			let targetPath = optionalStringPath(action.payload.targetPath);
-			let destinationPath = optionalStringPath(action.payload.destinationPath);
+			let targetPath = resolvePath(action.payload.targetPath);
+			let destinationPath = resolvePath(action.payload.destinationPath);
 
 			let targetParentPath = getParentPathFromPath(targetPath);
 
@@ -87,7 +101,7 @@ export const directorySlice = createSlice({
 			insertNodeInOrder(state.videoBrowser, destinationID, currentID, action.payload.videoData);
 		},
 		createDirectoryNode: (state, action: PayloadAction<DirectoryAddDirectoryPayload>) => {
-			let parentPath = optionalStringPath(action.payload.parentPath);
+			let parentPath = resolvePath(action.payload.parentPath);
 
 			let validate = validateDirectoryName(action.payload.slice.trim());
 
@@ -117,7 +131,7 @@ export const directorySlice = createSlice({
 			insertNodeInOrder(state.videoBrowser, parentNodeID, newNode.nodeID, []);
 		},
 		createVideoNode: (state, action: PayloadAction<DirectoryAddVideoPayload>) => {
-			let path = optionalStringPath(action.payload.parentPath);
+			let path = resolvePath(action.payload.parentPath);
 
 			if (path.type != "DIRECTORY") {
 				console.error(`directory.createVideoNode: Provided path was not a directory path: "${action.payload}".`);

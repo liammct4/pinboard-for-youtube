@@ -30,7 +30,7 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 						<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
 					}
 					{
-						currentlyEditing == node.slice ?
+						currentlyEditing == node.nodeID ?
 						<input
 							className="medium-text-input"
 							onBlur={(e) => requestEditEnd(e.target.value)}
