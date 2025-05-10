@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { DragEvent, DragList, DragListItemData } from "../../../lib/dragList/DragList";
+import { useMemo, useRef, useState } from "react";
+import { DragListItemData } from "../../../lib/dragList/DragList";
 import { SelectionBoxScrollbox } from "../SelectionBoxScrollbox/SelectionBoxScrollbox";
-import "./SelectionDragList.css"
 import { Rect } from "../../../lib/util/objects/types";
 import { rectIntersects } from "../../../lib/util/generic/miscUtil";
+import "./SelectionDragList.css"
 
 export interface ISelectionDragListProperties<T extends string> {
 	className?: string;
 	boxClassName?: string;
+	itemIDName: string;
 	allowSelection?: boolean;
 	setSelectedItems: (items: T[]) => void;
 	onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
@@ -16,6 +17,7 @@ export interface ISelectionDragListProperties<T extends string> {
 }
 
 export function SelectionList<T extends string>({
+		itemIDName,
 		className,
 		boxClassName,
 		setSelectedItems,
@@ -67,7 +69,7 @@ export function SelectionList<T extends string>({
 		<SelectionBoxScrollbox
 			frameClassName={className}
 			boxClassName={allowSelection ? boxClassName : ""}
-			onSelectBegin={() => setElementItems([ ...outerListBox.current.querySelectorAll(".drag-list-item") ])}
+			onSelectBegin={() => setElementItems([ ...outerListBox.current.querySelectorAll(`.drag-list-item[data-drag-list-name=${itemIDName}]`) ])}
 			onSelectMove={onSelectMove}
 			startingScrollPosition={startingScrollPosition}
 			onScroll={onScroll}>

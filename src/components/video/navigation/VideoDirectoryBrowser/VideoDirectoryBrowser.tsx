@@ -320,6 +320,7 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 						}}>
 							<SelectionList
 								className="video-directory-list separated-scrollbox"
+								itemIDName="directory-dl"
 								boxClassName="video-selection-box"
 								allowSelection={!isDragging}
 								setSelectedItems={setSelectedItems}
