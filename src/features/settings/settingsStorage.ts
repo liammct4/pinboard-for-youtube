@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { settingsActions } from "./settingsSlice";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStoarge";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const settingsSyncStorageMiddleware = createListenerMiddleware();
 

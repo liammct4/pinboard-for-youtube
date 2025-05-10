@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { cacheActions } from "./cacheSlice";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStoarge";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const cacheSyncStorageMiddleware = createListenerMiddleware();
 

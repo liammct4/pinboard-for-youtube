@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { videoActions } from "./videoSlice";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStoarge";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const videoSyncStorageMiddleware = createListenerMiddleware();
 
