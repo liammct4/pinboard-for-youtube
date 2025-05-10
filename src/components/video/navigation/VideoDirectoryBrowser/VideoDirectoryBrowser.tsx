@@ -61,13 +61,12 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
-	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<NodePath | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const dispatch = useDispatch();
-	const currentViewStyle = useSelector((state: RootState) => state.tempState.layout.videoItemViewStyle);
+	const layout = useSelector((state: RootState) => state.tempState.layout);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
@@ -263,22 +262,22 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 							<li>{directoryPath.slices[directoryPath.slices.length - 1]}</li>
 						</ul>
 				}
-				<button className="settings-button button-base button-small square-button" onClick={() => setSettingsOpen(!settingsOpen)}>
+				<button className="settings-button button-base button-small square-button" onClick={() => dispatch(tempStateActions.setLayoutState({ ...layout, isDirectoryBrowserSettingsExpanded: !layout.isDirectoryBrowserSettingsExpanded }))}>
 					<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
 				</button>
 			</div>
-			<ToggleExpander expanded={settingsOpen}>
+			<ToggleExpander expanded={layout.isDirectoryBrowserSettingsExpanded}>
 				<div className="settings-panel">
 					<LabelGroup label="View">
 						<div className="view-section">
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={currentViewStyle == "MINIMAL"}>
-								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "MINIMAL" }}/>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
+								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "MINIMAL" }}/>
 							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={currentViewStyle == "COMPACT"}>
-								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "COMPACT" }}/>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={layout.videoItemViewStyle == "COMPACT"}>
+								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "COMPACT" }}/>
 							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={currentViewStyle == "REGULAR"}>
-								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "REGULAR" }}/>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
+								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "REGULAR" }}/>
 							</button>
 						</div>
 					</LabelGroup>
@@ -314,7 +313,7 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 					}}>
 					<VideoDirectoryPresentationContext.Provider
 						value={{
-							videoItemStyle: currentViewStyle
+							videoItemStyle: layout.videoItemViewStyle
 						}}>
 							<SelectionList
 								className="video-directory-list separated-scrollbox"

@@ -18,7 +18,8 @@ const initialState: IStateSlice = {
 	videoBrowserScrollDistance: 0,
 	layout: {
 		isCurrentVideosSectionExpanded: true,
-		videoItemViewStyle: "MINIMAL"
+		videoItemViewStyle: "MINIMAL",
+		isDirectoryBrowserSettingsExpanded: false
 	},
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: false
