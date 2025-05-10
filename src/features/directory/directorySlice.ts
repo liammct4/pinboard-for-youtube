@@ -149,7 +149,9 @@ export const directorySlice = createSlice({
 					let nodeData = state.videoBrowser.directoryNodes[nodeID];
 					
 					nodeData.subNodes = [];
-					state.videoBrowser.directoryNodes = {};
+					state.videoBrowser.directoryNodes = {
+						[state.videoBrowser.rootNode]: state.videoBrowser.directoryNodes[state.videoBrowser.rootNode]
+					};
 					state.videoBrowser.videoNodes = {};
 
 					// No point in doing anything else.
