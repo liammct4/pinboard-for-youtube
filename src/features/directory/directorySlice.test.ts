@@ -488,7 +488,7 @@ describe("Redux store: 'directory' slice actions.", () => {
 			
 			expect(state.videoBrowser.directoryNodes[node].slice).toBe("$");
 			
-			directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Root" }));
+			state = directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Root" }));
 
 			expect(state.videoBrowser.directoryNodes[node].slice).toBe("$");
 		});
@@ -504,8 +504,9 @@ describe("Redux store: 'directory' slice actions.", () => {
 			
 			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Tutorials 2");
 			
-			directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Tutorials 2 + Other" }));
+			state = directorySlice.reducer(state, directoryActions.renameDirectory({ targetPath: path, newSlice: "Tutorials 2 > Other" }));
 
+			expect(state.videoBrowser.directoryNodes[node].slice).not.toBe("Tutorials 2 > Other");
 			expect(state.videoBrowser.directoryNodes[node].slice).toBe("Tutorials 2");
 		});
 	});
