@@ -128,8 +128,10 @@ export async function accessStorage(): Promise<IStorage> {
 	return storage;
 }
 
+const EXTENSION_URL_REGEX = /\w*-extension:(\\\\|\/\/)[\w\-]+/;
+
 export function getApplicationContextType(): StorageAuthorSources {
-	if (chrome.extension != undefined) {
+	if (EXTENSION_URL_REGEX.test(window.location.href)) {
 		return "EXTENSION";
 	}
 
