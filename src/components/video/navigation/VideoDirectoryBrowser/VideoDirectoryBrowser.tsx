@@ -28,8 +28,7 @@ import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeFromRef, getNodeSect
 import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString, reformatDirectoryPath, validateDirectoryName } from "../../../../lib/directory/path";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
-
-export type VideoPresentationStyle = "MINIMAL" | "COMPACT" | "REGULAR";
+import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
@@ -56,20 +55,19 @@ function DragVideoTooltipItem({ videoID }: { videoID: string }) {
 	);
 }
 
-export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
+export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<NodePath>(parsePath("$"));
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ settingsOpen, setSettingsOpen ] = useState<boolean>(false);
-	const [ currentViewStyle, setCurrentViewStyle ] = useState<VideoPresentationStyle>(defaultVideoStyle);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
 	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<NodePath | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const dispatch = useDispatch();
-	const videos = useSelector((state: RootState) => state.video.videos);
+	const currentViewStyle = useSelector((state: RootState) => state.tempState.layout.videoItemViewStyle);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
@@ -273,13 +271,13 @@ export function VideoDirectoryBrowser({ defaultVideoStyle, directoryPath, onDire
 				<div className="settings-panel">
 					<LabelGroup label="View">
 						<div className="view-section">
-							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("MINIMAL")} data-active-toggle={currentViewStyle == "MINIMAL"}>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={currentViewStyle == "MINIMAL"}>
 								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "MINIMAL" }}/>
 							</button>
-							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("COMPACT")} data-active-toggle={currentViewStyle == "COMPACT"}>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={currentViewStyle == "COMPACT"}>
 								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "COMPACT" }}/>
 							</button>
-							<button className="button-base button-small square-button" onClick={() => setCurrentViewStyle("REGULAR")} data-active-toggle={currentViewStyle == "REGULAR"}>
+							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={currentViewStyle == "REGULAR"}>
 								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": currentViewStyle == "REGULAR" }}/>
 							</button>
 						</div>

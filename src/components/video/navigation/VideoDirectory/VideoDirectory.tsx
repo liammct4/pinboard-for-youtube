@@ -1,11 +1,11 @@
 import { createContext } from "react";
-import { VideoPresentationStyle } from "../VideoDirectoryBrowser/VideoDirectoryBrowser";
 import { DragListItem } from "../../../../lib/dragList/DragListItem";
 import { InteractableBrowserNode } from "./nodes/InteractableBrowserNode";
 import { getNodeFromRef, IDirectoryNode } from "../../../../lib/directory/directory";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import "./VideoDirectory.css"
+import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
 
 export interface IVideoDirectoryProperties {
 	directoryData: IDirectoryNode;

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { LayoutState } from "../../lib/storage/tempState/layoutState";
+import { LayoutState, VideoPresentationStyle } from "../../lib/storage/tempState/layoutState";
 import { IStorage } from "../../lib/storage/storage";
 
 export interface IStateSlice {
@@ -17,7 +17,8 @@ const initialState: IStateSlice = {
 	currentDirectory: "$",
 	videoBrowserScrollDistance: 0,
 	layout: {
-		isCurrentVideosSectionExpanded: true
+		isCurrentVideosSectionExpanded: true,
+		videoItemViewStyle: "MINIMAL"
 	},
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: false
@@ -49,18 +50,11 @@ export const tempStateSlice = createSlice({
 				state.expandedVideoIDs.splice(index, 1);
 			}
 		},
-		setLayoutState: (state, action: PayloadAction<LayoutState>) => {
-			state.layout = action.payload;
-		},
-		enableControlsLock: (state) => {
-			state.temporarySingleState.onRequestIsVideoControlLocked = true;
-		},
-		disableControlsLock: (state) => {
-			state.temporarySingleState.onRequestIsVideoControlLocked = false;
-		},
-		setDirectoryPath: (state, action: PayloadAction<string>) => {
-			state.currentDirectory = action.payload;
-		}
+		changeVideoViewStyle: (state, action: PayloadAction<VideoPresentationStyle>) => { state.layout.videoItemViewStyle = action.payload },
+		setLayoutState: (state, action: PayloadAction<LayoutState>) => { state.layout = action.payload },
+		enableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = true },
+		disableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = false },
+		setDirectoryPath: (state, action: PayloadAction<string>) => { state.currentDirectory = action.payload }
 	}
 })
 

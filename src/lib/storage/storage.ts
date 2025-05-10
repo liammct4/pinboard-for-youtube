@@ -77,7 +77,8 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		videoBrowserScrollDistance: 0,
 		currentDirectoryPath: "$",
 		layout: {
-			isCurrentVideosSectionExpanded: true
+			isCurrentVideosSectionExpanded: true,
+			videoItemViewStyle: "MINIMAL"
 		}
 	},
 	auth: {
