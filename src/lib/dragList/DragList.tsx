@@ -1,6 +1,7 @@
 import { createContext, useEffect, useMemo, useRef, useState } from "react"
 import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
-import { Rect } from "../util/objects/types";
+import { Coordinates, Rect } from "../util/objects/types";
+import { useGlobalMousePosition } from "../../components/features/events/useGlobalMousePosition";
 
 export type DragEvent<T extends string> = {
 	startDragID: T;
@@ -23,6 +24,7 @@ export type InbetweenIDEventType = -1 | string | 1;
 export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties<T>) {
 	const listBox = useRef<HTMLUListElement>(null);
 	const [ startDragID, setStartDragID ] = useState<T | null>(null);
+	const [ startDragPosition, setStartDragPosition ] = useState<Coordinates | null>(null);
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
 	const [ yScroll, setYScroll ] = useState<number>(0);
 	const [ yBasePosition, setYBasePosition ] = useState<number>(0);
@@ -71,8 +73,19 @@ export function DragList<T extends string>({ className, dragListName, children, 
 
 		return "NOT_IN_BOUNDS";
 	}, [yMousePosition]);
+	const mouse = useGlobalMousePosition(dragInfo != null);
+	const outOfBounds = useMemo(() => {
+		if (startDragPosition == null) {
+			return true;
+		}
+
+		let boundsX = Math.abs(mouse.x - startDragPosition.x);
+		let boundsY = Math.abs(mouse.y - startDragPosition.y);
+	
+		return boundsX > 10 || boundsY > 10;
+	}, [mouse.x, mouse.y, startDragPosition?.x, startDragPosition?.y, ]);
 	useEffect(() => {
-		if (onDrag != undefined && dragInfo) {
+		if (onDrag != undefined && dragInfo && outOfBounds) {
 			onDrag(dragInfo);
 		}
 	}, [dragInfo]);
@@ -83,6 +96,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 
 			if (onDragEnd != null) {
 				onDragEnd(dragInfo!);
+				setStartDragPosition(null);
 			}
 		}
 	});
@@ -97,6 +111,10 @@ export function DragList<T extends string>({ className, dragListName, children, 
 				setYBasePosition(y);
 				setYScroll(listBox?.current?.scrollTop!);
 				setYMousePosition(listBoxPositionWithScroll);
+
+				if (startDragPosition == null) {
+					setStartDragPosition({ x: e.clientX, y: e.clientY });
+				}
 			}
 		}
 	})
@@ -111,7 +129,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 				inbetweenEndID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenEndID ?? null : null,
 				setStartDragID: (e) => {
 					onDragStart?.(e as T);
-					setStartDragID(e as T)
+					setStartDragID(e as T);
 				},
 				baseY: yBasePosition,
 				scrollY: yScroll
