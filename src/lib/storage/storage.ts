@@ -29,7 +29,9 @@ export interface IMetaStorage {
 
 export interface IStorage extends IMetaStorage {
 	userData: {
-		videos: IVideo[];
+		videos: {
+			[videoID: string]: IVideo | undefined
+		};
 		directory: DirectoryTree;
 		config: IConfig;
 	},
@@ -58,7 +60,7 @@ let rootNode: IDirectoryNode = {
 
 export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	userData: {
-		videos: [],
+		videos: {},
 		directory: {
 			rootNode: rootNode.nodeID,
 			directoryNodes: {

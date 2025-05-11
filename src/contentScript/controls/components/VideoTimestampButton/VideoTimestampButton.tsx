@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useVideo } from "../../../../components/features/useVideo";
 import { IVideo } from "../../../../lib/video/video";
 import { CircularLargeButton } from "../CircularLargeButton/CircularLargeButton";
 import { videoActions } from "../../../../features/video/videoSlice";
@@ -7,9 +6,9 @@ import { directoryActions } from "../../../../features/directory/directorySlice"
 import { RootState } from "../../../../app/store";
 
 export function VideoTimestampButton() {
-	const { getVideo } = useVideo();
 	const dispatch = useDispatch();
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
+	const videos = useSelector((state: RootState) => state.video.videos);
 
 	let logoUrl = chrome.runtime.getURL("/assets/logo/logo.svg");
 
@@ -17,7 +16,7 @@ export function VideoTimestampButton() {
 		let videoID = document.querySelector(`meta[itemprop="identifier"]`)?.getAttribute("content") as string;
 		let video = document.querySelector("video") as HTMLVideoElement;
 	
-		let existingVideo = getVideo(videoID) as IVideo;
+		let existingVideo = videos[videoID] as IVideo;
 	
 		let newTimestamp = {
 			id: crypto.randomUUID(), 

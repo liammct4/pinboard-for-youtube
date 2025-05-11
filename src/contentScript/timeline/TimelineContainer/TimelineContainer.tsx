@@ -3,33 +3,34 @@ import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
 import { IVideo, Timestamp } from "../../../lib/video/video";
-import { useDispatch } from "react-redux";
-import { useVideo } from "../../../components/features/useVideo";
+import { useDispatch, useSelector } from "react-redux";
 import { videoActions } from "../../../features/video/videoSlice";
 import "./TimelineContainer.css"
+import { RootState } from "../../../app/store";
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
 	const [ hover, setHover ] = useState<string | null>(null);
 	const videoData = useLocalVideoData();
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
-	const { getVideo, videoExists } = useVideo();
+	const videos = useSelector((state: RootState) => state.video.videos);
 	const dispatch = useDispatch();
-
-	// TODO: Replace.
-
+		
 	if (!videoData.isVideoPage || videoData.isAdvertisement) {
 		return <></>
 	}
-
 	
-	if (!videoExists(videoData.data.videoID)) {
+	let video = videos[videoData.data.videoID];
+
+	if (video == undefined) {
 		return <></>;
 	}
 	
-	const video = getVideo(videoData.data.videoID) as IVideo;
-
 	const onTimestampChange = (timestamp: Timestamp) => {
+		if (video == undefined) {
+			return;
+		}
+
 		let timestamps = [ ...video.timestamps ];
 		let index = timestamps.findIndex(x => x.id == timestamp.id);
 		

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { IVideo, Timestamp } from "../../../../../lib/video/video";
 import { CompactVideoItem } from "../../../styledVideoItems/CompactVideoItem/CompactVideoItem";
 import { MinimalVideoItem } from "../../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
@@ -6,10 +6,9 @@ import { RegularVideoItem } from "../../../styledVideoItems/RegularVideoItem/Reg
 import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../app/store";
+import { RootState, store } from "../../../../../app/store";
 import { tempStateActions } from "../../../../../features/state/tempStateSlice";
 import { videoActions } from "../../../../../features/video/videoSlice";
-import { useVideo } from "../../../../features/useVideo";
 import { IVideoNode } from "../../../../../lib/directory/directory";
 import { IVideoDirectoryInteractionContext, VideoDirectoryInteractionContext } from "../../../../../context/directory";
 
@@ -21,18 +20,24 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	const { videoItemStyle } = useContext<IVideoDirectoryPresentationContext>(VideoDirectoryPresentationContext);
 	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
 	const isExpanded = useSelector((state: RootState) => state.tempState.expandedVideoIDs).includes(node.videoID);
-	const { getVideo, videoExists } = useVideo();
 	const dispatch = useDispatch();
 
-	if (!videoExists(node.videoID)) {
+	// 'videos = useSelector(...)' will not update in closure (onTimestampAdded etc) for some reason so this is necessary.
+	const videos = useSelector((state: RootState) => state.video.videos);
+	const videosRef = useRef(videos);
+
+	videosRef.current = videos;
+
+	let video = videos[node.videoID];
+	
+	if (video == undefined) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
 		return <p>ERROR</p>;
 	}
 	
-	let video = getVideo(node.videoID) as IVideo;
-
 	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
-		let newVideo = { ...getVideo(node.videoID) as IVideo };
+		let copyVideo = videosRef.current[node.videoID] as IVideo;
+		let newVideo: IVideo = { ...copyVideo, timestamps: [ ...copyVideo.timestamps ] };
 		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
 		
 		if (index == -1) {
@@ -40,25 +45,22 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 			return;
 		}
 
-		let timestamps: Timestamp[] = [ ...newVideo.timestamps ];
-
 		if (newTimestamp == null) {
-			timestamps.splice(index, 1);
+			newVideo.timestamps.splice(index, 1);
 		}
 		else {
-			timestamps[index] = newTimestamp;
+			newVideo.timestamps[index] = newTimestamp;
 		}
-
-		newVideo.timestamps = timestamps;
 
 		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const onTimestampAdded = (newTimestamp: Timestamp) => {
+		let copyVideo = videosRef.current[node.videoID] as IVideo;
 		let newVideo: IVideo = {
-			...video,
+			...copyVideo,
 			timestamps: [
-				...video.timestamps,
+				...copyVideo.timestamps,
 				newTimestamp
 			]
 		};

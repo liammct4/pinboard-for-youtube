@@ -26,7 +26,6 @@ import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
 import { useActiveVideoID } from "../../components/features/activeVideo/useActiveVideo.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
-import { useVideo } from "../../components/features/useVideo.ts";
 import { videoActions } from "../../features/video/videoSlice.ts";
 import { directoryActions } from "../../features/directory/directorySlice.ts";
 import { useVideoCache } from "../../components/features/useVideoInfo.ts";
@@ -51,7 +50,7 @@ export function VideosPage(): React.ReactNode {
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const activeVideoID = useActiveVideoID();
-	const { getVideo, videoExists } = useVideo();
+	const videos = useSelector((state: RootState) => state.video.videos);
 	const { retrieveInfo } = useVideoCache();
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
@@ -93,7 +92,7 @@ export function VideosPage(): React.ReactNode {
 			return;
 		}
 
-		if (videoExists(activeVideo.id)) {
+		if (videos[activeVideo.id] == undefined) {
 			return;
 		}
 
@@ -109,11 +108,11 @@ export function VideosPage(): React.ReactNode {
 	const onPinCurrentTimestamp = async () => {
 		const activeVideo = await getActiveVideoInfo();
 
-		if (activeVideo == null || !videoExists(activeVideo.id)) {
+		if (activeVideo == null || !videos[activeVideo.id] == undefined) {
 			return;
 		}
 
-		let video = getVideo(activeVideo.id) as IVideo;
+		let video = videos[activeVideo.id] as IVideo;
 		
 		let newActiveVideo: IVideo = {
 			id: activeVideo.id,

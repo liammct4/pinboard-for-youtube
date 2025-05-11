@@ -5,15 +5,22 @@ import { IVideo, generateTimestamp } from "../src/lib/video/video";
 
 export const sampleVideoData: IVideo[] = [
 	{
-		"id": "LXb3EKWsInQ",
-		"timestamps": [
+		id: "LXb3EKWsInQ",
+		timestamps: [
 			generateTimestamp(63, "Timestamp expands to this end margin." ),
 			generateTimestamp(4351, "Timestamp in the middle..."),
 		]
 	},
 	{
-		"id": "njX2bu-_Vw4",
-		"timestamps": [
+		id: "WNCl-69POro",
+		timestamps: [
+			generateTimestamp(10, "A::Random"),
+			generateTimestamp(20, "B::Other")
+		]
+	},
+	{
+		id: "njX2bu-_Vw4",
+		timestamps: [
 			generateTimestamp(230, "Sed imperdiet interdum tempus."),
 			generateTimestamp(1200, "Nunc dui dolor, feugiat id eros feugiat."),
 			generateTimestamp(354, "Nulla ornare arcu tellus."),
@@ -21,33 +28,33 @@ export const sampleVideoData: IVideo[] = [
 		]
 	},
 	{
-		"id": "AKeUssuu3Is",
-		"timestamps": [
+		id: "AKeUssuu3Is",
+		timestamps: [
 			generateTimestamp(16, "Maecenas lectus nisl, pretium.")
 		]
 	},
 	{
-		"id": "ZjVAsJOl8SM",
-		"timestamps": [
+		id: "ZjVAsJOl8SM",
+		timestamps: [
 			generateTimestamp(1063, "Another timestamp.")
 		]
 	},
 	{
-		"id": "PnvkrBXmLSI",
-		"timestamps": [
+		id: "PnvkrBXmLSI",
+		timestamps: [
 			generateTimestamp(60342, "Phasellus convallis arcu in malesuada mattis."),
 			generateTimestamp(0, "Maximus quis purus."),
 		]
 	},
 	{
-		"id": "ERYG3NE1DO8",
-		"timestamps": []
+		id: "ERYG3NE1DO8",
+		timestamps: []
 	}
 ];
 
 export const sampleConfigData: IConfig = {
 	theme: {
-		"id": "b3eea507-4ae7-4ed9-b845-b517f624dbe9",
+		id: "b3eea507-4ae7-4ed9-b845-b517f624dbe9",
 		"name": "Default",
 		"palette": {
 			"primary-common": "rgb(255, 30, 74)",

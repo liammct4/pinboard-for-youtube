@@ -3,11 +3,13 @@ import { IStorage } from "../../lib/storage/storage";
 import { IVideo } from "../../lib/video/video";
 
 export interface IVideoSlice {
-	videos: IVideo[];
+	videos: {
+		[videoID: string]: IVideo | undefined
+	};
 }
 
 const initialState: IVideoSlice = {
-	videos: []
+	videos: {}
 }
 
 export const videoSlice = createSlice({
@@ -18,40 +20,31 @@ export const videoSlice = createSlice({
 			state.videos = action.payload.userData.videos;
 		},
 		addVideo: (state, action: PayloadAction<IVideo>) => {
-			let existingIndex = state.videos.findIndex(x => x.id == action.payload.id)
+			let existingVideo = state.videos[action.payload.id];
 
-			if (existingIndex != -1) {
+			if (existingVideo != undefined) {
 				return;
 			}
 
-			state.videos.push(action.payload);
+			state.videos[action.payload.id] = action.payload;
 		},
 		removeVideos: (state, action: PayloadAction<string[]>) => {
 			for (let video of action.payload) {
-				let index = state.videos.findIndex(x => x.id == video);
-				
-				if (index == -1) {
+				if (state.videos[video] == undefined) {
 					continue;
 				}
-				
-				state.videos.splice(index, 1);
+
+				delete state.videos[video];
 			}
 		},
 		addOrReplaceVideo: (state, action: PayloadAction<IVideo>) => {
-			let index = state.videos.findIndex(x => x.id == action.payload.id);
-
-			if (index == -1) {
-				state.videos.push(action.payload);
-			}
-			else {
-				state.videos[index] = action.payload;
-			}
+			state.videos[action.payload.id] = action.payload;
 		},
-		setVideos: (state, action: PayloadAction<IVideo[]>) => {
+		setVideos: (state, action: PayloadAction<{ [videoID: string]: IVideo }>) => {
 			state.videos = action.payload;
 		},
 		clearVideos: (state) => {
-			state.videos = [];
+			state.videos = {};
 		}
 	}
 });
