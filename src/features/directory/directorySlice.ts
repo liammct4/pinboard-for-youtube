@@ -154,9 +154,9 @@ export const directorySlice = createSlice({
 			state.videoBrowser.videoNodes[newNode.nodeID] = newNode;
 			insertNodeInOrder(state.videoBrowser, targetDirectoryID, newNode.nodeID, action.payload.videoData);
 		},
-		removeNodes: (state, action: PayloadAction<string[]>) => {
+		removeNodes: (state, action: PayloadAction<(NodePath | string)[]>) => {
 			for (let pathString of action.payload) {
-				let path = parsePath(pathString);
+				let path = resolvePath(pathString);
 				let nodeID = getNodeFromPath(state.videoBrowser, path) as NodeRef;
 
 				if (nodeID == state.videoBrowser.rootNode) {

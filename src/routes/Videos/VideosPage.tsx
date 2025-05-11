@@ -29,8 +29,8 @@ import "./VideosPage.css"
 import { videoActions } from "../../features/video/videoSlice.ts";
 import { directoryActions } from "../../features/directory/directorySlice.ts";
 import { useVideoCache } from "../../components/features/useVideoInfo.ts";
-import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, NodeRef } from "../../lib/directory/directory.ts";
-import { parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeType, getPathOfNode, NodeRef } from "../../lib/directory/directory.ts";
+import { NodePath, parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
 import { tempStateActions, tempStateSlice } from "../../features/state/tempStateSlice.ts";
 
 interface IAddVideoForm extends IErrorFieldValues {
@@ -138,10 +138,11 @@ export function VideosPage(): React.ReactNode {
 				title="Delete selected items"
 				onButtonPressed={(action) => {
 					if (action == "Yes") {
-						dispatch(directoryActions.removeNodes(selectedItems));
-						dispatch(videoActions.removeVideos(selectedItems.map(x => tree.videoNodes[x].videoID)));
+						dispatch(directoryActions.removeNodes(selectedItems.map(x => getPathOfNode(tree, x) as NodePath)));
+						dispatch(videoActions.removeVideos(selectedItems.filter(x => getNodeType(tree, x) == "VIDEO").map(x => tree.videoNodes[x].videoID)));
 					}
 
+					setSelectedItems([]);
 					setDeleteConfirmationOpen(false);
 				}}
 				body="Are you sure you want to delete all the selected items, this action cannot be undone."
