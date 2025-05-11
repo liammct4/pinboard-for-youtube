@@ -13,7 +13,8 @@ import JumpVideoIcon from "./../../../../../assets/icons/jump_icon.svg?react"
 import { IconContainer } from "../../../images/svgAsset.tsx";
 import "src/styling/dialog.css"
 import "./VideoTimestamp.css"
-import { useActiveVideoID } from "../../../features/activeVideo/useActiveVideo.tsx";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../app/store.ts";
 
 interface IEditTimestampForm extends IErrorFieldValues {
 	time: string
@@ -45,7 +46,7 @@ function validateTimestamp(value: string): string | null {
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ className, videoID, timestamp, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
-	const activeVideoID = useActiveVideoID();
+	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
 	const onSave = useCallback((data: IEditTimestampForm) => {
 		let inputTime: number = getSecondsFromTimestamp(data.time);
 

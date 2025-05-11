@@ -8,7 +8,7 @@ export const videoSyncStorageMiddleware = createListenerMiddleware();
 
 videoSyncStorageMiddleware.startListening({
 	predicate: (action) => {
-		if (action.type == videoActions.updateVideoSliceFromStorage.type) {
+		if ([videoActions.updateVideoSliceFromStorage.type, videoActions.changeActiveVideoID.type].includes(action.type)) {
 			return false;
 		}
 

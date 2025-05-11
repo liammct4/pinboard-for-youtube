@@ -23,7 +23,6 @@ import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
-import { useActiveVideoID } from "../../components/features/activeVideo/useActiveVideo.tsx";
 import "./../../styling/dialog.css"
 import "./VideosPage.css"
 import { videoActions } from "../../features/video/videoSlice.ts";
@@ -49,7 +48,7 @@ export function VideosPage(): React.ReactNode {
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
-	const activeVideoID = useActiveVideoID();
+	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
 	const videos = useSelector((state: RootState) => state.video.videos);
 	const { retrieveInfo } = useVideoCache();
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
@@ -86,22 +85,16 @@ export function VideosPage(): React.ReactNode {
 	});
 	
 	const onSaveActiveVideo = async () => {
-		const activeVideo = await getActiveVideoInfo();
-
-		if (activeVideo == null) {
+		if (activeVideoID == undefined) {
 			return;
 		}
 
-		if (videos[activeVideo.id] == undefined) {
-			return;
-		}
+		let info = await retrieveInfo(activeVideoID) as IYoutubeVideoInfo;
 
-		let info = await retrieveInfo(activeVideo.id) as IYoutubeVideoInfo;
-
-		dispatch(videoActions.addVideo({ id: activeVideo.id, timestamps: [] }));
+		dispatch(videoActions.addVideo({ id: activeVideoID, timestamps: [] }));
 		dispatch(directoryActions.createVideoNode({
 			parentPath: directoryPath,
-			videoID: activeVideo.id,
+			videoID: activeVideoID,
 			videoData: [ ...videoCache, info ]
 		}));
 	};

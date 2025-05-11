@@ -26,7 +26,6 @@ import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 import { directoryActions } from "./features/directory/directorySlice.ts"
-import { parsePath } from "./lib/directory/path.ts"
 import { videoActions } from "./features/video/videoSlice.ts"
 
 checkAndImplementLocalStorage();
@@ -38,7 +37,6 @@ async function setupState() {
 	syncStoreToStorage();
 
 	let activeID: string | undefined = undefined;
-	let storage: IStorage = await accessStorage();
 
 	if (chrome.extension != null) {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -61,6 +59,8 @@ async function setupState() {
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
 	}
+
+	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>

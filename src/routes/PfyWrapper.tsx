@@ -6,7 +6,6 @@ import { RequestHandlerWrapper } from "../components/features/requestHandler/Req
 import { StyleContextWrapper } from "../components/features/styleContext/StyleContextWrapper.tsx";
 import "./PfyWrapper.css"
 import "./HomePage.css"
-import { ActiveVideoWrapper } from "../components/features/activeVideo/useActiveVideo.tsx";
 
 export function PfyWrapper(): React.ReactNode {
 	return (
@@ -15,9 +14,7 @@ export function PfyWrapper(): React.ReactNode {
 				<EventWrapper>
 					<NotificationWrapper>
 						<RequestHandlerWrapper>
-							<ActiveVideoWrapper>
-								<Outlet/>
-							</ActiveVideoWrapper>
+							<Outlet/>
 						</RequestHandlerWrapper>
 					</NotificationWrapper>
 				</EventWrapper>
