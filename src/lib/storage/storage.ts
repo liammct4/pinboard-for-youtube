@@ -19,7 +19,7 @@ export interface IMutationQueues {
 	directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
 }
 
-export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION";
+export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION" | "DEVMODE";
 
 export interface IMetaStorage {
 	meta: {
@@ -56,6 +56,19 @@ let rootNode: IDirectoryNode = {
 	slice: "$",
 	nodeID: createNode(),
 	subNodes: []
+}
+
+const EXTENSION_URL_REGEX = /\w*-extension:(\\\\|\/\/)[\w\-]+/;
+
+export function getApplicationContextType(): StorageAuthorSources {
+	if (EXTENSION_URL_REGEX.test(window.location.href)) {
+		return "EXTENSION";
+	}
+	else if (window.location.href.startsWith("http://localhost:")) {
+		return "DEVMODE";
+	}
+
+	return "CONTENT_SCRIPT";
 }
 
 export const BLANK_STORAGE_TEMPLATE: IStorage = {
@@ -103,7 +116,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		videos: [],
 	},
 	meta: {
-		author: "EXTENSION"
+		author: getApplicationContextType()
 	}
 };
 
@@ -128,16 +141,6 @@ export async function accessStorage(): Promise<IStorage> {
 	let storage = await chrome.storage.local.get() as IStorage;
 
 	return storage;
-}
-
-const EXTENSION_URL_REGEX = /\w*-extension:(\\\\|\/\/)[\w\-]+/;
-
-export function getApplicationContextType(): StorageAuthorSources {
-	if (EXTENSION_URL_REGEX.test(window.location.href)) {
-		return "EXTENSION";
-	}
-
-	return "CONTENT_SCRIPT";
 }
 
 export async function modifyStorage(modifier: (s: IStorage) => void): Promise<void> {

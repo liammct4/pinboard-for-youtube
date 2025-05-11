@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { accessStorage, ensureInitialized, IStorage } from "./lib/storage/storage.ts"
+import { accessStorage, ensureInitialized, getApplicationContextType, IStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
@@ -20,7 +20,6 @@ import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { IVideo } from "./lib/video/video.ts"
 import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
@@ -34,11 +33,14 @@ async function setupState() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
 
-	syncStoreToStorage();
+	await syncStoreToStorage();
 
-	let activeID: string | undefined = undefined;
+	let activeID: string = "xcJtL7QggTI";
+	let environment = getApplicationContextType();
 
-	if (chrome.extension != null) {
+	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
+
+	if (environment == "EXTENSION") {
 		let currentUrl: string | undefined = await getActiveTabURL();
 
 		if (currentUrl != undefined && doesVideoExist(currentUrl)) {
@@ -48,19 +50,16 @@ async function setupState() {
 			} catch { }
 		}
 	}
-	else {
-		activeID = "xcJtL7QggTI";
-		
+
+	if (environment == "DEVMODE") {
 		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
 		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
-
+		
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "test" }));
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "random" }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
 	}
-
-	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>

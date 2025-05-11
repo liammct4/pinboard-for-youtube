@@ -1,4 +1,4 @@
-import { accessStorage, getApplicationContextType, modifyStorage } from "../lib/storage/storage";
+import { accessStorage, getApplicationContextType, IStorage, modifyStorage } from "../lib/storage/storage";
 import { authActions } from "../features/auth/authSlice";
 import { RootState, store } from "./store";
 import { tempStateActions } from "../features/state/tempStateSlice";
@@ -23,7 +23,7 @@ export async function syncStoreToStorage() {
 
 export function setupStorageAndStoreSync() {
 	chrome.storage.local.onChanged.addListener(async () => {	
-		let storage = await chrome.storage.local.get();
+		let storage = await chrome.storage.local.get() as IStorage;
 
 		if (getApplicationContextType() == storage.meta.author) {
 			return;
