@@ -28,13 +28,6 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 	videosRef.current = videos;
 
-	let video = videos[node.videoID];
-	
-	if (video == undefined) {
-		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
-		return <p>ERROR</p>;
-	}
-	
 	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
 		let copyVideo = videosRef.current[node.videoID] as IVideo;
 		let newVideo: IVideo = { ...copyVideo, timestamps: [ ...copyVideo.timestamps ] };
@@ -69,20 +62,27 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	};
 
 	const setTimestamps = (timestamps: Timestamp[]) => {
-		let newVideo = { ...video, timestamps: timestamps };
+		let copyVideo = videosRef.current[node.videoID] as IVideo;
+		let newVideo = { ...copyVideo, timestamps: timestamps };
 
 		dispatch(videoActions.addOrReplaceVideo(newVideo));
 	};
 
 	const onExpanded = (expanded: boolean) => {
 		if (expanded) {
-			dispatch(tempStateActions.addExpandedID(video.id));
+			dispatch(tempStateActions.addExpandedID(node.videoID));
 			return;
 		}
 
-		dispatch(tempStateActions.removeExpandedID(video.id));
+		dispatch(tempStateActions.removeExpandedID(node.videoID));
 	}
 
+	let video = videos[node.videoID];
+	
+	if (video == undefined) {
+		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
+		return <p>ERROR</p>;
+	}
 
 	return (
 		<div onMouseDown={(e) => {
