@@ -155,9 +155,9 @@ export function VideosPage(): React.ReactNode {
 			<div className="video-page-inner scrollbar-big" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
 				<TwoToggleLayoutExpander
 					expanded={layoutState.isCurrentVideosSectionExpanded}
-					onExpandedEvent={(_value: boolean) => {
-						// TODO: dispatch(setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }));
-					}}
+					onExpandedEvent={(value: boolean) =>
+						dispatch(tempStateActions.setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }))
+					}
 					openButtonContent={<IconContainer asset={OpenLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 					closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 					openTooltip="Show current video controls and saved timestamps."
