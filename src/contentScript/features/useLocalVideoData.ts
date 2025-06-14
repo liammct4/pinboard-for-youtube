@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePageLink } from "./usePageLink";
+import { areObjectsEqual } from "../../lib/util/objects/objects";
 
 export let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
 
@@ -47,12 +48,16 @@ export function useLocalVideoData(): VideoExists | VideoDoesntExist {
 		const check = () => {
 			let result = recalculateVideoData(window.location.href);
 
-			setVideoResult(result);
-			setTimeout(check, 100);
+			if (!areObjectsEqual(result, videoResult)) {
+				setVideoResult(result);
+			}
+			else {
+				setTimeout(check, 100);
+			}
 		}
 
 		check();
-	}, []);
+	}, [videoResult]);
 
 	return videoResult;
 }
