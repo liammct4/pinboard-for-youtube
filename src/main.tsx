@@ -29,16 +29,14 @@ import { videoActions } from "./features/video/videoSlice.ts"
 
 checkAndImplementLocalStorage();
 
-async function setupState() {
+async function initializeExtension() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
-
+	
 	await syncStoreToStorage();
 
-	let activeID: string = "xcJtL7QggTI";
+	let activeID: string | undefined;
 	let environment = getApplicationContextType();
-
-	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
 	if (environment == "EXTENSION") {
 		let currentUrl: string | undefined = await getActiveTabURL();
@@ -50,8 +48,9 @@ async function setupState() {
 			} catch { }
 		}
 	}
+	else if (environment == "DEVMODE") {
+		activeID = "xcJtL7QggTI";
 
-	if (environment == "DEVMODE") {
 		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
 		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
 		
@@ -60,6 +59,8 @@ async function setupState() {
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
 		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
 	}
+
+	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
@@ -89,4 +90,4 @@ async function setupState() {
 	);
 }
 
-await setupState();
+await initializeExtension();

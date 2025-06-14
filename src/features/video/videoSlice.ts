@@ -4,14 +4,14 @@ import { IVideo } from "../../lib/video/video";
 import { sampleVideoData } from "../../../testData/testDataSet";
 
 export interface IVideoSlice {
-	activeVideoID: string;
+	activeVideoID: string | undefined;
 	videos: {
 		[videoID: string]: IVideo | undefined
 	};
 }
 
 const initialState: IVideoSlice = {
-	activeVideoID: sampleVideoData[0].id,
+	activeVideoID: undefined,
 	videos: {}
 }
 
