@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGenericErrorMessage, useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
-import { FormField } from "../../../../../../components/forms/FormField/FormField";
-import { IErrorFieldValues, useValidatedForm } from "../../../../../../components/forms/validated-form";
 import { FormStyleContext } from "../../../../../../components/input/formStyleContext";
 import { confirmResetPassword, startResetPassword } from "../../../../../../lib/user/accounts";
-import { IUserDetailsForm } from "../../UserDetailsForm/UserDetailsFormPage";
-import { UserDetailsFormPrimitive } from "../../UserDetailsForm/UserDetailsFormPrimitive";
+import { UserDetailsForm, UserDetailsFormPrimitive } from "../../UserDetailsForm/UserDetailsFormPrimitive";
 import { HttpResponse } from "../../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../../lib/util/http";
 import { endResetPasswordPersistentState, setResetPasswordPersistentState, startResetPasswordPersistentState } from "../../../../../../lib/storage/persistentState/resetPassword";
-import { TextInputContext } from "../../../../../../components/input/TextInput/TextInput";
+import { TextInput } from "../../../../../../components/input/TextInput/TextInput";
 import "./ForgotPassword.css"
 import { getItemFromStorage } from "../../../../../../lib/storage/storage";
+import { ValidatedForm } from "../../../../../../components/forms/ValidatedForm";
 
-interface IResetPasswordForm extends IErrorFieldValues {
+type ResetPasswordFormField = "verificationCode" | "newPassword" | "reenterNewPassword";
+type ResetPasswordForm = {
 	verificationCode: string;
 	newPassword: string;
 	reenterNewPassword: string;
@@ -24,7 +23,7 @@ function useEmailSubmit() {
 	const { activateMessage } = useNotificationMessage();
 	const { activateError } = useGenericErrorMessage();
 
-	const onEmailSubmit = async (value: IUserDetailsForm) => {
+	const onEmailSubmit = async (value: UserDetailsForm) => {
 		activateMessage(undefined, "Sending a link...", "Info", "Info", -1);
 
 		let response: HttpResponse | undefined = await startResetPassword(value.email);
@@ -64,7 +63,7 @@ function useCodePasswordSubmit() {
 	const { activateMessage } = useNotificationMessage();
 	const navigate = useNavigate();
 
-	const onCodePasswordSubmit = async (value: IResetPasswordForm) => {
+	const onCodePasswordSubmit = async (value: ResetPasswordForm) => {
 		let state = await getItemFromStorage(s => s.persistentState.resetPasswordState);
 
 		if (state == undefined) {
@@ -99,11 +98,6 @@ export function ForgotPassword(): React.ReactNode {
 	const [ newPasswordFormVisible, setNewPasswordVisible ] = useState<boolean>(false);
 	const { onEmailSubmit } = useEmailSubmit();
 	const { onCodePasswordSubmit } = useCodePasswordSubmit();
-	const enterEmailAddressForm = useValidatedForm<IUserDetailsForm>((data: IUserDetailsForm) => {
-		setNewPasswordVisible(true);
-		onEmailSubmit(data);
-	});
-	const enterCodePasswordForm = useValidatedForm<IResetPasswordForm>(onCodePasswordSubmit);
 
 	// Use effects are needed because async functions cannot be used directly in component level.
 	useEffect(() => {
@@ -122,12 +116,15 @@ export function ForgotPassword(): React.ReactNode {
 
 				<i>Don't worry, you can close the extension and open your email. You can also send multiple codes.</i>
 			</p>
-			<form onSubmit={enterEmailAddressForm.handleSubmit(enterEmailAddressForm.handler)} id="reset-password-email-form">
+			<ValidatedForm
+				name="reset-password-email-form"
+				onSuccess={(data: UserDetailsForm) => {
+					setNewPasswordVisible(true);
+					onEmailSubmit(data);
+				}}>
 				<UserDetailsFormPrimitive
-					submit={enterEmailAddressForm.submit.current}
-					register={enterEmailAddressForm.register}
 					showPassword={false}/>
-			</form>
+			</ValidatedForm>
 			<input
 				form="reset-password-email-form"
 				type="submit"
@@ -136,44 +133,35 @@ export function ForgotPassword(): React.ReactNode {
 			{newPasswordFormVisible ?
 				<>
 					<h2 className="verification-text">Please enter the code sent to your email address:</h2>
-					<form
+					<ValidatedForm<ResetPasswordForm, ResetPasswordFormField>
 						className="reset-password-form"
-						id="reset-password-form"
-						onSubmit={enterCodePasswordForm.handleSubmit(enterCodePasswordForm.handler)}>
+						name="reset-password-form"
+						onSuccess={(data) => onCodePasswordSubmit(data)}>
 							<FormStyleContext.Provider value={{ labelSize: "large" }}>
-								<FormField<IResetPasswordForm>
+								<TextInput<ResetPasswordFormField>
 									label="Verification Code"
 									name="verificationCode"
-									register={enterCodePasswordForm.register}
-									selector={(data: IResetPasswordForm) => data.verificationCode}
 									fieldSize="small"
-									submitEvent={enterCodePasswordForm.submit.current}
-									validationMethod={() => null}/>
-								<TextInputContext.Provider value={{ textInputType: "password" }}>
-									<FormField<IResetPasswordForm>
-										label="New Password"
-										name="newPassword"
-										register={enterCodePasswordForm.register}
-										selector={(data: IResetPasswordForm) => data.verificationCode}
-										fieldSize="medium"
-										submitEvent={enterCodePasswordForm.submit.current}
-										validationMethod={() => null}/>
-									<FormField<IResetPasswordForm>
-										label="Re-enter Password"
-										name="reenterNewPassword"
-										register={enterCodePasswordForm.register}
-										selector={(data: IResetPasswordForm) => data.verificationCode}
-										fieldSize="medium"
-										submitEvent={enterCodePasswordForm.submit.current}
-										validationMethod={() => null}/>
-								</TextInputContext.Provider>
+									startValue=""/>
+								<TextInput<ResetPasswordFormField>
+									label="New Password"
+									name="newPassword"
+									fieldSize="medium"
+									startValue=""
+									textInputType="password"/>
+								<TextInput<ResetPasswordFormField>
+									label="Re-enter Password"
+									name="reenterNewPassword"
+									fieldSize="medium"
+									startValue=""
+									textInputType="password"/>
 								<input
 									form="reset-password-form"
 									type="submit"
 									className="reset-button button-medium button-base"
 									value="Reset Password"/>
 							</FormStyleContext.Provider>
-					</form>
+					</ValidatedForm>
 				</>
 			: <></>}
 		</div>

@@ -6,40 +6,43 @@ export interface IAppTheme extends IKeyIDItem {
 	modifiable: boolean;
 }
 
+export type ColourPaletteColours = 
+	"primary-common" |
+	"primary-faded" |
+	"primary-dark" |
+	"primary-ultradark" |
+	"empty-01-normal" |
+	"empty-01-raised" |
+	"empty-01-depth" |
+	"empty-01-shadow" |
+	"empty-02-normal" |
+	"empty-02-raised" |
+	"empty-02-depth" |
+	"empty-02-shadow" |
+	"text-strong" |
+	"text-normal" |
+	"text-light" |
+	"text-lighter" |
+	"field-background" |
+	"field-content" |
+	"shade-01" |
+	"shade-02" |
+	"shade-03" |
+	"shade-04" |
+	"shade-05" |
+	"shade-06" |
+	"shade-dark-01" |
+	"shade-dark-02" |
+	"shade-dark-03" |
+	"shade-light-01" |
+	"shade-light-02" |
+	"shade-light-03" |
+	"content-shade-standard" |
+	"content-shade-faded" |
+	"content-link" |
+	"content-link-visited" |
+	"selection-primary"
+
 export type ColourPalette = {
-	"primary-common": string;
-	"primary-faded": string;
-	"primary-dark": string;
-	"primary-ultradark": string;
-	"empty-01-normal": string;
-	"empty-01-raised": string;
-	"empty-01-depth": string;
-	"empty-01-shadow": string;
-	"empty-02-normal": string;
-	"empty-02-raised": string;
-	"empty-02-depth": string;
-	"empty-02-shadow": string;
-	"text-strong": string;
-	"text-normal": string;
-	"text-light": string;
-	"text-lighter": string;
-	"field-background": string;
-	"field-content": string;
-	"shade-01": string;
-	"shade-02": string;
-	"shade-03": string;
-	"shade-04": string;
-	"shade-05": string;
-	"shade-06": string;
-	"shade-dark-01": string;
-	"shade-dark-02": string;
-	"shade-dark-03": string;
-	"shade-light-01": string;
-	"shade-light-02": string;
-	"shade-light-03": string;
-	"content-shade-standard": string;
-	"content-shade-faded": string;
-	"content-link": string;
-	"content-link-visited": string;
-	"selection-primary": string;
+	[name in ColourPaletteColours]: string;
 };

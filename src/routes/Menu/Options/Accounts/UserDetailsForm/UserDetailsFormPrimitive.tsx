@@ -1,53 +1,72 @@
-import { UseFormRegister } from "react-hook-form";
-import { FormField } from "../../../../../components/forms/FormField/FormField";
-import { TextInputContext } from "../../../../../components/input/TextInput/TextInput";
+import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { IUserDetailsForm } from "./UserDetailsFormPage";
-import { MultiEvent } from "../../../../../lib/events/Event";
 import { validatePasswordInputField } from "../../../../../lib/user/password";
+import { FormField } from "../../../../../components/forms/ValidatedForm";
 
 export interface IUserDetailsFormPrimitiveProperties {
-	register: UseFormRegister<IUserDetailsForm>
-	submit: MultiEvent<IUserDetailsForm>,
 	showEmail?: boolean;
 	showPassword?: boolean;
 }
 
-export function UserDetailsFormPrimitive({ register, submit, showEmail = true, showPassword = true }: IUserDetailsFormPrimitiveProperties): React.ReactNode {
-	const emailValidationActive = (value: string) => {
-		if (!value.includes("@")) {
-			return "That email address is not valid.";
-		}
+export type UserDetailsFormField = "email" | "password";
+export type UserDetailsForm = {
+	email: string;
+	password: string;
+}
 
-		return null;
-	}
-
+export function UserDetailsFormPrimitive({ showEmail = true, showPassword = true }: IUserDetailsFormPrimitiveProperties): React.ReactNode {
+	showEmail ?? showPassword;
+	
 	return (
 		<FormStyleContext.Provider value={{ labelSize: "medium" }}>
-			<FormField<IUserDetailsForm>
+			<TextInput<UserDetailsFormField>
 				label="Email address"
 				name="email"
-				register={register}
-				selector={(data: IUserDetailsForm) => data.email}
-				inputType="Text"
-				submitEvent={submit}
 				fieldSize="large"
-				// The email field does not need to be validated if not shown.
-				validationMethod={showEmail ? emailValidationActive : () => null}
-				defaultValue=""
-				visible={showEmail}/>
-			<TextInputContext.Provider value={{ textInputType: "password" }}>
-				<FormField<IUserDetailsForm>
-					label="Password"
-					name="password"
-					register={register}
-					selector={(data: IUserDetailsForm) => data.password}
-					inputType="Text"
-					submitEvent={submit}
-					fieldSize="large"
-					validationMethod={showPassword ? validatePasswordInputField : () => null}
-					visible={showPassword}/>
-			</TextInputContext.Provider>
+				startValue=""/>
+			<TextInput<UserDetailsFormField>
+				label="Password"
+				name="password"
+				fieldSize="large"
+				startValue=""
+				textInputType="password"/>
 		</FormStyleContext.Provider>
 	)
 }
+
+export const userDetailsFieldData: FormField<UserDetailsFormField>[] = [
+	{
+		name: "email",
+		validator: (value: string) => {
+			if (!value.includes("@")) {
+				return {
+					error: true,
+					details: {
+						name: "email",
+						message: "That email address is not valid."
+					}
+				}
+			}
+	
+			return { error: false };
+		}
+	},
+	{
+		name: "password",
+		validator: (value: string) => {
+			let result = validatePasswordInputField(value);
+
+			if (result == null) {
+				return { error: false };
+			}
+
+			return {
+				error: true,
+				details: {
+					name: "password",
+					message: result
+				}
+			}
+		}
+	}
+]

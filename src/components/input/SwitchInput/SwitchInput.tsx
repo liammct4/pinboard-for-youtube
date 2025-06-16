@@ -1,6 +1,5 @@
 import * as Switch from "@radix-ui/react-switch"
 import { FormStyleContext, SizeOption } from "../formStyleContext";
-import { FieldValues } from "react-hook-form";
 import { IInputComponentProperties } from "../inputComponent";
 import { useContext } from "react";
 import "./SwitchInput.css"
@@ -36,9 +35,8 @@ export function SwitchInputPrimitive({ label, labelSize, reversed = false, switc
  BUG: Radix UI doesn't load "defaultValue" correctly, so the result will be undefined IF it wasn't toggled.
  Means that you should use the "defaultValue" as the actual value whenever the submitted form value is undefined.
 */
-export function SwitchInput<T extends FieldValues>({ label, name, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
+export function SwitchInput<TField extends string>({ label, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
-	const { onChange } = register(name, registerOptions ?? { });
 
 	return (
 		<div className="field-row switch-container" data-size={labelSize}>
@@ -46,9 +44,9 @@ export function SwitchInput<T extends FieldValues>({ label, name, register, regi
 			{/* Doesn't work with RHF properly */}
 			<Switch.Root
 				className="field-input small-text-input switch-root"
+				name={name}
 				defaultChecked={startValue == "true"}
-				defaultValue={startValue}
-				onCheckedChange={(value: boolean) => onChange({ target: { name, value } })}>
+				defaultValue={startValue}>
 				<Switch.Thumb className="switch-thumb"/>
 			</Switch.Root>
 		</div>

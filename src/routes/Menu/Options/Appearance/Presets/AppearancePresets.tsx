@@ -2,17 +2,16 @@ import { useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import { store } from "../../../../../app/store";
 import { ThemeContext } from "../../../../../context/theme";
-import { DropdownOptionsContext } from "../../../../../components/input/DropdownInput/context";
-import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
 import { Reorder } from "framer-motion";
-import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearancePresets.css"
+import { TextInput } from "../../../../../components/input/TextInput/TextInput";
+import { DropdownInput } from "../../../../../components/input/DropdownInput/DropdownInput";
 
 interface IThemePresetProperties {
 	theme: IAppTheme;
@@ -54,14 +53,15 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 	);
 }
 
-export interface IAddCustomThemeForm extends IErrorFieldValues {
+type AddCustomThemeFormField = "customName" | "basedOn";
+type AddCustomThemeForm = {
 	customName: string;
 	basedOn: string;
 }
 
 export function AppearancePresets(): React.ReactNode {
 	const { themes, customThemes, actions: { addCustomTheme, setCustomThemes } } = useContext(ThemeContext);
-	const onSubmitCustom = (form: IAddCustomThemeForm) => {
+	const onSubmitCustom = (form: AddCustomThemeForm) => {
 		let allThemes = [ ...store.getState().theme.themePresets, ...store.getState().theme.customThemes ];
 		let palette: ColourPalette = allThemes
 			.find(x => x.name == form.basedOn)?.palette
@@ -76,7 +76,6 @@ export function AppearancePresets(): React.ReactNode {
 		
 		addCustomTheme(newTheme);
 	}
-	let { register, handleSubmit, handler, submit } = useValidatedForm<IAddCustomThemeForm>(onSubmitCustom);
 	const onReorder = (newCustomThemes: IAppTheme[]) => {
 		setCustomThemes(newCustomThemes);
 	};
@@ -89,53 +88,53 @@ export function AppearancePresets(): React.ReactNode {
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>
 			<div className="custom-theme-controls">
-				<FormDialog
-					formID="add-custom-theme-form"
-					formTitle="Add Custom Theme"
+				<FormDialog<AddCustomThemeForm, AddCustomThemeFormField>
+					name="add-custom-theme-form"
+					title="Add Custom Theme"
 					description={<>Choose a name for your custom theme. This <b>Cannot</b> already exist or be a default theme.</>}
 					trigger={<button className="button-base button-small">New theme</button>}
 					labelSize="medium"
 					submitText="Add"
-					handleSubmit={handleSubmit(handler)}>
-						{/* TODO: Refactor submitEvent and register into context. */}
-						<FormField<IAddCustomThemeForm>
-							label="Theme name"
-							name="customName"
-							register={register}
-							selector={(value: IAddCustomThemeForm) => value.customName}
-							fieldSize="medium"
-							defaultValue="My Theme"
-							inputType="Text"
-							submitEvent={submit.current}
-							validationMethod={(data: string) => {
+					fieldData={[
+						{
+							name: "customName",
+							validator: (data: string) => {
 								let allThemes = [
 									...store.getState().theme.themePresets,
 									...store.getState().theme.customThemes	
 								];
 
 								if (allThemes.findIndex(x => x.name == data) != -1) {
-									return "A theme already exists with that name.";
+									return {
+										error: true,
+										details: {
+											name: "customName",
+											message: "A theme already exists with that name."
+										}
+									}
 								}
 
-								return null;
-							}}
-							/>
-						<DropdownOptionsContext.Provider value={{ options: [
-							"None",
-							...themes.map(x => x.name),
-							...customThemes.map(x => x.name)
-						]}}>
-							<FormField<IAddCustomThemeForm>
-								label="Based on"
-								name="basedOn"
-								register={register}
-								selector={(value: IAddCustomThemeForm) => value.customName}
-								defaultValue="None"
-								fieldSize="small"
-								inputType="Dropdown"
-								submitEvent={submit.current}
-								/>
-						</DropdownOptionsContext.Provider>
+
+								return { error: false };
+							}
+						}
+					]}
+					onSuccess={onSubmitCustom}>
+						<TextInput<AddCustomThemeFormField>
+							label="Theme name"
+							name="customName"
+							fieldSize="medium"
+							startValue="My Theme"/>
+						<DropdownInput<AddCustomThemeFormField>
+							label="Based on"
+							name="basedOn"
+							startValue="None"
+							fieldSize="small"
+							options={[
+								"None",
+								...themes.map(x => x.name),
+								...customThemes.map(x => x.name)
+							]}/>
 				</FormDialog>
 				<ActionMessageDialog
 					body="Are you sure you want to clear all custom themes? This cannot be undone."

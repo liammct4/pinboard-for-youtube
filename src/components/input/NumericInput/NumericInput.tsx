@@ -1,10 +1,9 @@
 import { useContext } from "react";
-import { FieldValues } from "react-hook-form";
 import { IInputComponentProperties } from "../inputComponent";
 import { FormStyleContext } from "../formStyleContext";
 import "./../Input.css"
 
-export function NumericInput<T extends FieldValues>({ label, fieldSize, name, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
+export function NumericInput<TField extends string>({ label, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
@@ -12,10 +11,10 @@ export function NumericInput<T extends FieldValues>({ label, fieldSize, name, re
 			<label className="label" data-size={labelSize}>{label}</label>
 			<input
 				type="number"
+				name={name}
 				className="small-text-input field-input"
 				data-size={fieldSize}
-				defaultValue={startValue}
-				{...register(name, registerOptions ?? {})}/>
+				defaultValue={startValue}/>
 		</div>
 	);
 }

@@ -4,16 +4,17 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { ThemeContext } from "../../../../../context/theme";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { IAppTheme, ColourPalette } from "../../../../../lib/config/theming/appTheme";
-import { FormField } from "../../../../../components/forms/FormField/FormField";
+import { IAppTheme, ColourPalette, ColourPaletteColours } from "../../../../../lib/config/theming/appTheme";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
-import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import ArrowIcon from "./../../../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";
 import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDialogMessage";
 import "./AppearanceCustom.css"
+import { ValidatedForm } from "../../../../../components/forms/ValidatedForm";
+import { TextInput } from "../../../../../components/input/TextInput/TextInput";
+import { ColourInput } from "../../../../../components/input/ColourInput/ColourInput";
 
-interface IEditThemeForm extends ColourPalette, IErrorFieldValues {
+interface IEditThemeForm extends ColourPalette {
 	name: string;
 }
 
@@ -52,7 +53,6 @@ export function AppearanceCustom(): React.ReactNode {
 		navigate(`../custom/${name}`);
 		setUpdateVisible(true);
 	}, []);
-	const { register, handleSubmit, handler, submit } = useValidatedForm<IEditThemeForm>(handlerBase);
 	// For the confirmation message when the "Save changes" button is pressed. 
 	const [ updateVisible, setUpdateVisible ] = useState<boolean>(false);
 	useEffect(() => {
@@ -79,7 +79,7 @@ export function AppearanceCustom(): React.ReactNode {
 							}
 
 							if (action == "Yes") {
-								handleSubmit(handler)();
+								// TODO: handleSubmit(handler)();
 							}
 
 							setTimeout(() => navigate(".."), 10);
@@ -94,42 +94,46 @@ export function AppearanceCustom(): React.ReactNode {
 					<h3 className="theme-title">{editingTheme.name}</h3>
 				</div>
 				<hr className="bold-separator"/>
-				<form className="edit-theme-form" id={`edit-custom-theme-form`} onSubmit={handleSubmit(handler)}>
+				<ValidatedForm
+					className="edit-theme-form"
+					name="edit-custom-theme-form"
+					fieldData={[
+						{
+							name: "name",
+							validator: (value: string) => {
+								if ([ ...customThemes, ...themes ].find(x => x.name == value) != undefined && editingTheme.name != value) {
+									return {
+										error: true,
+										details: {
+											name: "name",
+											message: `Theme with the name ${value} already exists. Please choose a different name.`
+										}
+									}
+								}
+
+								return { error: false };
+							}
+						}
+					]}
+					onSuccess={handlerBase}>
 					<FormStyleContext.Provider value={{ labelSize: "large" }}>
-						<FormField<IEditThemeForm>
+						<TextInput
 							name="name"
 							label="Theme name"
 							fieldSize="medium"
-							register={register}
-							submitEvent={submit.current}
-							selector={(data: IEditThemeForm) => data.name}
-							inputType="Text"
-							// @ts-ignore
-							defaultValue={editingTheme.name}
-							validationMethod={(value: string) => {
-								if ([ ...customThemes, ...themes ].find(x => x.name == value) != undefined && editingTheme.name != value) {
-									return `Theme with the name ${value} already exists. Please choose a different name.`
-								}
-
-								return null;
-							}}
+							startValue={editingTheme.name}
 							/>
 						{Object.keys(editingTheme.palette).map(x => 
-							<FormField<IEditThemeForm>
+							<ColourInput<ColourPaletteColours>
 								key={x}
-								name={x}
+								name={x as ColourPaletteColours}
 								label={toTitleCase(x.replace(/\-/g, " "))}
 								fieldSize="max"
-								register={register}
-								submitEvent={submit.current}
-								selector={(data: IEditThemeForm) => data[x]}
-								inputType="Colour"
-								// @ts-ignore
-								defaultValue={editingTheme.palette[x]}
+								startValue={editingTheme.palette[x as ColourPaletteColours]}
 								/>
 						)}
 					</FormStyleContext.Provider>
-				</form>
+				</ValidatedForm>
 				<div className="save-changes-bar">
 					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form"/>
 					{updateVisible ? <span className="confirmation-text">Changes Saved!</span> : <></>}

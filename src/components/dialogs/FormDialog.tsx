@@ -2,16 +2,14 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { DialogBox } from "./DialogBox";
 import { FormStyleContext, SizeOption } from "../input/formStyleContext";
 import "./FormDialog.css"
+import { IValidatedFormProperties, ValidatedForm } from "../forms/ValidatedForm";
 
-export interface IFormDialogProperties {
-	formID: string;
-	formTitle: string;
+export interface IFormDialogProperties<TForm, TField extends string> extends IValidatedFormProperties<TForm, TField> {
+	title: string;
 	submitText: string;
 	labelSize: SizeOption;
 	description?: React.ReactNode;
 	trigger: React.ReactNode;
-	children: React.ReactNode
-	handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
 /**
@@ -23,33 +21,41 @@ export interface IFormDialogProperties {
  * @param trigger A JSX snippet containing a button, when pressed, the dialog will open.
  * @param handleSubmit Handler which is triggered when the form is submitted.
  */
-export function FormDialog({
-		formID,
-		formTitle,
+export function FormDialog<TForm, TField extends string>({
+		name,
+		title,
+		fieldData,
+		onSuccess,
+		onError,
 		submitText,
 		description,
 		labelSize,
 		trigger,
-		handleSubmit,
 		children
-	}: IFormDialogProperties): React.ReactNode {
+	}: IFormDialogProperties<TForm, TField>): React.ReactNode {
 
 	return (
 		<DialogBox
-			title={formTitle}
+			title={title}
 			trigger={trigger}
 			description={description}
 			footer={
 				<>
-					<input type="submit" value={submitText} form={formID} className="button-base button-small"></input>
+					<input type="submit" value={submitText} form={name} className="button-base button-small"/>
 					<Dialog.Close className="button-base button-small">Close</Dialog.Close>
 				</>
 			}>
-			<form className="dialog-form" id={formID} onSubmit={handleSubmit}>
+			<ValidatedForm
+				className="dialog-form"
+				name={name}
+				fieldData={fieldData}
+				onSuccess={onSuccess}
+				onError={onError}
+			>
 				<FormStyleContext.Provider value={{ labelSize: labelSize }}>
 					{children}
 				</FormStyleContext.Provider>
-			</form>
+			</ValidatedForm>
 		</DialogBox>
 	);
 }

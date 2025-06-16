@@ -1,4 +1,3 @@
-import { FieldValues } from "react-hook-form";
 import { IInputComponentProperties } from "../inputComponent";
 import { useContext, useMemo, useState } from "react";
 import { FormStyleContext } from "../formStyleContext";
@@ -31,10 +30,9 @@ const matchingKeysFilter = new Map<string, string>([
 	[ "?", "/" ],
 ]);
 
-export function KeyInput<T extends FieldValues>({ label, fieldSize, name, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
+export function KeyInput<TField extends string>({ label, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	const [ keyInput, setKeyInput ] = useState<string>(startValue);
-	let { onChange, ref } = register(name, registerOptions ?? {});
 	const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		let pressed = [
 			event.ctrlKey ? "Ctrl" : null,
@@ -60,14 +58,11 @@ export function KeyInput<T extends FieldValues>({ label, fieldSize, name, regist
 			<label className="label" data-size={labelSize}>{label}</label>
 			<input
 				className="field-input small-text-input"
+				name={name}
 				type="text"
 				data-size={fieldSize}
 				value={keyInput}
-				onKeyDown={onKeyDown}
-				name={name}
-				ref={ref}
-				onChange={() => onChange({ target: { name: name, value: keyInput } })}
-				/>
+				onKeyDown={onKeyDown}/>
 		</div>
 	);
 }

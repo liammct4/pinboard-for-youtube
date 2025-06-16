@@ -1,12 +1,9 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useCallback, useContext } from "react"
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp } from "../../../../lib/video/video.ts";
-import { IErrorFieldValues, useValidatedForm } from "../../../forms/validated-form.ts";
-import { FormField } from "../../../forms/FormField/FormField.tsx";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
 import BinIcon from "./../../../../../assets/icons/bin.svg?react"
 import JumpVideoIcon from "./../../../../../assets/icons/jump_icon.svg?react"
@@ -15,8 +12,10 @@ import "src/styling/dialog.css"
 import "./VideoTimestamp.css"
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../app/store.ts";
+import { TextInput } from "../../../input/TextInput/TextInput.tsx";
 
-interface IEditTimestampForm extends IErrorFieldValues {
+type EditTimestampFormNames = "time" | "message";
+type EditTimestampForm = {
 	time: string
 	message: string
 }
@@ -47,12 +46,6 @@ function validateTimestamp(value: string): string | null {
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ className, videoID, timestamp, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
-	const onSave = useCallback((data: IEditTimestampForm) => {
-		let inputTime: number = getSecondsFromTimestamp(data.time);
-
-		onChange(timestamp, { ...timestamp, time: inputTime, message: data.message });
-	}, []);
-
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
 	}
@@ -60,7 +53,6 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 	const onJumpToTimestamp: () => void = () => {
 		setCurrentVideoTime(timestamp.time);
 	}
-	let { register, handleSubmit, handler, submit } = useValidatedForm<IEditTimestampForm>(onSave);
 
 	let isActiveId = activeVideoID == videoID;
 	let stringTime: string = getTimestampFromSeconds(timestamp.time);
@@ -86,29 +78,21 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 						</button>
 						{/* Edit dialog */}
 						<FormDialog
-							formID="edit-timestamp-form"
-							formTitle="Edit timestamp"
+							name="edit-timestamp-form"
+							title="Edit timestamp"
 							submitText="Save"
 							labelSize="small"
-							trigger={<button className="edit-button button-base button-small">Edit</button>}
-							handleSubmit={handleSubmit(handler)}>
-								{/* Time */}
-								<FormField<IEditTimestampForm> register={register} registerOptions={null}
+							trigger={<button className="edit-button button-base button-small">Edit</button>}>
+								<TextInput<EditTimestampFormNames>
 									label="Time:"
 									name="time"
 									fieldSize="small"
-									selector={(data) => data.time}
-									submitEvent={submit.current}
-									validationMethod={validateTimestamp}
-									defaultValue={stringTime}/>
-								{/* Message */}
-								<FormField<IEditTimestampForm> register={register} registerOptions={null}
+									startValue={stringTime}/>
+								<TextInput<EditTimestampFormNames>
 									label="Message:"
 									name="message"
 									fieldSize="large"
-									selector={(data) => data.message}
-									submitEvent={submit.current}
-									defaultValue={timestamp.message}/>
+									startValue={timestamp.message}/>
 						</FormDialog>
 					</>
 					:

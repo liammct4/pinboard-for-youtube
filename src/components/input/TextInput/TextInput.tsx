@@ -1,30 +1,24 @@
 import { HTMLInputTypeAttribute, createContext, useContext } from "react";
-import { FieldValues } from "react-hook-form";
 import { IInputComponentProperties } from "../inputComponent";
 import { FormStyleContext } from "../formStyleContext";
 import "./../Input.css"
 
-interface ITextInputContext {
-	textInputType: HTMLInputTypeAttribute;
+export interface ITextInputProperties<TField extends string> extends IInputComponentProperties<TField> {
+	textInputType?: HTMLInputTypeAttribute;
 }
 
-export function TextInput<T extends FieldValues>({ label, name, fieldSize, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
+export function TextInput<TField extends string>({ label, name, fieldSize, startValue, textInputType = "text" }: ITextInputProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
-	const { textInputType } = useContext<ITextInputContext>(TextInputContext);
 	
 	return (
 		<div className="field-row">
 			<label className="label" data-size={labelSize}>{label}</label>
 			<input
 				className="small-text-input field-input"
+				name={name}
 				data-size={fieldSize}
 				type={textInputType}
-				defaultValue={startValue}
-				{...register(name, registerOptions ?? {})}/>
+				defaultValue={startValue}/>
 		</div>
 	);
 }
-
-export const TextInputContext = createContext<ITextInputContext>({
-	textInputType: "text"
-});

@@ -1,28 +1,21 @@
 import { useOutletContext } from "react-router-dom";
-import { SubmitHandler } from "react-hook-form";
-import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
-import { UserDetailsFormPrimitive } from "./UserDetailsFormPrimitive";
-
-export interface IUserDetailsForm extends IErrorFieldValues {
-	email: string;
-	password: string;
-}
+import { UserDetailsForm, UserDetailsFormPrimitive } from "./UserDetailsFormPrimitive";
+import { ValidatedForm } from "../../../../../components/forms/ValidatedForm";
 
 export type UserDetailsFormContext = {
-	onSubmitted: SubmitHandler<IUserDetailsForm>;
+	onSubmitted: (data: UserDetailsForm) => void;
 	formName: string;
 	submitText: string;
 }
 
 export function UserDetailsFormPage() {
 	const { onSubmitted, formName, submitText } = useOutletContext<UserDetailsFormContext>();
-	const { register, handleSubmit, handler, submit } = useValidatedForm<IUserDetailsForm>(onSubmitted);
 
 	return (
 		<>
-			<form className={formName} id={formName} onSubmit={handleSubmit(handler)}>
-				<UserDetailsFormPrimitive register={register} submit={submit.current} show-email/>
-			</form>
+			<ValidatedForm className={formName} name={formName} onSuccess={onSubmitted}>
+				<UserDetailsFormPrimitive show-email/>
+			</ValidatedForm>
 			<input
 				className="button-base button-medium register-account-button"
 				type="submit"

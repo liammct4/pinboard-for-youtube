@@ -1,21 +1,21 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { IErrorFieldValues, useValidatedForm } from "../../../../../components/forms/validated-form";
 import { changeUserEmail, changeUserPassword, deleteUserAccount } from "../../../../../lib/user/accounts";
-import { UserDetailsFormPrimitive } from "../UserDetailsForm/UserDetailsFormPrimitive";
+import { userDetailsFieldData, UserDetailsForm, UserDetailsFormField, UserDetailsFormPrimitive } from "../UserDetailsForm/UserDetailsFormPrimitive";
 import { authActions } from "../../../../../features/auth/authSlice";
-import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { HttpStatusCode } from "../../../../../lib/util/http";
-import { FormField } from "../../../../../components/forms/FormField/FormField";
 import { validatePasswordInputField } from "../../../../../lib/user/password";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 import { useUserAccount } from "../../../../../components/features/useUserAccount";
 import "./AccountView.css"
+import { TextInput } from "../../../../../components/input/TextInput/TextInput";
+import { FormField, Validator, ValidatorResult } from "../../../../../components/forms/ValidatedForm";
 
-interface IUpdatePasswordForm extends IErrorFieldValues {
+type UpdatePasswordFormField = "previousPassword" | "newPassword" | "confirmNewPassword";
+type UpdatePasswordForm = {
 	previousPassword: string;
 	newPassword: string;
 	confirmNewPassword: string;
@@ -27,7 +27,7 @@ function useAccountDelete() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const onDeleteSubmit = (value: IUserDetailsForm) => {
+	const onDeleteSubmit = (value: UserDetailsForm) => {
 		activateMessage(undefined, "Deleting your account.", "Info", "Info", -1);
 
 		setTimeout(async () => {
@@ -66,7 +66,7 @@ function useEmailChange() {
 	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 
-	const onChangeEmailSubmit = (value: IUserDetailsForm) => {
+	const onChangeEmailSubmit = (value: UserDetailsForm) => {
 		activateMessage(undefined, "Updating your email address...", "Info", "Info", -1);
 		
 		setTimeout(async () => {
@@ -109,7 +109,7 @@ function usePasswordChange() {
 	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
 
-	const onChangePasswordSubmit = (value: IUpdatePasswordForm) => {
+	const onChangePasswordSubmit = (value: UpdatePasswordForm) => {
 		activateMessage(undefined, "Updating your password...", "Info", "Info", -1);
 		
 		setTimeout(async () => {
@@ -165,6 +165,37 @@ function usePasswordChange() {
 	return { onChangePasswordSubmit }
 }
 
+const passwordValidator = (data: string, field: UpdatePasswordFormField): ValidatorResult<UpdatePasswordFormField> => {
+	let result = validatePasswordInputField(data);
+
+	if (result == null) {
+		return { error: false };
+	}
+
+	return {
+		error: true,
+		details: {
+			name: field,
+			message: result
+		}
+	}
+}
+
+const updatePasswordForm: FormField<UpdatePasswordFormField>[] = [
+	{
+		name: "previousPassword",
+		validator: (data) => passwordValidator(data, "previousPassword")
+	},
+	{
+		name: "newPassword",
+		validator: (data) => passwordValidator(data, "newPassword")
+	},
+	{
+		name: "confirmNewPassword",
+		validator: (data) => passwordValidator(data, "confirmNewPassword")
+	}
+]
+
 export function AccountView(): React.ReactNode {
 	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
@@ -173,9 +204,6 @@ export function AccountView(): React.ReactNode {
 	const { onChangePasswordSubmit } = usePasswordChange();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const deleteForm = useValidatedForm<IUserDetailsForm>(onDeleteSubmit);
-	const changeEmailForm = useValidatedForm<IUserDetailsForm>(onChangeEmailSubmit);
-	const changePasswordForm = useValidatedForm<IUpdatePasswordForm>(onChangePasswordSubmit);
 
 	const onSignout = () => {
 		dispatch(authActions.logoutCurrentUser());
@@ -200,14 +228,14 @@ export function AccountView(): React.ReactNode {
 								<td className="account-field-name"><b>Email: </b></td>
 								<td className="account-field-value">{user?.email}</td>
 								<td>
-									<FormDialog
-										formID="change-email-form"
-										formTitle="Change Email Address"
+									<FormDialog<UserDetailsForm, UserDetailsFormField>
+										name="change-email-form"
+										title="Change Email Address"
 										submitText="Change email address"
 										labelSize="medium"
-										handleSubmit={changeEmailForm.handleSubmit(changeEmailForm.handler)}
+										fieldData={userDetailsFieldData}
 										trigger={<button className="button-small button-base">Change</button>}>
-											<UserDetailsFormPrimitive register={changeEmailForm.register} submit={changeEmailForm.submit.current} showPassword={false}/>
+											<UserDetailsFormPrimitive showPassword={false}/>
 									</FormDialog>
 								</td>
 							</tr>
@@ -217,37 +245,28 @@ export function AccountView(): React.ReactNode {
 								<td className="account-field-value" title="This is not your actual password, so don't worry.">**********</td>
 								<td>
 									<FormDialog
-										formID="change-password-form"
-										formTitle="Change Password"
+										name="change-password-form"
+										title="Change Password"
 										submitText="Change password"
 										labelSize="very large"
-										handleSubmit={changePasswordForm.handleSubmit(changePasswordForm.handler)}
+										fieldData={updatePasswordForm}
 										trigger={<button className="button-small button-base">Change</button>}>
-											<FormField<IUpdatePasswordForm>
+											<TextInput<UpdatePasswordFormField>
 												name="previousPassword"
 												label="Previous Password"
 												fieldSize="max"
-												register={changePasswordForm.register}
-												selector={(data: IUpdatePasswordForm) => data.previousPassword}
-												submitEvent={changePasswordForm.submit.current}
-												validationMethod={validatePasswordInputField}/>
+												startValue=""/>
 											<hr className="regular-separator"/>
-											<FormField<IUpdatePasswordForm>
+											<TextInput<UpdatePasswordFormField>
 												name="newPassword"
 												label="New Password"
 												fieldSize="max"
-												register={changePasswordForm.register}
-												selector={(data: IUpdatePasswordForm) => data.previousPassword}
-												submitEvent={changePasswordForm.submit.current}
-												validationMethod={validatePasswordInputField}/>
-											<FormField<IUpdatePasswordForm>
+												startValue=""/>
+											<TextInput<UpdatePasswordFormField>
 												name="confirmNewPassword"
 												label="Confirm New Password"
 												fieldSize="max"
-												register={changePasswordForm.register}
-												selector={(data: IUpdatePasswordForm) => data.previousPassword}
-												submitEvent={changePasswordForm.submit.current}
-												validationMethod={validatePasswordInputField}/>
+												startValue=""/>
 									</FormDialog>
 								</td>
 							</tr>
@@ -262,15 +281,16 @@ export function AccountView(): React.ReactNode {
 						<hr className="bold-separator"/>
 						<ul className="details-actions-list">
 							<li>
-								<FormDialog
+								<FormDialog<UserDetailsForm, UserDetailsFormField>
 									submitText="Delete my account"
 									description="This action cannot be undone, if you are sure you want to delete your account, please enter your password."
-									handleSubmit={deleteForm.handleSubmit(deleteForm.handler)}
-									formTitle="Delete your account"
+									title="Delete your account"
 									labelSize="medium"
-									formID="delete-account-form"
+									name="delete-account-form"
+									fieldData={userDetailsFieldData}
+									onSuccess={(data) => deleteUserAccount(user.email, data.password, user.tokens)}
 									trigger={<button className="button-small button-base">Delete account</button>}>
-										<UserDetailsFormPrimitive register={deleteForm.register} submit={deleteForm.submit.current} showEmail={false}/>
+										<UserDetailsFormPrimitive showEmail={false}/>
 								</FormDialog>
 							</li>
 						</ul>

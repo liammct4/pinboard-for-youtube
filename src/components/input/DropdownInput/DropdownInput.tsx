@@ -1,9 +1,7 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import { useContext } from "react";
-import { FieldValues } from "react-hook-form";
 import { IInputComponentProperties } from "../inputComponent";
-import { DropdownOptionsContext } from "./context";
 import { FormStyleContext } from "../formStyleContext";
 import * as Select from "@radix-ui/react-select"
 import ArrowIcon from "./../../../../assets/symbols/arrows/arrowhead.svg?react"
@@ -12,9 +10,11 @@ import { SelectItem } from "./dropdown";
 import "./../../../styling/elements/select.css"
 import "./../Input.css"
 
-export function DropdownInput<T extends FieldValues>({ label, name, fieldSize, register, registerOptions, startValue }: IInputComponentProperties<T>): React.ReactNode {
-	const { onChange } = register(name, registerOptions ?? { });
-	const { options } = useContext(DropdownOptionsContext);
+export interface IDropdownInputProperties<TField> extends IInputComponentProperties<TField> {
+	options: string[]
+}
+
+export function DropdownInput<TField extends string>({ label, name, fieldSize, startValue, options }: IDropdownInputProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
@@ -22,8 +22,8 @@ export function DropdownInput<T extends FieldValues>({ label, name, fieldSize, r
 			<label className="label" data-size={labelSize}>{label}</label>
 			<div className="form-dropdown-outer">
 				<Select.Root
-					defaultValue={startValue}
-					onValueChange={(value) => onChange({ target: { name, value } })}> 
+					name={name}
+					defaultValue={startValue}> 
 					<Select.Trigger className="select-button field-input" aria-label="Theme" data-size={fieldSize}>
 						<Select.Value placeholder="Choose a theme..."/>
 						{/* So the button is at a constant size and to fill in space... */}
