@@ -1,29 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { InputMethodType } from "../../lib/config/configurationOption";
-import { settingDefinitions } from "../../lib/config/settingDefinitions"
 import { IStorage } from "../../lib/storage/storage";
-
-export type SettingPrimitiveValue = string | number | boolean | bigint;
-
-export type SettingOption = {
-	settingName: string;
-	displayName: string;
-	description: string;
-	inputFormat: InputMethodType
-	defaultValue: string;
-}
-
-export type SettingValue = {
-	settingName: string;
-	value: SettingPrimitiveValue;
-}
+import { defaultSettings, Settings } from "../../lib/config/settings";
 
 export interface ISettingsSlice {
-	settingValues: SettingValue[];
+	settings: Settings;
 }
 
 const initialState: ISettingsSlice = {
-	settingValues: []
+	settings: defaultSettings
 }
 
 export const settingsSlice = createSlice({
@@ -31,23 +16,13 @@ export const settingsSlice = createSlice({
 	initialState,
 	reducers: {
 		updateSettingsSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
-			state.settingValues = action.payload.userData.config.userSettings;
+			state.settings = action.payload.userData.config.settings;
 		},
 		initializeAndSetSettingsDefault: (state) => {
-			for (let settingDefinition of settingDefinitions) {
-				let index = state.settingValues.findIndex(value => value.settingName == settingDefinition.settingName);
-
-				// Means theres no corresponding value, so set to default.
-				if (index == -1) {
-					state.settingValues.push({
-						settingName: settingDefinition.settingName,
-						value: settingDefinition.defaultValue
-					})
-				}
-			}
+			state.settings = defaultSettings;
 		},
-		setSettingValues: (state, action: PayloadAction<SettingValue[]>) => {
-			state.settingValues = action.payload;
+		setSettings: (state, action: PayloadAction<Settings>) => {
+			state.settings = action.payload;
 		}
 	}
 })

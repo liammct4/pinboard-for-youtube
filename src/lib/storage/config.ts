@@ -1,8 +1,8 @@
-import { SettingValue } from "../../features/settings/settingsSlice";
+import { Settings } from "../config/settings";
 import { IAppTheme } from "../config/theming/appTheme";
 
 export interface IConfig {
 	theme: IAppTheme;
 	customThemes: IAppTheme[];
-	userSettings: SettingValue[];
+	settings: Settings;
 }

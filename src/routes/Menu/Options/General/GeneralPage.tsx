@@ -1,61 +1,24 @@
 import { useDispatch, useSelector } from "react-redux";
 import { FormField } from "../../../../components/forms/FormField/FormField";
 import { IErrorFieldValues, useValidatedForm } from "../../../../components/forms/validated-form";
-import { settingDefinitions } from "../../../../lib/config/settingDefinitions"
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
-import settingsLayout from "./settingsLayout.json"
 import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { useCallback } from "react";
-import { SettingPrimitiveValue, SettingValue, settingsActions } from "../../../../features/settings/settingsSlice";
 import "./GeneralPage.css"
+import { settingDefinitions, Settings } from "../../../../lib/config/settings";
+import { settingsActions } from "../../../../features/settings/settingsSlice";
+import { settingsLayout } from "./settingsLayout";
 
-type SettingOption = "Heading" | "Field" | "Separator";
-interface ISettingElement {
-	type: SettingOption;
-}
-
-interface ISettingHeading extends ISettingElement {
-	message: string;
-	style: "bold" | "regular"
-}
-
-interface ISettingField extends ISettingElement {
-	fieldName: "string";
-}
-
-interface ISettingSeparator extends ISettingElement { }
-
-interface ISettingsForm extends IErrorFieldValues {
-	timestampButtonsEnabled: boolean;
-	saveVideoTimestampButtonEnabled: boolean;
-	pinCurrentTimestampShortcut: string;
-	useAutoSaveLatestTimestamp: boolean;	
-	onlyBringAutoSavedTimestampForward: boolean;
-	autoSaveLatestTimestampMessage: string;	
-}
+interface ISettingsForm extends Settings, IErrorFieldValues { }
 
 export function GeneralPage(): React.ReactNode {
 	let dispatch = useDispatch();
-	let settingValues = useSelector((state: RootState) => state.settings.settingValues);
+	let settingValues = useSelector((state: RootState) => state.settings.settings);
 	const onSaveSettings = useCallback((data: ISettingsForm) => {
-		let settings: SettingValue[] = Object
-			.keys(data)
-			.filter(x => x != "error")
-			.map(x => {				
-				// See SwitchInput.tsx for reason for this.
-				let matchingSettingDefinition = settingDefinitions.find(y => y.settingName == x);
-				let newValue: SettingPrimitiveValue = data[x];
+		delete data.error;
 
-				if (matchingSettingDefinition?.inputFormat == "Switch" && newValue == undefined) {
-					// Get the currently saved setting value, since it's unchanged.
-					// data[x] being undefined means it has not changed. 
-					newValue = settingValues.find(y => x == y.settingName)!.value;
-				}
-
-				return { settingName: x, value: newValue };
-			});
-		dispatch(settingsActions.setSettingValues(settings));
+		dispatch(settingsActions.setSettings(data));
 	}, []);
 	let { handleSubmit, handler, register, submit } = useValidatedForm<ISettingsForm>(onSaveSettings);
 
@@ -69,29 +32,27 @@ export function GeneralPage(): React.ReactNode {
 						settingsLayout.map<React.ReactNode>(x => {
 							switch (x.type)
 							{
-								case "heading":
-									let heading = x as ISettingHeading;
-									return <SplitHeading key={heading.message} text={heading.message!} type={heading.style}/>
-								case "separator":
+								case "Heading":
+									return <SplitHeading key={x.message} text={x.message!} type={x.style}/>
+								case "Separator":
 									return <hr className="regular-separator"/>
 							}
 
-							let field = x as ISettingField;
 
-							let settingDefinition = settingDefinitions.find(y => y.settingName == field.fieldName)!;
-							let existingValue = settingValues.find(y => y.settingName == settingDefinition.settingName)?.value.toString();
+							let settingDefinition = settingDefinitions[x.fieldName];
+							let existingValue = settingValues[x.fieldName];
 
 							return <FormField
-								key={field.fieldName}
+								key={x.fieldName}
 								fieldSize="medium"
 								label={settingDefinition.displayName}
-								name={settingDefinition.settingName}
+								name={x.fieldName}
 								register={register}
-								selector={(data: ISettingsForm) => data[settingDefinition.settingName]}
+								selector={(data: ISettingsForm) => data[x.fieldName].toString()}
 								submitEvent={submit.current}
 								// @ts-ignore Not arbritary data, so no checks needed.
 								inputType={settingDefinition.inputFormat}
-								defaultValue={existingValue}
+								defaultValue={existingValue.toString()}
 								validationMethod={() => { return null; }}/>
 						})
 					}

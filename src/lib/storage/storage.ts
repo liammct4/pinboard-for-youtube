@@ -4,14 +4,14 @@ import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
 import AppThemes from "./../../styling/theme.json"
-import { settingDefinitions } from "../config/settingDefinitions.ts"
-import { SettingValue } from "../../features/settings/settingsSlice.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
 import { createNode, DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IConfig } from "./config.ts"
 import { IDirectoryModificationAction } from "../user/resources/directory.ts"
+import { defaultSettings } from "../config/settings.ts"
+import { deepMerge } from "../util/objects/objects.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
@@ -48,10 +48,6 @@ export interface IStorage extends IMetaStorage {
 	}
 }
 
-let defaultUserSettings: SettingValue[] = settingDefinitions.map(x => {
-	return { settingName: x.settingName, value: x.defaultValue.toString() };
-});
-
 let rootNode: IDirectoryNode = {
 	slice: "$",
 	nodeID: createNode(),
@@ -84,7 +80,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		config: {
 			theme: AppThemes == undefined ? sampleConfigData.theme : AppThemes[0],
 			customThemes: [],
-			userSettings: defaultUserSettings
+			settings: defaultSettings
 		}
 	},
 	tempState: {
@@ -124,11 +120,8 @@ export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
 	let storage: IStorage | {} | undefined = await chrome.storage.local.get();
 
-	if (Object.keys(storage).length != 0) {
-		return;
-	}
-
-	await chrome.storage.local.set(BLANK_STORAGE_TEMPLATE);
+	deepMerge(storage, BLANK_STORAGE_TEMPLATE)
+	await chrome.storage.local.set(storage);
 }
 
 export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {

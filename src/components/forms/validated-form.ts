@@ -5,7 +5,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 export type FormValidator = (data: string) => string | null;
 
 export interface IErrorFieldValues extends FieldValues {
-	error: boolean
+	error?: boolean
 }
 
 export function useValidatedForm<T extends IErrorFieldValues>(onSubmitHandler: SubmitHandler<T>) {
