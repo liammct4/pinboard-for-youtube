@@ -1,7 +1,7 @@
 import * as Switch from "@radix-ui/react-switch"
 import { FormStyleContext, SizeOption } from "../formStyleContext";
 import { IInputComponentProperties } from "../inputComponent";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import "./SwitchInput.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
@@ -38,19 +38,21 @@ export function SwitchInputPrimitive({ label, labelSize, reversed = false, switc
 */
 export function SwitchInput<TField extends string>({ label, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
+	const [ checked, setChecked ] = useState<boolean>(startValue == "true");
 
 	return (
 		<FieldErrorContainer name={name}>
 			<div className="field-row switch-container" data-size={labelSize}>
 				<label className="label" data-size={labelSize}>{label}</label>
-				{/* Doesn't work with RHF properly */}
+				{/* Radix switch behaves extremely oddly and doesn't work properly with forms. */}
 				<Switch.Root
 					className="field-input small-text-input switch-root"
-					name={name}
-					defaultChecked={startValue == "true"}
-					defaultValue={startValue}>
+					onCheckedChange={(changed) => setChecked(changed)}
+					defaultChecked={startValue == "true"}>
 					<Switch.Thumb className="switch-thumb"/>
 				</Switch.Root>
+				{/* Temporary */}
+				<input name={name} style={{ width: 0, height: 0, visibility: "collapse" }} value={`${checked}`}/>
 			</div>
 		</FieldErrorContainer>
 	);
