@@ -1,17 +1,17 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { registerAccount } from "../../../../../lib/user/accounts";
-import { IUserDetailsForm } from "../UserDetailsForm/UserDetailsFormPage";
 import { HttpStatusCode } from "../../../../../lib/util/http";
 import { HttpResponse } from "../../../../../lib/util/request";
 import { startResendVerfiyEmailState } from "../../../../../lib/storage/persistentState/resendVerificationEmail";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 import "./Register.css"
+import { UserDetailsForm } from "../UserDetailsForm/UserDetailsFormPrimitive";
 
 export function Register(): React.ReactNode {
 	const navigate = useNavigate();
 	const { activateMessage, cancelCurrentNotification } = useNotificationMessage();
 
-	const onRegisterSubmitted = async (value: IUserDetailsForm) => {
+	const onRegisterSubmitted = async (value: UserDetailsForm) => {
 		activateMessage(undefined, "Creating your account, please wait...", "Info", "Info", -1, "Slide");
 
 		let response: HttpResponse | undefined = await registerAccount(value.email, value.password);

@@ -1,15 +1,15 @@
 import { IAuthenticatedUser } from "../../../../../../lib/user/accounts";
 import { useNotificationMessage } from "../../../../../../components/features/notifications/useNotificationMessage";
 import { Outlet, useNavigate } from "react-router-dom";
-import { IUserDetailsForm } from "../../UserDetailsForm/UserDetailsFormPage";
 import { useUserAccount } from "../../../../../../components/features/useUserAccount";
+import { UserDetailsForm } from "../../UserDetailsForm/UserDetailsFormPrimitive";
 
 export function EnterLoginDetails(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
 	const { attemptLogin } = useUserAccount();
 	const navigate = useNavigate();
 
-	const onLoginSubmitted = async (value: IUserDetailsForm) => {
+	const onLoginSubmitted = async (value: UserDetailsForm) => {
 		activateMessage(undefined, "Logging you in...", "Info", "Info", -1);
 		setTimeout(async () => {
 			let newlyAuthenticatedUser = await attemptLogin(value.email, value.password);

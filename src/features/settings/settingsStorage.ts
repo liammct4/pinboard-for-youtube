@@ -17,6 +17,6 @@ settingsSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.modifyStorage((storage) => storage.userData.config.userSettings = state.settings.settingValues);
+		ExtensionVirtualStorage.modifyStorage((storage) => storage.userData.config.settings = state.settings.settings);
 	}
 });

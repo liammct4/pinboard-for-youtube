@@ -3,6 +3,7 @@ import { FormStyleContext, SizeOption } from "../formStyleContext";
 import { IInputComponentProperties } from "../inputComponent";
 import { useContext } from "react";
 import "./SwitchInput.css"
+import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
 export interface ISwitchInputPrimitiveProperties {
 	label: string;
@@ -39,16 +40,18 @@ export function SwitchInput<TField extends string>({ label, name, startValue }: 
 	const { labelSize } = useContext(FormStyleContext);
 
 	return (
-		<div className="field-row switch-container" data-size={labelSize}>
-			<label className="label" data-size={labelSize}>{label}</label>
-			{/* Doesn't work with RHF properly */}
-			<Switch.Root
-				className="field-input small-text-input switch-root"
-				name={name}
-				defaultChecked={startValue == "true"}
-				defaultValue={startValue}>
-				<Switch.Thumb className="switch-thumb"/>
-			</Switch.Root>
-		</div>
+		<FieldErrorContainer name={name}>
+			<div className="field-row switch-container" data-size={labelSize}>
+				<label className="label" data-size={labelSize}>{label}</label>
+				{/* Doesn't work with RHF properly */}
+				<Switch.Root
+					className="field-input small-text-input switch-root"
+					name={name}
+					defaultChecked={startValue == "true"}
+					defaultValue={startValue}>
+					<Switch.Thumb className="switch-thumb"/>
+				</Switch.Root>
+			</div>
+		</FieldErrorContainer>
 	);
 }

@@ -1,3 +1,4 @@
+import { defaultSettings } from "../src/lib/config/settings";
 import { IConfig } from "../src/lib/storage/config";
 import { IVideo, generateTimestamp } from "../src/lib/video/video";
 
@@ -96,5 +97,5 @@ export const sampleConfigData: IConfig = {
 		modifiable: true
 	},
 	customThemes: [],
-	userSettings: []
+	settings: defaultSettings
 }

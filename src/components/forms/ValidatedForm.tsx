@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { createContext, useRef, useState } from "react";
 
 export type FormFieldError<TField> = {
 	name: TField;
@@ -26,6 +26,9 @@ export interface IValidatedFormProperties<TForm, TField> {
 }
 
 export function ValidatedForm<TForm, TField extends string>({ className, name, fieldData = [], onSuccess, onError, children }: IValidatedFormProperties<TForm, TField>) {
+	const [ errors, setErrors ] = useState<FormFieldError<TField>[]>([]);
+	const [ submitCounter, setSubmitCounter ] = useState<number>(0);
+	
 	return (
 		<form
 			className={className}
@@ -33,6 +36,7 @@ export function ValidatedForm<TForm, TField extends string>({ className, name, f
 			name={name}
 			onSubmit={(e) => {
 				e.preventDefault();
+
 				let rawData = new FormData(e.currentTarget);
 				let data: {
 					[field: string]: any
@@ -53,8 +57,27 @@ export function ValidatedForm<TForm, TField extends string>({ className, name, f
 				else {
 					onSuccess?.(data as TForm);
 				}
+
+				setErrors(errors);
+				setSubmitCounter(submitCounter + 1);
 			}}>
-			{children}
+			<ValidatedFormErrorContext.Provider
+				value={{
+					submitCounter: submitCounter,
+					errorList: errors
+				}}>
+				{children}
+			</ValidatedFormErrorContext.Provider>
 		</form>
 	)
 }
+
+export interface IValidatedFormErrorContext {
+	submitCounter: number;
+	errorList: FormFieldError<string>[];
+}
+
+export const ValidatedFormErrorContext = createContext<IValidatedFormErrorContext>({
+	submitCounter: 0,
+	errorList: []
+});

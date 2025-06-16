@@ -3,6 +3,7 @@ import { useContext, useMemo, useState } from "react";
 import { FormStyleContext } from "../formStyleContext";
 import { convertRGBToHex } from "../../../lib/util/generic/colour/colourUtil";
 import "./../Input.css"
+import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
 const excludedKeys = ["Control", "Meta", "Alt", "Shift"]
 const matchingKeysFilter = new Map<string, string>([
@@ -54,15 +55,17 @@ export function KeyInput<TField extends string>({ label, fieldSize, name, startV
 	}
 	
 	return (
-		<div className="field-row">
-			<label className="label" data-size={labelSize}>{label}</label>
-			<input
-				className="field-input small-text-input"
-				name={name}
-				type="text"
-				data-size={fieldSize}
-				value={keyInput}
-				onKeyDown={onKeyDown}/>
-		</div>
+		<FieldErrorContainer name={name}>
+			<div className="field-row">
+				<label className="label" data-size={labelSize}>{label}</label>
+				<input
+					className="field-input small-text-input"
+					name={name}
+					type="text"
+					data-size={fieldSize}
+					value={keyInput}
+					onKeyDown={onKeyDown}/>
+			</div>
+		</FieldErrorContainer>
 	);
 }

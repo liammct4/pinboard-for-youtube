@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Coordinates, Rect, Size } from "../../lib/util/objects/types";
-import { set } from "react-hook-form";
 
 export function useBoundsChangeEvent<T extends HTMLElement>(elem: React.RefObject<T>): Rect {
 	const [ position, setPosition ] = useState<Coordinates>({ x: 0, y: 0 });

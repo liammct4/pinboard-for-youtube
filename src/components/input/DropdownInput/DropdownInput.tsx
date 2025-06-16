@@ -9,12 +9,13 @@ import { IconContainer } from "../../images/svgAsset";
 import { SelectItem } from "./dropdown";
 import "./../../../styling/elements/select.css"
 import "./../Input.css"
+import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
 export interface IDropdownInputProperties<TField> extends IInputComponentProperties<TField> {
-	options: string[]
+	options?: string[]
 }
 
-export function DropdownInput<TField extends string>({ label, name, fieldSize, startValue, options }: IDropdownInputProperties<TField>): React.ReactNode {
+export function DropdownInput<TField extends string>({ label, name, fieldSize, startValue, options = [] }: IDropdownInputProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (

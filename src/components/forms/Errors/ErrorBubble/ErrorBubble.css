@@ -1,0 +1,41 @@
+.error-message {
+	display: flex;
+	gap: var(--pfy-spacing-standard-compact);
+	background: var(--pfy-empty-02-normal);
+	border: 1px solid var(--pfy-primary-ultradark);
+	height: var(--pfy-element-button-size-regular);
+	border-radius: var(--pfy-element-button-size-regular);
+	padding: var(--pfy-spacing-standard-compact);
+	animation: var(--pfy-timing-fast) expandVertical;
+
+	.warning-image {
+		margin-left: var(--pfy-spacing-standard-compact);
+		height: 100%;
+	}
+
+	.error-text {
+		margin: 0;
+		font-weight: bold;
+		color: var(--pfy-text-light);
+		font-size: var(--pfy-font-text-standard);
+		flex-grow: 1;
+	}
+
+	.close-button {
+		margin-left: auto;
+	}
+}
+
+&[data-visible="true"] {
+	visibility: visible;
+	display: grid;
+}
+
+@keyframes expandVertical {
+	0% {
+		transform: scaleY(0) translateY(-50%);
+	}
+	100% {
+		transform: scaleY(1) translateY(0%);
+	}
+}
