@@ -20,12 +20,7 @@ export function TimelineContainer() {
 		timestampButtonsEnabled,
 		useAutoSaveLatestTimestamp,
 		autoSaveLatestTimestampMessage,
-		pinCurrentTimestampShortcut
 	} = useSelector((state: RootState) => state.settings.settings);
-	
-	useHotkeys(pinCurrentTimestampShortcut as Keys, () => {
-		console.log("here");
-	});
 
 	useEffect(() => {
 		if (!videoData.isVideoPage || videoData.isAdvertisement || !timestampButtonsEnabled || !useAutoSaveLatestTimestamp) {

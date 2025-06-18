@@ -41,7 +41,7 @@ export const settingDefinitions: SettingDefinitions = {
 		displayName: "Pin timestamp shortcut",
 		description: "Pins the current timestamp of a video when pressed.",
 		inputFormat: "Key",
-		defaultValue: "Ctrl + E"
+		defaultValue: "H"
 	},
 	useAutoSaveLatestTimestamp: {
 		displayName: "Use auto timestamp",
