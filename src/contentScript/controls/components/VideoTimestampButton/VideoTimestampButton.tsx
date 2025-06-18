@@ -5,6 +5,7 @@ import { videoActions } from "../../../../features/video/videoSlice";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { RootState } from "../../../../app/store";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
+import { extractIDRegex } from "../../../features/useLocalVideoData";
 
 export function VideoTimestampButton() {
 	const dispatch = useDispatch();
@@ -13,7 +14,13 @@ export function VideoTimestampButton() {
 	const { saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut } = useSelector((state: RootState) => state.settings.settings);
 
 	const onSaveVideo = async () => {
-		let videoID = document.querySelector(`meta[itemprop="identifier"]`)?.getAttribute("content") as string;
+		let result = extractIDRegex.exec(window.location.href);
+		
+		if (result == null || result.groups == undefined) {
+			return;
+		}
+
+		let videoID = result.groups["videoID"] as string;
 		let video = document.querySelector("video") as HTMLVideoElement;
 	
 		let existingVideo = videos[videoID] as IVideo;
