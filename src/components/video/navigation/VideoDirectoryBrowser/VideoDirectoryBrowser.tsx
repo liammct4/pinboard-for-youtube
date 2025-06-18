@@ -204,7 +204,7 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 					<button className="button-base button-small square-button" onClick={() => {
 						onDirectoryPathChanged(getParentPathFromPath(directoryPath));
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
-					}} disabled={directoryPath.slices[0] == "$"}>
+					}} disabled={directoryPath.slices[directoryPath.slices.length - 1] == "$"}>
 						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
 					</button>
 					<button className="button-base button-small square-button" onClick={() => {
