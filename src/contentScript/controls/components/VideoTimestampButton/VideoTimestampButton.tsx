@@ -9,6 +9,11 @@ export function VideoTimestampButton() {
 	const dispatch = useDispatch();
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const videos = useSelector((state: RootState) => state.video.videos);
+	const { saveVideoTimestampButtonEnabled } = useSelector((state: RootState) => state.settings.settings);
+
+	if (!saveVideoTimestampButtonEnabled) {
+		return <></>;
+	}
 
 	let logoUrl = chrome.runtime.getURL("/assets/logo/logo.svg");
 

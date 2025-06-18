@@ -29,7 +29,6 @@ export const settingsLayout: ElementCollection[] = [
 	
 	{ type: "Heading", message: "Autosaved Timestamp", style: "Regular" },
 	{ type: "Field", fieldName: "useAutoSaveLatestTimestamp" },
-	{ type: "Field", fieldName: "onlyBringAutoSavedTimestampForward" },
 	{ type: "Field", fieldName: "autoSaveLatestTimestampMessage" },
 
 	{ type: "Separator" },

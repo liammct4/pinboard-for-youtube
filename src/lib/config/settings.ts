@@ -7,7 +7,6 @@ export type SettingName =
 	"saveVideoTimestampButtonEnabled" |
 	"pinCurrentTimestampShortcut" |
 	"useAutoSaveLatestTimestamp" |
-	"onlyBringAutoSavedTimestampForward" |
 	"autoSaveLatestTimestampMessage"
 
 export type Settings = {
@@ -50,12 +49,6 @@ export const settingDefinitions: SettingDefinitions = {
 		inputFormat: "Switch",	
 		defaultValue: true
 	},
-	onlyBringAutoSavedTimestampForward: {
-		displayName: "Never bring backward",
-		description: "Setting this on will mean that the auto saved timestamp will never move backwards from its current position, this is useful such as in the case of rewinding.",
-		inputFormat: "Switch",
-		defaultValue: false
-	},
 	autoSaveLatestTimestampMessage: {
 		displayName: "Timestamp message",
 		description: "The message to be associated with the auto save feature. Will be updated as the video progresses.",
@@ -66,13 +59,12 @@ export const settingDefinitions: SettingDefinitions = {
 
 export const defaultSettings: Settings = {
 	autoSaveLatestTimestampMessage: settingDefinitions.autoSaveLatestTimestampMessage.defaultValue,
-	onlyBringAutoSavedTimestampForward: settingDefinitions.onlyBringAutoSavedTimestampForward.defaultValue,
 	pinCurrentTimestampShortcut: settingDefinitions.pinCurrentTimestampShortcut.defaultValue,
 	saveVideoTimestampButtonEnabled: settingDefinitions.saveVideoTimestampButtonEnabled.defaultValue,
 	timestampButtonsEnabled: settingDefinitions.timestampButtonsEnabled.defaultValue,
 	useAutoSaveLatestTimestamp: settingDefinitions.useAutoSaveLatestTimestamp.defaultValue,
 };
 
-export function getSettingValue(settings: Settings, name: string) {
+//export function getSettingValue(settings: Settings, name: string) {
 
-}
+//}

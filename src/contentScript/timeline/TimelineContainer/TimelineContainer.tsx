@@ -1,12 +1,13 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
 import { IVideo, Timestamp } from "../../../lib/video/video";
 import { useDispatch, useSelector } from "react-redux";
 import { videoActions } from "../../../features/video/videoSlice";
-import "./TimelineContainer.css"
 import { RootState } from "../../../app/store";
+import { Keys, useHotkeys } from "react-hotkeys-hook";
+import "./TimelineContainer.css"
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
@@ -15,8 +16,64 @@ export function TimelineContainer() {
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 	const videos = useSelector((state: RootState) => state.video.videos);
 	const dispatch = useDispatch();
+	const {
+		timestampButtonsEnabled,
+		useAutoSaveLatestTimestamp,
+		autoSaveLatestTimestampMessage,
+		pinCurrentTimestampShortcut
+	} = useSelector((state: RootState) => state.settings.settings);
+	
+	useHotkeys(pinCurrentTimestampShortcut as Keys, () => {
+		console.log("here");
+	});
+
+	useEffect(() => {
+		if (!videoData.isVideoPage || videoData.isAdvertisement || !timestampButtonsEnabled || !useAutoSaveLatestTimestamp) {
+			return;
+		}
 		
-	if (!videoData.isVideoPage || videoData.isAdvertisement) {
+		let video = videos[videoData.data.videoID];
+		
+		if (video == undefined) {
+			return;
+		}
+
+		let timestampIndex = video.timestamps.findIndex(t => t.message == autoSaveLatestTimestampMessage);
+		let updatedVideo: IVideo = {
+			...video
+		} as IVideo;
+
+		if (timestampIndex == -1) {
+			timestampIndex = updatedVideo.timestamps.length;
+
+			let newTimestamp = {
+				id: crypto.randomUUID(),
+				message: autoSaveLatestTimestampMessage as string,
+				time: Math.round(videoData.data.currentTime)
+			};
+
+			updatedVideo.timestamps = [ ...updatedVideo.timestamps, newTimestamp ];
+		}
+		else {
+			// Don't bring backward.
+			if (updatedVideo.timestamps[timestampIndex].time > videoData.data.currentTime) {
+				return;
+			}
+
+			let updatedTimestamps = [ ...updatedVideo.timestamps ];
+
+			updatedTimestamps[timestampIndex] = {
+				...updatedTimestamps[timestampIndex],
+				time: Math.round(videoData.data.currentTime)
+			};
+
+			updatedVideo.timestamps = updatedTimestamps;
+		}
+
+		dispatch(videoActions.addOrReplaceVideo(updatedVideo));
+	}, [ Math.round(videoData?.isVideoPage ? videoData?.data?.currentTime : 0)]);
+	
+	if (!videoData.isVideoPage || videoData.isAdvertisement || !timestampButtonsEnabled) {
 		return <></>
 	}
 	
