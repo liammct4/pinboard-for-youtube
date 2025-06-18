@@ -52,7 +52,7 @@ export function SwitchInput<TField extends string>({ label, name, startValue }: 
 					<Switch.Thumb className="switch-thumb"/>
 				</Switch.Root>
 				{/* Temporary */}
-				<input name={name} style={{ width: 0, height: 0, visibility: "collapse" }} value={`${checked}`}/>
+				<input name={name} style={{ width: 0, height: 0, visibility: "collapse" }} value={`${checked}`} data-converter="boolean"/>
 			</div>
 		</FieldErrorContainer>
 	);

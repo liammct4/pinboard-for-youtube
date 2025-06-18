@@ -16,7 +16,8 @@ export function NumericInput<TField extends string>({ label, fieldSize, name, st
 					name={name}
 					className="small-text-input field-input"
 					data-size={fieldSize}
-					defaultValue={startValue}/>
+					defaultValue={startValue}
+					data-converter="numeric"/>
 			</div>
 		</FieldErrorContainer>
 	);

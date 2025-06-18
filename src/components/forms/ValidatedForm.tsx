@@ -11,6 +11,14 @@ type ValidatorNoError = { error: false };
 export type ValidatorResult<TField> = ValidatorError<TField> | ValidatorNoError
 export type Validator<TField> = (data: string) => ValidatorResult<TField>;
 
+type ConverterType = "boolean" | "numeric"
+const converters: {
+	[type in ConverterType]: (value: string) => any
+} = {
+	boolean: (value: string) => value == "true",
+	numeric: (value: string) => Number(value)
+};
+
 export type FormField<TField> = {
 	name: TField;
 	validator: Validator<TField>;
@@ -42,8 +50,20 @@ export function ValidatedForm<TForm, TField extends string>({ className, name, f
 					[field: string]: any
 				} = { };
 
+				let inputs = Array.from(e.currentTarget.querySelectorAll("input[data-converter]"));
+
 				for (let key of rawData.keys()) {
-					data[key] = rawData.get(key);
+					let value: any = rawData.get(key);
+					let input = inputs.find(x => x.getAttribute("name") == key);
+
+					if (input != null) {
+						let type = input?.getAttribute("data-converter") as ConverterType;
+
+						let converter = converters[type];
+						value = converter(value as string);
+					}
+
+					data[key] = value;
 				}
 
 				let errors = fieldData
