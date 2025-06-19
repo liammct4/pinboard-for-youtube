@@ -118,20 +118,20 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
-	let storage: IStorage | {} | undefined = await chrome.storage.local.get();
+	let storage: IStorage | {} | undefined = await chrome.storage.sync.get();
 
 	deepMerge(storage, BLANK_STORAGE_TEMPLATE)
-	await chrome.storage.local.set(storage);
+	await chrome.storage.sync.set(storage);
 }
 
 export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {
-	let storage = await chrome.storage.local.get() as IStorage;
+	let storage = await chrome.storage.sync.get() as IStorage;
 
 	return accessor(storage);
 }
 
 export async function accessStorage(): Promise<IStorage> {
-	let storage = await chrome.storage.local.get() as IStorage;
+	let storage = await chrome.storage.sync.get() as IStorage;
 
 	return storage;
 }
@@ -143,5 +143,5 @@ export async function modifyStorage(modifier: (s: IStorage) => void): Promise<vo
 
 	storage.meta.author = getApplicationContextType();
 
-	await chrome.storage.local.set(storage);
+	await chrome.storage.sync.set(storage);
 }
