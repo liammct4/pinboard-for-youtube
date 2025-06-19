@@ -13,7 +13,7 @@ export function ErrorPage(): React.ReactNode {
 
 	const onConfirm = async (result: string) => {
 		if (result == "Wipe local data") {
-			await chrome.storage.local.set(BLANK_STORAGE_TEMPLATE);
+			await chrome.storage.sync.set(BLANK_STORAGE_TEMPLATE);
 		}
 	}
 

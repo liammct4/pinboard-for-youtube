@@ -22,7 +22,7 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 	
 	public async modifyStorage(modifier: (storage: T) => void) {
 		if (this.saved) {
-			this.virtualStorage = await chrome.storage.local.get() as T;
+			this.virtualStorage = await chrome.storage.sync.get() as T;
 		}
 		
 		setTimeout(() => modifier(this.virtualStorage), this.delayTime / 2);
@@ -39,7 +39,7 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 				this.virtualStorage.meta.author = getApplicationContextType();
 				this.saved = true;
 
-				chrome.storage.local.set(this.virtualStorage);
+				chrome.storage.sync.set(this.virtualStorage);
 			}
 			else {
 				setTimeout(() => this.check(), 10);
