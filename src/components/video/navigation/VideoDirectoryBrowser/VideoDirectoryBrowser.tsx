@@ -201,19 +201,19 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 		<>
 			<div className="directory-navigator">
 				<div className="navigation-buttons">
-					<button className="button-base button-small square-button" onClick={() => {
+					<button className="button-base button-small square-button" title="Go back." onClick={() => {
 						onDirectoryPathChanged(getParentPathFromPath(directoryPath));
 						setNavigationStack([ ...navigationStack, directory!.slice ]);
 					}} disabled={directoryPath.slices[directoryPath.slices.length - 1] == "$"}>
 						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
 					</button>
-					<button className="button-base button-small square-button" onClick={() => {
+					<button className="button-base button-small square-button" title="Go to root directory." onClick={() => {
 						onDirectoryPathChanged(parsePath("$"));
 						setNavigationStack([]);
 					}}>
 						<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
 					</button>
-					<button className="button-base button-small square-button" onClick={() => {
+					<button className="button-base button-small square-button" title="Go forward." onClick={() => {
 						let stackRemovedSlice = [ ...navigationStack ];
 						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
 

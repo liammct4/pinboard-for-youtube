@@ -163,8 +163,8 @@ export function VideosPage(): React.ReactNode {
 						<VideoCard className="current-video-card" videoID={activeVideoID ?? undefined} placeholderTitle="No video found!"/>
 						{/* Current video controls */}
 						<div className="current-video-buttons">
-							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null}>Save video</button>
-							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={activeVideoID == null}>Pin timestamp</button>
+							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null} title="Save this video to the current directory.">Save video</button>
+							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={activeVideoID == null} title="Save the current time of the playing video as a new timestamp.">Pin timestamp</button>
 						</div>
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}
@@ -173,7 +173,7 @@ export function VideosPage(): React.ReactNode {
 					{/* Search bar. */}
 					<form className="search-bar-form">
 						<input className="small-text-input" type="text"/>
-						<button className="button-base button-small circle-button" type="submit">
+						<button className="button-base button-small circle-button" type="submit" title="Search through all saved videos with keywords.">
 							<IconContainer
 								asset={SearchIcon}
 								className="icon-colour-standard"

@@ -20,9 +20,11 @@ export function HomePage(): React.ReactNode {
 				<hr className="bold-separator"></hr>
 				<div className="button-options">
 					<button className="button-base button-small"
-						onClick={() => navigate("menu/options")}>Options</button>
+						onClick={() => navigate("menu/options")}
+						title="Change settings.">Options</button>
 					<button className="button-base button-small"
-						onClick={() => navigate("menu/help")}>Help</button>
+						onClick={() => navigate("menu/help")}
+						title="Find guides and report bugs.">Help</button>
 				</div>
 				<h2 className="extension-version">Version 1.0.0</h2>
 			</div>
