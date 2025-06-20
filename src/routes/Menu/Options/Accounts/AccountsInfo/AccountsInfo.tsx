@@ -1,12 +1,16 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserAccount } from "../../../../../components/features/useUserAccount";
+import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 
 export function AccountsInfo(): React.ReactNode {
 	const navigate = useNavigate();
 	const { isSignedIn } = useUserAccount();
+	const { activateMessage } = useNotificationMessage();
 
 	useEffect(() => {
+		activateMessage(undefined, "Unfortunately, accounts are not available currently and will not be for the foreseeable future.", "Warning", "Warning", undefined, "Shake");
+
 		async function checkRedirectOnLoggedIn() {
 			if (isSignedIn) {
 				navigate("./account");
@@ -34,10 +38,12 @@ export function AccountsInfo(): React.ReactNode {
 			<div className="account-button-option-bar">
 				<button
 					className="button-base button-large"
-					onClick={() => navigate("register")}>Create Account</button>
+					onClick={() => navigate("register")}
+					disabled>Create Account</button>
 				<button
 					className="button-base button-large"
-					onClick={() => navigate("login")}>Login</button>
+					onClick={() => navigate("login")}
+					disabled>Login</button>
 			</div>
 		</>
 	);
