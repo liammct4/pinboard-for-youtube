@@ -108,6 +108,16 @@ export function getNodeFromPath(tree: DirectoryTree, path: NodePath): NodeRef | 
 	return currentNode;
 }
 
+export function getNodeFromVideoID(tree: DirectoryTree, id: string): NodeRef | null {
+	for (let node of Object.values(tree.videoNodes)) {
+		if (node.videoID == id) {
+			return node.nodeID;
+		}
+	}
+
+	return null;
+}
+
 /**
  * Returns the type of node which is referenced by the provided node ID.
  */

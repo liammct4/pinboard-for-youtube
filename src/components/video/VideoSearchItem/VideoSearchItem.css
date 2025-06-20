@@ -1,0 +1,41 @@
+.video-search-item {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-rows: auto auto;
+	gap: var(--pfy-spacing-standard);
+	align-items: center;
+	margin: 0;
+	padding-top: var(--pfy-spacing-standard);
+	padding-bottom: var(--pfy-spacing-standard-compact);
+	font: var(--pfy-main-font);
+	font-size: var(--pfy-font-text-big);
+	border-bottom: 1px solid var(--pfy-primary-faded);
+
+	.thumbnail {
+		grid-column: 1;
+		grid-row: 1 / 3;
+	}
+
+	.title {
+		grid-column: 2;
+	}
+
+	.navigate-button {
+		border: none;
+		text-align: left;
+		padding: 0;
+		padding-left: var(--pfy-spacing-standard-compact);
+		padding-right: var(--pfy-spacing-standard-compact);
+		border-radius: var(--pfy-spacing-standard-compact);
+		background-color: var(--pfy-empty-02-normal);
+		font-size: var(--pfy-font-text-standard);
+		grid-row: 2;
+		outline: 1px solid var(--pfy-empty-02-normal);
+		transition: background var(--pfy-timing-fast), outline var(--pfy-timing-fast);
+
+		&:hover {
+			outline: 1px solid var(--pfy-empty-01-shadow);
+			background-color: var(--pfy-empty-02-depth);
+		}
+	}
+}

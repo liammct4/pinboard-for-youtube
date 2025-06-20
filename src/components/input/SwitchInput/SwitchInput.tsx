@@ -6,23 +6,25 @@ import "./SwitchInput.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
 export interface ISwitchInputPrimitiveProperties {
+	className?: string;
 	label: string;
 	switchFieldID?: string;
 	reversed?: boolean;
-	labelSize: SizeOption;
+	labelSize: SizeOption | "auto";
 	value: boolean;
 	onChange: (newValue: boolean) => void;
 }
 
 // There are two separate switches to allow the switch to be independently used outside of a form.
 
-export function SwitchInputPrimitive({ label, labelSize, reversed = false, switchFieldID, value, onChange }: ISwitchInputPrimitiveProperties): React.ReactNode {
+export function SwitchInputPrimitive({ className, label, labelSize, reversed = false, switchFieldID, value, onChange }: ISwitchInputPrimitiveProperties): React.ReactNode {
 	return (
-		<div className="switch-container" data-reversed={reversed} data-size={labelSize}>
+		<div className={`${className} switch-container`} data-reversed={reversed} data-size={labelSize}>
 			<Switch.Root
 				className="field-input small-text-input switch-root"
 				id={switchFieldID}
 				value={`${value}`}
+				checked={value}
 				onCheckedChange={() => onChange(!value)}>
 				<Switch.Thumb className="switch-thumb"/>
 			</Switch.Root>
