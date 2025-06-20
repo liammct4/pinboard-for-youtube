@@ -4,13 +4,6 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
-import ArrowIcon from "./../../../../../assets/symbols/arrows/arrowhead_sideways.svg?react"
-import SettingsIcon from "./../../../../../assets/icons/settings_icon.svg?react";
-import MinimalViewIcon from "./../../../../../assets/icons/view/minimal_option.svg?react"
-import CompactViewIcon from "./../../../../../assets/icons/view/compact_option.svg?react"
-import RegularViewIcon from "./../../../../../assets/icons/view/regular_option.svg?react"
-import HomeIcon from "./../../../../../assets/icons/home.svg?react"
-import LongArrow from "./../../../../../assets/symbols/arrows/long_arrow.svg?react"
 import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
 import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
@@ -29,11 +22,14 @@ import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathTo
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
 import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
+import { useDirectory } from "../useDirectory";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
 	directoryPath: NodePath;
-	onDirectoryPathChanged: (newPath: NodePath) => void; 
+	directoryBarHoverPath: NodePath | null;
+	onDirectoryPathChanged: (newPath: NodePath) => void;
+	onNavigate: (stack: string[]) => void;
 }
 
 function DragDirectoryTooltipItem({ sliceSection }: { sliceSection: string }) {
@@ -55,30 +51,19 @@ function DragVideoTooltipItem({ videoID }: { videoID: string }) {
 	);
 }
 
-export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }: IVideoDirectoryBrowserProperties): React.ReactNode {
+export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, onDirectoryPathChanged, onNavigate }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<NodePath>(parsePath("$"));
-	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
-	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
 	const { activateMessage } = useNotificationMessage();
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
-	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<NodePath | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const dispatch = useDispatch();
 	const layout = useSelector((state: RootState) => state.tempState.layout);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
-	const directory = useMemo(() => {
-		let nodeID = getNodeFromPath(tree, directoryPath);
-
-		if (nodeID == null) {
-			return tree.directoryNodes[tree.rootNode];
-		}
-
-		return tree.directoryNodes[nodeID];
-	}, [directoryPath]);
+	const directory = useDirectory(directoryPath);
 
 	useEffect(() => {
 		if (directory == null) {
@@ -193,101 +178,8 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 		setSelectedItems([]);
 	}
 
-	let parentSlices = getParentPathFromPath(directoryPath).slices;
-
-	let accumulator = "";
-
 	return (
-		<>
-			<div className="directory-navigator">
-				<div className="navigation-buttons">
-					<button className="button-base button-small square-button" title="Go back." onClick={() => {
-						onDirectoryPathChanged(getParentPathFromPath(directoryPath));
-						setNavigationStack([ ...navigationStack, directory!.slice ]);
-					}} disabled={directoryPath.slices[directoryPath.slices.length - 1] == "$"}>
-						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
-					</button>
-					<button className="button-base button-small square-button" title="Go to root directory." onClick={() => {
-						onDirectoryPathChanged(parsePath("$"));
-						setNavigationStack([]);
-					}}>
-						<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
-					</button>
-					<button className="button-base button-small square-button" title="Go forward." onClick={() => {
-						let stackRemovedSlice = [ ...navigationStack ];
-						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
-
-						onDirectoryPathChanged(directoryPathConcat(directoryPath, slice, "DIRECTORY"));
-						setNavigationStack(stackRemovedSlice);
-					}} disabled={navigationStack.length == 0}>
-						<IconContainer className="icon-colour-standard" asset={LongArrow} use-stroke/>
-					</button>
-				</div>
-				{
-					isEditingPathManually ?
-						<input
-							className="directory-path-bar small-text-input"
-							onBlur={(e) => {
-								onDirectoryPathChanged(parsePath(e.target.value));
-								setNavigationStack([]);
-								setIsEditingPathManually(false);
-							}}
-							onKeyDown={(e) => {
-								if (e.key == "Enter") {
-									onDirectoryPathChanged(parsePath(e.currentTarget.value));
-									setNavigationStack([]);
-									setIsEditingPathManually(false);
-								}
-							}}
-							autoFocus
-							defaultValue={pathToString(directoryPath)}/>
-						:
-						<ul className="directory-path-bar small-text-input directory-navigator-slices" onClick={() => setIsEditingPathManually(true)}>
-							{
-								parentSlices.map(x => {
-									accumulator += x;
-									let directPath = accumulator;
-									
-									accumulator += " > ";
-									
-									return (
-										<li key={directPath}>
-											<button className="jump-to-slice-path-button" onClick={(e) => {
-												onDirectoryPathChanged(parsePath(directPath));
-												setNavigationStack([]);
-												e.stopPropagation();
-											}}
-											onMouseEnter={() => setDirectoryBarHoverPath(parsePath(directPath))}
-											onMouseLeave={() => setDirectoryBarHoverPath(null)}>{x}</button>
-											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
-										</li>
-									);
-								})
-							}
-							<li>{directoryPath.slices[directoryPath.slices.length - 1]}</li>
-						</ul>
-				}
-				<button className="settings-button button-base button-small square-button" onClick={() => dispatch(tempStateActions.setLayoutState({ ...layout, isDirectoryBrowserSettingsExpanded: !layout.isDirectoryBrowserSettingsExpanded }))}>
-					<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
-				</button>
-			</div>
-			<ToggleExpander expanded={layout.isDirectoryBrowserSettingsExpanded}>
-				<div className="settings-panel">
-					<LabelGroup label="View">
-						<div className="view-section">
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
-								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "MINIMAL" }}/>
-							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={layout.videoItemViewStyle == "COMPACT"}>
-								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "COMPACT" }}/>
-							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
-								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "REGULAR" }}/>
-							</button>
-						</div>
-					</LabelGroup>
-				</div>
-			</ToggleExpander>
+		<>	
 			{/* For dragging */}
 			<MouseTooltip show={dragging != null && !timestampActivelyDragging} horizontal="START" vertical="CENTRE">
 				<ul className="drag-list-tooltip">
@@ -308,7 +200,7 @@ export function VideoDirectoryBrowser({ directoryPath, onDirectoryPathChanged }:
 					value={{
 						navigateRequest: (requester) => {
 							onDirectoryPathChanged(getPathOfNode(tree, requester.nodeID) as NodePath);
-							setNavigationStack([]);
+							onNavigate([]);
 						},
 						selectedItems,
 						setSelectedItems,

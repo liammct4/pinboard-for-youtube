@@ -30,6 +30,8 @@ import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeType, getPathOfNode,
 import { NodePath, parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
 import { tempStateActions, tempStateSlice } from "../../features/state/tempStateSlice.ts";
 import { TextInput } from "../../components/input/TextInput/TextInput.tsx";
+import { VideoDirectoryControls } from "../../components/video/navigation/VideoDirectoryControls/VideoDirectoryControls.tsx";
+import { useDirectory, useDirectoryPath } from "../../components/video/navigation/useDirectory.ts";
 
 type AddVideoFormFields = "link";
 type AddVideoForm = {
@@ -47,6 +49,8 @@ export function VideosPage(): React.ReactNode {
 	const [ selectedItems, setSelectedItems ] = useState<NodeRef[]>([]);
 	const [ currentlyEditing, setCurrentlyEditing ] = useState<NodeRef | null>(null);
 	const [ deleteConfirmationOpen, setDeleteConfirmationOpen ] = useState<boolean>(false);
+	const [ navigationStack, setNavigationStack ] = useState<string[]>([]);
+	const [ directoryBarHoverPath, setDirectoryBarHoverPath ] = useState<NodePath | null>(null);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
@@ -54,6 +58,7 @@ export function VideosPage(): React.ReactNode {
 	const { retrieveInfo } = useVideoCache();
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
+	const directory = useDirectoryPath(directoryPath);
 
 	// Hotkeys for directory browser.
 	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
@@ -181,6 +186,12 @@ export function VideosPage(): React.ReactNode {
 						</button>
 					</form>
 				</div>
+				<VideoDirectoryControls
+					navigationStack={navigationStack}
+					onNavigate={setNavigationStack}
+					path={directory}
+					onDirectoryPathChanged={(newPath) => dispatch(tempStateActions.setDirectoryPath(pathToString(newPath)))}
+					setDirectoryBarHoverPath={setDirectoryBarHoverPath}/>
 				<VideoDirectoryBrowserContext.Provider
 					value={{
 						selectedItems,
@@ -188,10 +199,14 @@ export function VideosPage(): React.ReactNode {
 						currentlyEditing,
 						setCurrentlyEditing
 					}}>
-					<VideoDirectoryBrowser
-						defaultVideoStyle="MINIMAL"
-						directoryPath={parsePath(directoryPath)}
-						onDirectoryPathChanged={(newPath) => dispatch(tempStateActions.setDirectoryPath(pathToString(newPath)))}/>
+					<>
+						<VideoDirectoryBrowser
+							defaultVideoStyle="MINIMAL"
+							directoryPath={directory}
+							onDirectoryPathChanged={(newPath) => dispatch(tempStateActions.setDirectoryPath(pathToString(newPath)))}
+							directoryBarHoverPath={directoryBarHoverPath}
+							onNavigate={setNavigationStack}/>
+					</>
 				</VideoDirectoryBrowserContext.Provider>
 				{/* Modification buttons */ }
 				<div className="modification-button-panel">
