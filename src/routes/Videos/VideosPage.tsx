@@ -193,6 +193,7 @@ export function VideosPage(): React.ReactNode {
 			}
 			<div className="video-page-inner scrollbar-big" data-locked={temporarySingleState.onRequestIsVideoControlLocked}>
 				<TwoToggleLayoutExpander
+					className="top-heading-row"
 					expanded={layoutState.isCurrentVideosSectionExpanded}
 					onExpandedEvent={(value: boolean) =>
 						dispatch(tempStateActions.setLayoutState({ ...layoutState, isCurrentVideosSectionExpanded: value }))
@@ -201,9 +202,9 @@ export function VideosPage(): React.ReactNode {
 					closeButtonContent={<IconContainer asset={CloseLayoutIcon} className="icon-colour-standard" use-stroke use-fill/>}
 					openTooltip="Show current video controls and saved timestamps."
 					closeTooltip="Only show saved timestamps."
-					align="right">
+					align="right"
+					content={<SplitHeading className="current-video-heading" text="Current Video"/>}>
 						{/* Current video */}
-						<SplitHeading className="current-video-heading" text="Current Video"/>
 						<VideoCard className="current-video-card" videoID={activeVideoID ?? undefined} placeholderTitle="No video found!"/>
 						{/* Current video controls */}
 						<div className="current-video-buttons">

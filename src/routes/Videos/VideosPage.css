@@ -50,8 +50,14 @@
 			filter: blur(2px);
 		}
 
-		.current-video-heading {
-			margin-top: var(--pfy-spacing-standard);
+		.top-heading-row {
+			display: flex;
+			flex-direction: row-reverse;
+			align-items: center;
+
+			.current-video-heading {
+				flex-grow: 1;
+			}
 		}
 		
 		.current-video-card {

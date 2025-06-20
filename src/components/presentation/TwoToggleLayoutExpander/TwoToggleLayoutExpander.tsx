@@ -1,9 +1,10 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
 import "./../../../styling/elements/expander.css"
 import "./TwoToggleLayoutExpander.css"
 
 export interface ITwoToggleLayoutExpanderProperties {
+	className?: string;
 	expanded: boolean;
 	onExpandedEvent?: (open: boolean) => void;
 	openMessage?: string;
@@ -14,9 +15,11 @@ export interface ITwoToggleLayoutExpanderProperties {
 	openButtonContent: React.ReactNode;
 	closeButtonContent: React.ReactNode;
 	align?: "left" | "middle" | "right";
+	content?: React.ReactNode;
 }
 
 export function TwoToggleLayoutExpander({
+		className,
 		expanded,
 		onExpandedEvent,
 		openMessage,
@@ -26,11 +29,12 @@ export function TwoToggleLayoutExpander({
 		children,
 		openButtonContent,
 		closeButtonContent,
-		align
+		align,
+		content
 	}: ITwoToggleLayoutExpanderProperties): React.ReactNode {
 	return (
 		<Collapsible.Root open={expanded}>
-			<div className="expander-inner" data-align={align ?? "left"}>
+			<div className={`${className} expander-inner`} data-align={align ?? "left"}>
 				<Collapsible.Trigger asChild>
 					<button
 						className="layout-option-button button-base button-small square-button"
@@ -51,7 +55,10 @@ export function TwoToggleLayoutExpander({
 							{closeButtonContent}
 					</button>
 				</Collapsible.Trigger>
-				<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>
+				{
+					content ??
+						<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>
+				}
 			</div>
 			<Collapsible.Content className="expander-content" data-expander-use-slide-animation>
 				{children}
