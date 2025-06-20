@@ -200,6 +200,10 @@
 		&:focus {
 			outline: 1px solid var(--pfy-primary-dark);
 		}
+		
+		&[data-force-focus="true"] {
+			outline: 1px solid var(--pfy-primary-dark);
+		}
 	}
 
 	.medium-text-input {

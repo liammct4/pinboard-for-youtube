@@ -64,6 +64,7 @@ export function VideosPage(): React.ReactNode {
 	const [ searchTerm, setSearchTerm ] = useState<string | null>(null);
 	const [ includeTitles, setIncludeTitles ] = useState<boolean>(true);
 	const [ includeTimestamps, setIncludeTimestamps ] = useState<boolean>(true);
+	const [ focusSearch, setFocusSearch ] = useState<boolean>(false);
 	const temporarySingleState = useSelector((state: RootState) => state.tempState.temporarySingleState);
 	const layoutState = useSelector((state: RootState) => state.tempState.layout);
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
@@ -218,10 +219,12 @@ export function VideosPage(): React.ReactNode {
 						className="search-bar-form"
 						name="search-bar-form"
 						onSuccess={(data) => setSearchTerm(data.searchTerm.trim() != "" ? data.searchTerm.trim() : null )}>
-						<div className="search-bar-wrapper small-text-input">
+						<div className="search-bar-wrapper small-text-input" data-force-focus={focusSearch}>
 							<input
 								name="searchTerm"
-								defaultValue={searchTerm ?? ""}/>
+								defaultValue={searchTerm ?? ""}
+								onBlur={() => setFocusSearch(false)}
+								onFocus={() => setFocusSearch(true)}/>
 							{
 								searchTerm != null ?
 								<button onClick={() => setSearchTerm(null)} title="Clear the current search.">
