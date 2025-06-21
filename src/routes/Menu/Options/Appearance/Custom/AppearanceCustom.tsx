@@ -13,6 +13,7 @@ import "./AppearanceCustom.css"
 import { ValidatedForm } from "../../../../../components/forms/ValidatedForm";
 import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { ColourInput } from "../../../../../components/input/ColourInput/ColourInput";
+import { TemporaryText } from "../../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
 
 interface IEditThemeForm extends ColourPalette {
 	name: string;
@@ -56,13 +57,7 @@ export function AppearanceCustom(): React.ReactNode {
 	}, []);
 	// For the confirmation message when the "Save changes" button is pressed. 
 	const [ updateVisible, setUpdateVisible ] = useState<boolean>(false);
-	useEffect(() => {
-		if (updateVisible == true) {
-			setTimeout(() => {
-				setUpdateVisible(false);
-			}, 6000);
-		}
-	}, [updateVisible]);
+	
 
 	return (
 		<div className="custom-page-outer">
@@ -136,7 +131,13 @@ export function AppearanceCustom(): React.ReactNode {
 				</ValidatedForm>
 				<div className="save-changes-bar">
 					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form" ref={submitButton}/>
-					{updateVisible ? <span className="confirmation-text">Changes Saved!</span> : <></>}
+					<TemporaryText
+						className="temporary-red"
+						visibleTime={6000}
+						textVisible={updateVisible}
+						setTextVisible={setUpdateVisible}>
+							Changes Saved!
+					</TemporaryText>
 				</div>
 			</>}
 		</div>

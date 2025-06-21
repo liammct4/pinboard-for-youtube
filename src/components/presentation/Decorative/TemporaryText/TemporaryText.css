@@ -1,0 +1,19 @@
+.temporary-text {
+	animation: fadeOut 1100ms ease-in;
+	animation-delay: 5s;
+}
+
+.temporary-red {
+	font-size: var(--pfy-font-text-standard);
+	height: var(--pfy-element-button-size-regular);
+	color: var(--pfy-primary-common);
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}

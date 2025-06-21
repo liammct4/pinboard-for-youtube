@@ -33,22 +33,6 @@
 		flex-direction: row;
 		gap: var(--pfy-spacing-large);
 		padding-bottom: var(--pfy-spacing-very-large);
-		
-		.confirmation-text {
-			font-size: var(--pfy-font-text-standard);
-			height: var(--pfy-element-button-size-regular);
-			color: var(--pfy-primary-common);
-			animation: fadeOut 1100ms ease-in;
-			animation-delay: 5s;
-		}
 	}
 }
 
-@keyframes fadeOut {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-}
