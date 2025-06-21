@@ -120,7 +120,10 @@ export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
 	let storage: IStorage | {} | undefined = await chrome.storage.sync.get();
 
-	deepMerge(storage, BLANK_STORAGE_TEMPLATE)
+	deepMerge(storage, BLANK_STORAGE_TEMPLATE);
+
+	(storage as IStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[0].palette));
+
 	await chrome.storage.sync.set(storage);
 }
 
