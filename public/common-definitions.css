@@ -187,7 +187,7 @@
 		background: var(--pfy-field-background);
 		color: var(--pfy-field-content);
 		height: var(--pfy-element-button-size-regular);
-		outline: 0;
+		outline-color: var(--pfy-primary-dark);
 		border: 1px solid var(--pfy-primary-ultradark);
 		border-radius: var(--pfy-element-button-size-regular);
 		font-size: var(--pfy-field-font-size);

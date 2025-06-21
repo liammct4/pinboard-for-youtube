@@ -109,6 +109,7 @@
 					& input {
 						flex-grow: 1;
 						font-size: var(--pfy-field-font-size);
+						color: var(--pfy-field-content);
 						background: none;
 						border: none;
 						padding: none;
