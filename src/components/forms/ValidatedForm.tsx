@@ -36,7 +36,7 @@ export interface IValidatedFormProperties<TForm, TField> {
 export function ValidatedForm<TForm, TField extends string>({ className, name, fieldData = [], onSuccess, onError, children }: IValidatedFormProperties<TForm, TField>) {
 	const [ errors, setErrors ] = useState<FormFieldError<TField>[]>([]);
 	const [ submitCounter, setSubmitCounter ] = useState<number>(0);
-	
+
 	return (
 		<form
 			className={className}

@@ -13,7 +13,7 @@ export function ColourInput<TField extends string>({ label, fieldSize, name, sta
 		<FieldErrorContainer name={name}>
 			<div className="field-row">
 				<label className="label" data-size={labelSize}>{label}</label>
-				<div className="field-input small-text-input" data-size={fieldSize}>
+				<div data-size={fieldSize}>
 					<input
 						className="field-input small-text-input"
 						name={name}

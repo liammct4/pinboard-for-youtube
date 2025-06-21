@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { ThemeContext } from "../../../../../context/theme";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
@@ -23,6 +23,7 @@ export function AppearanceCustom(): React.ReactNode {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const editingTheme: IAppTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
+	const submitButton = useRef<HTMLInputElement>(null!);
 	const handlerBase = useCallback((data: IEditThemeForm) => {
 		let name = data.name;
 
@@ -79,7 +80,7 @@ export function AppearanceCustom(): React.ReactNode {
 							}
 
 							if (action == "Yes") {
-								// TODO: handleSubmit(handler)();
+								submitButton.current.click();
 							}
 
 							setTimeout(() => navigate(".."), 10);
@@ -116,7 +117,7 @@ export function AppearanceCustom(): React.ReactNode {
 						}
 					]}
 					onSuccess={handlerBase}>
-					<FormStyleContext.Provider value={{ labelSize: "large" }}>
+					<FormStyleContext.Provider value={{ labelSize: "very large" }}>
 						<TextInput
 							name="name"
 							label="Theme name"
@@ -128,14 +129,13 @@ export function AppearanceCustom(): React.ReactNode {
 								key={x}
 								name={x as ColourPaletteColours}
 								label={toTitleCase(x.replace(/\-/g, " "))}
-								fieldSize="max"
-								startValue={editingTheme.palette[x as ColourPaletteColours]}
-								/>
+								fieldSize="very small"
+								startValue={editingTheme.palette[x as ColourPaletteColours]}/>
 						)}
 					</FormStyleContext.Provider>
 				</ValidatedForm>
 				<div className="save-changes-bar">
-					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form"/>
+					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form" ref={submitButton}/>
 					{updateVisible ? <span className="confirmation-text">Changes Saved!</span> : <></>}
 				</div>
 			</>}

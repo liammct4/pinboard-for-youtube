@@ -36,11 +36,11 @@
 		/* Colour Picker */
 		&[type="color"] {
 			background: 0;
-			border: none;
-			width: calc(100% + var(--pfy-spacing-standard));
+			padding: 0;
+			height: 100%;
 			box-sizing: content-box;
-			margin-left: calc(var(--pfy-spacing-standard) * -1);
-			
+			border-radius: var(--pfy-spacing-standard);
+
 			/* Remove default styling, such as padding and expand colour preview to full field bar. */
 			&::-webkit-color-swatch-wrapper {
 				padding: 0;
@@ -51,10 +51,13 @@
 				border: none;
 				margin: 0;
 				width: 100%;
-				border-radius: var(--pfy-spacing-large);
 			}
 		}
 		
+		&[data-size="very small"] {
+			width: var(--pfy-field-width-very-small);
+		}
+
 		&[data-size="small"] {
 			width: var(--pfy-field-width-small);
 		}
