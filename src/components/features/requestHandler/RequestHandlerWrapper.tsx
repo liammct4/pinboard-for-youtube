@@ -69,11 +69,6 @@ export function RequestHandlerWrapper({ children }: IWrapperProperties) {
 		}
 
 		return { success: true, response: reattemptedRequest };
-	},
-	GlobalRequestHandler.connectionChangedHandler = (type: ConnectionEventType) => {
-		if (type == "Reconnected") {
-			// TODO.
-		}
 	}
 
 	return children;
