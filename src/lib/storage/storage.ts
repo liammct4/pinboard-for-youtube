@@ -9,14 +9,12 @@ import { createNode, DirectoryTree, IDirectoryNode } from "../directory/director
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IConfig } from "./config.ts"
-import { IDirectoryModificationAction } from "../user/resources/directory.ts"
 import { defaultSettings } from "../config/settings.ts"
 import { deepMerge } from "../util/objects/objects.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
-	themePendingQueue: DataMutation<IAppTheme>[],
-	directoryPendingQueue: DataMutation<IDirectoryModificationAction>[]
+	themePendingQueue: DataMutation<IAppTheme>[]
 }
 
 export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION" | "DEVMODE";
@@ -105,7 +103,6 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 		mutationQueues: {
 			themePendingQueue: [],
 			videoPendingQueue: [],
-			directoryPendingQueue: []
 		}
 	},
 	cache: {
