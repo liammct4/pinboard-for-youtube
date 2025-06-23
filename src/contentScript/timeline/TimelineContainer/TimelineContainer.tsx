@@ -69,13 +69,13 @@ export function TimelineContainer() {
 	}, [ Math.round(videoData?.isVideoPage ? videoData?.data?.currentTime : 0)]);
 	
 	if (!videoData.isVideoPage || videoData.isAdvertisement || !timestampButtonsEnabled) {
-		return <></>
+		return <div className="pfy-timeline-container" ref={timelineContainerRef}/>;
 	}
 	
 	let video = videos[videoData.data.videoID];
 
 	if (video == undefined) {
-		return <></>;
+		return <div className="pfy-timeline-container" ref={timelineContainerRef}/>;
 	}
 	
 	const onTimestampChange = (timestamp: Timestamp) => {
