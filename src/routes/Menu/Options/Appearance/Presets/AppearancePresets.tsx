@@ -139,6 +139,7 @@ export function AppearancePresets(): React.ReactNode {
 				<ActionMessageDialog
 					body="Are you sure you want to clear all custom themes? This cannot be undone."
 					buttons={["Yes", "Cancel"]}
+					defaultFocusedButton="Cancel"
 					onButtonPressed={(action: string) => {
 						if (action == "Yes") {
 							setCustomThemes([])

@@ -68,6 +68,7 @@ export function AppearanceCustom(): React.ReactNode {
 						title="Go back"
 						body="Do you want to save changes made to the theme?"
 						buttons={["Yes", "No", "Cancel"]}
+						defaultFocusedButton="Yes"
 						defaultMessage="Cancel"
 						onButtonPressed={(action: string) => {
 							if (action == "Cancel") {

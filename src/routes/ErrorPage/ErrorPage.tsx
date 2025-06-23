@@ -32,7 +32,8 @@ export function ErrorPage(): React.ReactNode {
 				<ActionMessageDialog
 					title="Wipe data"
 					body="Are you sure that you want to wipe your data? You cannot undo this action."
-					buttons={["Wipe local data"]}
+					buttons={["Wipe local data", "Cancel"]}
+					defaultFocusedButton="Cancel"
 					onButtonPressed={onConfirm}>
 					<button className="button-base button-small">Wipe data</button>
 				</ActionMessageDialog>		

@@ -7,10 +7,11 @@ import "./../../styling/dialog.css"
 
 export type DialogClosedHandler = (result: string) => void;
 
-export interface IMessageDialogProperties {
+export interface IMessageDialogProperties<T extends string> {
 	title: string;
 	body: string;
-	buttons: string[];
+	buttons: T[];
+	defaultFocusedButton: T;
 	defaultMessage?: string;
 	onButtonPressed: DialogClosedHandler;
 	overrideOpen?: boolean | undefined;
@@ -26,7 +27,7 @@ export interface IMessageDialogProperties {
  * @param onButtonPressed A function which has a string parameter, whenever the user clicks on an option, the function will be ran with the chosen option. (This is case sensitive).
  * @param children The button trigger when when pressed, will open the dialog.
  */
-export function ActionMessageDialog({ title, body, buttons, defaultMessage="Cancel", overrideOpen, onButtonPressed, children }: IMessageDialogProperties): React.ReactNode {	
+export function ActionMessageDialog<T extends string>({ title, body, buttons, defaultFocusedButton, defaultMessage="Cancel", overrideOpen, onButtonPressed, children }: IMessageDialogProperties<T>): React.ReactNode {	
 	return (
 		<AlertDialog.Root open={overrideOpen}>
 			<AlertDialog.Trigger asChild>
@@ -52,7 +53,7 @@ export function ActionMessageDialog({ title, body, buttons, defaultMessage="Canc
 					<div className="bottom-footer">
 						{buttons.map(x =>
 							<AlertDialog.Action key={x} asChild>
-								<button type="button" className="button-base button-small" onClick={() => onButtonPressed(x)}>{x}</button>
+								<button autoFocus={defaultFocusedButton == x} type="button" className="button-base button-small" onClick={() => onButtonPressed(x)}>{x}</button>
 							</AlertDialog.Action>
 						)}
 					</div>

@@ -173,6 +173,7 @@ export function VideosPage(): React.ReactNode {
 			{/* Delete selected sections confirmation dialog */}
 			<ActionMessageDialog
 				buttons={["Yes", "Cancel"]}
+				defaultFocusedButton="Cancel"
 				title="Delete selected items"
 				onButtonPressed={(action) => {
 					if (action == "Yes") {
@@ -350,8 +351,9 @@ export function VideosPage(): React.ReactNode {
 										title="Remove everything"
 										body="Are you really sure you want to do this? This action will permanently delete all directories, saved videos and timestamps and is impossible to undo."
 										buttons={[ "I understand, remove everything", "Cancel" ]}
+										defaultFocusedButton="Cancel"
 										onButtonPressed={clearEverything}>
-										<button className="button-base button-small">Clear All</button>
+											<button className="button-base button-small">Clear All</button>
 									</ActionMessageDialog>
 								</LabelGroup>
 							</div>
