@@ -15,6 +15,8 @@ import { RootState } from "../../../../app/store";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import "./VideoDirectoryControls.css"
+import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel";
+import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
 
 export interface IVideoDirectoryControlsProperties {
 	path: NodePath;
@@ -43,29 +45,39 @@ export function VideoDirectoryControls({
 	return (
 		<>
 			<div className="directory-navigator">
-				<div className="navigation-buttons">
-					<button className="button-base button-small square-button" title="Go back." onClick={() => {
-						onDirectoryPathChanged(getParentPathFromPath(path));
-						onNavigate([ ...navigationStack, directory!.slice ]);
-					}} disabled={path.slices[path.slices.length - 1] == "$"}>
-						<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
-					</button>
-					<button className="button-base button-small square-button" title="Go to root directory." onClick={() => {
-						onDirectoryPathChanged(parsePath("$"));
-						onNavigate([]);
-					}}>
-						<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
-					</button>
-					<button className="button-base button-small square-button" title="Go forward." onClick={() => {
-						let stackRemovedSlice = [ ...navigationStack ];
-						let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
+				<ButtonPanel className="navigation-buttons">
+					<SmallButton
+						square
+						disabled={path.slices[path.slices.length - 1] == "$"}	
+						title="Go back."
+						onClick={() => {
+							onDirectoryPathChanged(getParentPathFromPath(path));
+							onNavigate([ ...navigationStack, directory!.slice ]);
+						}}>
+							<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
+					</SmallButton>
+					<SmallButton
+						square
+						title="Go to root directory." onClick={() => {
+							onDirectoryPathChanged(parsePath("$"));
+							onNavigate([]);
+						}}>
+							<IconContainer className="icon-colour-standard" asset={HomeIcon} use-stroke use-fill/>
+					</SmallButton>
+					<SmallButton
+						square
+						disabled={navigationStack.length == 0}
+						title="Go forward."
+						onClick={() => {
+							let stackRemovedSlice = [ ...navigationStack ];
+							let slice: string = stackRemovedSlice.splice(stackRemovedSlice.length - 1, 1)[0];
 
-						onDirectoryPathChanged(directoryPathConcat(path, slice, "DIRECTORY"));
-						onNavigate(stackRemovedSlice);
-					}} disabled={navigationStack.length == 0}>
-						<IconContainer className="icon-colour-standard" asset={LongArrow} use-stroke/>
-					</button>
-				</div>
+							onDirectoryPathChanged(directoryPathConcat(path, slice, "DIRECTORY"));
+							onNavigate(stackRemovedSlice);
+						}}>
+							<IconContainer className="icon-colour-standard" asset={LongArrow} use-stroke/>
+					</SmallButton>
+				</ButtonPanel>
 				{
 					isEditingPathManually ?
 						<input
@@ -102,7 +114,7 @@ export function VideoDirectoryControls({
 											}}
 											onMouseEnter={() => setDirectoryBarHoverPath(parsePath(directPath))}
 											onMouseLeave={() => setDirectoryBarHoverPath(null)}>{x}</button>
-											<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
+												<IconContainer className="icon-colour-standard" asset={ArrowIcon} use-fill/>
 										</li>
 									);
 								})
@@ -110,24 +122,27 @@ export function VideoDirectoryControls({
 							<li>{path.slices[path.slices.length - 1]}</li>
 						</ul>
 				}
-				<button className="settings-button button-base button-small square-button" onClick={() => dispatch(tempStateActions.setLayoutState({ ...layout, isDirectoryBrowserSettingsExpanded: !layout.isDirectoryBrowserSettingsExpanded }))}>
-					<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
-				</button>
+				<SmallButton
+					square
+					className="settings-button"
+					onClick={() => dispatch(tempStateActions.setLayoutState({ ...layout, isDirectoryBrowserSettingsExpanded: !layout.isDirectoryBrowserSettingsExpanded }))}>
+						<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
+				</SmallButton>
 			</div>
 			<ToggleExpander expanded={layout.isDirectoryBrowserSettingsExpanded}>
 				<div className="settings-panel">
 					<LabelGroup label="View">
-						<div className="view-section">
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
+						<ButtonPanel className="view-section">
+							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
 								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "MINIMAL" }}/>
-							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={layout.videoItemViewStyle == "COMPACT"}>
+							</SmallButton>
+							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={layout.videoItemViewStyle == "COMPACT"}>
 								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "COMPACT" }}/>
-							</button>
-							<button className="button-base button-small square-button" onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
+							</SmallButton>
+							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
 								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "REGULAR" }}/>
-							</button>
-						</div>
+							</SmallButton>
+						</ButtonPanel>
 					</LabelGroup>
 				</div>
 			</ToggleExpander>

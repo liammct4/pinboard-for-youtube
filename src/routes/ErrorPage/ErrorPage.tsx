@@ -5,6 +5,8 @@ import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessag
 import { LabeledArrowExpander } from "../../components/presentation/LabeledArrowExpander/LabeledArrowExpander";
 import "./ErrorPage.css"
 import { accessStorage, BLANK_STORAGE_TEMPLATE, modifyStorage } from "../../lib/storage/storage";
+import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
+import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
 
 export function ErrorPage(): React.ReactNode {
 	// useRouteError() doesn't work, returns undefined always.
@@ -26,18 +28,18 @@ export function ErrorPage(): React.ReactNode {
 		<section className="error-page">
 			<SplitHeading text="An error occurred"/>
 			<p className="main-error-text">An unknown error has occurred.</p>
-			<div className="toolbar">
-				<button className="button-base button-small" onClick={() => navigate("/app")}>Home page</button>
-				<button className="button-base button-small" onClick={onCopyToClipboard}>Copy data to clipboard</button>
+			<ButtonPanel className="toolbar" direction="Vertical">
+				<SmallButton onClick={() => navigate("/app")}>Home page</SmallButton>
+				<SmallButton onClick={onCopyToClipboard}>Copy data to clipboard</SmallButton>
 				<ActionMessageDialog
 					title="Wipe data"
 					body="Are you sure that you want to wipe your data? You cannot undo this action."
 					buttons={["Wipe local data", "Cancel"]}
 					defaultFocusedButton="Cancel"
 					onButtonPressed={onConfirm}>
-					<button className="button-base button-small">Wipe data</button>
+						<SmallButton>Wipe data</SmallButton>
 				</ActionMessageDialog>		
-			</div>
+			</ButtonPanel>
 			<LabeledArrowExpander
 				expanded={detailsExpanded}
 				onExpanded={setDetailsExpanded}

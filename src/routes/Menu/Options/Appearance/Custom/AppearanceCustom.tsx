@@ -14,6 +14,7 @@ import { ValidatedForm } from "../../../../../components/forms/ValidatedForm";
 import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { ColourInput } from "../../../../../components/input/ColourInput/ColourInput";
 import { TemporaryText } from "../../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
+import { SmallButton, SmallInputButton } from "../../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 interface IEditThemeForm extends ColourPalette {
 	name: string;
@@ -81,12 +82,12 @@ export function AppearanceCustom(): React.ReactNode {
 
 							setTimeout(() => navigate(".."), 10);
 						}}>
-							<button className="circle-button">
+							<SmallButton circle>
 								<IconContainer
 									asset={ArrowIcon}
 									className="icon-colour-standard arrow-icon"
 									use-stroke/>
-							</button>
+							</SmallButton>
 					</ActionMessageDialog>
 					<h3 className="theme-title">{editingTheme.name}</h3>
 				</div>
@@ -131,7 +132,7 @@ export function AppearanceCustom(): React.ReactNode {
 					</FormStyleContext.Provider>
 				</ValidatedForm>
 				<div className="save-changes-bar">
-					<input className="button-base button-small" type="submit" value="Save Changes" form="edit-custom-theme-form" ref={submitButton}/>
+					<SmallInputButton type="submit" value="Save Changes" form="edit-custom-theme-form" ref={submitButton}/>
 					<TemporaryText
 						className="temporary-red"
 						visibleTime={6000}

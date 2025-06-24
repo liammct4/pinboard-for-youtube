@@ -82,83 +82,9 @@
 		}
 	}
 
-	.button-small {
-		padding: 0;
-		height: var(--pfy-element-button-size-regular);
-		padding-left: var(--pfy-spacing-large);
-		padding-right: var(--pfy-spacing-large);
-		border-width: 1px;
-		border-radius: var(--pfy-spacing-standard-compact);
-		font-size: var(--pfy-font-text-standard);
-	}
-
-	.button-medium {
-		padding: 0;
-		height: var(--pfy-element-button-size-medium);
-		padding-left: var(--pfy-spacing-very-large);
-		padding-right: var(--pfy-spacing-very-large);
-		border-width: 1px;
-		border-radius: var(--pfy-spacing-standard);
-		font-size: var(--pfy-font-text-standard);
-	}
-
-	.button-large {
-		padding: 0;
-		height: var(--pfy-element-button-size-large);
-		padding-left: var(--pfy-spacing-very-large);
-		padding-right: var(--pfy-spacing-very-large);
-		border-width: 1px;
-		border-radius: var(--pfy-spacing-standard);
-		font-size: var(--pfy-font-text-standard);
-	}
-
 	.button-invisible {
 		background: none;
 		border: 0px;
-	}
-
-	/* Square button (Only makes the button square, no additional styling) */
-	.square-button {
-		aspect-ratio: 1 / 1;
-		width: var(--pfy-element-button-size-regular);
-		height: var(--pfy-element-button-size-regular);
-		padding: 0 !important;
-	}
-
-	/* Circle button */
-	.circle-button {
-		width: var(--pfy-element-button-size-regular);
-		height: var(--pfy-element-button-size-regular);
-		border-radius: 8px;
-		background: var(--pfy-shade-06);
-		border: 1px solid var(--pfy-primary-dark);
-		padding: 0;
-		color: white;
-		margin: auto 0 auto 0;
-		transition: background 0.2s;
-		font-size: 15pt;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	
-		&:hover {
-			background: var(--pfy-shade-05);
-		}
-
-		&:active {
-			background: var(--pfy-shade-04);
-		}
-
-		&:focus {
-			outline: 1px solid var(--pfy-primary-ultradark);
-		}
-
-		&:disabled {
-			background-color: var(--pfy-empty-02-raised);
-			color: var(--pfy-shade-03);
-			border: 1px solid var(--pfy-primary-faded);
-			cursor: not-allowed;
-		}
 	}
 
 	/* A button with no strong outline or background, useful for links. */

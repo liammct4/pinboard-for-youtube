@@ -6,6 +6,7 @@ import ArrowIcon from "./../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../images/svgAsset";
 import "./../../../styling/elements/expander.css"
 import "./LabeledArrowExpander.css"
+import { SmallButton } from "../../interactive/buttons/SmallButton/SmallButton";
 
 export interface ILabeledArrowExpanderProperties {
 	className?: string;
@@ -25,7 +26,7 @@ export function LabeledArrowExpander({ className, expanded, onExpanded, openMess
 		<Collapsible.Root className={className} open={onExpanded == null ? isExpanded : expanded} onOpenChange={onExpanded ?? setExpanded}>
 			<div className="expander-inner">
 				<Collapsible.Trigger asChild>
-					<button type="button" className="circle-button expander-control-button">
+					<SmallButton circle type="button" className="expander-control-button">
 						<div className="indicator-arrow-wrapper" data-state={expanded}>
 							<IconContainer
 								asset={ArrowIcon}
@@ -33,7 +34,7 @@ export function LabeledArrowExpander({ className, expanded, onExpanded, openMess
 								data-state={expanded}
 								use-stroke/>
 						</div>
-					</button>
+					</SmallButton>
 				</Collapsible.Trigger>
 				<h3 className="message-text">{expanded ? openMessage : closeMessage}</h3>
 			</div>

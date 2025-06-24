@@ -10,6 +10,7 @@ import { settingsLayout } from "./settingsLayout";
 import { ValidatedForm } from "../../../../components/forms/ValidatedForm";
 import { getInputComponent } from "../../../../components/input/componentLocator";
 import { TemporaryText } from "../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
+import { SmallInputButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 interface ISettingsForm extends Settings { }
 
@@ -58,7 +59,7 @@ export function GeneralPage(): React.ReactNode {
 				</ValidatedForm>
 				<hr className="bold-separator"/>
 				<div className="save-changes-row">
-					<input className="modify-settings-button button-small button-base" type="submit" form="modify-settings-form" value="Save Changes"/>
+					<SmallInputButton className="modify-settings-button" type="submit" form="modify-settings-form" value="Save Changes"/>
 					<TemporaryText
 						className="temporary-red"
 						textVisible={saveChangesVisible}

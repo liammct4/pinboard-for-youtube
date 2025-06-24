@@ -12,6 +12,8 @@ import { ActionMessageDialog } from "../../../../../components/dialogs/ActionDia
 import "./AppearancePresets.css"
 import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { DropdownInput } from "../../../../../components/input/DropdownInput/DropdownInput";
+import { SmallButton } from "../../../../../components/interactive/buttons/SmallButton/SmallButton";
+import { ButtonPanel } from "../../../../../components/interactive/ButtonPanel/ButtonPanel";
 
 interface IThemePresetProperties {
 	theme: IAppTheme;
@@ -37,16 +39,16 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 					</div>
 				</button>
 				{ theme.modifiable ?
-				<div className="modify-buttons">
-					<button className="square-button button-base button-small" onClick={() => deleteCustomTheme(theme.id)}>
+				<ButtonPanel className="modify-buttons">
+					<SmallButton square onClick={() => deleteCustomTheme(theme.id)}>
 						<IconContainer
 							className="icon-colour-standard"
 							asset={DeleteIcon}
 							use-stroke
 							use-fill/>
-					</button>
-					<button className="button-base button-small" onClick={() => navigate(`custom/${theme.name}`)}>Edit</button>
-				</div>
+					</SmallButton>
+					<SmallButton onClick={() => navigate(`custom/${theme.name}`)}>Edit</SmallButton>
+				</ButtonPanel>
 				: <></>}
 			</div>
 		</Reorder.Item>
@@ -92,7 +94,7 @@ export function AppearancePresets(): React.ReactNode {
 					name="add-custom-theme-form"
 					title="Add Custom Theme"
 					description={<>Choose a name for your custom theme. This <b>Cannot</b> already exist or be a default theme.</>}
-					trigger={<button className="button-base button-small">New theme</button>}
+					trigger={<SmallButton>New theme</SmallButton>}
 					labelSize="medium"
 					submitText="Add"
 					fieldData={[
@@ -147,7 +149,7 @@ export function AppearancePresets(): React.ReactNode {
 					}}
 					title="Clear Custom Themes"
 					defaultMessage="Cancel">
-					<button className="button-base button-small">Clear All</button>
+					<SmallButton>Clear All</SmallButton>
 				</ActionMessageDialog>
 			</div>
 			<hr className="regular-separator"/>

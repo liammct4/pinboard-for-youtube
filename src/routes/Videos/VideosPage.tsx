@@ -37,6 +37,8 @@ import { ValidatedForm } from "../../components/forms/ValidatedForm.tsx";
 import { CompactVideoItem } from "../../components/video/styledVideoItems/CompactVideoItem/CompactVideoItem.tsx";
 import { VideoSearchItem } from "../../components/video/VideoSearchItem/VideoSearchItem.tsx";
 import { SwitchInputPrimitive } from "../../components/input/SwitchInput/SwitchInput.tsx";
+import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton.tsx";
+import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel.tsx";
 
 type AddVideoFormFields = "link";
 type AddVideoForm = {
@@ -208,10 +210,10 @@ export function VideosPage(): React.ReactNode {
 						{/* Current video */}
 						<VideoCard className="current-video-card" videoID={activeVideoID ?? undefined} placeholderTitle="No video found!"/>
 						{/* Current video controls */}
-						<div className="current-video-buttons">
-							<button className="button-base button-small" onClick={onSaveActiveVideo} disabled={activeVideoID == null} title="Save this video to the current directory.">Save video</button>
-							<button className="button-base button-small" onClick={onPinCurrentTimestamp} disabled={activeVideoID == null} title="Save the current time of the playing video as a new timestamp.">Pin timestamp</button>
-						</div>
+						<ButtonPanel className="current-video-buttons">
+							<SmallButton onClick={onSaveActiveVideo} disabled={activeVideoID == null} title="Save this video to the current directory.">Save video</SmallButton>
+							<SmallButton onClick={onPinCurrentTimestamp} disabled={activeVideoID == null} title="Save the current time of the playing video as a new timestamp.">Pin timestamp</SmallButton>
+						</ButtonPanel>
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}
 				<SplitHeading className="video-collection-section-heading" text={searchTerm == null ? "My Video Timestamps" : "Search Results"}></SplitHeading>
@@ -235,12 +237,12 @@ export function VideosPage(): React.ReactNode {
 								: <></>
 							}
 						</div>
-						<button className="button-base button-small circle-button" type="submit" title="Search through all saved videos with keywords.">
+						<SmallButton circle type="submit" title="Search through all saved videos with keywords.">
 							<IconContainer
 								asset={SearchIcon}
 								className="icon-colour-standard"
 								use-stroke/>
-						</button>
+						</SmallButton>
 					</ValidatedForm>
 				</div>
 				{
@@ -267,7 +269,7 @@ export function VideosPage(): React.ReactNode {
 									onNavigate={setNavigationStack}/>
 							</VideoDirectoryBrowserContext.Provider>
 							{/* Modification buttons */ }
-							<div className="modification-button-panel">
+							<ButtonPanel className="modification-button-panel">
 								<LabelGroup className="modification-label-group" label="Add">
 									<FormDialog
 										name="add-video-form"
@@ -275,7 +277,7 @@ export function VideosPage(): React.ReactNode {
 										labelSize="small"
 										submitText="Add"
 										onSuccess={addVideoFormHandler}
-										trigger={<button className="button-base button-small">Video</button>}>
+										trigger={<SmallButton>Video</SmallButton>}>
 											<TextInput<AddVideoFormFields>
 												label="Link:"
 												name="link"
@@ -288,6 +290,7 @@ export function VideosPage(): React.ReactNode {
 										labelSize="medium"
 										submitText="Add"
 										onSuccess={addDirectoryFormHandler}
+										trigger={<SmallButton>Directory</SmallButton>}
 										fieldData={[
 											{
 												name: "directoryName",
@@ -337,8 +340,7 @@ export function VideosPage(): React.ReactNode {
 													return { error: false };
 												}
 											}
-										]}
-										trigger={<button className="button-base button-small">Directory</button>}>
+										]}>
 											<TextInput<AddDirectoryFormFields>
 												label="Section Name:"
 												name="directoryName"
@@ -347,16 +349,16 @@ export function VideosPage(): React.ReactNode {
 									</FormDialog>
 								</LabelGroup>
 								<LabelGroup className="modification-label-group" label="Actions" placeLineAfter={false}>
-									<ActionMessageDialog
-										title="Remove everything"
-										body="Are you really sure you want to do this? This action will permanently delete all directories, saved videos and timestamps and is impossible to undo."
-										buttons={[ "I understand, remove everything", "Cancel" ]}
-										defaultFocusedButton="Cancel"
-										onButtonPressed={clearEverything}>
-											<button className="button-base button-small">Clear All</button>
-									</ActionMessageDialog>
+										<ActionMessageDialog
+											title="Remove everything"
+											body="Are you really sure you want to do this? This action will permanently delete all directories, saved videos and timestamps and is impossible to undo."
+											buttons={[ "I understand, remove everything", "Cancel" ]}
+											defaultFocusedButton="Cancel"
+											onButtonPressed={clearEverything}>
+												<SmallButton>Clear All</SmallButton>
+										</ActionMessageDialog>
 								</LabelGroup>
-							</div>
+							</ButtonPanel>
 						</>
 					:
 						<>

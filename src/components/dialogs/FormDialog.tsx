@@ -3,6 +3,8 @@ import { DialogBox } from "./DialogBox";
 import { FormStyleContext, SizeOption } from "../input/formStyleContext";
 import "./FormDialog.css"
 import { IValidatedFormProperties, ValidatedForm } from "../forms/ValidatedForm";
+import { SmallButton, SmallInputButton } from "../interactive/buttons/SmallButton/SmallButton";
+import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 
 export interface IFormDialogProperties<TForm, TField extends string> extends IValidatedFormProperties<TForm, TField> {
 	title: string;
@@ -40,10 +42,12 @@ export function FormDialog<TForm, TField extends string>({
 			trigger={trigger}
 			description={description}
 			footer={
-				<>
-					<input type="submit" value={submitText} form={name} className="button-base button-small"/>
-					<Dialog.Close className="button-base button-small">Close</Dialog.Close>
-				</>
+				<ButtonPanel>
+					<SmallInputButton type="submit" value={submitText} form={name}/>
+					<Dialog.DialogClose asChild>
+						<SmallButton>Close</SmallButton>
+					</Dialog.DialogClose>
+				</ButtonPanel>
 			}>
 			<ValidatedForm
 				className="dialog-form"

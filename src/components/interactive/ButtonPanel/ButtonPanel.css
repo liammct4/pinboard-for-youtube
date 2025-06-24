@@ -1,0 +1,7 @@
+.button-panel {
+	display: flex;
+	gap: var(--pfy-spacing-standard-compact);
+	list-style-type: none;
+	flex-direction: column;
+	margin: 0;
+}

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserAccount } from "../../../../../components/features/useUserAccount";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
+import { ButtonPanel } from "../../../../../components/interactive/ButtonPanel/ButtonPanel";
+import { LargeButton } from "../../../../../components/interactive/buttons/LargeButton/LargeButton";
 
 export function AccountsInfo(): React.ReactNode {
 	const navigate = useNavigate();
@@ -35,16 +37,10 @@ export function AccountsInfo(): React.ReactNode {
 				To get started, click the <b>Create account</b> button below.
 				Or alternatively, login with an existing account.
 			</p>
-			<div className="account-button-option-bar">
-				<button
-					className="button-base button-large"
-					onClick={() => navigate("register")}
-					disabled>Create Account</button>
-				<button
-					className="button-base button-large"
-					onClick={() => navigate("login")}
-					disabled>Login</button>
-			</div>
+			<ButtonPanel className="account-button-option-bar">
+				<LargeButton disabled onClick={() => navigate("register")}>Create Account</LargeButton>
+				<LargeButton disabled onClick={() => navigate("login")}>Login</LargeButton>
+			</ButtonPanel>
 		</>
 	);
 }

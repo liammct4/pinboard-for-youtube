@@ -4,6 +4,8 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
+import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
+import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 
 export type DialogClosedHandler = (result: string) => void;
 
@@ -39,24 +41,24 @@ export function ActionMessageDialog<T extends string>({ title, body, buttons, de
 					<div className="top-header">
 						<AlertDialog.Title className="title">{title}</AlertDialog.Title>
 						<AlertDialog.Action asChild>
-							<button type="button" className="circle-button close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
+							<SmallButton circle type="button" className="close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
 								<IconContainer
 									className="icon-colour-standard"
 									asset={CrossIcon}
 									use-stroke/>
-							</button>
+							</SmallButton>
 						</AlertDialog.Action>
 					</div>
 					<div className="inner-content-area">
 						<AlertDialog.Description className="description">{body}</AlertDialog.Description>
 					</div>
-					<div className="bottom-footer">
+					<ButtonPanel className="bottom-footer">
 						{buttons.map(x =>
 							<AlertDialog.Action key={x} asChild>
-								<button autoFocus={defaultFocusedButton == x} type="button" className="button-base button-small" onClick={() => onButtonPressed(x)}>{x}</button>
+								<SmallButton autoFocus={defaultFocusedButton == x} type="button" onClick={() => onButtonPressed(x)}>{x}</SmallButton>
 							</AlertDialog.Action>
 						)}
-					</div>
+					</ButtonPanel>
 				</AlertDialog.Content>
 			</AlertDialog.Portal>
 		</AlertDialog.Root>

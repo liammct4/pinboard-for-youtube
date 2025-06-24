@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
 import "./../../../styling/elements/expander.css"
 import "./TwoToggleLayoutExpander.css"
+import { SmallButton } from "../../interactive/buttons/SmallButton/SmallButton";
 
 export interface ITwoToggleLayoutExpanderProperties {
 	className?: string;
@@ -36,24 +37,26 @@ export function TwoToggleLayoutExpander({
 		<Collapsible.Root open={expanded}>
 			<div className={`${className} expander-inner`} data-align={align ?? "left"}>
 				<Collapsible.Trigger asChild>
-					<button
-						className="layout-option-button button-base button-small square-button"
+					<SmallButton
+						className="layout-option-button"
 						type="button"
 						title={openTooltip}
 						onClick={() => onExpandedEvent?.(true)}
-						data-active={expanded}>
+						data-active={expanded}
+						square>
 							{openButtonContent}
-					</button>
+					</SmallButton>
 				</Collapsible.Trigger>
 				<Collapsible.Trigger asChild>
-					<button
-						className="layout-option-button button-base button-small square-button"
+					<SmallButton
+						className="layout-option-button"
 						type="button"
 						title={closeTooltip}
 						onClick={() => onExpandedEvent?.(false)}
-						data-active={!expanded}>
+						data-active={!expanded}
+						square>
 							{closeButtonContent}
-					</button>
+					</SmallButton>
 				</Collapsible.Trigger>
 				{
 					content ??

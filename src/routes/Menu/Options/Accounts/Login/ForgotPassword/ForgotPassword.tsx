@@ -11,6 +11,8 @@ import { TextInput } from "../../../../../../components/input/TextInput/TextInpu
 import "./ForgotPassword.css"
 import { getItemFromStorage } from "../../../../../../lib/storage/storage";
 import { ValidatedForm } from "../../../../../../components/forms/ValidatedForm";
+import { SmallInputButton } from "../../../../../../components/interactive/buttons/SmallButton/SmallButton";
+import { MediumInputButton } from "../../../../../../components/interactive/buttons/MediumButton/MediumButton";
 
 type ResetPasswordFormField = "verificationCode" | "newPassword" | "reenterNewPassword";
 type ResetPasswordForm = {
@@ -125,10 +127,10 @@ export function ForgotPassword(): React.ReactNode {
 				<UserDetailsFormPrimitive
 					showPassword={false}/>
 			</ValidatedForm>
-			<input
+			<MediumInputButton
 				form="reset-password-email-form"
 				type="submit"
-				className="send-reset-email-button button-medium button-base"
+				className="send-reset-email-button"
 				value="Send password reset email"/>
 			{newPasswordFormVisible ?
 				<>
@@ -155,10 +157,10 @@ export function ForgotPassword(): React.ReactNode {
 									fieldSize="medium"
 									startValue=""
 									textInputType="password"/>
-								<input
+								<MediumInputButton
 									form="reset-password-form"
 									type="submit"
-									className="reset-button button-medium button-base"
+									className="reset-button"
 									value="Reset Password"/>
 							</FormStyleContext.Provider>
 					</ValidatedForm>

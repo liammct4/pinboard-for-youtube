@@ -66,9 +66,6 @@
 		}
 
 		.current-video-buttons {
-			display: flex;
-			flex-direction: row;
-			gap: var(--pfy-spacing-standard);
 			margin-bottom: var(--pfy-spacing-standard-compact);
 		}
 

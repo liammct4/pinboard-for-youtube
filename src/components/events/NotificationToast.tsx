@@ -6,6 +6,7 @@ import { Asset, IconContainer } from "../images/svgAsset";
 import CloseIcon from "./../../../assets/symbols/cross.svg?react"
 import * as Toast from "@radix-ui/react-toast";
 import "./NotificationToast.css"
+import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 
 export interface INotificationToastProperties {
 	isOpen: boolean;
@@ -34,14 +35,12 @@ export function NotificationToast({ isOpen, title, message, colour, image, anima
 						<p className="toast-message">{message}</p>
 					</Toast.Description>
 					<Toast.Action className="close-button" asChild altText="Close">
-						<button
-							className="button-small circle-button"
-							onClick={() => cancelCurrentNotification()}>
+						<SmallButton circle onClick={() => cancelCurrentNotification()}>
 							<IconContainer
 								asset={CloseIcon}
 								className="icon-colour-standard"
 								use-stroke/>
-						</button>
+						</SmallButton>
 					</Toast.Action>
 				</div>
 			</Toast.Root>

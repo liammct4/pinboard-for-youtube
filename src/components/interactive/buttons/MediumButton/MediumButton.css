@@ -1,0 +1,9 @@
+.medium-button {
+	padding: 0;
+	height: var(--pfy-element-button-size-medium);
+	padding-left: var(--pfy-spacing-very-large);
+	padding-right: var(--pfy-spacing-very-large);
+	border-width: 1px;
+	border-radius: var(--pfy-spacing-standard);
+	font-size: var(--pfy-font-text-standard);
+}

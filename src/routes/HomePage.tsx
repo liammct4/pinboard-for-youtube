@@ -2,6 +2,8 @@
 
 import { Outlet, useNavigate } from "react-router-dom";
 import PfyLogo from "./../../assets/logo/logo.svg?react";
+import { ButtonPanel } from "../components/interactive/ButtonPanel/ButtonPanel";
+import { SmallButton } from "../components/interactive/buttons/SmallButton/SmallButton";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
@@ -18,14 +20,18 @@ export function HomePage(): React.ReactNode {
 			</div>
 			<div className="footer-area">
 				<hr className="bold-separator"></hr>
-				<div className="button-options">
-					<button className="button-base button-small"
+				<ButtonPanel className="button-options" direction="Vertical">
+					<SmallButton
 						onClick={() => navigate("menu/options")}
-						title="Change settings.">Options</button>
-					<button className="button-base button-small"
+						title="Change settings.">
+							Options
+					</SmallButton>
+					<SmallButton
 						onClick={() => navigate("menu/help")}
-						title="Find guides and report bugs.">Help</button>
-				</div>
+						title="Find guides and report bugs.">
+							Help
+					</SmallButton>
+				</ButtonPanel>
 				<h2 className="extension-version">Version 1.0.0</h2>
 			</div>
 		</div>

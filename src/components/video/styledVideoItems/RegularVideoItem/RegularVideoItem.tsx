@@ -11,6 +11,7 @@ import { IconContainer } from "../../../images/svgAsset";
 import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeUtil";
 import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
+import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
 
 export function RegularVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
@@ -20,9 +21,9 @@ export function RegularVideoItem(): React.ReactNode {
 		<div className="regular-video-item">
 			<div className="video-info-area">
 				<VideoThumbnail className="video-thumbnail" videoID={video.id} alt=""/>
-				<button className="link-button button-base square-button button-small" onClick={() => window.open(getYouTubeLinkFromVideoID(video.id))}>
+				<SmallButton square onClick={() => window.open(getYouTubeLinkFromVideoID(video.id))}>
 					<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
-				</button>
+				</SmallButton>
 				<span className="video-title">{videoInfo?.title}</span>
 				<a className="link-text video-channel" href={videoInfo?.author_url}>{videoInfo?.author_name}</a>
 			</div>
@@ -38,11 +39,11 @@ export function RegularVideoItem(): React.ReactNode {
 							onTimestampChanged={onTimestampChanged}
 							onTimestampsChanged={setTimestamps}
 							timestamps={video.timestamps}/>
-						<button className="button-base circle-button" onClick={() => {
+						<SmallButton circle onClick={() => {
 							onTimestampAdded({ id: crypto.randomUUID(), message: "New timestamp", time: 60 });
 						}}>
 							<IconContainer className="icon-colour-standard" asset={PlusIcon} use-stroke/>
-						</button>
+						</SmallButton>
 					</>
 			</LabeledArrowExpander>
 		</div>

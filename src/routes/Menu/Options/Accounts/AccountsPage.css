@@ -5,12 +5,9 @@
 }
 
 .account-button-option-bar {
-	display: flex;
-	flex-direction: row;
-	gap: var(--pfy-spacing-large);
 	justify-content: center;
 
-	.button-base {
+	& button {
 		width: 50%;
 	}
 }

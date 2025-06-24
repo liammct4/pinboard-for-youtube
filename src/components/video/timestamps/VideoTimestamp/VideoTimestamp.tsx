@@ -13,6 +13,8 @@ import "./VideoTimestamp.css"
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../app/store.ts";
 import { TextInput } from "../../../input/TextInput/TextInput.tsx";
+import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton.tsx";
+import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel.tsx";
 
 type EditTimestampFormNames = "time" | "message";
 type EditTimestampForm = {
@@ -60,29 +62,29 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 
 	return (
 		<li className={`${className} timestamp-inner`}>
-			<button className="square-button button-base button-small" type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+			<SmallButton square type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
 				<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
-			</button>
+			</SmallButton>
 			<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
 			<div>
 				<span className="message-text">{timestamp.message}</span>
 			</div>
 			{
 				allowControls ?
-					<>
-						<button className="square-button button-base button-small delete-timestamp-button" onClick={onDelete} aria-label="Delete the current timestamp.">
+					<ButtonPanel>
+						<SmallButton square onClick={onDelete} aria-label="Delete the current timestamp.">
 							<IconContainer
 								className="bin-icon icon-colour-standard"
 								asset={BinIcon}
 								use-stroke/>
-						</button>
+						</SmallButton>
 						{/* Edit dialog */}
 						<FormDialog
 							name="edit-timestamp-form"
 							title="Edit timestamp"
 							submitText="Save"
 							labelSize="small"
-							trigger={<button className="edit-button button-base button-small">Edit</button>}>
+							trigger={<SmallButton className="edit-button">Edit</SmallButton>}>
 								<TextInput<EditTimestampFormNames>
 									label="Time:"
 									name="time"
@@ -94,7 +96,7 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 									fieldSize="large"
 									startValue={timestamp.message}/>
 						</FormDialog>
-					</>
+					</ButtonPanel>
 					:
 					<></>
 			}

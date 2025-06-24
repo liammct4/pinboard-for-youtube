@@ -59,15 +59,8 @@
 		}
 
 		.button-options {
-			display: grid;
-			grid-template-rows: 1fr 1fr;
 			padding: var(--pfy-spacing-standard);
 			gap: var(--pfy-spacing-standard);
-
-			:is(button, a) {
-				margin-top: auto;
-				margin-bottom: auto;
-			}
 		}
 
 		.extension-version {

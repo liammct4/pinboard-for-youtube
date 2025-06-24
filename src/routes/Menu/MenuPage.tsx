@@ -5,6 +5,7 @@ import CloseIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../../components/images/svgAsset";
 import { toTitleCase } from "../../lib/util/generic/stringUtil";
 import "./MenuPage.css"
+import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
 
 export function MenuPage(): React.ReactNode {
 	const navigate = useNavigate();
@@ -39,12 +40,12 @@ export function MenuPage(): React.ReactNode {
 							</li>
 						)}
 					</ul>
-					<button className="close-button circle-button" onClick={() => navigate("..")}>
+					<SmallButton circle className="close-button" onClick={() => navigate("..")}>
 						<IconContainer
 							className="icon-colour-standard"
 							asset={CloseIcon}
 							use-stroke/>
-					</button>
+					</SmallButton>
 					<hr className="bold-separator"></hr>
 				</div>
 				<div className="page-content">

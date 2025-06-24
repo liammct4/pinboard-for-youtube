@@ -9,6 +9,7 @@ import { endResendVerfiyEmailState } from "../../../../../../lib/storage/persist
 import { HttpStatusCode } from "../../../../../../lib/util/http";
 import "./RegisterSuccess.css"
 import { accessStorage } from "../../../../../../lib/storage/storage";
+import { SmallButton } from "../../../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 export function RegisterSuccess(): React.ReactNode {
 	const navigate = useNavigate();
@@ -43,9 +44,9 @@ export function RegisterSuccess(): React.ReactNode {
 		<>
 			<div className="title-area">
 				<h4 className="register-success-title">Your account has been successfuly created!</h4>
-				<button className="button-small circle-button" onClick={cancelVerificationPage} title="Exit to the account page">
+				<SmallButton circle onClick={cancelVerificationPage} title="Exit to the account page">
 					<IconContainer className="icon-colour-standard" asset={CrossIcon} use-stroke/>
-				</button>
+				</SmallButton>
 			</div>
 			<p className="paragraph-regular">
 				Please verify your email address. If you haven't recieved an email, please

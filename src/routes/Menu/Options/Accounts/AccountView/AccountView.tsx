@@ -13,6 +13,7 @@ import { useUserAccount } from "../../../../../components/features/useUserAccoun
 import "./AccountView.css"
 import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { FormField, Validator, ValidatorResult } from "../../../../../components/forms/ValidatedForm";
+import { SmallButton } from "../../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 type UpdatePasswordFormField = "previousPassword" | "newPassword" | "confirmNewPassword";
 type UpdatePasswordForm = {
@@ -234,7 +235,7 @@ export function AccountView(): React.ReactNode {
 										submitText="Change email address"
 										labelSize="medium"
 										fieldData={userDetailsFieldData}
-										trigger={<button className="button-small button-base">Change</button>}>
+										trigger={<SmallButton>Change</SmallButton>}>
 											<UserDetailsFormPrimitive showPassword={false}/>
 									</FormDialog>
 								</td>
@@ -250,7 +251,7 @@ export function AccountView(): React.ReactNode {
 										submitText="Change password"
 										labelSize="very large"
 										fieldData={updatePasswordForm}
-										trigger={<button className="button-small button-base">Change</button>}>
+										trigger={<SmallButton>Change</SmallButton>}>
 											<TextInput<UpdatePasswordFormField>
 												name="previousPassword"
 												label="Previous Password"
@@ -275,7 +276,7 @@ export function AccountView(): React.ReactNode {
 					<div className="details-actions">
 						<ul className="details-actions-list">
 							<li>
-								<button className="button-small button-base" onClick={onSignout}>Sign out</button>
+								<SmallButton onClick={onSignout}>Sign out</SmallButton>
 							</li>
 						</ul>
 						<hr className="bold-separator"/>
@@ -289,7 +290,7 @@ export function AccountView(): React.ReactNode {
 									name="delete-account-form"
 									fieldData={userDetailsFieldData}
 									onSuccess={(data) => deleteUserAccount(user.email, data.password, user.tokens)}
-									trigger={<button className="button-small button-base">Delete account</button>}>
+									trigger={<SmallButton>Delete account</SmallButton>}>
 										<UserDetailsFormPrimitive showEmail={false}/>
 								</FormDialog>
 							</li>
@@ -299,7 +300,7 @@ export function AccountView(): React.ReactNode {
 				<SplitHeading text="Actions"/>
 				<ul className="actions-list">
 					<li>
-						<button className="button-small button-base">Download your data</button>
+						<SmallButton>Download your data</SmallButton>
 					</li>
 				</ul>
 			</>

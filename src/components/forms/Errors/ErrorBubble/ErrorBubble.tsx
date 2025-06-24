@@ -5,6 +5,7 @@ import { IconContainer } from "../../../images/svgAsset";
 import WarningIcon from "./../../../../../assets/icons/status/warning.svg?react"
 import CrossIcon from "./../../../../../assets/symbols/cross.svg?react"
 import "./ErrorBubble.css"
+import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
 
 export interface IErrorBubbleProperties {
 	onClose?: () => void;
@@ -19,12 +20,12 @@ export function ErrorBubble({ onClose, children: message }: IErrorBubbleProperti
 				asset={WarningIcon}
 				use-fill/>
 			<p className="error-text">{message}</p>
-			<button className="circle-button close-button" type="button" onClick={onClose}>
+			<SmallButton circle className="close-button" type="button" onClick={onClose}>
 				<IconContainer
 					className="icon-colour-standard"
 					asset={CrossIcon}
 					use-stroke/>
-			</button>
+			</SmallButton>
 		</div>
 	);
 }

@@ -4,6 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
+import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 
 export interface IDialogBoxProperties {
 	title: string;
@@ -30,12 +31,12 @@ export function DialogBox({ title, trigger, description, footer, children }: IDi
 					<div className="top-header">
 						<Dialog.Title className="title">{title}</Dialog.Title>
 						<Dialog.Close asChild>
-							<button type="button" className="circle-button close-button" aria-label="Close">
+							<SmallButton circle type="button" className="close-button" aria-label="Close">
 								<IconContainer
 									className="icon-colour-standard"
 									asset={CrossIcon}
 									use-stroke/>
-							</button>
+							</SmallButton>
 						</Dialog.Close>
 					</div>
 					<div className="inner-content-area">

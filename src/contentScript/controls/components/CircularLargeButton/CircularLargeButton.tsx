@@ -1,3 +1,4 @@
+import { BaseButton } from "../../../../components/interactive/buttons/BaseButton/BaseButton";
 import "./CircularLargeButton.css"
 
 export interface ICircularLargeButtonProperties {
@@ -7,8 +8,8 @@ export interface ICircularLargeButtonProperties {
 
 export function CircularLargeButton({ children, onClick }: ICircularLargeButtonProperties) {
 	return (
-		<button className="pfy-save-video-button button-base" onClick={onClick}>
+		<BaseButton className="pfy-save-video-button" onClick={onClick}>
 			{children}
-		</button>
+		</BaseButton>
 	);
 }

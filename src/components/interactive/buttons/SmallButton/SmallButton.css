@@ -1,0 +1,23 @@
+.small-button {
+	padding: 0;
+	height: var(--pfy-element-button-size-regular);
+	padding-left: var(--pfy-spacing-large);
+	padding-right: var(--pfy-spacing-large);
+	border-width: 1px;
+	border-radius: var(--pfy-spacing-standard-compact);
+	font-size: var(--pfy-font-text-standard);
+
+	&[data-shape="square"] {
+		aspect-ratio: 1 / 1;
+		width: var(--pfy-element-button-size-regular);
+		height: var(--pfy-element-button-size-regular);
+		padding: 0;
+	}
+
+	&[data-shape="circle"] {
+		width: var(--pfy-element-button-size-regular);
+		height: var(--pfy-element-button-size-regular);
+		border-radius: 8px;
+		padding: 0;
+	}
+}

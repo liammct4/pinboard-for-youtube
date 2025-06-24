@@ -4,9 +4,6 @@
 	margin: 0;
 
 	.navigation-buttons {
-		display: flex;
-		flex-direction: row;
-		gap: var(--pfy-spacing-standard-compact);
 		margin-right: var(--pfy-spacing-standard);
 
 		& button {
@@ -82,9 +79,6 @@
 	padding-bottom: var(--pfy-spacing-standard-compact);
 
 	.view-section {
-		display: flex;
-		flex-direction: row;
-		gap: var(--pfy-spacing-standard-compact);
 		padding-left: var(--pfy-spacing-standard-compact);
 		padding-right: var(--pfy-spacing-standard-compact);
 

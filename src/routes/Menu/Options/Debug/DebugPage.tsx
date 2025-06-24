@@ -3,6 +3,7 @@ import { SwitchInputPrimitive } from "../../../../components/input/SwitchInput/S
 import { accessStorage, BLANK_STORAGE_TEMPLATE, IStorage } from "../../../../lib/storage/storage";
 import { useNotificationMessage } from "../../../../components/features/notifications/useNotificationMessage";
 import "./DebugPage.css";
+import { SmallButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 export function DebugPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
@@ -34,23 +35,23 @@ export function DebugPage(): React.ReactNode {
 			{toolsActivated ?
 				<div className="debug-tools">
 					{/* Print storage */}
-					<button className="button-small button-base" onClick={async () => {
+					<SmallButton onClick={async () => {
 						console.log("Printing storage:")
 						let storage = await accessStorage();
 						console.log(storage);
 						
 						activateMessage(undefined, "Sent to console.", "Success", "Tick", -1);
-					}}>Storage to console</button>
-					<button className="button-small button-base" onClick={async () => {
+					}}>Storage to console</SmallButton>
+					<SmallButton onClick={async () => {
 						let storage = await accessStorage();
 						navigator.clipboard.writeText(JSON.stringify(storage, null, 4));
 
 						activateMessage(undefined, "Copied to clipboard.", "Success", "Tick", -1);
-					}}>Copy storage to clipboard</button>
+					}}>Copy storage to clipboard</SmallButton>
 					{/* Wipe storage. */}
-					<button className="button-small button-base" onClick={async () => {
+					<SmallButton onClick={async () => {
 						await chrome.storage.sync.set(BLANK_STORAGE_TEMPLATE);
-					}}>Wipe storage</button>
+					}}>Wipe storage</SmallButton>
 				</div>
 			: <></>}
 		</>
