@@ -23,6 +23,7 @@ import { directoryActions } from "../../../../features/directory/directorySlice"
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
 import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
 import { useDirectory } from "../useDirectory";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
@@ -54,16 +55,63 @@ function DragVideoTooltipItem({ videoID }: { videoID: string }) {
 export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, onDirectoryPathChanged, onNavigate }: IVideoDirectoryBrowserProperties): React.ReactNode {
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<NodePath>(parsePath("$"));
-	const { activateMessage } = useNotificationMessage();
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
+	const { activateMessage } = useNotificationMessage();
 	const dispatch = useDispatch();
 	const layout = useSelector((state: RootState) => state.tempState.layout);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const directory = useDirectory(directoryPath);
+	
+	useHotkeys("ArrowUp", () => {
+		if (selectedItems.length != 1) {
+			return;
+		}
+		
+		let index = directory.subNodes.findIndex(n => selectedItems[0] == n);
+		let newNode = index == 0 ? directory.subNodes[directory.subNodes.length - 1] : directory.subNodes[index - 1];
+		
+		setSelectedItems([ newNode ]);
+	});
+
+	useHotkeys("ArrowDown", () => {
+		if (selectedItems.length != 1) {
+			return;
+		}
+		
+		let index = directory.subNodes.findIndex(n => selectedItems[0] == n);
+		let newNode = index == directory.subNodes.length - 1 ? directory.subNodes[0] : directory.subNodes[index + 1];
+		
+		setSelectedItems([ newNode ]);
+	});
+
+	useHotkeys("Enter, ArrowRight", () => {
+		if (selectedItems.length != 1) {
+			return;
+		}
+
+		if (getNodeType(tree, selectedItems[0]) == "DIRECTORY") {
+			let node = selectedItems[0];
+
+			onDirectoryPathChanged(directoryPathConcat(directoryPath, tree.directoryNodes[node].slice, "DIRECTORY"));
+		}
+		else {
+
+		}
+	});
+
+	useHotkeys("Backspace, ArrowLeft", () => {
+		if (directory.slice == "$") {
+			return;
+		}
+
+		onDirectoryPathChanged(getParentPathFromPath(directoryPath));
+		console.log(directory.slice);
+		setSelectedItems([ directory.nodeID ]);
+	});
 
 	useEffect(() => {
 		if (directory == null) {
@@ -73,7 +121,8 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 			setLastKnownValidPath(directoryPath);
 		}
 
-		setSelectedItems([]);
+		// TODO: Move state to reducer.
+		// setSelectedItems([]);
 	}, [directory]);
 
 	const requestEditEnd = async (newSliceName: string) => {
