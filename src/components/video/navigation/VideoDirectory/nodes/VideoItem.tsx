@@ -70,11 +70,11 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 	const onExpanded = (expanded: boolean) => {
 		if (expanded) {
-			dispatch(tempStateActions.addExpandedID(node.videoID));
+			dispatch(tempStateActions.expandVideo(node.videoID));
 			return;
 		}
 
-		dispatch(tempStateActions.removeExpandedID(node.videoID));
+		dispatch(tempStateActions.collapseVideo(node.videoID));
 	}
 
 	let video = videos[node.videoID];

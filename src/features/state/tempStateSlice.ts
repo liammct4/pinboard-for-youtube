@@ -39,12 +39,12 @@ export const tempStateSlice = createSlice({
 		setVideoBrowserScrollDistance: (state, action: PayloadAction<number>) => {
 			state.videoBrowserScrollDistance = action.payload;
 		},
-		addExpandedID: (state, action: PayloadAction<string>) => {
+		expandVideo: (state, action: PayloadAction<string>) => {
 			if (!state.expandedVideoIDs.includes(action.payload)) {
 				state.expandedVideoIDs.push(action.payload);
 			}
 		},
-		removeExpandedID: (state, action: PayloadAction<string>) => {
+		collapseVideo: (state, action: PayloadAction<string>) => {
 			let index = state.expandedVideoIDs.findIndex(id => id == action.payload);
 
 			if (index != -1) {

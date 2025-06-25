@@ -24,6 +24,7 @@ import { VideoDirectoryInteractionContext } from "../../../../context/directory"
 import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
 import { useDirectory } from "../useDirectory";
 import { useHotkeys } from "react-hotkeys-hook";
+import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeUtil";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
@@ -61,6 +62,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const { activateMessage } = useNotificationMessage();
 	const dispatch = useDispatch();
 	const layout = useSelector((state: RootState) => state.tempState.layout);
+	const expandedVideoIDs = useSelector((state: RootState) => state.tempState.expandedVideoIDs);
 	const scrollPosition = useSelector((state: RootState) => state.tempState.videoBrowserScrollDistance);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
@@ -88,7 +90,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ newNode ]);
 	});
 
-	useHotkeys("Enter, ArrowRight", () => {
+	useHotkeys("Enter, ArrowRight", (e) => {
 		if (selectedItems.length != 1) {
 			return;
 		}
@@ -99,7 +101,17 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 			onDirectoryPathChanged(directoryPathConcat(directoryPath, tree.directoryNodes[node].slice, "DIRECTORY"));
 		}
 		else {
+			let videoID = tree.videoNodes[selectedItems[0]].videoID;
 
+			if (e.key == "Enter") {
+				window.open(getYouTubeLinkFromVideoID(videoID));
+			}
+			else if (expandedVideoIDs.includes(videoID)) {
+				dispatch(tempStateActions.collapseVideo(videoID));
+			}
+			else {
+				dispatch(tempStateActions.expandVideo(videoID));
+			}
 		}
 	});
 
