@@ -109,7 +109,6 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		}
 
 		onDirectoryPathChanged(getParentPathFromPath(directoryPath));
-		console.log(directory.slice);
 		setSelectedItems([ directory.nodeID ]);
 	});
 
@@ -121,8 +120,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 			setLastKnownValidPath(directoryPath);
 		}
 
-		// TODO: Move state to reducer.
-		// setSelectedItems([]);
+		setSelectedItems(selectedItems.filter(n => directory.subNodes.findIndex(s => s == n) != -1));
 	}, [directory]);
 
 	const requestEditEnd = async (newSliceName: string) => {
