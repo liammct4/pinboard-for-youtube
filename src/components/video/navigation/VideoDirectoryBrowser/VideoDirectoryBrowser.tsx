@@ -68,10 +68,13 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const directory = useDirectory(directoryPath);
 	
-	useHotkeys("ArrowUp", () => {
+	useHotkeys("ArrowUp", (e) => {
 		if (selectedItems.length != 1) {
 			return;
 		}
+
+		// Stops scrolling when navigating items using arrow keys (nodes are autofocused).
+		e.preventDefault();
 		
 		let index = directory.subNodes.findIndex(n => selectedItems[0] == n);
 		let newNode = index == 0 ? directory.subNodes[directory.subNodes.length - 1] : directory.subNodes[index - 1];
@@ -79,10 +82,12 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ newNode ]);
 	});
 
-	useHotkeys("ArrowDown", () => {
+	useHotkeys("ArrowDown", (e) => {
 		if (selectedItems.length != 1) {
 			return;
 		}
+
+		e.preventDefault();
 		
 		let index = directory.subNodes.findIndex(n => selectedItems[0] == n);
 		let newNode = index == directory.subNodes.length - 1 ? directory.subNodes[0] : directory.subNodes[index + 1];

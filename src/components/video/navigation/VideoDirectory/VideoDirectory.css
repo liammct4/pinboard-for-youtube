@@ -35,6 +35,10 @@
 				font-size: var(--pfy-font-text-standard);
 				width: 100%;
 				color: var(--pfy-text-normal);
+
+				&:focus {
+					outline: none;
+				}
 			}
 
 			&[data-is-hover-overlap="true"] {
