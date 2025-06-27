@@ -13,7 +13,7 @@ export function SmallButton(props: ISmallButtonProperties) {
 	delete actualProps.circle;
 
 	return <BaseButton
-		{...props}
+		{...actualProps}
 		className={`small-button ${props.className}`}
 		data-shape={props.square ? "square" : props.circle ? "circle" : ""}/>
 }
