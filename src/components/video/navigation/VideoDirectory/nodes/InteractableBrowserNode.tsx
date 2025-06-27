@@ -17,7 +17,19 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 	const itemRef = useRef<HTMLLIElement>(null!);
 	
 	if (itemRef.current != null && selectedItems.includes(node.nodeID)) {
-		itemRef.current.focus();
+		if (nodeType == "VIDEO") {
+			// @ts-ignore
+			let elem = itemRef.current.querySelector("div[data-focus]");
+					
+			if (!elem?.contains(document.activeElement)) {
+				// @ts-ignore
+				elem?.focus();
+			}
+		}
+		else {
+			itemRef.current.focus();
+		}
+
 		// @ts-ignore Doesn't exist in type definition for some reason:
 		// https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
 		itemRef.current.scrollIntoViewIfNeeded(false);
@@ -29,7 +41,15 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 			data-is-hover-highlight={true}
 			data-is-selected={selectedItems.includes(node.nodeID)}
 			ref={itemRef}
-			onMouseDown={(e) => {
+			onMouseDown={(e) => {				
+				if (nodeType == "VIDEO") {
+					// @ts-ignore
+					itemRef.current.querySelector("div[data-focus]").focus();
+				}
+				else {
+					itemRef.current.focus();
+				}
+
 				if (e.ctrlKey) {
 					if (selectedItems.includes(node.nodeID)) {
 						setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));

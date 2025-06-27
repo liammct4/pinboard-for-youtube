@@ -85,7 +85,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	}
 
 	return (
-		<div onMouseDown={(e) => {
+		<div data-focus tabIndex={0} onMouseDown={(e) => {
 			if (e.ctrlKey) {
 				if (selectedItems.includes(node.nodeID)) {
 					setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));

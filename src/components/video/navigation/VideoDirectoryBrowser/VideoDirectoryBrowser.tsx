@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
@@ -67,9 +67,10 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const directory = useDirectory(directoryPath);
+	const listRef = useRef<HTMLDivElement>(null!);
 	
 	useHotkeys("ArrowUp", (e) => {
-		if (selectedItems.length != 1) {
+		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
 
@@ -83,7 +84,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	});
 
 	useHotkeys("ArrowDown", (e) => {
-		if (selectedItems.length != 1) {
+		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
 
@@ -96,7 +97,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	});
 
 	useHotkeys("Enter, ArrowRight", (e) => {
-		if (selectedItems.length != 1) {
+		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
 
@@ -283,16 +284,22 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 								allowSelection={!isDragging}
 								setSelectedItems={setSelectedItems}
 								startingScrollPosition={scrollPosition}
+								ref={listRef}
 								onScroll={(e) => dispatch(tempStateActions.setVideoBrowserScrollDistance(e.currentTarget.scrollTop))}>
-									<DragList<NodeRef> className="directory-drag-list" dragListName="directory-dl" onDragStart={() => setIsDragging(true)} onDrag={(e) => {
-										setDragging(e);
+									<DragList<NodeRef>	
+										className="directory-drag-list"
+										dragListName="directory-dl"
+										onDragStart={() => setIsDragging(true)}
+										onDragEnd={() => setTimeout(dragEnd, 10)}
+										onDrag={(e) => {
+											setDragging(e);
 
-										if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
-											setSelectedItems([ e.startDragID ]);
-										}
-									}} onDragEnd={() => setTimeout(dragEnd, 10)}>
-										{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-										<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+											if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
+												setSelectedItems([ e.startDragID ]);
+											}
+										}}>
+											{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+											<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
 									</DragList>
 							</SelectionList>
 					</VideoDirectoryPresentationContext.Provider>

@@ -13,6 +13,8 @@ export interface ISelectionDragListProperties<T extends string> {
 	setSelectedItems: (items: T[]) => void;
 	onScroll?: (e: React.UIEvent<HTMLDivElement>) => void;
 	startingScrollPosition?: number;
+	onClickCapture?: (e: React.MouseEvent<HTMLDivElement>) => void;
+	ref: React.MutableRefObject<HTMLDivElement>;
 	children: JSX.Element | JSX.Element[];
 }
 
@@ -24,9 +26,10 @@ export function SelectionList<T extends string>({
 		allowSelection,
 		onScroll,
 		startingScrollPosition,
+		ref: outerListBox,
+		onClickCapture,
 		children,
 	}: ISelectionDragListProperties<T>) {
-	const outerListBox = useRef<HTMLDivElement>(null!);
 	const [ elementItems, setElementItems] = useState<Element[]>([]);
 	const dataItems = useMemo<DragListItemData[]>(() => {
 		if (elementItems.length == 0) {
@@ -73,7 +76,7 @@ export function SelectionList<T extends string>({
 			onSelectMove={onSelectMove}
 			startingScrollPosition={startingScrollPosition}
 			onScroll={onScroll}>
-			<div ref={outerListBox}>
+			<div ref={outerListBox} onClickCapture={onClickCapture}>
 				{children}
 			</div>
 		</SelectionBoxScrollbox>
