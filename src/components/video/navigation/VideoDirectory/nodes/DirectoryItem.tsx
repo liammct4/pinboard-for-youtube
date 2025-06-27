@@ -21,30 +21,26 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 	let isHover = draggingID == node.slice;
 
 	return (
-		<>
-			<div data-is-hover-overlap={isHover}>
-				<button className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
-					{
-						isHover ?
-						<IconContainer className="icon-colour-standard" asset={DropIcon} use-fill use-stroke/> :
-						<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
-					}
-					{
-						currentlyEditing == node.nodeID ?
-						<input
-							className="medium-text-input"
-							onBlur={(e) => requestEditEnd(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key == "Enter") {
-									requestEditEnd(e.currentTarget.value);
-								}
-							}}
-							defaultValue={node.slice}
-							autoFocus/> :
-						<span>{node.slice}</span>
-					}
-				</button>
-			</div>
-		</>
+		<button data-focus data-is-hover-overlap={isHover} className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
+			{
+				isHover ?
+				<IconContainer className="icon-colour-standard" asset={DropIcon} use-fill use-stroke/> :
+				<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
+			}
+			{
+				currentlyEditing == node.nodeID ?
+				<input
+					className="medium-text-input"
+					onBlur={(e) => requestEditEnd(e.target.value)}
+					onKeyDown={(e) => {
+						if (e.key == "Enter") {
+							requestEditEnd(e.currentTarget.value);
+						}
+					}}
+					defaultValue={node.slice}
+					autoFocus/> :
+				<span>{node.slice}</span>
+			}
+		</button>
 	)
 }

@@ -17,17 +17,11 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 	const itemRef = useRef<HTMLLIElement>(null!);
 	
 	if (itemRef.current != null && selectedItems.includes(node.nodeID)) {
-		if (nodeType == "VIDEO") {
+		let itemElement = itemRef.current.querySelector("*[data-focus]");
+
+		if (nodeType == "DIRECTORY" || (nodeType == "VIDEO" && !itemElement?.contains(document.activeElement))) {
 			// @ts-ignore
-			let elem = itemRef.current.querySelector("div[data-focus]");
-					
-			if (!elem?.contains(document.activeElement)) {
-				// @ts-ignore
-				elem?.focus();
-			}
-		}
-		else {
-			itemRef.current.focus();
+			itemElement?.focus();
 		}
 
 		// @ts-ignore Doesn't exist in type definition for some reason:

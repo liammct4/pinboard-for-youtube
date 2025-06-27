@@ -5,6 +5,12 @@
 	--transparent-bg-selected: color-mix(in srgb, var(--pfy-selection-primary) 10%, transparent);
 	--transparent-bg-hover: color-mix(in srgb, var(--pfy-selection-primary) 5%, transparent);
 
+	*[data-focus] {
+		&:focus {
+			outline: none;
+		}
+	}
+
 	&[data-is-hover-highlight="true"] {
 		&:hover {
 			outline: 1px solid var(--pfy-selection-primary);
