@@ -62,14 +62,16 @@ async function initializeExtension() {
 
 	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
+	let errorPage = getApplicationContextType() == "DEVMODE" ? undefined : ErrorPage;
+
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<PfyWrapper/>}>
 						<Route path="app" element={<HomePage/>} >
-							<Route path="videos" element={<VideosPage/>} ErrorBoundary={ErrorPage}/>
-							<Route path="menu" element={<MenuPage/>} ErrorBoundary={ErrorPage}>
+							<Route path="videos" element={<VideosPage/>} ErrorBoundary={errorPage}/>
+							<Route path="menu" element={<MenuPage/>} ErrorBoundary={errorPage}>
 								<Route path="options/*" element={<OptionsPage/>}>
 									<Route path="general" element={<GeneralPage/>}/>
 									<Route path="accounts/*" element={<AccountsPage/>}/>
@@ -79,7 +81,7 @@ async function initializeExtension() {
 								</Route>
 								<Route path="help" element={<HelpPage/>}/>				
 							</Route>
-							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={ErrorPage}/>
+							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={errorPage}/>
 						</Route>
 						<Route path="*" element={<Navigate to="app" replace/>}/>
 					</Route>

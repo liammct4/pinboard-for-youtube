@@ -6,7 +6,8 @@ import svgr from "vite-plugin-svgr"
 export default defineConfig({
 	plugins: [react(), svgr()],
 	build: {
-		target: 'esnext'
+		target: 'esnext',
+		minify: false
 	},
 	resolve: {
 		alias: {
