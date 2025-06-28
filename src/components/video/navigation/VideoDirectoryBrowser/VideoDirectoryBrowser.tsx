@@ -25,6 +25,8 @@ import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layout
 import { useDirectory } from "../useDirectory";
 import { useHotkeys } from "react-hotkeys-hook";
 import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeUtil";
+import { videoActions } from "../../../../features/video/videoSlice";
+import { ActionMessageDialog } from "../../../dialogs/ActionDialogMessage";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
@@ -59,6 +61,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
+	const [ deleteNodeDialog, setDeleteNodeDialog ] = useState<NodeRef | null>(null); 
 	const { activateMessage } = useNotificationMessage();
 	const dispatch = useDispatch();
 	const layout = useSelector((state: RootState) => state.tempState.layout);
@@ -245,6 +248,34 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 
 	return (
 		<>	
+			{deleteNodeDialog != null ?
+				<ActionMessageDialog
+					title="Delete this item?"
+					body={`Are you sure you want to delete this ${getNodeType(tree, deleteNodeDialog).toLowerCase()}?`}
+					buttons={["Yes", "Cancel"]}
+					defaultFocusedButton="Cancel"
+					defaultMessage="Cancel"
+					overrideOpen={deleteNodeDialog != null}
+					onButtonPressed={(result) => {
+						if (result == "Yes") {
+							let nodeType = getNodeType(tree, deleteNodeDialog);
+							let path = directoryPathConcat(directoryPath, getNodeSection(tree, getNodeFromRef(tree, deleteNodeDialog)), nodeType);
+
+							if (nodeType == "VIDEO") {
+								dispatch(videoActions.removeVideos([ tree.videoNodes[deleteNodeDialog].videoID ]));
+							}
+
+							dispatch(directoryActions.removeNodes([ path ]));
+
+							let selected = selectedItems.filter(n => n != deleteNodeDialog);
+							setSelectedItems(selected);
+						}
+
+						setDeleteNodeDialog(null);
+					}}/>
+					:
+					<></>
+			}
 			{/* For dragging */}
 			<MouseTooltip show={dragging != null && !timestampActivelyDragging} horizontal="START" vertical="CENTRE">
 				<ul className="drag-list-tooltip">
@@ -271,6 +302,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 						setSelectedItems,
 						currentlyEditing,
 						requestEditEnd,
+						activateDeleteNodeDialog: setDeleteNodeDialog,
 						draggingID: dragging != "NOT_IN_BOUNDS" ? dragging?.overlappingID ?? null : null
 					}}>
 					<VideoDirectoryPresentationContext.Provider

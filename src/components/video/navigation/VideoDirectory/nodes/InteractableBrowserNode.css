@@ -1,4 +1,7 @@
 .node-item {
+	display: flex;
+	flex-direction: row;
+	gap: var(--pfy-spacing-standard-compact);
 	border: 1px solid transparent;
 	border-bottom: 1px solid var(--pfy-primary-faded);
 	padding: var(--pfy-spacing-standard-compact);
@@ -6,6 +9,8 @@
 	--transparent-bg-hover: color-mix(in srgb, var(--pfy-selection-primary) 5%, transparent);
 
 	*[data-focus] {
+		flex-grow: 1;
+
 		&:focus {
 			outline: none;
 		}

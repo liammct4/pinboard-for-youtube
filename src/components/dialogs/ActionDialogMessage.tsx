@@ -7,15 +7,15 @@ import "./../../styling/dialog.css"
 import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 
-export type DialogClosedHandler = (result: string) => void;
+export type DialogClosedHandler<T> = (result: T) => void;
 
 export interface IMessageDialogProperties<T extends string> {
 	title: string;
 	body: string;
 	buttons: T[];
 	defaultFocusedButton: T;
-	defaultMessage?: string;
-	onButtonPressed: DialogClosedHandler;
+	defaultMessage: T;
+	onButtonPressed: DialogClosedHandler<T>;
 	overrideOpen?: boolean | undefined;
 	children?: React.ReactNode;
 }
@@ -29,7 +29,7 @@ export interface IMessageDialogProperties<T extends string> {
  * @param onButtonPressed A function which has a string parameter, whenever the user clicks on an option, the function will be ran with the chosen option. (This is case sensitive).
  * @param children The button trigger when when pressed, will open the dialog.
  */
-export function ActionMessageDialog<T extends string>({ title, body, buttons, defaultFocusedButton, defaultMessage="Cancel", overrideOpen, onButtonPressed, children }: IMessageDialogProperties<T>): React.ReactNode {	
+export function ActionMessageDialog<T extends string>({ title, body, buttons, defaultFocusedButton, defaultMessage, overrideOpen, onButtonPressed, children }: IMessageDialogProperties<T>): React.ReactNode {	
 	return (
 		<AlertDialog.Root open={overrideOpen}>
 			<AlertDialog.Trigger asChild>

@@ -1,13 +1,7 @@
 import React from "react";
 
-export interface IBaseButtonProperties {
-	className?: string;
-	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-	title?: string;
-	autoFocus?: boolean;
-	type?: "submit" | "reset" | "button" | undefined;
-	disabled?: boolean;
-	children?: string | JSX.Element[] | JSX.Element | React.ReactNode | React.ReactNode[];
+export interface IBaseButtonProperties extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+
 }
 
 export function BaseButton(props: IBaseButtonProperties) {
@@ -18,12 +12,8 @@ export function BaseButton(props: IBaseButtonProperties) {
 	)
 }
 
-export interface IBaseInputButtonProperties {
-	form?: string;
-	value?: string;
-	type?: React.HTMLInputTypeAttribute;
-	className?: string;
-	ref?: React.MutableRefObject<HTMLInputElement>;
+export interface IBaseInputButtonProperties extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+
 }
 
 export function BaseInputButton(props: IBaseInputButtonProperties) {

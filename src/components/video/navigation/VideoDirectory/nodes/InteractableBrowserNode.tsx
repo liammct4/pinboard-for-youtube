@@ -1,18 +1,22 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
 import { getNodeType, IDirectoryNode, INode, IVideoNode } from "../../../../../lib/directory/directory";
 import { IVideoDirectoryInteractionContext, VideoDirectoryInteractionContext } from "../../../../../context/directory";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../app/store";
+import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
 import "./InteractableBrowserNode.css"
+import { SmallButton } from "../../../../interactive/buttons/SmallButton/SmallButton";
+import { IconContainer } from "../../../../images/svgAsset";
+import { ActionMessageDialog } from "../../../../dialogs/ActionDialogMessage";
 
 export interface IInteractableBrowserNodeProperties {
 	node: INode;
 }
 
 export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProperties): React.ReactNode {
-	const { selectedItems, setSelectedItems } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
+	const { selectedItems, setSelectedItems, activateDeleteNodeDialog } = useContext<IVideoDirectoryInteractionContext>(VideoDirectoryInteractionContext);
 	const nodeType = useSelector((state: RootState) => getNodeType(state.directory.videoBrowser, node.nodeID));
 	const itemRef = useRef<HTMLLIElement>(null!);
 	
@@ -30,37 +34,43 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 	}
 
 	return (
-		<li
-			className={`node-item ${nodeType == "DIRECTORY" ? "directory-node-item" : "video-node-item"}`}
-			data-is-hover-highlight={true}
-			data-is-selected={selectedItems.includes(node.nodeID)}
-			ref={itemRef}
-			onMouseDown={(e) => {				
-				if (nodeType == "VIDEO") {
-					// @ts-ignore
-					itemRef.current.querySelector("div[data-focus]").focus();
-				}
-				else {
-					itemRef.current.focus();
-				}
-
-				if (e.ctrlKey) {
-					if (selectedItems.includes(node.nodeID)) {
-						setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));
+		<>
+			<li
+				className={`node-item ${nodeType == "DIRECTORY" ? "directory-node-item" : "video-node-item"}`}
+				data-is-hover-highlight={true}
+				data-is-selected={selectedItems.includes(node.nodeID)}
+				ref={itemRef}
+				onMouseDown={(e) => {			
+					if (nodeType == "VIDEO") {
+						// @ts-ignore
+						itemRef.current.querySelector("div[data-focus]").focus();
 					}
 					else {
-						setSelectedItems([ ...selectedItems, node.nodeID])
+						itemRef.current.focus();
 					}
+
+					if (e.ctrlKey) {
+						if (selectedItems.includes(node.nodeID)) {
+							setSelectedItems([ ...selectedItems ].filter(x => x != node.nodeID));
+						}
+						else {
+							setSelectedItems([ ...selectedItems, node.nodeID])
+						}
+					}
+					else if (!selectedItems.includes(node.nodeID)) {
+						setSelectedItems([ node.nodeID ]);
+					}
+				}}
+				onFocus={() => setSelectedItems([ node.nodeID ])}>
+				{nodeType == "DIRECTORY" ?
+					<DirectoryItem node={node as IDirectoryNode} />
+					:
+					<VideoItem node={node as IVideoNode}/>
 				}
-				else if (!selectedItems.includes(node.nodeID)) {
-					setSelectedItems([ node.nodeID ]);
-				}
-			}}
-			onFocus={() => setSelectedItems([ node.nodeID ])}>
-			{nodeType == "DIRECTORY" ?
-				<DirectoryItem node={node as IDirectoryNode} />
-				:
-				<VideoItem node={node as IVideoNode}/>}
-		</li>
+				<SmallButton tabIndex={-1} onClick={() => activateDeleteNodeDialog(node.nodeID)} square>
+					<IconContainer className="icon-colour-standard" asset={DeleteIcon} use-stroke/>
+				</SmallButton>
+			</li>
+		</>
 	);
 }

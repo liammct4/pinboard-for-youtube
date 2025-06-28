@@ -15,8 +15,6 @@
 	}
 
 	.directory-node-item {
-		display: flex;
-		flex-direction: column;
 		font-size: var(--pfy-font-text-big);
 
 		.enter-navigate-button {
