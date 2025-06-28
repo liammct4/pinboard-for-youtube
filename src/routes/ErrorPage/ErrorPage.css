@@ -1,13 +1,7 @@
 .error-page {
-	.main-error-text {
-		color: var(--pfy-text-strong);
-		font-size: var(--pfy-font-text-big);
-	}
-
-	.more-error-text {
-		color: var(--pfy-text-normal);
-		font-size: var(--pfy-font-text-standard);
-	}
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 
 	.toolbar {
 		display: flex;
@@ -17,7 +11,21 @@
 		margin-bottom: var(--pfy-spacing-large);
 
 		& button {
-			width: 200px;
+			flex-grow: 1;
 		}
+	}
+
+	.main-error-text {
+		color: var(--pfy-text-strong);
+		font-size: var(--pfy-font-text-standard);
+	}
+
+	.detailed-error-text {
+		color: var(--pfy-text-normal);
+		font-size: var(--pfy-font-text-standard);
+	}
+	
+	.error-block {
+		margin-top: var(--pfy-spacing-standard);
 	}
 }

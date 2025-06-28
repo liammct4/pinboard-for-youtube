@@ -12,6 +12,11 @@ export function BaseButton(props: IBaseButtonProperties) {
 	)
 }
 
+export interface ISizeButtonProperties extends IBaseButtonProperties {
+	square?: boolean;
+	circle?: boolean;
+}
+
 export interface IBaseInputButtonProperties extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
 
 }

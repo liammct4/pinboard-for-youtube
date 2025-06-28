@@ -7,7 +7,6 @@ import {
 } from '@lmcd/mock-storagearea';
 
 export function checkAndImplementLocalStorage() {
-	// @ts-ignore
 	if (chrome.storage != undefined) {
 		return;
 	}

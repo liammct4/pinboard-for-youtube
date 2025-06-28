@@ -189,16 +189,15 @@
 		
 		::-webkit-scrollbar-track {
 			background: var(--pfy-empty-02-normal);
-			box-shadow: var(--pfy-box-shadow-standard);
-			border: 1px solid var(--pfy-primary-ultradark);
 			border-radius: var(--pfy-spacing-standard);
+			border: 1px solid var(--pfy-empty-02-depth);
 		}
 		
 		::-webkit-scrollbar-thumb {
 			-webkit-border-radius: 16px;
 			border-radius: 16px;
-			background: var(--pfy-empty-02-depth); 
-			border: 1px solid var(--pfy-empty-02-shadow);
+			background: var(--pfy-primary-dark); 
+			border: 1px solid var(--pfy-primary-ultradark);
 		}
 	}
 

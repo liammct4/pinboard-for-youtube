@@ -67,9 +67,9 @@ async function initializeExtension() {
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(createRoutesFromElements(
 					<Route path="/*" element={<PfyWrapper/>}>
-						<Route path="app" element={<HomePage/>}>
-							<Route path="videos" element={<VideosPage/>}/>
-							<Route path="menu" element={<MenuPage/>}>
+						<Route path="app" element={<HomePage/>} >
+							<Route path="videos" element={<VideosPage/>} ErrorBoundary={ErrorPage}/>
+							<Route path="menu" element={<MenuPage/>} ErrorBoundary={ErrorPage}>
 								<Route path="options/*" element={<OptionsPage/>}>
 									<Route path="general" element={<GeneralPage/>}/>
 									<Route path="accounts/*" element={<AccountsPage/>}/>
@@ -79,8 +79,7 @@ async function initializeExtension() {
 								</Route>
 								<Route path="help" element={<HelpPage/>}/>				
 							</Route>
-							<Route path="" element={<Navigate to="videos" replace/>}/>
-							<Route path="error" element={<ErrorPage/>}/>
+							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={ErrorPage}/>
 						</Route>
 						<Route path="*" element={<Navigate to="app" replace/>}/>
 					</Route>

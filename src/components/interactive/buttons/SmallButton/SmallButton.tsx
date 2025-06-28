@@ -1,12 +1,7 @@
-import { BaseButton, BaseInputButton, IBaseButtonProperties, IBaseInputButtonProperties } from "../BaseButton/BaseButton";
+import { BaseButton, BaseInputButton, IBaseButtonProperties, IBaseInputButtonProperties, ISizeButtonProperties } from "../BaseButton/BaseButton";
 import "./SmallButton.css"
 
-export interface ISmallButtonProperties extends IBaseButtonProperties {
-	square?: boolean;
-	circle?: boolean;
-}
-
-export function SmallButton(props: ISmallButtonProperties) {
+export function SmallButton(props: ISizeButtonProperties) {
 	const actualProps = { ...props };
 
 	delete actualProps.square;

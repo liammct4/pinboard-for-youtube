@@ -29,11 +29,6 @@ export function AppearanceCustom(): React.ReactNode {
 	const handlerBase = useCallback((data: IEditThemeForm) => {
 		let name = data.name;
 
-		// @ts-ignore
-		delete data.error;
-		// @ts-ignore
-		delete data.name;
-
 		deleteCustomTheme(editingTheme!.id);
 
 		let updatedTheme: IAppTheme = {

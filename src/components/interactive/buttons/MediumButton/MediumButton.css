@@ -6,4 +6,18 @@
 	border-width: 1px;
 	border-radius: var(--pfy-spacing-standard);
 	font-size: var(--pfy-font-text-standard);
+
+	&[data-shape="square"] {
+		aspect-ratio: 1 / 1;
+		width: var(--pfy-element-button-size-medium);
+		height: var(--pfy-element-button-size-medium);
+		padding: 0;
+	}
+
+	&[data-shape="circle"] {
+		width: var(--pfy-element-button-size-medium);
+		height: var(--pfy-element-button-size-medium);
+		border-radius: 8px;
+		padding: 0;
+	}
 }

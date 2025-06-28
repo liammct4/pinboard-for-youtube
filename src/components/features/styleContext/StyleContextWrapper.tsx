@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { IWrapperProperties } from "../wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
+import { ColourPaletteColours } from "../../../lib/config/theming/appTheme";
 
 export interface IStyleContextWrapper extends IWrapperProperties {
 	"update-theme"?: boolean;
@@ -17,8 +18,7 @@ export function StyleContextWrapper({ children, "update-theme": updateTheme }: I
 		}
 
 		Object.keys(currentTheme.palette).forEach(key => {
-			// @ts-ignore
-			let value = currentTheme.palette[key] as string;
+			let value = currentTheme.palette[key as ColourPaletteColours] as string;
 
 			styleContextRef.current.style.setProperty(`--pfy-${key}`, value);
 		});
