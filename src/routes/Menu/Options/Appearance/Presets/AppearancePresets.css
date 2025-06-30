@@ -53,7 +53,7 @@
 				overflow: hidden;
 				border: 1px solid black;
 				height: 100%;
-				box-shadow: var(--pfy-box-shadow-standard);
+				box-shadow: var(--pfy-box-shadow-standard) var(--pfy-empty-01-shadow);
 				width: calc(var(--pfy-element-button-size-regular) * 2);
 				grid-template-columns: 1fr 1fr;
 				grid-template-rows: 1fr 1fr;

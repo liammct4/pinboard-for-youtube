@@ -47,7 +47,7 @@
 	/* Other theming options */
 	--pfy-main-font: "Open Sans";
 	--pfy-fallback-font: sans-serif;
-	--pfy-box-shadow-standard: 1px 1px 1px 1px var(--pfy-empty-01-shadow);
+	--pfy-box-shadow-standard: 1px 1px 1px 1px;
 	--pfy-box-shadow-gentle-glow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
 
 	/* Never use the main or fallback fonts individually, always use the font collection below. */

@@ -45,7 +45,7 @@
 
 	/* Button base, does not define size, only visuals. */
 	.button-base {
-		box-shadow: var(--pfy-box-shadow-standard);
+		box-shadow: var(--pfy-box-shadow-standard) var(--pfy-empty-01-shadow);
 		font-family: var(--pfy-font-scheme-standard);
 		background: var(--pfy-field-background);
 		color: var(--pfy-field-content);

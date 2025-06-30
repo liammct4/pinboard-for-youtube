@@ -69,6 +69,7 @@
 		.close-button {
 			margin-left: auto !important;
 			grid-column: 2;
+			align-self: center;
 		}
 	}
 
