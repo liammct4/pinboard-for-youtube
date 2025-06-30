@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { InputMethodType } from "../../lib/config/configurationOption";
-import { IStorage } from "../../lib/storage/storage";
+import { IPrimaryStorage } from "../../lib/storage/storage";
 import { defaultSettings, Settings } from "../../lib/config/settings";
 
 export interface ISettingsSlice {
@@ -15,7 +15,7 @@ export const settingsSlice = createSlice({
 	name: "settings",
 	initialState,
 	reducers: {
-		updateSettingsSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
+		updateSettingsSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
 			state.settings = action.payload.userData.config.settings;
 		},
 		initializeAndSetSettingsDefault: (state) => {

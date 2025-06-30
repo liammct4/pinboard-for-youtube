@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { videoActions } from "./videoSlice";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const videoSyncStorageMiddleware = createListenerMiddleware();
 
@@ -17,6 +17,6 @@ videoSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.modifyStorage((storage) => storage.userData.videos = state.video.videos);
+		ExtensionMainVirtualStorage.modifyStorage((storage) => storage.userData.videos = state.video.videos);
 	}
 });

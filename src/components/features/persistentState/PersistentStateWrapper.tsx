@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { To, useNavigate } from "react-router-dom";
 import { useUserAccount } from "../useUserAccount";
 import { IWrapperProperties } from "../wrapper";
-import { accessStorage } from "../../../lib/storage/storage";
+import { accessMainStorage } from "../../../lib/storage/storage";
 
 export function PersistentStateWrapper({ children }: IWrapperProperties) {
 	const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export function PersistentStateWrapper({ children }: IWrapperProperties) {
 	useEffect(() => {
 		// Persistent state.
 		const checkPersistentState = async () => {
-			let storage = await accessStorage();
+			let storage = await accessMainStorage();
 			let path: string | undefined = storage.persistentState.path;
 
 			if (path != undefined) {

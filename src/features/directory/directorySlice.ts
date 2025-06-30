@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IStorage } from "../../lib/storage/storage";
+import { IPrimaryStorage } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
 import { getParentPathFromPath, NodePath, parsePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
@@ -51,7 +51,7 @@ export const directorySlice = createSlice({
 	name: "directory",
 	initialState,
 	reducers: {
-		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
+		updateDirectorySliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
 			state.videoBrowser = action.payload.userData.directory;
 		},
 		renameDirectory: (state, action: PayloadAction<DirectoryRenameDirectoryPayload>) => {

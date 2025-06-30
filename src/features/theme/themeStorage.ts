@@ -2,7 +2,7 @@ import { themeActions } from "./themeSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const themeStorageSyncMiddleware = createListenerMiddleware();
 
@@ -17,7 +17,7 @@ themeStorageSyncMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionVirtualStorage.modifyStorage((storage) => {
+		ExtensionMainVirtualStorage.modifyStorage((storage) => {
 			storage.userData.config.customThemes = state.theme.customThemes;
 			storage.userData.config.theme = state.theme.currentTheme;
 		});

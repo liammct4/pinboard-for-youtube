@@ -25,7 +25,13 @@ export interface IMetaStorage {
 	}
 }
 
-export interface IStorage extends IMetaStorage {
+export interface ILocalStorage extends IMetaStorage {
+	cache: {
+		videos: IYoutubeVideoInfo[]
+	}
+}
+
+export interface IPrimaryStorage extends IMetaStorage {
 	userData: {
 		videos: {
 			[videoID: string]: IVideo | undefined
@@ -40,9 +46,6 @@ export interface IStorage extends IMetaStorage {
 	persistentState: IPersistentState;
 	account: {
 		mutationQueues: IMutationQueues;
-	},
-	cache: {
-		videos: IYoutubeVideoInfo[]
 	}
 }
 
@@ -65,7 +68,16 @@ export function getApplicationContextType(): StorageAuthorSources {
 	return "CONTENT_SCRIPT";
 }
 
-export const BLANK_STORAGE_TEMPLATE: IStorage = {
+export const BLANK_LOCAL_STORAGE_TEMPLATE: ILocalStorage = {
+	cache: {
+		videos: []
+	},
+	meta: {
+		author: getApplicationContextType()
+	}
+}
+
+export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 	userData: {
 		videos: {},
 		directory: {
@@ -105,9 +117,6 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 			videoPendingQueue: [],
 		}
 	},
-	cache: {
-		videos: [],
-	},
 	meta: {
 		author: getApplicationContextType()
 	}
@@ -115,29 +124,38 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
-	let storage: IStorage | {} | undefined = await chrome.storage.sync.get();
+	let mainStorage: IPrimaryStorage | {} | undefined = await chrome.storage.sync.get();
+	let localStorage: ILocalStorage | {} | undefined = await chrome.storage.local.get();
 
-	deepMerge(storage, BLANK_STORAGE_TEMPLATE);
+	deepMerge(mainStorage, BLANK_MAIN_STORAGE_TEMPLATE);
+	deepMerge(localStorage, BLANK_LOCAL_STORAGE_TEMPLATE);
 
-	(storage as IStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[0].palette));
+	(mainStorage as IPrimaryStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[0].palette));
 
-	await chrome.storage.sync.set(storage);
+	await chrome.storage.sync.set(mainStorage);
+	await chrome.storage.local.set(localStorage);
 }
 
-export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {
-	let storage = await chrome.storage.sync.get() as IStorage;
+export async function getItemFromStorage<T>(accessor: (storage: IPrimaryStorage) => T): Promise<T> {
+	let storage = await chrome.storage.sync.get() as IPrimaryStorage;
 
 	return accessor(storage);
 }
 
-export async function accessStorage(): Promise<IStorage> {
-	let storage = await chrome.storage.sync.get() as IStorage;
+export async function accessMainStorage(): Promise<IPrimaryStorage> {
+	let storage = await chrome.storage.sync.get() as IPrimaryStorage;
 
 	return storage;
 }
 
-export async function modifyStorage(modifier: (s: IStorage) => void): Promise<void> {
-	let storage = await accessStorage();
+export async function accessLocalStorage(): Promise<ILocalStorage> {
+	let storage = await chrome.storage.local.get() as ILocalStorage;
+
+	return storage;
+}
+
+export async function modifyStorage(modifier: (s: IPrimaryStorage) => void): Promise<void> {
+	let storage = await accessMainStorage();
 
 	modifier(storage);
 

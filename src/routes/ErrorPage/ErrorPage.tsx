@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useRouteError } from "react-router-dom";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage";
-import { accessStorage, BLANK_STORAGE_TEMPLATE, modifyStorage } from "../../lib/storage/storage";
+import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE, modifyStorage } from "../../lib/storage/storage";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
 import { CodeBlock } from "../../components/presentation/Decorative/CodeBlock/CodeBlock";
 import { MediumButton } from "../../components/interactive/buttons/MediumButton/MediumButton";
@@ -27,12 +27,12 @@ export function ErrorPage(): React.ReactNode {
 
 	const onConfirm = async (result: string) => {
 		if (result == "Wipe local data") {
-			await chrome.storage.sync.set(BLANK_STORAGE_TEMPLATE);
+			await chrome.storage.sync.set(BLANK_MAIN_STORAGE_TEMPLATE);
 		}
 	}
 
 	const onCopyToClipboard = async () => {
-		accessStorage()
+		accessMainStorage()
 			.then((storage) => window.navigator.clipboard.writeText(JSON.stringify(storage, null, 4)));
 		
 		activateMessage("Copied to clipboard", "Your data has been copied to the clipboard, please keep it in case you need to recover your data.", "Info", "Info", 6000);

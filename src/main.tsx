@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { accessStorage, ensureInitialized, getApplicationContextType, IStorage } from "./lib/storage/storage.ts"
+import { accessMainStorage, ensureInitialized, getApplicationContextType, IPrimaryStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
@@ -18,22 +18,20 @@ import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
-import { checkAndImplementLocalStorage } from "./lib/browser/features/localStorage.ts"
 import { sampleVideoData } from "./../testData/testDataSet.ts";
-import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
+import { setupStorageAndStoreSync, syncStoreToLocalStorage, syncStoreToMainStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 import { directoryActions } from "./features/directory/directorySlice.ts"
 import { videoActions } from "./features/video/videoSlice.ts"
 
-checkAndImplementLocalStorage();
-
 async function initializeExtension() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
 	
-	await syncStoreToStorage();
+	await syncStoreToLocalStorage();
+	await syncStoreToMainStorage();
 
 	let activeID: string | undefined;
 	let environment = getApplicationContextType();

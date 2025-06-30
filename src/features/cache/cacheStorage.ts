@@ -2,7 +2,7 @@ import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
 import { cacheActions } from "./cacheSlice";
-import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionLocalVirtualStorage, ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const cacheSyncStorageMiddleware = createListenerMiddleware();
 
@@ -17,6 +17,6 @@ cacheSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 		
-		ExtensionVirtualStorage.modifyStorage((storage) => storage.cache.videos = state.cache.videoCache);
+		ExtensionLocalVirtualStorage.modifyStorage((storage) => storage.cache.videos = state.cache.videoCache);
 	}
 });

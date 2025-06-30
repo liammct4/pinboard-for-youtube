@@ -1,4 +1,7 @@
-import { getApplicationContextType, IMetaStorage, IStorage } from "./storage";
+import { checkAndImplementLocalStorage } from "../browser/features/localStorage";
+import { getApplicationContextType, ILocalStorage, IMetaStorage, IPrimaryStorage } from "./storage";
+
+checkAndImplementLocalStorage();
 
 /*
 Acts as a StorageArea but does not immediately push
@@ -11,19 +14,22 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 	private pushChangesTime: number;
 	private virtualStorage: T;
 	private saved: boolean = true;
+	// @ts-ignore StorageArea type is inaccessible for whatever reason.
+	private storageArea: any;
 
-	constructor() {
+	constructor(storageArea: any) {
 		this.pushChangesTime = Date.now();
 		this.virtualStorage = {
 			meta: {
 				author: getApplicationContextType()
 			}
 		} as T;
+		this.storageArea = storageArea;
 	}
 	
 	public async modifyStorage(modifier: (storage: T) => void) {
 		if (this.saved) {
-			this.virtualStorage = await chrome.storage.sync.get() as T;
+			this.virtualStorage = await this.storageArea.get() as T;
 		}
 		
 		setTimeout(() => modifier(this.virtualStorage), this.delayTime / 2);
@@ -40,7 +46,7 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 				this.virtualStorage.meta.author = getApplicationContextType();
 				this.saved = true;
 
-				chrome.storage.sync.set(this.virtualStorage);
+				this.storageArea.set(this.virtualStorage);
 			}
 			else {
 				setTimeout(() => this.check(), 10);
@@ -49,4 +55,5 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 	}
 }
 
-export const ExtensionVirtualStorage = new VirtualStorageArea<IStorage>();
+export const ExtensionMainVirtualStorage = new VirtualStorageArea<IPrimaryStorage>(chrome.storage.sync);
+export const ExtensionLocalVirtualStorage = new VirtualStorageArea<ILocalStorage>(chrome.storage.local);

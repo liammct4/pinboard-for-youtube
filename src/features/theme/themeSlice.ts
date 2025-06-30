@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IAppTheme } from "../../lib/config/theming/appTheme";
 import ThemePresets from "./../../styling/theme.json"
-import { IStorage } from "../../lib/storage/storage";
+import { IPrimaryStorage } from "../../lib/storage/storage";
 
 export interface IThemeSlice {
 	currentTheme: IAppTheme;
@@ -20,7 +20,7 @@ export const themeSlice = createSlice({
 	name: "theme",
 	initialState,
 	reducers: {
-		updateThemeSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
+		updateThemeSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
 			state.currentTheme = action.payload.userData.config.theme;
 			state.customThemes = action.payload.userData.config.customThemes;
 		},

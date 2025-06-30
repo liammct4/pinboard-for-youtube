@@ -1,4 +1,4 @@
-import { IStorage, modifyStorage } from "../storage";
+import { IPrimaryStorage, modifyStorage } from "../storage";
 import { RESET_PASSWORD_PATH } from "./persistentState";
 
 export interface IResetPasswordState {
