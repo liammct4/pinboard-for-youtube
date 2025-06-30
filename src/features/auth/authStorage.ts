@@ -17,6 +17,12 @@ authSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => storage.auth.currentUser = state.auth.currentUser);
+		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+			storage.auth.currentUser = state.auth.currentUser;
+			
+			if (!storage.meta.changed.includes(authSlice.name)) {
+				storage.meta.changed.push(authSlice.name);
+			}
+		});
 	}
 });

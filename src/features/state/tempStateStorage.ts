@@ -1,4 +1,4 @@
-import { tempStateActions } from "./tempStateSlice";
+import { tempStateActions, tempStateSlice } from "./tempStateSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
@@ -17,11 +17,17 @@ tempStateSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => storage.tempState = {
-			expandedVideos: state.tempState.expandedVideoIDs,
-			currentDirectoryPath: state.tempState.currentDirectory,
-			layout: state.tempState.layout,
-			videoBrowserScrollDistance: state.tempState.videoBrowserScrollDistance
+		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+			storage.tempState = {
+				expandedVideos: state.tempState.expandedVideoIDs,
+				currentDirectoryPath: state.tempState.currentDirectory,
+				layout: state.tempState.layout,
+				videoBrowserScrollDistance: state.tempState.videoBrowserScrollDistance
+			};
+
+			if (!storage.meta.changed.includes(tempStateSlice.name)) {
+				storage.meta.changed.push(tempStateSlice.name);
+			}
 		});
 	}
 });

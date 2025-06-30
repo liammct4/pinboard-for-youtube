@@ -1,5 +1,5 @@
 import { IPrimaryStorage } from "../../lib/storage/storage";
-import { directoryActions, IDirectorySlice } from "./directorySlice";
+import { directoryActions, directorySlice, IDirectorySlice } from "./directorySlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
@@ -18,6 +18,12 @@ directorySyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => storage.userData.directory = state.directory.videoBrowser);
+		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+			storage.userData.directory = state.directory.videoBrowser
+
+			if (!storage.meta.changed.includes(directorySlice.name)) {
+				storage.meta.changed.push(directorySlice.name);
+			}
+		});
 	}
 });

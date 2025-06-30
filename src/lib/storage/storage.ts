@@ -22,6 +22,7 @@ export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION" | "DEVMODE";
 export interface IMetaStorage {
 	meta: {
 		author: StorageAuthorSources;
+		changed: string[];
 	}
 }
 
@@ -73,7 +74,8 @@ export const BLANK_LOCAL_STORAGE_TEMPLATE: ILocalStorage = {
 		videos: []
 	},
 	meta: {
-		author: getApplicationContextType()
+		author: getApplicationContextType(),
+		changed: []
 	}
 }
 
@@ -118,7 +120,8 @@ export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 		}
 	},
 	meta: {
-		author: getApplicationContextType()
+		author: getApplicationContextType(),
+		changed: []
 	}
 };
 

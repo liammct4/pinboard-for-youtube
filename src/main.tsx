@@ -30,8 +30,8 @@ async function initializeExtension() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
 	
-	await syncStoreToLocalStorage();
-	await syncStoreToMainStorage();
+	await syncStoreToLocalStorage(false);
+	await syncStoreToMainStorage(false);
 
 	let activeID: string | undefined;
 	let environment = getApplicationContextType();

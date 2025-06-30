@@ -1,4 +1,4 @@
-import { themeActions } from "./themeSlice";
+import { themeActions, themeSlice } from "./themeSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { modifyStorage } from "../../lib/storage/storage";
@@ -20,6 +20,10 @@ themeStorageSyncMiddleware.startListening({
 		ExtensionMainVirtualStorage.modifyStorage((storage) => {
 			storage.userData.config.customThemes = state.theme.customThemes;
 			storage.userData.config.theme = state.theme.currentTheme;
+
+			if (!storage.meta.changed.includes(themeSlice.name)) {
+				storage.meta.changed.push(themeSlice.name);
+			}
 		});
 	}
 });
