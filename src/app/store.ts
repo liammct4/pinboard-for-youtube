@@ -12,6 +12,7 @@ import { directorySyncStorageMiddleware } from "../features/directory/directoryS
 import { settingsSyncStorageMiddleware } from "../features/settings/settingsStorage.ts";
 import { tempStateSyncStorageMiddleware } from "../features/state/tempStateStorage.ts";
 import { videoSyncStorageMiddleware } from "../features/video/videoStorage.ts";
+import { themeStorageSyncMiddleware } from "../features/theme/themeStorage.ts";
 
 export let store = configureStore({
 	reducer: {
@@ -31,6 +32,7 @@ export let store = configureStore({
 		.prepend(settingsSyncStorageMiddleware.middleware)
 		.prepend(tempStateSyncStorageMiddleware.middleware)
 		.prepend(videoSyncStorageMiddleware.middleware)
+		.prepend(themeStorageSyncMiddleware.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>;
