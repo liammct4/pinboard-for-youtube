@@ -8,7 +8,7 @@ import { IPrimaryStorage } from "../../lib/storage/storage";
 export function TimelineApp() {
 	return (
 		<Provider store={store}>
-			<StyleContextWrapper update-theme>
+			<StyleContextWrapper update-theme use-transition>
 				<TextMeasurerWrapper>
 					<TimelineContainer/>
 				</TextMeasurerWrapper>

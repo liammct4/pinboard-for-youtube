@@ -1,11 +1,16 @@
 /* To prevent any styling conflicts, all provided styles have to be within a pfy-style-context class. */
 
-.pfy-style-context * {
-	font-family: var(--pfy-font-scheme-standard);
-	transition: background var(--pfy-timing-fast);
-}
-
 .pfy-style-context {
+	* {
+		font-family: var(--pfy-font-scheme-standard);
+	}
+
+	&[data-transition="true"] {
+		* {
+			transition: background var(--pfy-timing-fast);
+		}
+	}
+
 	.regular-separator {
 		width: 100%;
 		border-left: 0;

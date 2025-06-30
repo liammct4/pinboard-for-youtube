@@ -9,7 +9,7 @@ import "./HomePage.css"
 
 export function PfyWrapper(): React.ReactNode {
 	return (
-		<StyleContextWrapper update-theme>
+		<StyleContextWrapper update-theme use-transition>
 			<ExtensionBoundsWrapper>
 				<EventWrapper>
 					<NotificationWrapper>

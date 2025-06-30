@@ -5,6 +5,7 @@ import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
+import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
 
 export interface IDialogBoxProperties {
 	title: string;
@@ -27,25 +28,27 @@ export function DialogBox({ title, trigger, description, footer, children }: IDi
 			<Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay className="dialog-background-overlay"/>
-				<Dialog.Content className="dialog-body pfy-style-context">
-					<div className="top-header">
-						<Dialog.Title className="title">{title}</Dialog.Title>
-						<Dialog.Close asChild>
-							<SmallButton circle type="button" className="close-button" aria-label="Close">
-								<IconContainer
-									className="icon-colour-standard"
-									asset={CrossIcon}
-									use-stroke/>
-							</SmallButton>
-						</Dialog.Close>
-					</div>
-					<div className="inner-content-area">
-						{description != "" && description != null ? <Dialog.Description className="description">{description}</Dialog.Description> : <></>}
-						<div className="content">
-							{children}
+				<Dialog.Content className="dialog-body">
+					<StyleContextWrapper update-theme>
+						<div className="top-header">
+							<Dialog.Title className="title">{title}</Dialog.Title>
+							<Dialog.Close asChild>
+								<SmallButton circle type="button" className="close-button" aria-label="Close">
+									<IconContainer
+										className="icon-colour-standard"
+										asset={CrossIcon}
+										use-stroke/>
+								</SmallButton>
+							</Dialog.Close>
 						</div>
-					</div>
-					<div className="bottom-footer">{footer}</div>
+						<div className="inner-content-area">
+							{description != "" && description != null ? <Dialog.Description className="description">{description}</Dialog.Description> : <></>}
+							<div className="content">
+								{children}
+							</div>
+						</div>
+						<div className="bottom-footer">{footer}</div>
+					</StyleContextWrapper>
 				</Dialog.Content>
 			</Dialog.Portal>
 		</Dialog.Root>

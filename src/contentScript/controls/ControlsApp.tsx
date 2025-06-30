@@ -7,7 +7,7 @@ import { IPrimaryStorage } from "../../lib/storage/storage";
 export function ControlsApp() {
 	return (
 		<Provider store={store}>
-			<StyleContextWrapper>
+			<StyleContextWrapper use-transition>
 				<VideoTimestampButton/>
 			</StyleContextWrapper>
 		</Provider>

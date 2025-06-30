@@ -6,6 +6,7 @@ import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
+import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
 
 export type DialogClosedHandler<T> = (result: T) => void;
 
@@ -38,27 +39,29 @@ export function ActionMessageDialog<T extends string>({ title, body, buttons, de
 			<AlertDialog.Portal>
 				<AlertDialog.Overlay className="dialog-background-overlay"/>
 				<AlertDialog.Content className="dialog-body pfy-style-context">
-					<div className="top-header">
-						<AlertDialog.Title className="title">{title}</AlertDialog.Title>
-						<AlertDialog.Action asChild>
-							<SmallButton circle type="button" className="close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
-								<IconContainer
-									className="icon-colour-standard"
-									asset={CrossIcon}
-									use-stroke/>
-							</SmallButton>
-						</AlertDialog.Action>
-					</div>
-					<div className="inner-content-area">
-						<AlertDialog.Description className="description">{body}</AlertDialog.Description>
-					</div>
-					<ButtonPanel className="bottom-footer">
-						{buttons.map(x =>
-							<AlertDialog.Action key={x} asChild>
-								<SmallButton autoFocus={defaultFocusedButton == x} type="button" onClick={() => onButtonPressed(x)}>{x}</SmallButton>
+					<StyleContextWrapper update-theme>
+						<div className="top-header">
+							<AlertDialog.Title className="title">{title}</AlertDialog.Title>
+							<AlertDialog.Action asChild>
+								<SmallButton circle type="button" className="close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
+									<IconContainer
+										className="icon-colour-standard"
+										asset={CrossIcon}
+										use-stroke/>
+								</SmallButton>
 							</AlertDialog.Action>
-						)}
-					</ButtonPanel>
+						</div>
+						<div className="inner-content-area">
+							<AlertDialog.Description className="description">{body}</AlertDialog.Description>
+						</div>
+						<ButtonPanel className="bottom-footer">
+							{buttons.map(x =>
+								<AlertDialog.Action key={x} asChild>
+									<SmallButton autoFocus={defaultFocusedButton == x} type="button" onClick={() => onButtonPressed(x)}>{x}</SmallButton>
+								</AlertDialog.Action>
+							)}
+						</ButtonPanel>
+					</StyleContextWrapper>
 				</AlertDialog.Content>
 			</AlertDialog.Portal>
 		</AlertDialog.Root>
