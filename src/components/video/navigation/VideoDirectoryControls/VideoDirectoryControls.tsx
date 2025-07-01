@@ -17,6 +17,7 @@ import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGro
 import "./VideoDirectoryControls.css"
 import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
+import { getNodeFromPath } from "../../../../lib/directory/directory";
 
 export interface IVideoDirectoryControlsProperties {
 	path: NodePath;
@@ -35,9 +36,25 @@ export function VideoDirectoryControls({
 	}: IVideoDirectoryControlsProperties) {
 	const directory = useDirectory(path);
 	const layout = useSelector((state: RootState) => state.tempState.layout);
+	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const dispatch = useDispatch();
 	const [ isEditingPathManually, setIsEditingPathManually ] = useState<boolean>(false);
 	
+	const processTypedPath = (value: string) => {
+		let path = parsePath(value);
+		let node = getNodeFromPath(tree, path);
+
+		if (node != null) {
+			onDirectoryPathChanged(path);
+			onNavigate([]);
+			setIsEditingPathManually(false);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	let parentSlices = getParentPathFromPath(path).slices;
 
 	let accumulator = "";
@@ -83,15 +100,15 @@ export function VideoDirectoryControls({
 						<input
 							className="directory-path-bar small-text-input"
 							onBlur={(e) => {
-								onDirectoryPathChanged(parsePath(e.target.value));
-								onNavigate([]);
-								setIsEditingPathManually(false);
+								let result = processTypedPath(e.currentTarget.value);
+
+								if (!result) {
+									setIsEditingPathManually(false);
+								}
 							}}
 							onKeyDown={(e) => {
 								if (e.key == "Enter") {
-									onDirectoryPathChanged(parsePath(e.currentTarget.value));
-									onNavigate([]);
-									setIsEditingPathManually(false);
+									processTypedPath(e.currentTarget.value);
 								}
 							}}
 							autoFocus
