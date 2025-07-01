@@ -64,11 +64,12 @@
 		}
 
 		.extension-version {
+			--faded-text-colour: color-mix(in srgb, var(--pfy-text-lighter) 40%, transparent);
 			margin-top: auto;
 			margin-left: auto;
 			margin-right: var(--pfy-spacing-standard-compact);
 			margin-bottom: var(--pfy-spacing-standard-compact);
-			color: var(--pfy-empty-02-shadow);
+			color: var(--faded-text-colour);
 			font-size: var(--pfy-font-heading-tiny);
 		}
 	}
