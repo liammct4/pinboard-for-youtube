@@ -1,8 +1,8 @@
 import { Settings } from "../config/settings";
-import { IAppTheme } from "../config/theming/appTheme";
+import { IAppTheme, ICustomTheme, ThemeID } from "../config/theming/appTheme";
 
 export interface IConfig {
-	theme: IAppTheme;
-	customThemes: IAppTheme[];
+	theme: ThemeID;
+	customThemes: ICustomTheme[];
 	settings: Settings;
 }

@@ -3,6 +3,7 @@ import { IWrapperProperties } from "../wrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { ColourPaletteColours } from "../../../lib/config/theming/appTheme";
+import { useTheme } from "../useTheme";
 
 export interface IStyleContextWrapper extends IWrapperProperties {
 	"update-theme"?: boolean;
@@ -11,15 +12,15 @@ export interface IStyleContextWrapper extends IWrapperProperties {
 
 export function StyleContextWrapper({ children, "update-theme": updateTheme, "use-transition": useTransition }: IStyleContextWrapper) {
 	const styleContextRef = useRef<HTMLDivElement>(null!);
-	const currentTheme = useSelector((state: RootState) => state.theme.currentTheme);
+	const { currentTheme, currentThemeData } = useTheme();
 
 	useEffect(() => {
 		if (!updateTheme) {
 			return;
 		}
 
-		Object.keys(currentTheme.palette).forEach(key => {
-			let value = currentTheme.palette[key as ColourPaletteColours] as string;
+		Object.keys(currentThemeData.palette).forEach(key => {
+			let value = currentThemeData.palette[key as ColourPaletteColours] as string;
 
 			styleContextRef.current.style.setProperty(`--pfy-${key}`, value);
 		});

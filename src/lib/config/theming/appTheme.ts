@@ -1,9 +1,15 @@
 import { IKeyIDItem } from "../../../components/features/useUserAccount";
+import { GUID } from "../../util/objects/types";
 
-export interface IAppTheme extends IKeyIDItem {
+export type ThemeID = `${GUID}:THEME`;
+export interface IAppTheme {
+	id: ThemeID;
 	name: string;
 	palette: ColourPalette;
-	modifiable: boolean;
+}
+
+export interface ICustomTheme extends IAppTheme {
+	basedOn: ThemeID;
 }
 
 export type ColourPaletteColours = 
@@ -46,3 +52,9 @@ export type ColourPaletteColours =
 export type ColourPalette = {
 	[name in ColourPaletteColours]: string;
 };
+
+export function createTheme(): ThemeID {
+	let guid = crypto.randomUUID();
+
+	return `${guid}:THEME`;
+}

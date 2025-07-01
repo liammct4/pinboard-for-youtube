@@ -1,20 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IAppTheme } from "../../lib/config/theming/appTheme";
-import ThemePresets from "./../../styling/theme.json"
+import { IAppTheme, ICustomTheme, ThemeID } from "../../lib/config/theming/appTheme";
 import { IPrimaryStorage } from "../../lib/storage/storage";
+import { AppThemes, DEFAULT_THEME } from "../../styling/themes";
 
 export interface IThemeSlice {
-	currentTheme: IAppTheme;
-	themePresets: IAppTheme[];
-	customThemes: IAppTheme[];
+	currentTheme: ThemeID;
+	customThemes: ICustomTheme[];
 }
 
 const initialState: IThemeSlice = {
-	// Set after storage has been initialized in main.tsx
-	currentTheme: null!,
-	themePresets: ThemePresets,
-	customThemes: null!
-}
+	currentTheme: DEFAULT_THEME,
+	customThemes: []
+};
 
 export const themeSlice = createSlice({
 	name: "theme",
@@ -24,10 +21,10 @@ export const themeSlice = createSlice({
 			state.currentTheme = action.payload.userData.config.theme;
 			state.customThemes = action.payload.userData.config.customThemes;
 		},
-		setCurrentTheme: (state, action: PayloadAction<IAppTheme>) => {
+		setCurrentTheme: (state, action: PayloadAction<ThemeID>) => {
 			state.currentTheme = action.payload;
 		},
-		addCustomTheme: (state, action: PayloadAction<IAppTheme>) => {
+		addCustomTheme: (state, action: PayloadAction<ICustomTheme>) => {
 			let existingIndex = state.customThemes.findIndex(x => x.id == action.payload.id)
 
 			if (existingIndex == -1) {
@@ -37,15 +34,19 @@ export const themeSlice = createSlice({
 
 			state.customThemes[existingIndex] = action.payload;
 		},
-		setCustomThemes: (state, action: PayloadAction<IAppTheme[]>) => {
+		setCustomThemes: (state, action: PayloadAction<ICustomTheme[]>) => {
 			state.customThemes = action.payload;
 		},
-		deleteCustomTheme: (state, action: PayloadAction<string>) => {
+		deleteCustomTheme: (state, action: PayloadAction<ThemeID>) => {
 			let index = state.customThemes.findIndex(x => x.id == action.payload);
 			
 			state.customThemes.splice(index, 1);
+
+			if (action.payload == state.currentTheme) {
+				state.currentTheme = DEFAULT_THEME;
+			}
 		},
-		setCustomThemesWithoutQueue: (state, action: PayloadAction<IAppTheme[]>) => {
+		setCustomThemesWithoutQueue: (state, action: PayloadAction<ICustomTheme[]>) => {
 			state.customThemes = action.payload;
 		}
 	}

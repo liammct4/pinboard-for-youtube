@@ -11,11 +11,13 @@ import "./../../../styling/elements/select.css"
 import "./../Input.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
-export interface IDropdownInputProperties<TField> extends IInputComponentProperties<TField> {
-	options?: string[]
+export type SelectOption<T> = { id: T; label: string };
+
+export interface IDropdownInputProperties<TField, TOptionID> extends IInputComponentProperties<TField> {
+	options?: SelectOption<TOptionID>[]
 }
 
-export function DropdownInput<TField extends string>({ label, name, fieldSize, startValue, options = [] }: IDropdownInputProperties<TField>): React.ReactNode {
+export function DropdownInput<TField extends string, TOptionID extends string>({ label, name, fieldSize, startValue, options = [] }: IDropdownInputProperties<TField, TOptionID>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
@@ -41,7 +43,7 @@ export function DropdownInput<TField extends string>({ label, name, fieldSize, s
 						<Select.Content className="select-dropdown-content">
 							<Select.Viewport className="select-viewport">
 								<Select.Group className="select-group">
-									{options.map(x => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+									{options.map(i => <SelectItem key={i.id} value={i.id}>{i.label}</SelectItem>)}
 								</Select.Group>
 							</Select.Viewport>
 						</Select.Content>

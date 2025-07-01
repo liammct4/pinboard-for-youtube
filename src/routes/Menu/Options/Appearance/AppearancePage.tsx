@@ -1,38 +1,20 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppearancePresets } from "./Presets/AppearancePresets";
 import { AppearanceCustom } from "./Custom/AppearanceCustom";
-import { ThemeContext } from "../../../../context/theme";
 import { themeActions } from "../../../../features/theme/themeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { IAppTheme } from "../../../../lib/config/theming/appTheme";
 import { RootState } from "../../../../app/store";
-import AppPalettes from "../../../../styling/theme.json";
 
 export function AppearancePage() {
 	const dispatch = useDispatch();
-	const currentTheme: IAppTheme = useSelector((state: RootState) => state.theme.currentTheme) as IAppTheme;
-	const customThemes: IAppTheme[] = useSelector((state: RootState) => state.theme.customThemes);
 
 	return (
-		<>
-			<ThemeContext.Provider value={{
-					themes: AppPalettes,
-					customThemes: customThemes, 
-					currentTheme: currentTheme,
-					actions: {
-						setCurrentTheme: (theme: IAppTheme) => dispatch(themeActions.setCurrentTheme(theme)),
-						addCustomTheme: (theme: IAppTheme) => dispatch(themeActions.addCustomTheme(theme)),
-						deleteCustomTheme: (themeName: string) => dispatch(themeActions.deleteCustomTheme(themeName)),
-						setCustomThemes: (themes: IAppTheme[]) => dispatch(themeActions.setCustomThemes(themes))
-					}
-				}}>
-				<Routes>
-					<Route path="presets" element={<AppearancePresets/>}/>
-					<Route path="custom/" element={<Navigate to=".."/>}/>
-					<Route path="custom/:id" element={<AppearanceCustom/>}/>
-					<Route path="/" element={<AppearancePresets/>}/>
-				</Routes>
-			</ThemeContext.Provider>
-		</>
+		<Routes>
+			<Route path="presets" element={<AppearancePresets/>}/>
+			<Route path="custom/" element={<Navigate to=".."/>}/>
+			<Route path="custom/:id" element={<AppearanceCustom/>}/>
+			<Route path="/" element={<AppearancePresets/>}/>
+		</Routes>
 	);
 }

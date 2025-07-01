@@ -2,9 +2,8 @@
 
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-import { ThemeContext } from "../../../../../context/theme";
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { IAppTheme, ColourPalette, ColourPaletteColours } from "../../../../../lib/config/theming/appTheme";
+import { IAppTheme, ColourPalette, ColourPaletteColours, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import ArrowIcon from "./../../../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";
@@ -15,36 +14,40 @@ import { TextInput } from "../../../../../components/input/TextInput/TextInput";
 import { ColourInput } from "../../../../../components/input/ColourInput/ColourInput";
 import { TemporaryText } from "../../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
 import { SmallButton, SmallInputButton } from "../../../../../components/interactive/buttons/SmallButton/SmallButton";
+import { useTheme } from "../../../../../components/features/useTheme";
+import { useDispatch } from "react-redux";
+import { themeActions } from "../../../../../features/theme/themeSlice";
 
 interface IEditThemeForm extends ColourPalette {
 	name: string;
 }
 
 export function AppearanceCustom(): React.ReactNode {
-	const { themes, customThemes, currentTheme, actions: { addCustomTheme, deleteCustomTheme, setCurrentTheme } } = useContext(ThemeContext);
+	const { currentTheme, currentThemeData, customThemes, allThemes } = useTheme();
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const editingTheme: IAppTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
+	const dispatch = useDispatch();
+	const editingTheme: ICustomTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
 	const submitButton = useRef<HTMLInputElement>(null!);
 	const handlerBase = useCallback((data: IEditThemeForm) => {
 		let name = data.name;
 
-		deleteCustomTheme(editingTheme!.id);
+		dispatch(themeActions.deleteCustomTheme(editingTheme!.id));
 
-		let updatedTheme: IAppTheme = {
+		let updatedTheme: ICustomTheme = {
 			id: editingTheme!.id,
 			name: name,
 			palette: {
 				...data
 			},
-			modifiable: true
+			basedOn: editingTheme!.basedOn
 		}
 		
-		addCustomTheme(updatedTheme);
+		dispatch(themeActions.addCustomTheme(updatedTheme));
 
 		// Update interface if the current theme selected is being edited.
-		if (name == currentTheme.name) {
-			setCurrentTheme(updatedTheme);
+		if (name == currentThemeData.name) {
+			dispatch(themeActions.setCurrentTheme(updatedTheme.id));
 		}
 
 		// Move the location to the new name.
@@ -94,7 +97,7 @@ export function AppearanceCustom(): React.ReactNode {
 						{
 							name: "name",
 							validator: (value: string) => {
-								if ([ ...customThemes, ...themes ].find(x => x.name == value) != undefined && editingTheme.name != value) {
+								if (allThemes.find(x => x.name == value) != undefined && editingTheme.name != value) {
 									return {
 										error: true,
 										details: {

@@ -1,9 +1,7 @@
 import { IVideo } from "./../video/video.ts"
 import { ITempState } from "./tempState/tempState"
-import { sampleConfigData } from "../../../testData/testDataSet.ts"
 import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
-import AppThemes from "./../../styling/theme.json"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
 import { createNode, DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
@@ -11,6 +9,7 @@ import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IConfig } from "./config.ts"
 import { defaultSettings } from "../config/settings.ts"
 import { deepMerge } from "../util/objects/objects.ts"
+import { AppThemes, DEFAULT_THEME } from "../../styling/themes.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
@@ -90,7 +89,7 @@ export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 			videoNodes: {}
 		},
 		config: {
-			theme: AppThemes == undefined ? sampleConfigData.theme : AppThemes[0],
+			theme: DEFAULT_THEME,
 			customThemes: [],
 			settings: defaultSettings
 		}
@@ -133,7 +132,7 @@ export async function ensureInitialized(): Promise<void> {
 	deepMerge(mainStorage, BLANK_MAIN_STORAGE_TEMPLATE);
 	deepMerge(localStorage, BLANK_LOCAL_STORAGE_TEMPLATE);
 
-	(mainStorage as IPrimaryStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[0].palette));
+	(mainStorage as IPrimaryStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[x.basedOn!]));
 
 	await chrome.storage.sync.set(mainStorage);
 	await chrome.storage.local.set(localStorage);
