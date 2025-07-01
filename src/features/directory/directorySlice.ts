@@ -88,6 +88,7 @@ export const directorySlice = createSlice({
 
 			if (pathEquals(targetParentPath, destinationPath)) {
 				console.error("directory.moveNode: Target is already in the same directory.");
+				return;
 			}
 
 			let currentID = getNodeFromPath(state.videoBrowser, targetPath) as NodeRef;

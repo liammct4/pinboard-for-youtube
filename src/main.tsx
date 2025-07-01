@@ -18,13 +18,14 @@ import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
-import { sampleVideoData } from "./../testData/testDataSet.ts";
+import { sampleCacheData, sampleVideoData } from "./../testData/testDataSet.ts";
 import { setupStorageAndStoreSync, syncStoreToLocalStorage, syncStoreToMainStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
 import { directoryActions } from "./features/directory/directorySlice.ts"
 import { videoActions } from "./features/video/videoSlice.ts"
+import { cacheActions } from "./features/cache/cacheSlice.ts"
 
 async function initializeExtension() {
 	await ensureInitialized();
@@ -49,13 +50,16 @@ async function initializeExtension() {
 	else if (environment == "DEVMODE") {
 		activeID = "xcJtL7QggTI";
 
+		store.dispatch(cacheActions.saveVideoToCache(sampleCacheData[0]));
+		store.dispatch(cacheActions.saveVideoToCache(sampleCacheData[1]));
+		store.dispatch(cacheActions.saveVideoToCache(sampleCacheData[2]));
 		store.dispatch(videoActions.addVideo(sampleVideoData[0]));
 		store.dispatch(videoActions.addVideo(sampleVideoData[1]));
 		
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "test" }));
 		store.dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: "random" }));
-		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: [] }));
-		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: [] }));
+		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[0].id, videoData: store.getState().cache.videoCache }));
+		store.dispatch(directoryActions.createVideoNode({ parentPath: "$", videoID: sampleVideoData[1].id, videoData: store.getState().cache.videoCache }));
 	}
 
 	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
