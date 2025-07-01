@@ -20,7 +20,7 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 	const nodeType = useSelector((state: RootState) => getNodeType(state.directory.videoBrowser, node.nodeID));
 	const itemRef = useRef<HTMLLIElement>(null!);
 	
-	if (itemRef.current != null && selectedItems.includes(node.nodeID)) {
+	if (itemRef.current != null && selectedItems.includes(node.nodeID) && selectedItems.length == 1) {
 		let itemElement = itemRef.current.querySelector("*[data-focus]");
 
 		if (nodeType == "DIRECTORY" || (nodeType == "VIDEO" && !itemElement?.contains(document.activeElement))) {
@@ -61,7 +61,11 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 						setSelectedItems([ node.nodeID ]);
 					}
 				}}
-				onFocus={() => setSelectedItems([ node.nodeID ])}>
+				onFocus={() => {
+					if (selectedItems.length == 0) {
+						setSelectedItems([ node.nodeID ])}
+					}
+				}>
 				{nodeType == "DIRECTORY" ?
 					<DirectoryItem node={node as IDirectoryNode} />
 					:
