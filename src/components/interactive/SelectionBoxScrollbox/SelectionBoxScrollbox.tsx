@@ -128,6 +128,7 @@ export function SelectionBoxScrollbox({
 
 	return (
 		<div
+			tabIndex={0}
 			className={`${frameClassName} selection-box-frame`}
 			onMouseDown={(e) => {
 				let bounds = frameRef.current.getBoundingClientRect();

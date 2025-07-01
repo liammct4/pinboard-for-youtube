@@ -5,6 +5,10 @@
 	align-items: stretch;
 	overflow: hidden;
 
+	&:focus-within {
+		outline: none;	
+	}
+
 	.list-data-wrapper {
 		flex-grow: 1;
 		display: flex;

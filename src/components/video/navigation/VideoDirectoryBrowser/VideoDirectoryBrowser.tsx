@@ -133,6 +133,14 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ directory.nodeID ]);
 	});
 
+	useHotkeys("Ctrl + A", (e) => {
+		if (document.querySelector(".video-directory-browser-list:focus-within") != null) {
+			e.preventDefault();
+
+			setSelectedItems([ ...directory.subNodes ]);
+		}
+	})
+
 	useEffect(() => {
 		if (directory == null) {
 			onDirectoryPathChanged(lastKnownValidPath);
