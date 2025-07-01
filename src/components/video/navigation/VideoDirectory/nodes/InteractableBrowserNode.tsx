@@ -62,7 +62,7 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 					}
 				}}
 				onFocus={() => {
-					if (selectedItems.length == 0) {
+					if (selectedItems.length <= 1) {
 						setSelectedItems([ node.nodeID ])}
 					}
 				}>
