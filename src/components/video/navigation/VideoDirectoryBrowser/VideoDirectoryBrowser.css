@@ -1,9 +1,26 @@
-.video-directory-list {
+.video-directory-browser-list {
 	display: flex;
 	flex-direction: column;
 	user-select: none;
 	align-items: stretch;
 	overflow: hidden;
+
+	.list-data-wrapper {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+
+		.video-directory-list {
+			display: flex;
+			flex-direction: column;
+			gap: var(--pfy-spacing-standard-compact);
+		}
+
+		.empty-click-area {
+			flex-grow: 1;
+			min-height: calc(var(--pfy-spacing-very-large) * 2);
+		}
+	}
 
 	.video-selection-box {
 		--transparent-background: color-mix(in srgb, var(--pfy-selection-primary) 50%, transparent);

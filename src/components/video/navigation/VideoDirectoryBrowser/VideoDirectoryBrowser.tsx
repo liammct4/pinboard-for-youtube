@@ -310,29 +310,33 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 							videoItemStyle: layout.videoItemViewStyle
 						}}>
 							<SelectionList
-								className="video-directory-list separated-scrollbox"
+								className="video-directory-browser-list separated-scrollbox"
 								itemIDName="directory-dl"
 								boxClassName="video-selection-box"
+								innerClassName="list-data-wrapper"
 								allowSelection={!isDragging}
+								selectedItems={selectedItems}
 								setSelectedItems={setSelectedItems}
 								startingScrollPosition={scrollPosition}
 								ref={listRef}
 								onScroll={(e) => dispatch(tempStateActions.setVideoBrowserScrollDistance(e.currentTarget.scrollTop))}>
-									<DragList<NodeRef>	
-										className="directory-drag-list"
-										dragListName="directory-dl"
-										onDragStart={() => setIsDragging(true)}
-										onDragEnd={() => setTimeout(dragEnd, 10)}
-										onDrag={(e) => {
-											setDragging(e);
+									<>
+										<DragList<NodeRef>	
+											className="directory-drag-list"
+											dragListName="directory-dl"
+											onDragStart={() => setIsDragging(true)}
+											onDragEnd={() => setTimeout(dragEnd, 10)}
+											onDrag={(e) => {
+												setDragging(e);
 
-											if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
-												setSelectedItems([ e.startDragID ]);
-											}
-										}}>
-											{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
-											<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
-									</DragList>
+												if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
+													setSelectedItems([ e.startDragID ]);
+												}
+											}}>
+												{directory != null ? <VideoDirectory directoryData={directory}/> : <p>No directory</p>}
+										</DragList>
+										<div className="empty-click-area" onClick={() => setSelectedItems([])}/>
+									</>
 							</SelectionList>
 					</VideoDirectoryPresentationContext.Provider>
 				</VideoDirectoryInteractionContext.Provider>

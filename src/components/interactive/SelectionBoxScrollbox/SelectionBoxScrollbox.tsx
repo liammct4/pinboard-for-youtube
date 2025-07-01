@@ -28,7 +28,7 @@ export function SelectionBoxScrollbox({
 	}: ISelectionBoxScrollboxProperties) {
 	const frameRef = useRef<HTMLDivElement>(null!);
 	const [ selectionAnchor, setSelectionAnchor ] = useState<Coordinates | null>(null);
-	const mouse = useGlobalMousePosition(true);
+	const selectionBoxRef = useRef<HTMLDivElement | null>(null);
 	const frameBounds = useMemo<Rect>(() => {
 		if (frameRef.current == null) {
 			return {
@@ -56,25 +56,40 @@ export function SelectionBoxScrollbox({
 			}
 		};
 	}, [frameRef.current, selectionAnchor]);
-	const relativeToScrollboxMouse = useMemo<Coordinates>(() => {
-		if (frameRef.current == null) {
-			return { 
-				x: 0,
-				y: 0
-			};
-		}
+	useGlobalEvent({
+		event: "MOUSE_UP",
+		handler: (e) => {
+			let frame = document.querySelector(".selection-box-frame");
+			
+			if (frame == null) {
+				return;
+			}
+			
+			let selectionBox = calculateSelectionBox(e.clientX, e.clientY, frame.scrollLeft, frame.scrollTop);
 
-		return {
-			x: (mouse.x - frameBounds.position.x) + frameRef.current.scrollLeft,
-			y: (mouse.y - frameBounds.position.y) + frameRef.current.scrollTop
+			if (selectionBox == null) {
+				return;
+			}
+
+			onSelectEnd?.(selectionBox);
+			setSelectionAnchor(null);
+		}
+	});
+
+	const calculateSelectionBox = (mouseX: number, mouseY: number, scrollLeft?: number, scrollTop?: number) => {
+		let scrollLeftValue = scrollLeft ?? frameRef.current.scrollLeft;
+		let scrollTopValue = scrollTop ?? frameRef.current.scrollTop;
+
+		let relativeToScrollboxMouse = {
+			x: (mouseX - frameBounds.position.x) + scrollLeftValue,
+			y: (mouseY - frameBounds.position.y) + scrollTopValue
 		};
-	}, [mouse, frameBounds]);
-	const selectionBox = useMemo<Rect | null>(() => {
+
 		if (selectionAnchor == null) {
 			return null;
 		}
 
-		return {
+		let selectionBox: Rect = {
 			position: {
 				x: Math.min(selectionAnchor.x, relativeToScrollboxMouse.x),
 				y: Math.min(selectionAnchor.y, relativeToScrollboxMouse.y)
@@ -84,23 +99,28 @@ export function SelectionBoxScrollbox({
 				height: Math.abs(relativeToScrollboxMouse.y - selectionAnchor.y)
 			}
 		};
-	}, [mouse, selectionAnchor]);
-	useGlobalEvent({
-		event: "MOUSE_UP",
-		handler: () => {
-			if (selectionBox == null) {
-				return;
-			}
 
-			onSelectEnd?.(selectionBox);
-			setSelectionAnchor(null);
+		return selectionBox;
+	}
+
+	const selectionBoxMouseHandler = (e: React.MouseEvent<HTMLElement>) => {
+		if (selectionAnchor == null || selectionBoxRef.current == null) {
+			return null;
 		}
-	});
-	useEffect(() => {
+
+		let selectionBox = calculateSelectionBox(e.clientX, e.clientY);
+
 		if (selectionAnchor != null && selectionBox != null) {
 			onSelectMove?.(selectionBox);
 		}
-	}, [selectionBox]);
+
+		selectionBoxRef.current.style.left = `${selectionBox?.position.x}px`;
+		selectionBoxRef.current.style.top = `${selectionBox?.position.y}px`;
+		selectionBoxRef.current.style.width = `${selectionBox?.size.width}px`;
+		selectionBoxRef.current.style.height = `${selectionBox?.size.height}px`;
+	};
+	
+	useGlobalEvent({ event: "MOUSE_MOVE", handler: selectionBoxMouseHandler });
 
 	useEffect(() => {
 		frameRef.current.scrollTo({ top: startingScrollPosition, behavior: "instant" });
@@ -124,14 +144,8 @@ export function SelectionBoxScrollbox({
 			ref={frameRef}>
 				{ selectionAnchor != null ?
 					<div
-						style={{
-							left: selectionBox?.position.x,
-							top: selectionBox?.position.y,
-							width: selectionBox?.size.width,
-							height: selectionBox?.size.height
-						}}
 						className={`selection-box ${boxClassName}`}
-						/>
+						ref={selectionBoxRef}/>
 					: <></>
 				}
 				{children}

@@ -1,18 +1,10 @@
-.video-directory-list {
+.directory-drag-list {
 	display: flex;
 	flex-direction: column;
-	list-style-type: none;
-	padding: var(--pfy-spacing-standard-compact);
+	padding: var(--pfy-spacing-standard);
 	margin: 0;
-	padding-right: var(--pfy-spacing-very-large);
-	padding-bottom: calc(var(--pfy-spacing-very-large) * 2);
-	gap: 5px;
-
-	.directory-drag-list {
-		padding: 0;
-		margin: 0;
-		list-style-type: none;
-	}
+	gap: var(--pfy-spacing-standard-compact);
+	list-style-type: none;
 
 	.directory-node-item {
 		font-size: var(--pfy-font-text-big);
