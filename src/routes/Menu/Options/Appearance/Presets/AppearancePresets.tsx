@@ -100,7 +100,7 @@ export function AppearancePresets(): React.ReactNode {
 	return (
 		<>
 			<Reorder.Group className="theme-list" values={AppThemesArray} onReorder={() => null}>
-				{AppThemesArray.map(t => <li key={t.id}><ThemePreset theme={t.id}/></li>)}
+				{AppThemesArray.map(t => <ThemePreset key={t.id} theme={t.id}/>)}
 			</Reorder.Group>
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>

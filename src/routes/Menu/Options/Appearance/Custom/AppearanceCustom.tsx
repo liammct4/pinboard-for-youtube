@@ -102,7 +102,7 @@ export function AppearanceCustom(): React.ReactNode {
 										error: true,
 										details: {
 											name: "name",
-											message: `Theme with the name ${value} already exists. Please choose a different name.`
+											message: `Theme with the name "${value}" already exists.`
 										}
 									}
 								}
@@ -119,7 +119,7 @@ export function AppearanceCustom(): React.ReactNode {
 							fieldSize="medium"
 							startValue={editingTheme.name}
 							/>
-						{Object.keys(editingTheme.palette).map(x => 
+						{Object.keys(editingTheme.palette).filter(x => x != "name").map(x => 
 							<ColourInput<ColourPaletteColours>
 								key={x}
 								name={x as ColourPaletteColours}
