@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
+import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
 import { DragListItem } from "../../../../lib/dragList/DragListItem";
 import { Timestamp } from "../../../../lib/video/video";
 import { VideoTimestamp } from "../VideoTimestamp/VideoTimestamp";
@@ -13,7 +13,7 @@ export interface ITimestampListProperties {
 }
 
 export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTimestampChanged }: ITimestampListProperties): React.ReactNode {
-	const [ dragging, setDragging ] = useState<DragEvent<string> | null>(null);
+	const [ dragging, setDragging ] = useState<DragListEvent<string> | null>(null);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 
 	// When dragging ends, reorder the list.

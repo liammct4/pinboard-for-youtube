@@ -3,7 +3,7 @@ import { useGlobalEvent } from "../../components/features/events/useGlobalEvent"
 import { Coordinates, Rect } from "../util/objects/types";
 import { useGlobalMousePosition } from "../../components/features/events/useGlobalMousePosition";
 
-export type DragEvent<T extends string> = {
+export type DragListEvent<T extends string> = {
 	startDragID: T;
 	inbetweenStartID: T | null;
 	inbetweenEndID: T | null;
@@ -15,8 +15,8 @@ export interface IDragListProperties<T extends string> {
 	children: JSX.Element | JSX.Element[];
 	dragListName: string;
 	onDragStart?: (startingID: T) => void;
-	onDrag?: (e: DragEvent<T>) => void;
-	onDragEnd?: (e: DragEvent<T>) => void;
+	onDrag?: (e: DragListEvent<T>) => void;
+	onDragEnd?: (e: DragListEvent<T>) => void;
 }
 
 export type InbetweenIDEventType = -1 | string | 1;
@@ -28,7 +28,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
 	const [ yScroll, setYScroll ] = useState<number>(0);
 	const [ yBasePosition, setYBasePosition ] = useState<number>(0);
-	const dragInfo = useMemo<DragEvent<T> | null>(() => {
+	const dragInfo = useMemo<DragListEvent<T> | null>(() => {
 		let children = listBox?.current?.querySelectorAll(`.drag-list-item[data-drag-list-name=${dragListName}]`);
 		
 		if (children == undefined) {

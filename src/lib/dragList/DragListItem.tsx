@@ -2,11 +2,12 @@ import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DragListContext, IDragListContext } from "./DragList";
 
 export interface IDragListItemProperties {
+	className?: string;
 	id: string;
-	children: JSX.Element;
+	children: JSX.Element | JSX.Element[];
 }
 
-export function DragListItem({ id, children }: IDragListItemProperties) {
+export function DragListItem({ className, id, children }: IDragListItemProperties) {
 	const bounds = useRef<HTMLDivElement>(null);
 	const { dragListName, setStartDragID, scrollY, baseY } = useContext<IDragListContext>(DragListContext);
 	const [ counter, setCounter ] = useState<number>(0);
@@ -28,7 +29,7 @@ export function DragListItem({ id, children }: IDragListItemProperties) {
 	
 	return (
 		<div
-			className="drag-list-item"
+			className={`${className} drag-list-item`}
 			ref={bounds}
 			onMouseDown={() => setStartDragID(id)}
 			data-box-id={id}

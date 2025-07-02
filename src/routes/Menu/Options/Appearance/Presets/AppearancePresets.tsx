@@ -1,8 +1,7 @@
-import { useContext, useMemo } from "react"
+import { useContext, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { RootState, store } from "../../../../../app/store";
 import { IAppTheme, ColourPalette, ThemeID, createTheme, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
-import { Reorder } from "framer-motion";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
@@ -18,12 +17,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { themeActions } from "../../../../../features/theme/themeSlice";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 import { useTheme } from "../../../../../components/features/useTheme";
+import { DragListEvent, DragList } from "../../../../../lib/dragList/DragList";
+import { DragListItem } from "../../../../../lib/dragList/DragListItem";
 
 interface IThemePresetProperties {
 	theme: ThemeID;
+	useHover?: boolean;
 }
 
-function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
+function ThemePreset({ theme, useHover = true }: IThemePresetProperties): React.ReactNode {
 	const dispatch = useDispatch();
 	const currentTheme = useSelector((state: RootState) => state.theme.currentTheme);
 	const customThemes = useSelector((state: RootState) => state.theme.customThemes);
@@ -31,35 +33,34 @@ function ThemePreset({ theme }: IThemePresetProperties): React.ReactNode {
 	const navigate = useNavigate();
 	
 	return (
-		<Reorder.Item value={theme}>
-			<div className="theme-row">
-				<button
-					className="select-button"
-					onClick={() => dispatch(themeActions.setCurrentTheme(theme))}
-					data-selected={currentTheme == theme ? "" : null}>
-					<h3 className="name">{themeData.name}</h3>
-					<div className="preview-grid">
-						<div style={{ background: themeData.palette["primary-common"] }}/>
-						<div style={{ background: themeData.palette["primary-ultradark"] }}/>
-						<div style={{ background: themeData.palette["empty-02-raised"] }}/>
-						<div style={{ background: themeData.palette["empty-01-normal"] }}/>
-					</div>
-				</button>
-				{AppThemes[theme] == undefined ?
-					<ButtonPanel className="modify-buttons">
-						<SmallButton square onClick={() => dispatch(themeActions.deleteCustomTheme(theme))}>
-							<IconContainer
-								className="icon-colour-standard"
-								asset={DeleteIcon}
-								use-stroke
-								use-fill/>
-						</SmallButton>
-						<SmallButton onClick={() => navigate(`custom/${themeData.name}`)}>Edit</SmallButton>
-					</ButtonPanel>
-					: <></>
-				}
-			</div>
-		</Reorder.Item>
+		<li className="theme-row" value={theme}>
+			<button
+				className="select-button"
+				onClick={() => dispatch(themeActions.setCurrentTheme(theme))}
+				data-selected={currentTheme == theme ? "" : null}
+				data-use-hover={useHover}>
+				<h3 className="name">{themeData.name}</h3>
+				<div className="preview-grid">
+					<div style={{ background: themeData.palette["primary-common"] }}/>
+					<div style={{ background: themeData.palette["primary-ultradark"] }}/>
+					<div style={{ background: themeData.palette["empty-02-raised"] }}/>
+					<div style={{ background: themeData.palette["empty-01-normal"] }}/>
+				</div>
+			</button>
+			{AppThemes[theme] == undefined ?
+				<ButtonPanel className="modify-buttons">
+					<SmallButton square onClick={() => dispatch(themeActions.deleteCustomTheme(theme))}>
+						<IconContainer
+							className="icon-colour-standard"
+							asset={DeleteIcon}
+							use-stroke
+							use-fill/>
+					</SmallButton>
+					<SmallButton onClick={() => navigate(`custom/${themeData.name}`)}>Edit</SmallButton>
+				</ButtonPanel>
+				: <></>
+			}
+		</li>
 	);
 }
 
@@ -71,9 +72,11 @@ type AddCustomThemeForm = {
 
 export function AppearancePresets(): React.ReactNode {
 	const customThemes = useSelector((state: RootState) => state.theme.customThemes);
-	const { allThemes } = useTheme();
+	const { allThemes, retrieveThemeData } = useTheme();
 	const dispatch = useDispatch();
 	const { activateMessage } = useNotificationMessage();
+	const [ dragging, setDragging ] = useState<DragListEvent<ThemeID> | null>(null);
+	const [ startDragID, setStartDragID ] = useState<ThemeID | null>(null);
 
 	const onSubmitCustom = (form: AddCustomThemeForm) => {
 		let palette: ColourPalette | undefined = allThemes
@@ -93,15 +96,35 @@ export function AppearancePresets(): React.ReactNode {
 		
 		dispatch(themeActions.addCustomTheme(newTheme));
 	}
-	const onReorder = (newCustomThemes: ICustomTheme[]) => {
-		dispatch(themeActions.setCustomThemes(newCustomThemes));
+	const onReorder = (e: DragListEvent<ThemeID>) => {
+		setDragging(null);
+		setStartDragID(null);
+
+		if (e == "NOT_IN_BOUNDS") {
+			return;
+		}
+
+		let newThemes = [ ...customThemes ];
+		let index = newThemes.findIndex(x => x.id == e.startDragID);
+		
+		let theme = newThemes.splice(index, 1);
+		let whereIndex = newThemes.findIndex(x => x.id == e.inbetweenEndID);
+
+		if (e.inbetweenEndID == null) {
+			newThemes.push(theme[0]);
+		}
+		else {
+			newThemes.splice(whereIndex, 0, theme[0]);
+		}
+
+		dispatch(themeActions.setCustomThemes(newThemes));
 	};
 
 	return (
 		<>
-			<Reorder.Group className="theme-list" values={AppThemesArray} onReorder={() => null}>
+			<ul className="theme-list">
 				{AppThemesArray.map(t => <ThemePreset key={t.id} theme={t.id}/>)}
-			</Reorder.Group>
+			</ul>
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>
 			<div className="custom-theme-controls">
@@ -162,9 +185,28 @@ export function AppearancePresets(): React.ReactNode {
 			</div>
 			<hr className="regular-separator"/>
 			{customThemes.length != 0 ?
-				<Reorder.Group layoutScroll className="theme-list" values={customThemes} onReorder={onReorder}>
-					{customThemes.map(t => <ThemePreset key={t.id} theme={t.id}/>)}
-				</Reorder.Group>
+				<DragList<ThemeID>
+					dragListName="theme-list"
+					onDrag={(e) => setDragging(e)}
+					onDragStart={(e) => setStartDragID(e)}
+					onDragEnd={onReorder}
+					className="theme-list">
+						{customThemes.map(t =>
+							<>
+								<DragListItem className={startDragID == t.id ? "drag-theme-hover-item" : ""} key={t.id} id={t.id}>
+									{
+										dragging != "NOT_IN_BOUNDS" && t.id == customThemes[0].id && dragging?.inbetweenEndID == t.id ?
+											<div className="drag-line"><hr data-start="true"/></div> : <></>
+									}
+									<ThemePreset theme={t.id} useHover={dragging == null}/>
+									{
+										dragging != "NOT_IN_BOUNDS" && dragging?.inbetweenStartID == t.id ?
+											<div className="drag-line"><hr data-start="false"/></div> : <></>
+									}
+								</DragListItem>
+							</>
+						)}
+				</DragList>
 				: <span className="empty-theme-list-text">Nothing to display...</span>
 			}
 		</>

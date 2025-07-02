@@ -5,7 +5,7 @@ import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirec
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
-import { DragEvent, DragList } from "../../../../lib/dragList/DragList";
+import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
@@ -59,7 +59,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const { selectedItems, setSelectedItems, currentlyEditing, setCurrentlyEditing	} = useContext<IVideoDirectoryBrowserContext>(VideoDirectoryBrowserContext);
 	const [ lastKnownValidPath, setLastKnownValidPath ] = useState<NodePath>(parsePath("$"));
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
-	const [ dragging, setDragging ] = useState<DragEvent<NodeRef> | null>(null);
+	const [ dragging, setDragging ] = useState<DragListEvent<NodeRef> | null>(null);
 	const [ timestampActivelyDragging, setTimestampActivelyDragging ] = useState<boolean>(false);
 	const [ deleteNodeDialog, setDeleteNodeDialog ] = useState<NodeRef | null>(null); 
 	const { activateMessage } = useNotificationMessage();

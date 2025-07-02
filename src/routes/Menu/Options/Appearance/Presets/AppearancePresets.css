@@ -7,6 +7,35 @@
 	margin-top: var(--pfy-spacing-standard);
 	margin-bottom: var(--pfy-spacing-standard);
 
+	.drag-theme-hover-item {
+		outline: 2px dashed var(--pfy-primary-ultradark);
+		border-radius: var(--pfy-spacing-standard-compact);
+	}
+	
+	.drag-line {
+		position: relative;
+		width: 100%;
+		height: 0;
+
+		hr {
+			border: none;
+			outline: none;
+			position: absolute;
+			width: 100%;
+			height: 2px;
+			background-color: var(--pfy-primary-common);
+			margin: 0;
+
+			&[data-start="true"] {
+				transform: translateY(-3px);
+			}
+
+			&[data-start="false"] {
+				transform: translateY(2px);
+			}
+		}
+	}
+
 	.theme-row {
 		display: flex;
 		flex-direction: row;
@@ -22,7 +51,7 @@
 			border: 0;
 			border-radius: var(--pfy-spacing-standard);
 			
-			&:hover {
+			&[data-use-hover="true"]:hover {
 				.name {
 					padding-left: var(--pfy-spacing-very-large);
 				}
