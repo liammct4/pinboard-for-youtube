@@ -1,0 +1,41 @@
+.dropdown-input, ::picker(select) {
+	appearance: base-select;
+}
+
+.dropdown-input {
+	&::picker-icon {
+		display: none;
+	}
+
+	& svg {
+		margin: auto;
+		margin-right: 0;
+		transition: transform var(--pfy-timing-fast);
+	}
+
+	&:open svg {
+		transform: rotate(180deg);
+	}
+
+	& option {
+		outline: none;
+		border: none;
+		color: var(--pfy-text-normal);
+		font-size: var(--pfy-field-font-size);
+
+		&:checked {
+			font-weight: bold;
+			background-color: var(--pfy-empty-02-raised)
+		}
+
+		&::checkmark {
+			display: none;
+		}
+	}
+
+	&::picker(select) {
+		border: 1px solid var(--pfy-empty-01-shadow);
+		border-radius: var(--pfy-spacing-standard);
+		background-color: var(--pfy-empty-01-normal);
+	}
+}

@@ -242,6 +242,19 @@
 		}
 	}
 
+	.icon-colour-field-content {
+		fill: none;
+		stroke: none;
+
+		&[data-use-fill] {
+			fill: var(--pfy-field-content);
+		}
+
+		&[data-use-stroke] {
+			stroke: var(--pfy-field-content);
+		}
+	}
+
 	/* Text */
 	.paragraph-regular {
 		font-size: var(--pfy-font-text-standard);
