@@ -193,7 +193,8 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const dragEnd = () => {
 		setIsDragging(false);
 
-		if (dragging == null) {
+		if (dragging == null || timestampActivelyDragging) {
+			setDragging(null);
 			return;
 		}
 
