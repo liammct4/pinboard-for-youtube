@@ -182,7 +182,6 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 			);
 		}
 
-		
 		dispatch(directoryActions.renameDirectory({
 			targetPath: directoryPathConcat(directoryPath, tree.directoryNodes[currentlyEditing as NodeRef].slice, "DIRECTORY"),
 			newSlice: newSliceName
@@ -194,7 +193,11 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const dragEnd = () => {
 		setIsDragging(false);
 
-		if (dragging == "NOT_IN_BOUNDS") {
+		if (dragging == null) {
+			return;
+		}
+
+		if (dragging.notInBounds) {
 			if (directoryBarHoverPath == null) {
 				setDragging(null);
 				return;
@@ -219,7 +222,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 			return;
 		}
 
-		if (dragging?.overlappingID == undefined || getNodeType(tree, dragging.overlappingID as NodeRef) == "VIDEO") {
+		if (dragging.overlappingID == null || getNodeType(tree, dragging.overlappingID) == "VIDEO") {
 			setDragging(null);
 			return;
 		}
@@ -311,7 +314,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 						currentlyEditing,
 						requestEditEnd,
 						activateDeleteNodeDialog: setDeleteNodeDialog,
-						draggingID: dragging != "NOT_IN_BOUNDS" ? dragging?.overlappingID ?? null : null
+						draggingID: !dragging?.notInBounds ? dragging?.overlappingID ?? null : null
 					}}>
 					<VideoDirectoryPresentationContext.Provider
 						value={{
@@ -333,11 +336,11 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 											className="directory-drag-list"
 											dragListName="directory-dl"
 											onDragStart={() => setIsDragging(true)}
-											onDragEnd={() => setTimeout(dragEnd, 10)}
-											onDrag={(e) => {
+											onDragEnd={dragEnd}
+											onDragChanged={(e) => {
 												setDragging(e);
 
-												if (selectedItems.length == 0 && e != "NOT_IN_BOUNDS") {
+												if (selectedItems.length == 0 && !e.notInBounds) {
 													setSelectedItems([ e.startDragID ]);
 												}
 											}}>

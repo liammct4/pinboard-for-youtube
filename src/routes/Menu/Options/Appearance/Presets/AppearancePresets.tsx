@@ -100,7 +100,12 @@ export function AppearancePresets(): React.ReactNode {
 		setDragging(null);
 		setStartDragID(null);
 
-		if (e == "NOT_IN_BOUNDS") {
+		if (e.notInBounds) {
+			return;
+		}
+
+		// Means that it's been dragged to the exact same position, so no need to do anything.
+		if (e.inbetweenEndID == e.startDragID) {
 			return;
 		}
 
@@ -187,7 +192,7 @@ export function AppearancePresets(): React.ReactNode {
 			{customThemes.length != 0 ?
 				<DragList<ThemeID>
 					dragListName="theme-list"
-					onDrag={(e) => setDragging(e)}
+					onDragChanged={(e) => { console.log(e); setDragging(e)}}
 					onDragStart={(e) => setStartDragID(e)}
 					onDragEnd={onReorder}
 					className="theme-list">
@@ -195,12 +200,12 @@ export function AppearancePresets(): React.ReactNode {
 							<>
 								<DragListItem className={startDragID == t.id ? "drag-theme-hover-item" : ""} key={t.id} id={t.id}>
 									{
-										dragging != "NOT_IN_BOUNDS" && t.id == customThemes[0].id && dragging?.inbetweenEndID == t.id ?
+										!dragging?.notInBounds && t.id == customThemes[0].id && dragging?.inbetweenEndID == t.id ?
 											<div className="drag-line"><hr data-start="true"/></div> : <></>
 									}
 									<ThemePreset theme={t.id} useHover={dragging == null}/>
 									{
-										dragging != "NOT_IN_BOUNDS" && dragging?.inbetweenStartID == t.id ?
+										!dragging?.notInBounds && dragging?.inbetweenStartID == t.id ?
 											<div className="drag-line"><hr data-start="false"/></div> : <></>
 									}
 								</DragListItem>

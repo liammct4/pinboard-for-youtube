@@ -1,142 +1,244 @@
-import { createContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, useReducer, useRef } from "react"
 import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
 import { Coordinates, Rect } from "../util/objects/types";
-import { useGlobalMousePosition } from "../../components/features/events/useGlobalMousePosition";
+import { areObjectsEqual } from "../util/objects/objects";
 
 export type DragListEvent<T extends string> = {
 	startDragID: T;
 	inbetweenStartID: T | null;
 	inbetweenEndID: T | null;
 	overlappingID: T | null;
-} | "NOT_IN_BOUNDS";
+	notInBounds: boolean;
+};
 
 export interface IDragListProperties<T extends string> {
 	className?: string;
 	children: JSX.Element | JSX.Element[];
 	dragListName: string;
 	onDragStart?: (startingID: T) => void;
-	onDrag?: (e: DragListEvent<T>) => void;
+	onDragChanged?: (e: DragListEvent<T>) => void;
 	onDragEnd?: (e: DragListEvent<T>) => void;
 }
 
 export type InbetweenIDEventType = -1 | string | 1;
 
-export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDrag, onDragEnd }: IDragListProperties<T>) {
+let defaultState: DragListState = {
+	dragging: false
+}
+
+interface IDragListStateDragging {
+	dragging: true;
+	event: {
+		info: DragListEvent<string>;
+	}
+	yBasePosition: number;
+	scroll: number;
+	startDragPosition: Coordinates;
+	outOfBounds: boolean;
+	nodeElements: HTMLElement[];
+}
+
+type DragListState = IDragListStateDragging | { dragging: false };
+
+type DragListAction = 
+	{ type: "START_DRAG", startID: string, listBox: HTMLElement, dragListName: string, startDragPosition: Coordinates } |
+	{ type: "CHANGED_DRAG", info: DragListEvent<string> } |
+	{ type: "DRAG_ELEMENT_UPDATE", yPosition: number, scroll: number } |
+	{ type: "END_DRAG" }
+
+function reducer(state: DragListState, action: DragListAction): DragListState {
+	switch (action.type) {
+		case "START_DRAG":
+			state.dragging = true;
+
+			if (!state.dragging) {
+				return state;
+			}
+
+			state.event = {
+				info: {
+					startDragID: action.startID,
+					inbetweenEndID: null,
+					inbetweenStartID: null,
+					overlappingID: null,
+					notInBounds: false
+				}
+			}
+			state.startDragPosition = action.startDragPosition;
+			state.nodeElements = Array.from(action.listBox.querySelectorAll(`.drag-list-item[data-drag-list-name=${action.dragListName}]`));
+			state.yBasePosition = action.listBox.getBoundingClientRect().y!
+			state.scroll = action.listBox.scrollTop;
+
+			return state;
+		case "CHANGED_DRAG":
+			if (!state.dragging) {
+				return state;
+			}
+
+			state.event.info = action.info;
+			return state;
+		case "DRAG_ELEMENT_UPDATE":
+			if (!state.dragging) {
+				return state;
+			}
+
+			state.yBasePosition = action.yPosition!;
+			state.scroll = action.scroll;
+
+			return state;
+		case "END_DRAG":
+			state.dragging = false;
+			
+			return state;
+	}
+}
+
+export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDragChanged, onDragEnd }: IDragListProperties<T>) {
 	const listBox = useRef<HTMLUListElement>(null);
-	const [ startDragID, setStartDragID ] = useState<T | null>(null);
-	const [ startDragPosition, setStartDragPosition ] = useState<Coordinates | null>(null);
-	const [ yMousePosition, setYMousePosition ] = useState<number>(0);
-	const [ yScroll, setYScroll ] = useState<number>(0);
-	const [ yBasePosition, setYBasePosition ] = useState<number>(0);
-	const dragInfo = useMemo<DragListEvent<T> | null>(() => {
-		let children = listBox?.current?.querySelectorAll(`.drag-list-item[data-drag-list-name=${dragListName}]`);
-		
-		if (children == undefined) {
-			return null;
+	const [ state, dispatch ] = useReducer(reducer, defaultState);
+
+	useGlobalEvent({
+		event: "MOUSE_MOVE",
+		handler: (e) => {
+			if (!state.dragging) {
+				return;
+			}
+
+			let listBoxPosition = e.clientY - state.yBasePosition;
+			let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
+			
+			let info = calculateDragInfo(e.clientX, listBoxPositionWithScroll);
+
+			if (!areObjectsEqual(info, state.event.info)) {
+				dispatch({ type: "CHANGED_DRAG", info });
+				onDragChanged?.(info as DragListEvent<T>);
+			}
+		}
+	})
+	useGlobalEvent({
+		event: "MOUSE_UP",
+		handler: () => {
+			if (!state.dragging) {
+				return;
+			}
+
+			onDragEnd?.(state.event.info as DragListEvent<T>);
+			dispatch({ type: "END_DRAG" });
+		}
+	});
+
+	const calculateOutOfBounds = (mouseX: number, mouseY: number) => {
+		if (!state.dragging) {
+			return false;
 		}
 
-		for (let i = 0; i < children.length; i++) {
-			let boxYPosition = Number(children[i].getAttribute("data-y-box-position"));
-			let boxYHeight = Number(children[i].getAttribute("data-box-height"));
+		let boundsX = Math.abs(mouseX - state.startDragPosition.x);
+		let boundsY = Math.abs(mouseY - state.startDragPosition.y);
+
+		return boundsX < 10 && boundsY < 10;
+	}
+
+	const calculateDragInfo = (mouseX: number, mouseY: number): DragListEvent<T> => {
+		if (!state.dragging) {
+			throw Error("Called calculateDragInfo when not dragging.");
+		}
+
+		if (calculateOutOfBounds(mouseX, mouseY)) {
+			let outOfBounds: DragListEvent<T> = {
+				startDragID: state.event.info.startDragID as T,
+				inbetweenEndID: null,
+				inbetweenStartID: null,
+				overlappingID: null,
+				notInBounds: true
+			}
+
+			return outOfBounds;
+		}
+
+		for (let i = 0; i < state.nodeElements.length; i++) {
+			let boxYPosition = Number(state.nodeElements[i].getAttribute("data-y-box-position"));
+			let boxYHeight = Number(state.nodeElements[i].getAttribute("data-box-height"));
 
 			let bottomOfBoxItem = boxYPosition + boxYHeight;
+			let maxBound = bottomOfBoxItem;
+			
+			let nextNode = state.nodeElements[i + 1];
+
+			if (nextNode != undefined) {
+				maxBound = Number(nextNode.getAttribute("data-y-box-position"));
+			}
 
 			if (
-				yMousePosition > boxYPosition &&
-				yMousePosition < bottomOfBoxItem
+				mouseY > boxYPosition &&
+				mouseY < maxBound
 			) {
-				let overlappingID = children[i].getAttribute("data-box-id") as T;
+				let overlappingID = state.nodeElements[i].getAttribute("data-box-id") as T;
 
-				let diffBetweenStart = Math.abs(yMousePosition - boxYPosition);
-				let diffBetweenEnd = Math.abs(yMousePosition - bottomOfBoxItem);
+				let diffBetweenStart = Math.abs(mouseY - boxYPosition);
+				let diffBetweenEnd = Math.abs(mouseY - bottomOfBoxItem);
 
 				let startID: T | null;
 				let endID: T | null;
 
 				if (diffBetweenStart <= diffBetweenEnd) {
-					startID = children[i - 1]?.getAttribute("data-box-id") as T;
+					startID = state.nodeElements[i - 1]?.getAttribute("data-box-id") as T;
 					endID = overlappingID as T;
 				}
 				else {
 					startID = overlappingID as T;
-					endID = children[i + 1]?.getAttribute("data-box-id") as T;
+					endID = state.nodeElements[i + 1]?.getAttribute("data-box-id") as T;
 				}
 
 				return {
-					startDragID: startDragID as T,
+					startDragID: state.event.info.startDragID as T,
 					inbetweenStartID: startID,
 					inbetweenEndID: endID,
-					overlappingID: overlappingID
+					overlappingID: overlappingID,
+					notInBounds: false
 				}
 			}
 		}
 
-		return "NOT_IN_BOUNDS";
-	}, [yMousePosition]);
-	const mouse = useGlobalMousePosition(dragInfo != null);
-	const outOfBounds = useMemo(() => {
-		if (startDragPosition == null) {
-			return true;
-		}
+		let info: DragListEvent<T> = {
+			startDragID: state.event.info.startDragID as T,
+			inbetweenStartID: null,
+			inbetweenEndID: null,
+			overlappingID: null,
+			notInBounds: true
+		};
 
-		let boundsX = Math.abs(mouse.x - startDragPosition.x);
-		let boundsY = Math.abs(mouse.y - startDragPosition.y);
-	
-		return boundsX > 10 || boundsY > 10;
-	}, [mouse.x, mouse.y, startDragPosition?.x, startDragPosition?.y, ]);
-	useEffect(() => {
-		if (onDrag != undefined && dragInfo && outOfBounds) {
-			onDrag(dragInfo);
-		}
-	}, [dragInfo]);
-	useGlobalEvent({
-		event: "MOUSE_UP",
-		handler: () => {
-			setStartDragID(null);
-
-			if (onDragEnd != null) {
-				onDragEnd(dragInfo!);
-				setStartDragPosition(null);
-			}
-		}
-	});
-	useGlobalEvent({
-		event: "MOUSE_MOVE",
-		handler: (e: React.MouseEvent<HTMLElement>) => {
-			if (startDragID != null) {
-				let y = listBox.current?.getBoundingClientRect().y!;
-				let listBoxPosition = e.clientY - y;
-				let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
-	
-				setYBasePosition(y);
-				setYScroll(listBox?.current?.scrollTop!);
-				setYMousePosition(listBoxPositionWithScroll);
-
-				if (startDragPosition == null) {
-					setStartDragPosition({ x: e.clientX, y: e.clientY });
-				}
-			}
-		}
-	})
+		return info;
+	}
 	
 	return (
 		<DragListContext.Provider
 			value={{
 				dragListName,
-				startDragID,
-				overlappingID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.overlappingID ?? null : null,
-				inbetweenStartID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenStartID ?? null : null,
-				inbetweenEndID: dragInfo != "NOT_IN_BOUNDS" ? dragInfo?.inbetweenEndID ?? null : null,
-				setStartDragID: (e) => {
+				startDragID: state.dragging ? state.event.info.startDragID : null,
+				overlappingID: state.dragging && !state.outOfBounds ? state.event.info.overlappingID : null,
+				inbetweenStartID: state.dragging && !state.outOfBounds ? state.event.info.inbetweenStartID: null,
+				inbetweenEndID: state.dragging && !state.outOfBounds ? state.event.info.inbetweenEndID : null,
+				setStartDragID: (e, position) => {
+					dispatch({
+						type: "START_DRAG",
+						startID: e,
+						listBox: listBox.current as HTMLElement,
+						startDragPosition: position,
+						dragListName: dragListName
+					});
 					onDragStart?.(e as T);
-					setStartDragID(e as T);
 				},
-				baseY: yBasePosition,
-				scrollY: yScroll
+				baseY: state.dragging ? state.yBasePosition : 0,
+				scrollY: state.dragging ? state.scroll : 0
 			}}>
 			<ul
 				className={className}
-				ref={listBox}>
+				ref={listBox}
+				onScroll={(e) => {
+					if (state.dragging) {
+						dispatch({ type: "DRAG_ELEMENT_UPDATE", yPosition: e.currentTarget.getBoundingClientRect().y, scroll: e.currentTarget.scrollTop! });
+					}
+				}}>
 				{children}
 			</ul>
 		</DragListContext.Provider>
@@ -154,7 +256,7 @@ export interface IDragListContext {
 	overlappingID: string | null;
 	inbetweenStartID: string | null;
 	inbetweenEndID: string | null;
-	setStartDragID: (id: string) => void;
+	setStartDragID: (id: string, position: Coordinates) => void;
 	baseY: number;
 	scrollY: number;
 }

@@ -31,7 +31,7 @@ export function DragListItem({ className, id, children }: IDragListItemPropertie
 		<div
 			className={`${className} drag-list-item`}
 			ref={bounds}
-			onMouseDown={() => setStartDragID(id)}
+			onMouseDown={(e) => setStartDragID(id, { x: e.clientX, y: e.clientY })}
 			data-box-id={id}
 			data-y-box-position={Number.isNaN(itemY) ? 0 : itemY}
 			data-box-height={itemHeight}
