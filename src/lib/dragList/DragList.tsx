@@ -210,6 +210,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 	return (
 		<DragListContext.Provider
 			value={{
+				dragging: state.dragging,
 				dragListName,
 				startDragID: state.dragging ? state.event.info.startDragID : null,
 				overlappingID: state.dragging && !state.event.info.notInBounds ? state.event.info.overlappingID : null,
@@ -248,6 +249,7 @@ export type DragListItemData = {
 }
 
 export interface IDragListContext {
+	dragging: boolean;
 	dragListName: string;
 	startDragID: string | null;
 	overlappingID: string | null;

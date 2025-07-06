@@ -9,8 +9,7 @@ export interface IDragListItemProperties {
 
 export function DragListItem({ className, id, children }: IDragListItemProperties) {
 	const bounds = useRef<HTMLDivElement>(null);
-	const { dragListName, startDragFromItem, scrollY, baseY } = useContext<IDragListContext>(DragListContext);
-	const [ counter, setCounter ] = useState<number>(0);
+	const { dragging, dragListName, startDragFromItem, scrollY, baseY } = useContext<IDragListContext>(DragListContext);
 	const { itemY, itemHeight }  = useMemo(() => {
 		let boundCurrent = bounds?.current?.getBoundingClientRect();
 
@@ -18,15 +17,8 @@ export function DragListItem({ className, id, children }: IDragListItemPropertie
 		let withScrollConsidered = neutral + (scrollY * 1);
 
 		return { itemY: withScrollConsidered, itemHeight: boundCurrent?.height }
-	}, [scrollY, baseY, counter]);
+	}, [scrollY, baseY, dragging]);
 
-	// TODO: Replace with MutationObserver
-	useEffect(() => {
-		setTimeout(() => {
-			setCounter(Math.random());
-		}, 100);
-	}, [counter])
-	
 	return (
 		<div
 			className={`${className} drag-list-item`}
