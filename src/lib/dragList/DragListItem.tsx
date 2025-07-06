@@ -9,7 +9,7 @@ export interface IDragListItemProperties {
 
 export function DragListItem({ className, id, children }: IDragListItemProperties) {
 	const bounds = useRef<HTMLDivElement>(null);
-	const { dragListName, setStartDragID, scrollY, baseY } = useContext<IDragListContext>(DragListContext);
+	const { dragListName, startDragFromItem, scrollY, baseY } = useContext<IDragListContext>(DragListContext);
 	const [ counter, setCounter ] = useState<number>(0);
 	const { itemY, itemHeight }  = useMemo(() => {
 		let boundCurrent = bounds?.current?.getBoundingClientRect();
@@ -31,7 +31,7 @@ export function DragListItem({ className, id, children }: IDragListItemPropertie
 		<div
 			className={`${className} drag-list-item`}
 			ref={bounds}
-			onMouseDown={(e) => setStartDragID(id, { x: e.clientX, y: e.clientY })}
+			onMouseDown={(e) => startDragFromItem(id, { x: e.clientX, y: e.clientY })}
 			data-box-id={id}
 			data-y-box-position={Number.isNaN(itemY) ? 0 : itemY}
 			data-box-height={itemHeight}

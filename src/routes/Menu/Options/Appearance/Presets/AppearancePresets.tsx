@@ -192,7 +192,7 @@ export function AppearancePresets(): React.ReactNode {
 			{customThemes.length != 0 ?
 				<DragList<ThemeID>
 					dragListName="theme-list"
-					onDragChanged={(e) => { console.log(e); setDragging(e)}}
+					onDragChanged={(e) => setDragging(e)}
 					onDragStart={(e) => setStartDragID(e)}
 					onDragEnd={onReorder}
 					className="theme-list">

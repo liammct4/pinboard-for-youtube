@@ -34,7 +34,6 @@ interface IDragListStateDragging {
 	yBasePosition: number;
 	scroll: number;
 	startDragPosition: Coordinates;
-	outOfBounds: boolean;
 	nodeElements: HTMLElement[];
 }
 
@@ -49,47 +48,45 @@ type DragListAction =
 function reducer(state: DragListState, action: DragListAction): DragListState {
 	switch (action.type) {
 		case "START_DRAG":
-			state.dragging = true;
-
-			if (!state.dragging) {
-				return state;
+			return {
+				dragging: true,
+				event: {
+					info: {
+						startDragID: action.startID,
+						inbetweenEndID: null,
+						inbetweenStartID: null,
+						overlappingID: null,
+						notInBounds: false
+					}
+				},
+				startDragPosition: action.startDragPosition,
+				nodeElements: Array.from(action.listBox.querySelectorAll(`.drag-list-item[data-drag-list-name=${action.dragListName}]`)),
+				yBasePosition: action.listBox.getBoundingClientRect().y!,
+				scroll: action.listBox.scrollTop
 			}
-
-			state.event = {
-				info: {
-					startDragID: action.startID,
-					inbetweenEndID: null,
-					inbetweenStartID: null,
-					overlappingID: null,
-					notInBounds: false
-				}
-			}
-			state.startDragPosition = action.startDragPosition;
-			state.nodeElements = Array.from(action.listBox.querySelectorAll(`.drag-list-item[data-drag-list-name=${action.dragListName}]`));
-			state.yBasePosition = action.listBox.getBoundingClientRect().y!
-			state.scroll = action.listBox.scrollTop;
-
-			return state;
 		case "CHANGED_DRAG":
 			if (!state.dragging) {
-				return state;
+				return { ...state };
 			}
 
-			state.event.info = action.info;
-			return state;
+			return {
+				...state,
+				event: {
+					info: action.info
+				}
+			};
 		case "DRAG_ELEMENT_UPDATE":
 			if (!state.dragging) {
-				return state;
+				return { ...state };
 			}
 
-			state.yBasePosition = action.yPosition!;
-			state.scroll = action.scroll;
-
-			return state;
-		case "END_DRAG":
-			state.dragging = false;
-			
-			return state;
+			return {
+				...state,
+				yBasePosition: action.yPosition,
+				scroll: action.scroll
+			}
+		case "END_DRAG":			
+			return { dragging: false };
 	}
 }
 
@@ -103,7 +100,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 			if (!state.dragging) {
 				return;
 			}
-
+			
 			let listBoxPosition = e.clientY - state.yBasePosition;
 			let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
 			
@@ -215,10 +212,10 @@ export function DragList<T extends string>({ className, dragListName, children, 
 			value={{
 				dragListName,
 				startDragID: state.dragging ? state.event.info.startDragID : null,
-				overlappingID: state.dragging && !state.outOfBounds ? state.event.info.overlappingID : null,
-				inbetweenStartID: state.dragging && !state.outOfBounds ? state.event.info.inbetweenStartID: null,
-				inbetweenEndID: state.dragging && !state.outOfBounds ? state.event.info.inbetweenEndID : null,
-				setStartDragID: (e, position) => {
+				overlappingID: state.dragging && !state.event.info.notInBounds ? state.event.info.overlappingID : null,
+				inbetweenStartID: state.dragging && !state.event.info.notInBounds ? state.event.info.inbetweenStartID: null,
+				inbetweenEndID: state.dragging && !state.event.info.notInBounds ? state.event.info.inbetweenEndID : null,
+				startDragFromItem: (e, position) => {
 					dispatch({
 						type: "START_DRAG",
 						startID: e,
@@ -256,7 +253,7 @@ export interface IDragListContext {
 	overlappingID: string | null;
 	inbetweenStartID: string | null;
 	inbetweenEndID: string | null;
-	setStartDragID: (id: string, position: Coordinates) => void;
+	startDragFromItem: (id: string, position: Coordinates) => void;
 	baseY: number;
 	scrollY: number;
 }
