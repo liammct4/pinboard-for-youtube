@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
 import { IAppTheme, ColourPalette, ColourPaletteColours, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
@@ -23,13 +23,13 @@ interface IEditThemeForm extends ColourPalette {
 }
 
 export function AppearanceCustom(): React.ReactNode {
-	const { currentTheme, currentThemeData, customThemes, allThemes } = useTheme();
+	const { currentThemeData, customThemes, allThemes } = useTheme();
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const editingTheme: ICustomTheme | undefined = useMemo(() => customThemes.find(x => x.name == id), [customThemes]);
 	const submitButton = useRef<HTMLInputElement>(null!);
-	const handlerBase = useCallback((data: IEditThemeForm) => {
+	const handlerBase = (data: IEditThemeForm) => {
 		let name = data.name;
 
 		dispatch(themeActions.deleteCustomTheme(editingTheme!.id));
@@ -53,7 +53,7 @@ export function AppearanceCustom(): React.ReactNode {
 		// Move the location to the new name.
 		navigate(`../custom/${name}`);
 		setUpdateVisible(true);
-	}, []);
+	};
 	// For the confirmation message when the "Save changes" button is pressed. 
 	const [ updateVisible, setUpdateVisible ] = useState<boolean>(false);
 	

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { FormStyleContext } from "../../../../components/input/formStyleContext";
 import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import "./GeneralPage.css"
 import { settingDefinitions, Settings } from "../../../../lib/config/settings";
 import { settingsActions } from "../../../../features/settings/settingsSlice";
@@ -18,10 +18,10 @@ export function GeneralPage(): React.ReactNode {
 	let dispatch = useDispatch();
 	let settingValues = useSelector((state: RootState) => state.settings.settings);
 	const [ saveChangesVisible, setSaveChangesVisible ] = useState<boolean>(false);
-	const onSaveSettings = useCallback((data: ISettingsForm) => {
+	const onSaveSettings = (data: ISettingsForm) => {
 		dispatch(settingsActions.setSettings(data));
 		setSaveChangesVisible(true);
-	}, []);
+	}
 
 	return (
 		<>
