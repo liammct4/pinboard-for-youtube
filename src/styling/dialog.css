@@ -47,6 +47,7 @@
 		background-color: var(--pfy-empty-01-raised);
 		color: var(--pfy-text-normal);
 		font-size: var(--pfy-font-text-standard);
+		white-space: pre-wrap;
 
 		.description {
 			margin: 0;

@@ -4,35 +4,6 @@
 	flex-direction: column;
 	background: var(--pfy-empty-01-raised);
 
-	/* Header Area */
-	.header-area {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		grid-template-rows: 1fr auto;
-		background: var(--pfy-empty-02-normal);
-		padding: var(--pfy-spacing-standard);
-		padding-bottom: 0;
-
-		.extension-logo {
-			width: var(--pfy-logo-standard);
-			aspect-ratio: 6 / 5;
-		}
-		
-		.extension-title {
-			color: var(--pfy-text-strong);
-			font-size: var(--pfy-font-heading-large);
-			margin-left: var(--pfy-spacing-standard-compact);
-			margin-top: auto;
-			margin-bottom: auto;
-		}
-
-		.bold-separator {
-			grid-row: 2;
-			grid-column: 1 / 3;
-			margin: 0;
-		}
-	}
-
 	/* Inner Body */
 	.inner-body-content {
 		padding: var(--pfy-spacing-large);

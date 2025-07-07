@@ -4,7 +4,7 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
-import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
+import { SmallButton, SmallInputButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
 
@@ -16,7 +16,7 @@ export interface IMessageDialogProperties<T extends string> {
 	buttons: T[];
 	defaultFocusedButton: T;
 	defaultMessage: T;
-	onButtonPressed: DialogClosedHandler<T>;
+	onButtonPressed?: DialogClosedHandler<T>;
 	overrideOpen?: boolean | undefined;
 	children?: React.ReactNode;
 }
@@ -43,7 +43,7 @@ export function ActionMessageDialog<T extends string>({ title, body, buttons, de
 						<div className="top-header">
 							<AlertDialog.Title className="title">{title}</AlertDialog.Title>
 							<AlertDialog.Action asChild>
-								<SmallButton circle type="button" className="close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed(defaultMessage)}>
+								<SmallButton circle type="button" className="close-button" aria-label="Cancel and close popup." onClick={() => onButtonPressed?.(defaultMessage)}>
 									<IconContainer
 										className="icon-colour-standard"
 										asset={CrossIcon}
@@ -57,7 +57,7 @@ export function ActionMessageDialog<T extends string>({ title, body, buttons, de
 						<ButtonPanel className="bottom-footer">
 							{buttons.map(x =>
 								<AlertDialog.Action key={x} asChild>
-									<SmallButton autoFocus={defaultFocusedButton == x} type="button" onClick={() => onButtonPressed(x)}>{x}</SmallButton>
+									<SmallButton autoFocus={defaultFocusedButton == x} type="button" onClick={() => onButtonPressed?.(x)}>{x}</SmallButton>
 								</AlertDialog.Action>
 							)}
 						</ButtonPanel>

@@ -1,0 +1,14 @@
+.text-box {
+	padding: var(--pfy-spacing-standard-compact);
+	background: var(--pfy-field-background);
+	color: var(--pfy-field-content);
+	outline-color: var(--pfy-primary-dark);
+	border: 1px solid var(--pfy-primary-ultradark);
+	border-radius: var(--pfy-spacing-standard);
+	font-size: var(--pfy-field-font-size);
+	transition: border var(--pfy-timing-snappy), outline var(--pfy-timing-snappy);
+
+	&[data-monospace] {
+		font-family: monospace;
+	}
+}

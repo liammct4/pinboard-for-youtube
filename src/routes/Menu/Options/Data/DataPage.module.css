@@ -1,0 +1,28 @@
+.data-page {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.heading {
+	margin-bottom: var(--pfy-spacing-standard);
+}
+
+.options-panel {
+	margin-top: var(--pfy-spacing-standard);
+	margin-bottom: var(--pfy-spacing-very-large);
+	gap: var(--pfy-spacing-standard);
+	width: calc(var(--pfy-window-width) - (var(--pfy-spacing-large) * 2));
+}
+
+.update-storage-form {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.replace-textbox {
+	margin-top: var(--pfy-spacing-standard-compact);
+	margin-bottom: var(--pfy-spacing-standard);
+	flex-grow: 1;
+}

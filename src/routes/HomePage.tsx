@@ -4,17 +4,14 @@ import { Outlet, useNavigate } from "react-router-dom";
 import PfyLogo from "./../../assets/logo/logo.svg?react";
 import { ButtonPanel } from "../components/interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../components/interactive/buttons/SmallButton/SmallButton";
+import { Header } from "../components/presentation/extension/Header/Header";
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
 
 	return (
 		<div className="outer-body">
-			<div className="header-area">
-				<PfyLogo className="extension-logo"/>
-				<h1 className="extension-title">Pinboard for YouTube</h1>
-				<hr className="bold-separator"></hr>
-			</div>
+			<Header/>
 			<div className="inner-body-content">
 				<Outlet/>
 			</div>

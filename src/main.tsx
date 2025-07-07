@@ -26,6 +26,8 @@ import "./main.css"
 import { directoryActions } from "./features/directory/directorySlice.ts"
 import { videoActions } from "./features/video/videoSlice.ts"
 import { cacheActions } from "./features/cache/cacheSlice.ts"
+import { DataPage } from "./routes/Menu/Options/Data/DataPage.tsx"
+import { ClosePage } from "./routes/Menu/Options/ClosePage/ClosePage.tsx"
 
 async function initializeExtension() {
 	await ensureInitialized();
@@ -76,6 +78,7 @@ async function initializeExtension() {
 							<Route path="menu" element={<MenuPage/>} ErrorBoundary={errorPage}>
 								<Route path="options/*" element={<OptionsPage/>}>
 									<Route path="general" element={<GeneralPage/>}/>
+									<Route path="data" element={<DataPage/>}/>
 									<Route path="accounts/*" element={<AccountsPage/>}/>
 									<Route path="appearance/*" element={<AppearancePage/>}/>
 									<Route path="debug/*" element={<DebugPage/>}/>
@@ -85,6 +88,7 @@ async function initializeExtension() {
 							</Route>
 							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={errorPage}/>
 						</Route>
+						<Route path="close" element={<ClosePage/>}/>
 						<Route path="*" element={<Navigate to="app" replace/>}/>
 					</Route>
 				))}/>

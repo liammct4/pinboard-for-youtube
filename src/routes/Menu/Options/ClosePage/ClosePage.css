@@ -1,0 +1,16 @@
+.outer-close {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background-color: var(--pfy-empty-01-normal);
+	overflow: auto;
+	align-items: stretch;
+
+	.close-text {
+		align-self: center;
+		margin-top: 50%;
+		font-size: var(--pfy-font-heading-small);
+		color: var(--pfy-text-normal);
+		text-align: center;
+	}
+}

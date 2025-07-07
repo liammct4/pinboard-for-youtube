@@ -28,6 +28,7 @@ export function OptionsNavigator(): React.ReactNode {
 	return (
 		<ul className="options-list">
 			<Option name="General" path="general"/>
+			<Option name="Data" path="data"/>
 			<Option name="Accounts" path="accounts"/>
 			<Option name="Appearance & Themes" path="appearance"/>
 		</ul>

@@ -4,14 +4,14 @@ import { IWrapperProperties } from "../wrapper";
 
 export function ExtensionBoundsWrapper({ children }: IWrapperProperties) {
 	const location = useLocation();
-	const [expanded, setExpanded] = useState<boolean>();
+	const [ expanded, setExpanded ] = useState<boolean>();
 	useEffect(() => {
 		// If the current page needs to expand the extension to fit properly.
 		let paths = [
-			"/app/menu/options/accounts/conflicts" // TODO...
+			"/app/menu/options/data?showEditor=true" // TODO...
 		]
 
-		setExpanded(paths.includes(location.pathname));
+		setExpanded(paths.includes(location.pathname + location.search));
 	}, [location]);
 
 	return (

@@ -27,6 +27,9 @@ export const cacheSlice = createSlice({
 
 			state.videoCache[index] = action.payload;
 		},
+		clearCache: (state) => {
+			state.videoCache = [];
+		}
 	}
 })
 
