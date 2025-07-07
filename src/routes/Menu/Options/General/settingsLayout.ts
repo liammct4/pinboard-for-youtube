@@ -23,6 +23,9 @@ export interface ISettingSeparator extends ISettingElement {
 export type ElementCollection = ISettingHeading | ISettingField | ISettingSeparator
 
 export const settingsLayout: ElementCollection[] = [
+	{ type: "Heading", message: "Extension Settings", style: "Bold" },
+	{ type: "Field", fieldName: "extensionSize" },
+
 	{ type: "Heading", message: "Timeline Settings", style: "Bold" },
 	{ type: "Field", fieldName: "timestampButtonsEnabled" },
 	{ type: "Field", fieldName: "saveVideoTimestampButtonEnabled" },
@@ -34,5 +37,5 @@ export const settingsLayout: ElementCollection[] = [
 	{ type: "Separator" },
 
 	{ type: "Heading", message: "Shortcuts & Bindings", style: "Bold" },
-	{ type: "Field", fieldName: "pinCurrentTimestampShortcut" }
+	{ type: "Field", fieldName: "pinCurrentTimestampShortcut" },
 ]

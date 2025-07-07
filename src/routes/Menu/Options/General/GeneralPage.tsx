@@ -11,6 +11,7 @@ import { ValidatedForm } from "../../../../components/forms/ValidatedForm";
 import { getInputComponent } from "../../../../components/input/componentLocator";
 import { TemporaryText } from "../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
 import { SmallInputButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";
+import { DropdownInput } from "../../../../components/input/DropdownInput/DropdownInput";
 
 interface ISettingsForm extends Settings { }
 
@@ -46,14 +47,25 @@ export function GeneralPage(): React.ReactNode {
 							let settingDefinition = settingDefinitions[x.fieldName];
 							let existingValue = settingValues[x.fieldName];
 
-							let InputComponent = getInputComponent(settingDefinition.inputFormat);
+							switch (settingDefinition.inputFormat) {
+								case "Dropdown":
+									return <DropdownInput
+										key={x.fieldName}
+										fieldSize="medium"
+										label={settingDefinition.displayName}
+										name={x.fieldName}
+										startValue={existingValue.toString()}
+										options={settingDefinition.options}/>
+								default:
+									let InputComponent = getInputComponent(settingDefinition.inputFormat);
 
-							return <InputComponent
-								key={x.fieldName}
-								fieldSize="medium"
-								label={settingDefinition.displayName}
-								name={x.fieldName}
-								startValue={existingValue.toString()}/>
+									return <InputComponent
+										key={x.fieldName}
+										fieldSize="medium"
+										label={settingDefinition.displayName}
+										name={x.fieldName}
+										startValue={existingValue.toString()}/>
+							}
 						})
 					}
 				</ValidatedForm>

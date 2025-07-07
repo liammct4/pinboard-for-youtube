@@ -2,6 +2,26 @@
 	width: var(--pfy-window-width);
 	height: var(--pfy-window-height);
 
+	&[data-size-setting="small"] {
+		width:var(--pfy-window-width-small);
+	}
+
+	&[data-size-setting="medium"] {
+		width: var(--pfy-window-width-medium);
+	}
+
+	&[data-size-setting="large"] {
+		width: var(--pfy-window-width-large);
+	}
+
+	&[data-size-setting="very large"] {
+		width: var(--pfy-window-width-very-large);
+	}
+
+	&[data-size-setting="max"] {
+		width: var(--pfy-window-width-max);
+	}
+
 	&[data-expanded-window="true"] {
 		width: var(--pfy-window-width-expanded);
 	}
