@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { DragListItemData } from "../DragList/DragList";
-import { SelectionBoxScrollbox } from "../SelectionBoxScrollbox/SelectionBoxScrollbox";
-import { Rect } from "../../../lib/util/objects/types";
-import { rectIntersects } from "../../../lib/util/generic/miscUtil";
+import { SelectionBoxScrollbox } from "../../SelectionBoxScrollbox/SelectionBoxScrollbox";
+import { Rect } from "../../../../lib/util/objects/types";
+import { rectIntersects } from "../../../../lib/util/generic/miscUtil";
 import "./SelectionDragList.css"
-import { areObjectsEqual } from "../../../lib/util/objects/objects";
+import { areObjectsEqual } from "../../../../lib/util/objects/objects";
 
 export interface ISelectionDragListProperties<T extends string> {
 	className?: string;

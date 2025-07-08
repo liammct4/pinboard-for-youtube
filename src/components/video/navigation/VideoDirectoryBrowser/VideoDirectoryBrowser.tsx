@@ -5,11 +5,11 @@ import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirec
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
-import { DragListEvent, DragList } from "../../../interactive/DragList/DragList";
+import { DragListEvent, DragList } from "../../../interactive/dragList/DragList/DragList";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";
-import { SelectionList } from "../../../interactive/SelectionDragList/SelectionDragList";
+import { SelectionList } from "../../../interactive/dragList/SelectionDragList/SelectionDragList";
 import { tempStateActions } from "../../../../features/state/tempStateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";

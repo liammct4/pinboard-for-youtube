@@ -6,6 +6,8 @@ import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
 import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
+import { useContext } from "react";
+import { DragListControllerContext } from "../interactive/dragList/DragListController";
 
 export interface IDialogBoxProperties {
 	title: string;
@@ -23,8 +25,10 @@ export interface IDialogBoxProperties {
  * @param footer A customizable JSX snippet which will be displayed in the footer section.
  */
 export function DialogBox({ title, trigger, description, footer, children }: IDialogBoxProperties): React.ReactNode {
+	const { setActive } = useContext(DragListControllerContext);
+	
 	return (
-		<Dialog.Root>
+		<Dialog.Root onOpenChange={(open) => setActive(!open)}>
 			<Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay className="dialog-background-overlay"/>

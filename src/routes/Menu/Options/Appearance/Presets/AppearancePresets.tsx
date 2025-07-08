@@ -17,8 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { themeActions } from "../../../../../features/theme/themeSlice";
 import { useNotificationMessage } from "../../../../../components/features/notifications/useNotificationMessage";
 import { useTheme } from "../../../../../components/features/useTheme";
-import { DragListEvent, DragList } from "../../../../../components/interactive/DragList/DragList";
-import { DragListItem } from "../../../../../components/interactive/DragList/DragListItem";
+import { DragListEvent, DragList } from "../../../../../components/interactive/dragList/DragList/DragList";
+import { DragListItem } from "../../../../../components/interactive/dragList/DragList/DragListItem";
 
 interface IThemePresetProperties {
 	theme: ThemeID;

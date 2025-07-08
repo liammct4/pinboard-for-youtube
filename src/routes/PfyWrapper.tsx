@@ -4,6 +4,7 @@ import { ExtensionBoundsWrapper } from "../components/features/extensionBounds/E
 import { EventWrapper } from "../components/features/events/EventWrapper.tsx";
 import { RequestHandlerWrapper } from "../components/features/requestHandler/RequestHandlerWrapper.tsx";
 import { StyleContextWrapper } from "../components/features/styleContext/StyleContextWrapper.tsx";
+import { DragListController } from "../components/interactive/dragList/DragListController.tsx";
 import "./PfyWrapper.css"
 import "./HomePage.css"
 
@@ -14,7 +15,9 @@ export function PfyWrapper(): React.ReactNode {
 				<EventWrapper>
 					<NotificationWrapper>
 						<RequestHandlerWrapper>
-							<Outlet/>
+							<DragListController>
+								<Outlet/>
+							</DragListController>
 						</RequestHandlerWrapper>
 					</NotificationWrapper>
 				</EventWrapper>

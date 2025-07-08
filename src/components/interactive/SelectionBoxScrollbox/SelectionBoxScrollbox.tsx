@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import "./SelectionBoxScrollbox.css";
 import { Coordinates, Rect } from "../../../lib/util/objects/types";
 import { useGlobalEvent } from "../../features/events/useGlobalEvent";
+import { DragListControllerContext } from "../dragList/DragListController";
 
 export interface ISelectionBoxScrollboxProperties {
 	frameClassName?: string;
@@ -24,6 +25,7 @@ export function SelectionBoxScrollbox({
 		startingScrollPosition,
 		children
 	}: ISelectionBoxScrollboxProperties) {
+	const { active } = useContext(DragListControllerContext);
 	const frameRef = useRef<HTMLDivElement>(null!);
 	const [ selectionAnchor, setSelectionAnchor ] = useState<Coordinates | null>(null);
 	const selectionBoxRef = useRef<HTMLDivElement | null>(null);
@@ -102,8 +104,8 @@ export function SelectionBoxScrollbox({
 	}
 
 	const selectionBoxMouseHandler = (e: React.MouseEvent<HTMLElement>) => {
-		if (selectionAnchor == null || selectionBoxRef.current == null) {
-			return null;
+		if (!active || selectionAnchor == null || selectionBoxRef.current == null) {
+			return;
 		}
 
 		let selectionBox = calculateSelectionBox(e.clientX, e.clientY);
@@ -129,6 +131,10 @@ export function SelectionBoxScrollbox({
 			tabIndex={0}
 			className={`${frameClassName} selection-box-frame`}
 			onMouseDown={(e) => {
+				if (!active) {
+					return;
+				}
+
 				let bounds = frameRef.current.getBoundingClientRect();
 
 				let anchor: Coordinates = {

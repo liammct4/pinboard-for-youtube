@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { DragListItem } from "../../../interactive/DragList/DragListItem";
+import { DragListItem } from "../../../interactive/dragList/DragList/DragListItem";
 import { InteractableBrowserNode } from "./nodes/InteractableBrowserNode";
 import { getNodeFromRef, IDirectoryNode } from "../../../../lib/directory/directory";
 import { useSelector } from "react-redux";

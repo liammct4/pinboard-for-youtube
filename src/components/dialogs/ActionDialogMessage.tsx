@@ -7,6 +7,8 @@ import "./../../styling/dialog.css"
 import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
+import { useContext } from "react";
+import { DragListController, DragListControllerContext } from "../interactive/dragList/DragListController";
 
 export type DialogClosedHandler<T> = (result: T) => void;
 
@@ -31,8 +33,10 @@ export interface IMessageDialogProperties<T extends string> {
  * @param children The button trigger when when pressed, will open the dialog.
  */
 export function ActionMessageDialog<T extends string>({ title, body, buttons, defaultFocusedButton, defaultMessage, overrideOpen, onButtonPressed, children }: IMessageDialogProperties<T>): React.ReactNode {	
+	const { setActive } = useContext(DragListControllerContext);
+	
 	return (
-		<AlertDialog.Root open={overrideOpen}>
+		<AlertDialog.Root onOpenChange={(open) => setActive(!open)} open={overrideOpen}>
 			<AlertDialog.Trigger asChild>
 				{children}
 			</AlertDialog.Trigger>

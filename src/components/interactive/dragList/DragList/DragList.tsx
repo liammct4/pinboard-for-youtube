@@ -1,8 +1,9 @@
-import { createContext, useReducer, useRef } from "react"
-import { useGlobalEvent } from "../../features/events/useGlobalEvent";
-import { Coordinates, Rect } from "../../../lib/util/objects/types";
-import { areObjectsEqual } from "../../../lib/util/objects/objects";
-import { distanceTwoPoints } from "../../../lib/util/generic/miscUtil";
+import { createContext, useContext, useReducer, useRef } from "react"
+import { useGlobalEvent } from "../../../features/events/useGlobalEvent";
+import { Coordinates, Rect } from "../../../../lib/util/objects/types";
+import { areObjectsEqual } from "../../../../lib/util/objects/objects";
+import { distanceTwoPoints } from "../../../../lib/util/generic/miscUtil";
+import { DragListControllerContext } from "../DragListController";
 
 export type DragListEvent<T extends string> = {
 	startDragID: T;
@@ -109,13 +110,14 @@ function reducer(state: DragListState, action: DragListAction): DragListState {
 const START_DRAG_THRESHOLD = 5;
 
 export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDragChanged, onDragEnd }: IDragListProperties<T>) {
+	const { active } = useContext(DragListControllerContext);
 	const listBox = useRef<HTMLUListElement>(null);
 	const [ state, dispatch ] = useReducer(reducer, defaultState);
 
 	useGlobalEvent({
 		event: "MOUSE_MOVE",
 		handler: (e) => {
-			if (!state.dragging) {
+			if (!state.dragging || !active) {
 				return;
 			}
 
@@ -246,6 +248,10 @@ export function DragList<T extends string>({ className, dragListName, children, 
 				inbetweenStartID: state.dragging && !state.event.info.notInBounds ? state.event.info.inbetweenStartID: null,
 				inbetweenEndID: state.dragging && !state.event.info.notInBounds ? state.event.info.inbetweenEndID : null,
 				startDragFromItem: (e, position) => {
+					if (!active) {
+						return;
+					}
+					
 					dispatch({
 						type: "PRE_DRAG",
 						startID: e,
