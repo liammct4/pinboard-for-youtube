@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IAppTheme, ICustomTheme, ThemeID } from "../../lib/config/theming/appTheme";
+import { ICustomTheme, ThemeID } from "../../lib/config/theming/appTheme";
 import { IPrimaryStorage } from "../../lib/storage/storage";
-import { AppThemes, DEFAULT_THEME } from "../../styling/themes";
+import { DEFAULT_THEME } from "../../styling/themes";
 
 export interface IThemeSlice {
 	currentTheme: ThemeID;

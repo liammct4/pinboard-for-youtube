@@ -1,7 +1,6 @@
 import { IInputComponentProperties } from "../inputComponent";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { FormStyleContext } from "../formStyleContext";
-import { convertRGBToHex } from "../../../lib/util/generic/colour/colourUtil";
 import "./../Input.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 

@@ -1,10 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { changeUserEmail, changeUserPassword, deleteUserAccount } from "../../../../../lib/user/accounts";
+import { deleteUserAccount } from "../../../../../lib/user/accounts";
 import { userDetailsFieldData, UserDetailsForm, UserDetailsFormField, UserDetailsFormPrimitive } from "../UserDetailsForm/UserDetailsFormPrimitive";
 import { authActions } from "../../../../../features/auth/authSlice";
-import { HttpResponse } from "../../../../../lib/util/request";
-import { HttpStatusCode } from "../../../../../lib/util/http";
 import { validatePasswordInputField } from "../../../../../lib/user/password";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
@@ -12,159 +10,10 @@ import { useNotificationMessage } from "../../../../../components/features/notif
 import { useUserAccount } from "../../../../../components/features/useUserAccount";
 import "./AccountView.css"
 import { TextInput } from "../../../../../components/input/TextInput/TextInput";
-import { FormField, Validator, ValidatorResult } from "../../../../../components/forms/ValidatedForm";
+import { FormField, ValidatorResult } from "../../../../../components/forms/ValidatedForm";
 import { SmallButton } from "../../../../../components/interactive/buttons/SmallButton/SmallButton";
 
 type UpdatePasswordFormField = "previousPassword" | "newPassword" | "confirmNewPassword";
-type UpdatePasswordForm = {
-	previousPassword: string;
-	newPassword: string;
-	confirmNewPassword: string;
-}
-
-function useAccountDelete() {
-	const { user, isSignedIn } = useUserAccount();
-	const { activateMessage } = useNotificationMessage();
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-
-	const onDeleteSubmit = (value: UserDetailsForm) => {
-		activateMessage(undefined, "Deleting your account.", "Info", "Info", -1);
-
-		setTimeout(async () => {
-			if (!isSignedIn) {
-				return;
-			}
-
-			let response: HttpResponse | undefined = await deleteUserAccount(user.email, value.password, user.tokens);
-
-			if (response == undefined) {
-				return;
-			}
-
-			if (response!.status == HttpStatusCode.OK) {
-				activateMessage("Account deleted.", "Your account has been successfully deleted, please log out of any other devices.", "Success", "Tick", 10000);
-				dispatch(authActions.logoutCurrentUser());
-			}
-			else if (response!.status == HttpStatusCode.UNAUTHORIZED) {
-				// Meaning token was invalid.
-				if (response?.body == "Unauthorized") {
-					activateMessage(undefined, "Something went wrong, please log in and try again.", "Error", "Error", 6000, "Shake");
-				}
-				else {
-					activateMessage(undefined, response?.body, "Error", "Error", 4000, "Shake");
-				}
-			}
-			
-			navigate("/app/menu/options/accounts");
-		}, 10);
-	};
-
-	return { onDeleteSubmit }
-}
-
-function useEmailChange() {
-	const { user, isSignedIn } = useUserAccount();
-	const { activateMessage } = useNotificationMessage();
-
-	const onChangeEmailSubmit = (value: UserDetailsForm) => {
-		activateMessage(undefined, "Updating your email address...", "Info", "Info", -1);
-		
-		setTimeout(async () => {
-			if (!isSignedIn) {
-				return;
-			}
-
-			let response: HttpResponse | undefined = await changeUserEmail(user.email, value.email, user.tokens);
-			
-			if (response == undefined) {
-				return;
-			}
-
-			if (response?.status == HttpStatusCode.OK) {
-				activateMessage(
-					"Email address updated",
-					`Your email address has been successfully changed to ${value.email}`,
-					"Success",
-					"Tick",
-					-1
-				);
-			}
-			else if (response?.status == HttpStatusCode.UNAUTHORIZED) {
-				activateMessage(
-					undefined,
-					"Something went wrong, please try again later.",
-					"Error",
-					"Error",
-					6000,
-					"Shake"
-				);
-			}
-		}, 10);
-	}
-
-	return { onChangeEmailSubmit };
-}
-
-function usePasswordChange() {
-	const { user, isSignedIn } = useUserAccount();
-	const { activateMessage } = useNotificationMessage();
-
-	const onChangePasswordSubmit = (value: UpdatePasswordForm) => {
-		activateMessage(undefined, "Updating your password...", "Info", "Info", -1);
-		
-		setTimeout(async () => {
-			if (!isSignedIn) {
-				return;
-			}
-
-			let response: HttpResponse | undefined = await changeUserPassword(
-				user.email,
-				value.previousPassword,
-				value.newPassword,
-				user.tokens
-			);
-			
-			if (response == undefined) {
-				return undefined;
-			}
-
-			if (response?.status == HttpStatusCode.OK) {
-				activateMessage(
-					"Password successfully updated",
-					"Your password has been successfully updated.",
-					"Success",
-					"Tick",
-					4000
-				);
-			}
-			else if (response?.status == HttpStatusCode.UNAUTHORIZED) {
-				if (response.body == "Unauthorized.") {
-					activateMessage(
-						undefined,
-						"Something went wrong, please login and try again.",
-						"Error",
-						"Error",
-						6000,
-						"Shake"
-					);
-				}
-				else {
-					activateMessage(
-						undefined,
-						response.body,
-						"Error",
-						"Error",
-						6000,
-						"Shake"
-					);
-				}
-			}
-		}, 10);
-	}
-
-	return { onChangePasswordSubmit }
-}
 
 const passwordValidator = (data: string, field: UpdatePasswordFormField): ValidatorResult<UpdatePasswordFormField> => {
 	let result = validatePasswordInputField(data);
@@ -200,9 +49,6 @@ const updatePasswordForm: FormField<UpdatePasswordFormField>[] = [
 export function AccountView(): React.ReactNode {
 	const { user, isSignedIn } = useUserAccount();
 	const { activateMessage } = useNotificationMessage();
-	const { onDeleteSubmit } = useAccountDelete();
-	const { onChangeEmailSubmit } = useEmailChange();
-	const { onChangePasswordSubmit } = usePasswordChange();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 

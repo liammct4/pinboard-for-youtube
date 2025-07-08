@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { InputMethodType } from "../../lib/config/configurationOption";
 import { IPrimaryStorage } from "../../lib/storage/storage";
 import { defaultSettings, Settings } from "../../lib/config/settings";
 

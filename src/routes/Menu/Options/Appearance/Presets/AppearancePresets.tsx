@@ -1,7 +1,7 @@
-import { useContext, useMemo, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { RootState, store } from "../../../../../app/store";
-import { IAppTheme, ColourPalette, ThemeID, createTheme, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
+import { RootState } from "../../../../../app/store";
+import { ColourPalette, ThemeID, createTheme, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
 import { FormDialog } from "../../../../../components/dialogs/FormDialog";
 import { SplitHeading } from "../../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
@@ -72,7 +72,7 @@ type AddCustomThemeForm = {
 
 export function AppearancePresets(): React.ReactNode {
 	const customThemes = useSelector((state: RootState) => state.theme.customThemes);
-	const { allThemes, retrieveThemeData } = useTheme();
+	const { allThemes } = useTheme();
 	const dispatch = useDispatch();
 	const { activateMessage } = useNotificationMessage();
 	const [ dragging, setDragging ] = useState<DragListEvent<ThemeID> | null>(null);

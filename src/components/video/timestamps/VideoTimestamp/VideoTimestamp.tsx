@@ -2,7 +2,7 @@
 
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
-import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
+import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp } from "../../../../lib/video/video.ts";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
 import BinIcon from "./../../../../../assets/icons/bin.svg?react"
@@ -18,10 +18,6 @@ import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButto
 import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel.tsx";
 
 type EditTimestampFormNames = "time" | "message";
-type EditTimestampForm = {
-	time: string
-	message: string
-}
 
 export interface IVideoTimestampProperties {
 	className?: string;
@@ -31,21 +27,6 @@ export interface IVideoTimestampProperties {
 	onAutoplayClick: (value: boolean) => void;
 	allowControls: boolean;
 	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
-}
-
-function validateTimestamp(value: string): string | null {
-	if (value.length == 0) {
-		return "This value is required.";
-	}
-
-	try {
-		getSecondsFromTimestamp(value);
-	}
-	catch {
-		return "Invalid value provided.";
-	}
-
-	return null;
 }
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */

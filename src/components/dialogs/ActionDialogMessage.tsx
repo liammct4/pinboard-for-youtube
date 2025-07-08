@@ -4,7 +4,7 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import CrossIcon from "./../../../assets/symbols/cross.svg?react"
 import { IconContainer } from "../images/svgAsset";
 import "./../../styling/dialog.css"
-import { SmallButton, SmallInputButton } from "../interactive/buttons/SmallButton/SmallButton";
+import { SmallButton } from "../interactive/buttons/SmallButton/SmallButton";
 import { ButtonPanel } from "../interactive/ButtonPanel/ButtonPanel";
 import { StyleContextWrapper } from "../features/styleContext/StyleContextWrapper";
 

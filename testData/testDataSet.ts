@@ -1,8 +1,5 @@
-import { defaultSettings } from "../src/lib/config/settings";
-import { IConfig } from "../src/lib/storage/config";
 import { IYoutubeVideoInfo } from "../src/lib/util/youtube/youtubeUtil";
 import { IVideo, generateTimestamp } from "../src/lib/video/video";
-import { AppThemes, DEFAULT_THEME } from "../src/styling/themes";
 
 /* This files contains all of the testing/sample data needed. */
 

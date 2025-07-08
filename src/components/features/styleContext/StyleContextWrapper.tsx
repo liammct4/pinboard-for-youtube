@@ -1,7 +1,5 @@
 import { useEffect, useRef } from "react";
 import { IWrapperProperties } from "../wrapper";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
 import { ColourPaletteColours } from "../../../lib/config/theming/appTheme";
 import { useTheme } from "../useTheme";
 

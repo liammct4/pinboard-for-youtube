@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { IWrapperProperties } from "./wrapper";
-import { Size } from "../../lib/util/objects/types";
 
 export function useTextMeasurer() {
 	const { cache, setCache, context } = useContext<ITextMeasureWrapperContext>(TextMeasureWrapperContext);

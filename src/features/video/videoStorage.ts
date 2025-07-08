@@ -1,6 +1,5 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { modifyStorage } from "../../lib/storage/storage";
 import { videoActions, videoSlice } from "./videoSlice";
 import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 

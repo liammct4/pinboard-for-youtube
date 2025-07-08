@@ -14,11 +14,10 @@ import CloseLayoutIcon from "./../../../assets/icons/layout_expander_close.svg?r
 import SearchIcon from "./../../../assets/symbols/search.svg?react"
 import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
-import { getVideoIdFromYouTubeLink, getYouTubeLinkFromVideoID, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil.ts";
+import { getVideoIdFromYouTubeLink, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil.ts";
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
 import { VideoDirectoryBrowserContext } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowserContext.ts";
 import { LabelGroup } from "../../components/presentation/Decorative/LabelGroup/LabelGroup.tsx";
-import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage.tsx";
 import { getActiveVideoInfo } from "../../lib/browser/youtube.ts";
 import { generateTimestamp, IVideo } from "../../lib/video/video.ts";
 import CrossIcon from "./../../../assets/symbols/cross.svg?react"
@@ -29,12 +28,11 @@ import { directoryActions } from "../../features/directory/directorySlice.ts";
 import { useVideoCache } from "../../components/features/useVideoInfo.ts";
 import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeType, getPathOfNode, NodeRef } from "../../lib/directory/directory.ts";
 import { NodePath, parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
-import { tempStateActions, tempStateSlice } from "../../features/state/tempStateSlice.ts";
+import { tempStateActions } from "../../features/state/tempStateSlice.ts";
 import { TextInput } from "../../components/input/TextInput/TextInput.tsx";
 import { VideoDirectoryControls } from "../../components/video/navigation/VideoDirectoryControls/VideoDirectoryControls.tsx";
-import { useDirectory, useDirectoryPath } from "../../components/video/navigation/useDirectory.ts";
+import { useDirectoryPath } from "../../components/video/navigation/useDirectory.ts";
 import { ValidatedForm } from "../../components/forms/ValidatedForm.tsx";
-import { CompactVideoItem } from "../../components/video/styledVideoItems/CompactVideoItem/CompactVideoItem.tsx";
 import { VideoSearchItem } from "../../components/video/VideoSearchItem/VideoSearchItem.tsx";
 import { SwitchInputPrimitive } from "../../components/input/SwitchInput/SwitchInput.tsx";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton.tsx";

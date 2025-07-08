@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useGlobalEvent } from "./useGlobalEvent";
 import { Coordinates } from "../../../lib/util/objects/types";
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SwitchInputPrimitive } from "../../../../components/input/SwitchInput/SwitchInput";
-import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE, IPrimaryStorage } from "../../../../lib/storage/storage";
+import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE } from "../../../../lib/storage/storage";
 import { useNotificationMessage } from "../../../../components/features/notifications/useNotificationMessage";
 import "./DebugPage.css";
 import { SmallButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";

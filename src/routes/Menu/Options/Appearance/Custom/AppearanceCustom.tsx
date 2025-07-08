@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { FormStyleContext } from "../../../../../components/input/formStyleContext";
-import { IAppTheme, ColourPalette, ColourPaletteColours, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
+import { ColourPalette, ColourPaletteColours, ICustomTheme } from "../../../../../lib/config/theming/appTheme";
 import { toTitleCase } from "../../../../../lib/util/generic/stringUtil";
 import ArrowIcon from "./../../../../../../assets/symbols/arrows/arrowhead.svg?react"
 import { IconContainer } from "../../../../../components/images/svgAsset";

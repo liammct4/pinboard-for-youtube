@@ -3,7 +3,6 @@ import { StyleContextWrapper } from "../../components/features/styleContext/Styl
 import { TextMeasurerWrapper } from "../../components/features/useTextMeasurer";
 import { TimelineContainer } from "./TimelineContainer/TimelineContainer";
 import { store } from "../../app/store";
-import { IPrimaryStorage } from "../../lib/storage/storage";
 import { LocalVideoDataWrapper } from "../features/LocalVideoDataWrapper";
 
 export function TimelineApp() {

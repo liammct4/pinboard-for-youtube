@@ -3,9 +3,9 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { accessMainStorage, ensureInitialized, getApplicationContextType, IPrimaryStorage } from "./lib/storage/storage.ts"
+import { ensureInitialized, getApplicationContextType } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router, RouterProvider, Routes } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 import { HomePage } from "./routes/HomePage.tsx"
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
 import { MenuPage } from "./routes/Menu/MenuPage.tsx"

@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IPrimaryStorage } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
-import { getParentPathFromPath, NodePath, parsePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
-import { getAlphanumericInsertIndex } from "../../lib/util/generic/stringUtil";
+import { getParentPathFromPath, NodePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
 export interface IDirectorySlice {

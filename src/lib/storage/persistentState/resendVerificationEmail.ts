@@ -1,4 +1,4 @@
-import { IPrimaryStorage, modifyStorage } from "../storage";
+import { modifyStorage } from "../storage";
 import { RESEND_VERIFICATION_EMAIL_PATH } from "./persistentState";
 
 export interface IResendVerificationEmailState {

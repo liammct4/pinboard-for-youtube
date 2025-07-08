@@ -1,6 +1,5 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { modifyStorage } from "../../lib/storage/storage";
 import { settingsActions, settingsSlice } from "./settingsSlice";
 import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 

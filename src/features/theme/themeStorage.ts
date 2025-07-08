@@ -1,7 +1,6 @@
 import { themeActions, themeSlice } from "./themeSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { modifyStorage } from "../../lib/storage/storage";
 import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const themeStorageSyncMiddleware = createListenerMiddleware();

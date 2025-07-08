@@ -1,7 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import { Outlet, useNavigate } from "react-router-dom";
-import PfyLogo from "./../../assets/logo/logo.svg?react";
 import { ButtonPanel } from "../components/interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../components/interactive/buttons/SmallButton/SmallButton";
 import { Header } from "../components/presentation/extension/Header/Header";

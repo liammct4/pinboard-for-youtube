@@ -5,7 +5,6 @@ import { createTimestamp, IVideo, Timestamp } from "../../../lib/video/video";
 import { useDispatch, useSelector } from "react-redux";
 import { videoActions } from "../../../features/video/videoSlice";
 import { RootState } from "../../../app/store";
-import { Keys, useHotkeys } from "react-hotkeys-hook";
 import "./TimelineContainer.css"
 import { LocalVideoDataContext } from "../../features/LocalVideoDataWrapper";
 

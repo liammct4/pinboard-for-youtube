@@ -1,4 +1,3 @@
-import React, { useState } from "react"
 import * as Collapsible from "@radix-ui/react-collapsible"
 import "./../../../styling/elements/expander.css"
 import "./TwoToggleLayoutExpander.css"

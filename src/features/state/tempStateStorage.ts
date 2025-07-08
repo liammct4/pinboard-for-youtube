@@ -1,7 +1,6 @@
 import { tempStateActions, tempStateSlice } from "./tempStateSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { modifyStorage } from "../../lib/storage/storage";
 import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const tempStateSyncStorageMiddleware = createListenerMiddleware();

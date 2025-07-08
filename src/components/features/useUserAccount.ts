@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { GlobalRequestHandler } from "../../lib/util/request";
 import { IAuthenticatedUser, loginGetTokens } from "../../lib/user/accounts";
 import { authActions } from "../../features/auth/authSlice";
 

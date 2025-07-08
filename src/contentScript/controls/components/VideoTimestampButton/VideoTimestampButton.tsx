@@ -6,8 +6,7 @@ import { directoryActions } from "../../../../features/directory/directorySlice"
 import { RootState } from "../../../../app/store";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
 import { getNodeFromPath } from "../../../../lib/directory/directory";
-import { directoryPathConcat, filterDirectoryName, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
-import { cacheActions } from "../../../../features/cache/cacheSlice";
+import { filterDirectoryName, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
 import { useVideoCache } from "../../../../components/features/useVideoInfo";
 import { extractIDRegex } from "../../../features/LocalVideoDataWrapper";
 

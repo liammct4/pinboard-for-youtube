@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { VideoThumbnail } from "../../VideoThumbnail/VideoThumbnail";
 import PlayIcon from "./../../../../../assets/icons/jump_icon.svg?react";

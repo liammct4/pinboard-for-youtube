@@ -1,6 +1,6 @@
-import { accessLocalStorage, accessMainStorage, getApplicationContextType, ILocalStorage, IMetaStorage, IPrimaryStorage, modifyStorage } from "../lib/storage/storage";
+import { accessLocalStorage, accessMainStorage, getApplicationContextType, IMetaStorage } from "../lib/storage/storage";
 import { authActions, authSlice } from "../features/auth/authSlice";
-import { RootState, store } from "./store";
+import { store } from "./store";
 import { tempStateActions, tempStateSlice } from "../features/state/tempStateSlice";
 import { themeActions, themeSlice } from "../features/theme/themeSlice";
 import { settingsActions, settingsSlice } from "../features/settings/settingsSlice";

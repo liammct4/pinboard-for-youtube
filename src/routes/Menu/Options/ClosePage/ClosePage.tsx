@@ -1,4 +1,3 @@
-import { IconContainer } from "../../../../components/images/svgAsset";
 import { Header } from "../../../../components/presentation/extension/Header/Header";
 import "./ClosePage.css"
 

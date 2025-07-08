@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "./SelectionBoxScrollbox.css";
 import { Coordinates, Rect } from "../../../lib/util/objects/types";
-import { useGlobalMousePosition } from "../../features/events/useGlobalMousePosition";
 import { useGlobalEvent } from "../../features/events/useGlobalEvent";
-import { DragListItemData } from "../../../lib/dragList/DragList";
 
 export interface ISelectionBoxScrollboxProperties {
 	frameClassName?: string;

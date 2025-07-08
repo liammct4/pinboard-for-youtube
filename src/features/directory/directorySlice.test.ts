@@ -10,9 +10,9 @@ Object.defineProperty(globalThis, "crypto", {
 	}
 })
 
-import { testDirectory, Tutorials2_Other, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
+import { testDirectory, Tutorials2_Other_Video2, Video1 } from "../../../testData/directory";
 import { parsePath } from "../../lib/directory/path";
-import { getNodeFromPath, getNodeType, NodeRef, stringifyNode, stringifyTree, traverseTreeDF } from "../../lib/directory/directory";
+import { getNodeFromPath, NodeRef, stringifyNode } from "../../lib/directory/directory";
 import { directoryActions, directorySlice, IDirectorySlice } from "./directorySlice";
 
 // Jest, not showing diffs doesnt work.

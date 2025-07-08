@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
-import { ILocalStorage, IPrimaryStorage } from "../../lib/storage/storage";
+import { ILocalStorage } from "../../lib/storage/storage";
 
 export interface ICacheSlice {
 	videoCache: IYoutubeVideoInfo[]

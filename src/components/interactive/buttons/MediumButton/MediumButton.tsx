@@ -1,4 +1,4 @@
-import { BaseButton, BaseInputButton, IBaseButtonProperties, IBaseInputButtonProperties, ISizeButtonProperties } from "../BaseButton/BaseButton";
+import { BaseButton, BaseInputButton, IBaseInputButtonProperties, ISizeButtonProperties } from "../BaseButton/BaseButton";
 import "./MediumButton.css"
 
 export function MediumButton(props: ISizeButtonProperties) {

@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { DirectoryItem } from "./DirectoryItem";
 import { VideoItem } from "./VideoItem";
 import { getNodeType, IDirectoryNode, INode, IVideoNode } from "../../../../../lib/directory/directory";
@@ -9,7 +9,6 @@ import DeleteIcon from "./../../../../../../assets/icons/bin.svg?react"
 import "./InteractableBrowserNode.css"
 import { SmallButton } from "../../../../interactive/buttons/SmallButton/SmallButton";
 import { IconContainer } from "../../../../images/svgAsset";
-import { ActionMessageDialog } from "../../../../dialogs/ActionDialogMessage";
 
 export interface IInteractableBrowserNodeProperties {
 	node: INode;

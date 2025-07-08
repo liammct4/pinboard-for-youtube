@@ -1,13 +1,11 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirectory/VideoDirectory"
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
 import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
-import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
-import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";
@@ -17,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
-import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeFromRef, getNodeSection, getNodeType, getPathOfNode, NodeRef } from "../../../../lib/directory/directory";
-import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, pathToString, reformatDirectoryPath, validateDirectoryName } from "../../../../lib/directory/path";
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromRef, getNodeSection, getNodeType, getPathOfNode, NodeRef } from "../../../../lib/directory/directory";
+import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
 import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";

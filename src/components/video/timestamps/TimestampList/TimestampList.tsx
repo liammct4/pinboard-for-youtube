@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
 import { DragListItem } from "../../../../lib/dragList/DragListItem";
 import { Timestamp } from "../../../../lib/video/video";

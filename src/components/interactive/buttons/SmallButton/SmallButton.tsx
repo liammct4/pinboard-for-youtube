@@ -1,4 +1,4 @@
-import { BaseButton, BaseInputButton, IBaseButtonProperties, IBaseInputButtonProperties, ISizeButtonProperties } from "../BaseButton/BaseButton";
+import { BaseButton, BaseInputButton, IBaseInputButtonProperties, ISizeButtonProperties } from "../BaseButton/BaseButton";
 import "./SmallButton.css"
 
 export function SmallButton(props: ISizeButtonProperties) {

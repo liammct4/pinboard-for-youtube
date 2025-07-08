@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { IVideoItemContext, VideoItemContext } from "../VideoItem";
 import { VideoThumbnail } from "../../VideoThumbnail/VideoThumbnail";
 import { useVideoInfo } from "../../../features/useVideoInfo";

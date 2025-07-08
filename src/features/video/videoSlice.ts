@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IPrimaryStorage } from "../../lib/storage/storage";
 import { IVideo, TimestampID } from "../../lib/video/video";
-import { sampleVideoData } from "../../../testData/testDataSet";
 
 export interface IVideoSlice {
 	activeVideoID: string | undefined;

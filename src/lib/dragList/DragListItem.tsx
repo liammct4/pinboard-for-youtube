@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef } from "react";
 import { DragListContext, IDragListContext } from "./DragList";
 
 export interface IDragListItemProperties {

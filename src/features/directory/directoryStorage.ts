@@ -1,8 +1,6 @@
-import { IPrimaryStorage } from "../../lib/storage/storage";
-import { directoryActions, directorySlice, IDirectorySlice } from "./directorySlice";
+import { directoryActions, directorySlice } from "./directorySlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { modifyStorage } from "../../lib/storage/storage";
 import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const directorySyncStorageMiddleware = createListenerMiddleware();

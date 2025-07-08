@@ -1,5 +1,4 @@
-import { KeyboardEvent, useEffect, useMemo, useRef } from "react";
-import { useDomEvent } from "../../../contentScript/features/useDomEvent";
+import { KeyboardEvent, useEffect, useRef } from "react";
 import "./ButtonPanel.css"
 
 export interface IButtonPanelProperties {

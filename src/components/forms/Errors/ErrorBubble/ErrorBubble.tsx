@@ -1,6 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useState } from "react";
 import { IconContainer } from "../../../images/svgAsset";
 import WarningIcon from "./../../../../../assets/icons/status/warning.svg?react"
 import CrossIcon from "./../../../../../assets/symbols/cross.svg?react"

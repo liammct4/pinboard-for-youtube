@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import { useVideoCache } from "../../features/useVideoInfo";
 import { RootState } from "../../../app/store";
 import "./VideoSearchItem.css"
 import { VideoThumbnail } from "../VideoThumbnail/VideoThumbnail";

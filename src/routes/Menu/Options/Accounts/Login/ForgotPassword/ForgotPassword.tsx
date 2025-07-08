@@ -11,7 +11,6 @@ import { TextInput } from "../../../../../../components/input/TextInput/TextInpu
 import "./ForgotPassword.css"
 import { getItemFromStorage } from "../../../../../../lib/storage/storage";
 import { ValidatedForm } from "../../../../../../components/forms/ValidatedForm";
-import { SmallInputButton } from "../../../../../../components/interactive/buttons/SmallButton/SmallButton";
 import { MediumInputButton } from "../../../../../../components/interactive/buttons/MediumButton/MediumButton";
 
 type ResetPasswordFormField = "verificationCode" | "newPassword" | "reenterNewPassword";

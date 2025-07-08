@@ -1,6 +1,5 @@
 import { createRoot } from "react-dom/client";
 import { ControlsApp } from "./ControlsApp";
-import { IPrimaryStorage } from "../../lib/storage/storage";
 
 let container = document.createElement("div");
 container.id = "pfy-controls-root";

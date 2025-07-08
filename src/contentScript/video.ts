@@ -1,5 +1,4 @@
 import { IVideoInfo, VideoScriptAction } from "../lib/browser/youtube";
-import { YOUTUBE_EXTRACT_VIDEO_ID_REGEX } from "../lib/util/youtube/youtubeUtil";
 import { extractIDRegex } from "./features/LocalVideoDataWrapper";
 
 function setVideoPosition(time: number): {} {

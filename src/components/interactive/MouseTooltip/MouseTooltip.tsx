@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useGlobalEvent } from "../../features/events/useGlobalEvent";
 import "./MouseTooltip.css";
 import { useGlobalMousePosition } from "../../features/events/useGlobalMousePosition";
 

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useRef } from "react";
 import { IVideo, Timestamp } from "../../../../../lib/video/video";
 import { CompactVideoItem } from "../../../styledVideoItems/CompactVideoItem/CompactVideoItem";
 import { MinimalVideoItem } from "../../../styledVideoItems/MinimalVideoItem/MinimalVideoItem";
@@ -6,7 +6,7 @@ import { RegularVideoItem } from "../../../styledVideoItems/RegularVideoItem/Reg
 import { VideoItemContext } from "../../../styledVideoItems/VideoItem";
 import { IVideoDirectoryPresentationContext, VideoDirectoryPresentationContext } from "../VideoDirectory";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, store } from "../../../../../app/store";
+import { RootState } from "../../../../../app/store";
 import { tempStateActions } from "../../../../../features/state/tempStateSlice";
 import { videoActions } from "../../../../../features/video/videoSlice";
 import { IVideoNode } from "../../../../../lib/directory/directory";

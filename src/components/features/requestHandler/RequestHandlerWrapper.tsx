@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../../../features/auth/authSlice";
 import { regenerateTokensWithRefreshToken } from "../../../lib/user/accounts";
 import { HttpStatusCode } from "../../../lib/util/http";
-import { ConnectionEventType, GlobalRequestHandler, NetworkErrorType } from "../../../lib/util/request";
+import { GlobalRequestHandler, NetworkErrorType } from "../../../lib/util/request";
 import { useNotificationMessage } from "../notifications/useNotificationMessage";
 import { IWrapperProperties } from "../wrapper";
 import { useUserAccount } from "../useUserAccount";

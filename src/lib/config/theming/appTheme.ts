@@ -1,4 +1,3 @@
-import { IKeyIDItem } from "../../../components/features/useUserAccount";
 import { GUID } from "../../util/objects/types";
 
 export type ThemeID = `${GUID}:THEME`;

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useRouteError } from "react-router-dom";
 import { SplitHeading } from "../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { ActionMessageDialog } from "../../components/dialogs/ActionDialogMessage";
-import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE, modifyStorage } from "../../lib/storage/storage";
+import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE } from "../../lib/storage/storage";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
 import { CodeBlock } from "../../components/presentation/Decorative/CodeBlock/CodeBlock";
 import { MediumButton } from "../../components/interactive/buttons/MediumButton/MediumButton";
