@@ -5,7 +5,8 @@ export interface IVideoDirectoryInteractionContext {
 	navigateRequest: (requester: IDirectoryNode) => void;
 	selectedItems: NodeRef[];
 	setSelectedItems: (selectedItems: NodeRef[]) => void;
-	currentlyEditing: string | null;
+	currentlyEditing: NodeRef | null;
+	requestEditStart: (node: NodeRef) => void;
 	requestEditEnd: (newSliceName: string) => void;
 	activateDeleteNodeDialog: (node: NodeRef) => void;
 	draggingID: string | null;
@@ -17,7 +18,8 @@ export const VideoDirectoryInteractionContext = createContext<IVideoDirectoryInt
 		selectedItems: [],
 		setSelectedItems: () => console.error("No context provided: VideoDirectoryInteractionContext.setSelectedItems"),
 		currentlyEditing: null,
-		requestEditEnd:  () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditEnd"),
+		requestEditStart: () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditStart"),
+		requestEditEnd: () => console.error("No context provided: VideoDirectoryInteractionContext.requestEditEnd"),
 		activateDeleteNodeDialog: () => console.error("No context provided: VideoDirectoryInteractionContext.activateDeleteNodeDialog"),
 		draggingID: null
 	}

@@ -311,6 +311,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 						selectedItems,
 						setSelectedItems,
 						currentlyEditing,
+						requestEditStart: setCurrentlyEditing,
 						requestEditEnd,
 						activateDeleteNodeDialog: setDeleteNodeDialog,
 						draggingID: !dragging?.notInBounds ? dragging?.overlappingID ?? null : null

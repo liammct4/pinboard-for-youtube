@@ -9,6 +9,11 @@
 	.directory-node-item {
 		font-size: var(--pfy-font-text-big);
 
+		.rename-button {
+			padding-left: var(--pfy-spacing-standard-compact);
+			padding-right: var(--pfy-spacing-standard-compact);
+		}
+
 		.enter-navigate-button {
 			display: flex;
 			background-color: transparent;
@@ -19,6 +24,11 @@
 			font-size: var(--pfy-font-text-standard);
 			width: 100%;
 			color: var(--pfy-text-normal);
+
+			& button {
+				align-self: flex-start;
+				margin-left: auto;
+			}
 		}
 
 		&[data-is-hover-overlap="true"] {
