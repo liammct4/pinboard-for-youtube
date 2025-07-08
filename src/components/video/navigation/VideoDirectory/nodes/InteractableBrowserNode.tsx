@@ -61,10 +61,10 @@ export function InteractableBrowserNode({ node }: IInteractableBrowserNodeProper
 					}
 				}}
 				onFocus={() => {
-					if (selectedItems.length <= 1) {
-						setSelectedItems([ node.nodeID ])}
+					if (selectedItems.length == 0 || selectedItems.length == 1 && selectedItems[0] != node.nodeID) {
+						setSelectedItems([ node.nodeID ])
 					}
-				}>
+				}}>
 				{nodeType == "DIRECTORY" ?
 					<DirectoryItem node={node as IDirectoryNode} />
 					:
