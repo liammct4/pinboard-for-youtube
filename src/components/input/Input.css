@@ -4,7 +4,7 @@
 
 	.label {
 		width: var(--pfy-label-width-medium);
-		font-size: var(--pfy-font-text-standard);
+		font-size: var(--pfy-field-font-size);
 		margin-right: var(--pfy-spacing-standard);
 
 		&[data-size="small"] {

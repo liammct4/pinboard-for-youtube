@@ -28,7 +28,7 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 
 	videosRef.current = videos;
 
-	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => {
+	const onTimestampChanged = (oldTimestamp: Timestamp, newTimestamp: Timestamp | null, autoplay: boolean) => {
 		let copyVideo = videosRef.current[node.videoID] as IVideo;
 		let newVideo: IVideo = { ...copyVideo, timestamps: [ ...copyVideo.timestamps ] };
 		let index = newVideo.timestamps.findIndex(x => x.id == oldTimestamp.id);
@@ -43,6 +43,13 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 		}
 		else {
 			newVideo.timestamps[index] = newTimestamp;
+			
+			if (autoplay) {
+				newVideo.autoplayTimestamp = newTimestamp.id;
+			}
+			else if (!autoplay && newVideo.autoplayTimestamp == newTimestamp.id) {
+				newVideo.autoplayTimestamp = null;
+			}
 		}
 
 		dispatch(videoActions.addOrReplaceVideo(newVideo));

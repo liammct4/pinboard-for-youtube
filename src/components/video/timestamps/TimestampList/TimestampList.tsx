@@ -13,7 +13,7 @@ export interface ITimestampListProperties {
 	videoID: string;
 	timestamps: Timestamp[];
 	onTimestampsChanged: (newTimestamps: Timestamp[]) => void;
-	onTimestampChanged: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
+	onTimestampChanged: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null, autoplay: boolean) => void;
 }
 
 export function TimestampList({ timestamps, videoID, onTimestampsChanged, onTimestampChanged }: ITimestampListProperties): React.ReactNode {

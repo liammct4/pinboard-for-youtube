@@ -4,7 +4,7 @@ import { sampleVideoData } from "../../../../testData/testDataSet";
 
 export interface IVideoItemContext {
 	video: IVideo;
-	onTimestampChanged: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
+	onTimestampChanged: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null, autoplay: boolean) => void;
 	onTimestampAdded: (newTimestamp: Timestamp) => void;
 	setTimestamps: (timestamps: Timestamp[]) => void;
 	expanded: boolean;

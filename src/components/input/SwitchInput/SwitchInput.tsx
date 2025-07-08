@@ -38,13 +38,13 @@ export function SwitchInputPrimitive({ className, label, labelSize, reversed = f
  BUG: Radix UI doesn't load "defaultValue" correctly, so the result will be undefined IF it wasn't toggled.
  Means that you should use the "defaultValue" as the actual value whenever the submitted form value is undefined.
 */
-export function SwitchInput<TField extends string>({ label, title, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
+export function SwitchInput<TField extends string>({ label, title, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	const [ checked, setChecked ] = useState<boolean>(startValue == "true");
 
 	return (
 		<FieldErrorContainer name={name}>
-			<div className="field-row switch-container" title={title} data-size={labelSize}>
+			<div className="field-row switch-container" title={title} data-size={fieldSize}>
 				<label className="label" data-size={labelSize}>{label}</label>
 				{/* Radix switch behaves extremely oddly and doesn't work properly with forms. */}
 				<Switch.Root
