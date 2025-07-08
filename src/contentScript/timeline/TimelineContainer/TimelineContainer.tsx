@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import { useLocalVideoData } from "../../features/useLocalVideoData";
+import { useContext, useEffect, useRef, useState } from "react";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
 import { createTimestamp, IVideo, Timestamp } from "../../../lib/video/video";
@@ -8,11 +7,12 @@ import { videoActions } from "../../../features/video/videoSlice";
 import { RootState } from "../../../app/store";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
 import "./TimelineContainer.css"
+import { LocalVideoDataContext } from "../../features/LocalVideoDataWrapper";
 
 export function TimelineContainer() {
 	const timelineContainerRef = useRef<HTMLDivElement>(null!);
 	const [ hover, setHover ] = useState<string | null>(null);
-	const videoData = useLocalVideoData();
+	const videoData = useContext(LocalVideoDataContext);
 	const timelineBounds = useBoundsChangeEvent(timelineContainerRef);
 	const videos = useSelector((state: RootState) => state.video.videos);
 	const dispatch = useDispatch();

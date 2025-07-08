@@ -5,11 +5,11 @@ import { videoActions } from "../../../../features/video/videoSlice";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { RootState } from "../../../../app/store";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
-import { extractIDRegex, useLocalVideoData } from "../../../features/useLocalVideoData";
 import { getNodeFromPath } from "../../../../lib/directory/directory";
 import { directoryPathConcat, filterDirectoryName, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
 import { cacheActions } from "../../../../features/cache/cacheSlice";
 import { useVideoCache } from "../../../../components/features/useVideoInfo";
+import { extractIDRegex } from "../../../features/LocalVideoDataWrapper";
 
 export function VideoTimestampButton() {
 	const dispatch = useDispatch();

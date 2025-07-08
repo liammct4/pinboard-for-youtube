@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { usePageLink } from "./usePageLink";
+import { createContext, useEffect, useRef, useState } from "react";
+import { IWrapperProperties } from "../../components/features/wrapper";
 import { areObjectsEqual } from "../../lib/util/objects/objects";
+import { usePageLink } from "./usePageLink";
 
 export let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
 
@@ -42,7 +43,7 @@ function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist 
 	};
 }
 
-export function useLocalVideoData(): VideoExists | VideoDoesntExist {
+export function LocalVideoDataWrapper({ children }: IWrapperProperties) {
 	const pageLink = usePageLink();
 	const video = useRef<HTMLVideoElement | null>(null!);
 	const [ videoResult, setVideoResult ] = useState<VideoExists | VideoDoesntExist>(recalculateVideoData(pageLink));
@@ -87,6 +88,12 @@ export function useLocalVideoData(): VideoExists | VideoDoesntExist {
 			setTimeout(() => update(), 900);
 		}
 	}, [ videoResult ]);
-
-	return videoResult;
+	
+	return (
+		<LocalVideoDataContext.Provider value={videoResult}>
+			{children}
+		</LocalVideoDataContext.Provider>
+	);
 }
+
+export const LocalVideoDataContext = createContext<VideoExists | VideoDoesntExist>({ isVideoPage: false });

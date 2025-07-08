@@ -3,12 +3,15 @@ import { StyleContextWrapper } from "../../components/features/styleContext/Styl
 import { VideoTimestampButton } from "./components/VideoTimestampButton/VideoTimestampButton";
 import { RootState, store } from "../../app/store";
 import { IPrimaryStorage } from "../../lib/storage/storage";
+import { LocalVideoDataWrapper } from "../features/LocalVideoDataWrapper";
 
 export function ControlsApp() {
 	return (
 		<Provider store={store}>
 			<StyleContextWrapper use-transition>
-				<VideoTimestampButton/>
+				<LocalVideoDataWrapper>
+					<VideoTimestampButton/>
+				</LocalVideoDataWrapper>
 			</StyleContextWrapper>
 		</Provider>
 	);

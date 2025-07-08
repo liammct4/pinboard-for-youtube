@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Timestamp } from "../../../../lib/video/video"
 import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil";
-import { useLocalVideoData } from "../../../features/useLocalVideoData";
 import { IconContainer } from "../../../../components/images/svgAsset";
 import ArrowDown from "./../../../../../assets/misc/arrow_down_timeline.svg?react"
 import PausedIcon from "./../../../../../assets/icons/jump_icon.svg?react"
@@ -12,6 +11,7 @@ import { useDomEvent } from "../../../features/useDomEvent";
 import { useBoundsChangeEvent } from "../../../features/useBoundsChangeEvent";
 import "./TimelineButton.css"
 import { useTextMeasurer } from "../../../../components/features/useTextMeasurer";
+import { LocalVideoDataContext } from "../../../features/LocalVideoDataWrapper";
 
 export interface ITimelineButtonProperties {
 	timestamp: Timestamp;
@@ -26,7 +26,7 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 	const buttonRef = useRef<HTMLButtonElement>(null!);
 	const arrowRef = useRef<HTMLDivElement>(null!);
 	const arrowImageRef = useRef<SVGSVGElement>(null!);
-	const videoData = useLocalVideoData();
+	const videoData = useContext(LocalVideoDataContext);
 	const { setCurrentTime } = useLocalVideoControls();
 	const secondTimeData = useMemo(() => getTimestampFromSeconds(timestamp.time), [timestamp.time]);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
