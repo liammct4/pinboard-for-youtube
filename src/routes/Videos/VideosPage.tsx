@@ -91,7 +91,8 @@ export function VideosPage(): React.ReactNode {
 
 		dispatch(videoActions.addVideo({
 			id,
-			timestamps: []
+			timestamps: [],
+			autoplayTimestamp: null
 		}));
 
 		dispatch(directoryActions.createVideoNode({
@@ -114,7 +115,7 @@ export function VideosPage(): React.ReactNode {
 
 		let info = await retrieveInfo(activeVideoID) as IYoutubeVideoInfo;
 
-		dispatch(videoActions.addVideo({ id: activeVideoID, timestamps: [] }));
+		dispatch(videoActions.addVideo({ id: activeVideoID, timestamps: [], autoplayTimestamp: null }));
 		dispatch(directoryActions.createVideoNode({
 			parentPath: directoryPath,
 			videoID: activeVideoID,
@@ -135,7 +136,8 @@ export function VideosPage(): React.ReactNode {
 			timestamps: [
 				...video.timestamps,
 				generateTimestamp(Math.floor(activeVideo!.currentTime), "Current time")
-			]
+			],
+			autoplayTimestamp: null
 		}
 		
 		dispatch(videoActions.addOrReplaceVideo(newActiveVideo));

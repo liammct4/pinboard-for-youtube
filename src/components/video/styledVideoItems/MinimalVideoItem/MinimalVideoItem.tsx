@@ -11,6 +11,7 @@ import { getYouTubeLinkFromVideoID, getYoutubeVideoInfoFromLink } from "../../..
 import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import "./MinimalVideoItem.css"
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
+import { createTimestamp } from "../../../../lib/video/video";
 
 export function MinimalVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
@@ -31,7 +32,7 @@ export function MinimalVideoItem(): React.ReactNode {
 						onTimestampsChanged={setTimestamps}
 					/>
 					<SmallButton circle onClick={() => {
-						onTimestampAdded({ id: crypto.randomUUID(), message: "New timestamp", time: 60 });
+						onTimestampAdded({ id: createTimestamp(), message: "New timestamp", time: 60 });
 					}}>
 						<IconContainer className="icon-colour-standard" asset={PlusIcon} use-stroke/>
 					</SmallButton>

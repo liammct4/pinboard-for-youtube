@@ -12,6 +12,7 @@ import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeU
 import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
+import { createTimestamp } from "../../../../lib/video/video";
 
 export function RegularVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
@@ -40,7 +41,7 @@ export function RegularVideoItem(): React.ReactNode {
 							onTimestampsChanged={setTimestamps}
 							timestamps={video.timestamps}/>
 						<SmallButton circle onClick={() => {
-							onTimestampAdded({ id: crypto.randomUUID(), message: "New timestamp", time: 60 });
+							onTimestampAdded({ id: createTimestamp(), message: "New timestamp", time: 60 });
 						}}>
 							<IconContainer className="icon-colour-standard" asset={PlusIcon} use-stroke/>
 						</SmallButton>

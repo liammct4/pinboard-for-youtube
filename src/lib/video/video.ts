@@ -1,13 +1,17 @@
 import { IKeyIDItem } from "../../components/features/useUserAccount";
+import { GUID } from "../util/objects/types";
+
+export type TimestampID = `${GUID}:TIMESTAMP`;
 
 export type Timestamp = {
-	id: string;
+	id: TimestampID;
 	time: number;
 	message: string;
 };
 
 export interface IVideo extends IKeyIDItem {
 	timestamps: Timestamp[];
+	autoplayTimestamp: TimestampID | null
 };
 
 /**
@@ -18,8 +22,12 @@ export interface IVideo extends IKeyIDItem {
  */
 export function generateTimestamp(time: number, message: string): Timestamp {
 	return {
-		id: crypto.randomUUID(),
+		id: createTimestamp(),
 		time: time,
 		message: message
 	}
+}
+
+export function createTimestamp(): TimestampID {
+	return `${crypto.randomUUID()}:TIMESTAMP`;
 }

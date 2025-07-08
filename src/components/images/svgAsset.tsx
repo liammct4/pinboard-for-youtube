@@ -1,13 +1,17 @@
 export type Asset = React.FC<React.SVGProps<SVGSVGElement>>;
-export interface ISVGContainerProperties {
-	asset: Asset
+
+type DataPropName = `data-${string}`;
+interface DataProps {
+	[name: DataPropName]: string
+}
+
+export interface ISVGContainerProperties extends DataProps {
+	asset?: Asset
 	className?: string;
 	"manual-fill"?: string;
 	"manual-stroke"?: string;
 	"use-fill"?: boolean;
 	"use-stroke"?: boolean;
-	// This allows for any user specified arbitrary attributes to be added to the svg in the DOM.
-	"attached-attributes"?: any;
 }
 
 /**
@@ -22,26 +26,28 @@ export interface ISVGContainerProperties {
  * @param use-fill Set to enable the fill colour on the asset, no fill is applied by default.
  * @param use-stroke Set to enable the stroke colour on the asset, no stroke is applied by default.
  */
-export function IconContainer({
-		asset: Asset,
-		className = "icon-primary-content-contrast",
-		"manual-fill": fill,
-		"manual-stroke": stroke,
-		"use-fill": useFill,
-		"use-stroke": useStroke,
-		"attached-attributes": attachedAttributes
-	}: ISVGContainerProperties): React.ReactNode {
+export function IconContainer(props: ISVGContainerProperties): React.ReactNode {
+	let actualProps = { ...props };
+
+	delete actualProps["manual-fill"];
+	delete actualProps["manual-stroke"];
+	delete actualProps["use-fill"];
+	delete actualProps["use-stroke"];
+	delete actualProps.asset;
+
+	let className = props.className ?? "icon-primary-content-contrast";
+	let Asset = props.asset!;
 
 	return (
 		<Asset
+			{...actualProps}
 			className={className}
 			style={{
 				/* Check if the provided fill is a variable. */
-				fill: fill?.startsWith("--") ? `var(${fill})` : fill,
-				stroke: stroke?.startsWith("--") ? `var(${stroke})` : stroke
+				fill: props["manual-fill"]?.startsWith("--") ? `var(${props["manual-fill"]})` : props["manual-fill"],
+				stroke: props["manual-stroke"]?.startsWith("--") ? `var(${props["manual-stroke"]})` : props["manual-stroke"]
 			}}
-			data-use-fill={useFill}
-			data-use-stroke={useStroke}
-			{...attachedAttributes}/>
+			data-use-fill={props["use-fill"]}
+			data-use-stroke={props["use-stroke"]}/>
 		);
 }

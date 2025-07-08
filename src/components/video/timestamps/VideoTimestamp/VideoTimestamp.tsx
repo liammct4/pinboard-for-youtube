@@ -6,6 +6,7 @@ import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../li
 import { Timestamp } from "../../../../lib/video/video.ts";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
 import BinIcon from "./../../../../../assets/icons/bin.svg?react"
+import AutoplayIcon from "./../../../../../assets/icons/autoplay.svg?react"
 import JumpVideoIcon from "./../../../../../assets/icons/jump_icon.svg?react"
 import { IconContainer } from "../../../images/svgAsset.tsx";
 import "src/styling/dialog.css"
@@ -26,6 +27,8 @@ export interface IVideoTimestampProperties {
 	className?: string;
 	videoID: string;
 	timestamp: Timestamp;
+	isAutoplay: boolean;
+	onAutoplayClick: (value: boolean) => void;
 	allowControls: boolean;
 	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
 }
@@ -46,7 +49,7 @@ function validateTimestamp(value: string): string | null {
 }
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
-export function VideoTimestamp({ className, videoID, timestamp, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
+export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAutoplayClick, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
@@ -72,6 +75,19 @@ export function VideoTimestamp({ className, videoID, timestamp, onChange, allowC
 			{
 				allowControls ?
 					<ButtonPanel>
+						<SmallButton
+							className="autoplay-button"
+							onClick={() => onAutoplayClick(!isAutoplay)}
+							circle
+							data-is-auto={isAutoplay}
+							data-active-toggle={isAutoplay}>
+							<IconContainer
+								className="autoplay-icon icon-colour-standard"
+								asset={AutoplayIcon}
+								use-fill
+								use-stroke
+								data-active-toggle={isAutoplay}/>
+						</SmallButton>
 						<SmallButton square onClick={onDelete} aria-label="Delete the current timestamp.">
 							<IconContainer
 								className="bin-icon icon-colour-standard"

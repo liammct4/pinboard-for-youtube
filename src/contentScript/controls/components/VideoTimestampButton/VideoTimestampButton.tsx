@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { IVideo } from "../../../../lib/video/video";
+import { createTimestamp, IVideo } from "../../../../lib/video/video";
 import { CircularLargeButton } from "../CircularLargeButton/CircularLargeButton";
 import { videoActions } from "../../../../features/video/videoSlice";
 import { directoryActions } from "../../../../features/directory/directorySlice";
@@ -26,7 +26,7 @@ export function VideoTimestampButton() {
 		let existingVideo = videos[videoID] as IVideo;
 	
 		let newTimestamp = {
-			id: crypto.randomUUID(), 
+			id: createTimestamp(), 
 			time: Math.round(video.currentTime),
 			message: "Saved timestamp.",
 		}
@@ -36,7 +36,8 @@ export function VideoTimestampButton() {
 		if (existingVideo == null) {
 			updatedVideo = {
 				id: videoID,
-				timestamps: [ newTimestamp ]
+				timestamps: [ newTimestamp ],
+				autoplayTimestamp: null
 			}
 			
 			// TODO: Selection menu.

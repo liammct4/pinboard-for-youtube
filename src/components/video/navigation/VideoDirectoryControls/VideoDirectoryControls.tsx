@@ -151,13 +151,13 @@ export function VideoDirectoryControls({
 					<LabelGroup label="View">
 						<ButtonPanel className="view-section">
 							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
-								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "MINIMAL" }}/>
+								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}/>
 							</SmallButton>
 							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("COMPACT"))} data-active-toggle={layout.videoItemViewStyle == "COMPACT"}>
-								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "COMPACT" }}/>
+								<IconContainer className="icon-colour-standard" asset={CompactViewIcon} use-stroke use-fill data-active-toggle={layout.videoItemViewStyle == "COMPACT"}/>
 							</SmallButton>
 							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
-								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill attached-attributes={{ "data-active-toggle": layout.videoItemViewStyle == "REGULAR" }}/>
+								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill data-active-toggle={layout.videoItemViewStyle == "REGULAR"}/>
 							</SmallButton>
 						</ButtonPanel>
 					</LabelGroup>

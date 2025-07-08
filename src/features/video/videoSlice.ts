@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IPrimaryStorage } from "../../lib/storage/storage";
-import { IVideo } from "../../lib/video/video";
+import { IVideo, TimestampID } from "../../lib/video/video";
 import { sampleVideoData } from "../../../testData/testDataSet";
 
 export interface IVideoSlice {
@@ -51,6 +51,20 @@ export const videoSlice = createSlice({
 		},
 		clearVideos: (state) => {
 			state.videos = {};
+		},
+		changeAutoplayTimestamp: (state, action: PayloadAction<{ videoID: string, timestamp: TimestampID }>) => {
+			let video = state.videos[action.payload.videoID];
+
+			if (video == undefined) {
+				return;
+			}
+
+			if (video.autoplayTimestamp == action.payload.timestamp) {
+				video.autoplayTimestamp = null;
+			}
+			else {
+				video.autoplayTimestamp = action.payload.timestamp;
+			}
 		}
 	}
 });

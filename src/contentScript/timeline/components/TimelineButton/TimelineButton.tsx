@@ -4,6 +4,7 @@ import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil";
 import { useLocalVideoData } from "../../../features/useLocalVideoData";
 import { IconContainer } from "../../../../components/images/svgAsset";
 import ArrowDown from "./../../../../../assets/misc/arrow_down_timeline.svg?react"
+import AutoplayIcon from "./../../../../../assets/icons/autoplay.svg?react"
 import { useLocalVideoControls } from "../../../features/useLocalVideoControls";
 import { Coordinates, Rect } from "../../../../lib/util/objects/types";
 import { useDomEvent } from "../../../features/useDomEvent";
@@ -14,12 +15,13 @@ import { useTextMeasurer } from "../../../../components/features/useTextMeasurer
 export interface ITimelineButtonProperties {
 	timestamp: Timestamp;
 	timelineBounds: Rect;
+	isAutoplayButton: boolean;
 	onChange?: (newTimestamp: Timestamp) => void;
 	activeHover: string | null;
 	onHoverChanged: (hover: string | null) => void;
 }
 
-export function TimelineButton({ timestamp, timelineBounds, onChange, activeHover, onHoverChanged }: ITimelineButtonProperties) {
+export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, onChange, activeHover, onHoverChanged }: ITimelineButtonProperties) {
 	const buttonRef = useRef<HTMLButtonElement>(null!);
 	const arrowRef = useRef<HTMLDivElement>(null!);
 	const videoData = useLocalVideoData();
@@ -96,8 +98,22 @@ export function TimelineButton({ timestamp, timelineBounds, onChange, activeHove
 	const spaceRemainingRight = Math.max((timelineBounds.size.width - (rawPixelsAlong)) - (arrowSize.width / 2), 0);
 	const spaceRemainingLeft = Math.max(rawPixelsAlong - (arrowSize.width / 2), 0);
 
-	const content = hover && !isDragging ? timestamp.message : secondTime;
-	const textWidth = measureText(content, `9pt "Roboto"`) + 14;
+	let content: JSX.Element;
+	let textWidth: number;
+
+	if (isAutoplayButton) {
+		content = <IconContainer
+			className="autoplay-icon icon-colour-standard"
+			asset={AutoplayIcon}
+			use-fill
+			use-stroke
+			data-active-toggle="true"/>
+	}
+	else {
+		let text = hover && !isDragging ? timestamp.message : secondTime;
+		content = <p className="timeline-inner-text">{text}</p>
+		textWidth = measureText(text, `9pt "Roboto"`) + 14;
+	}
 
 	let mouseEvents: React.HTMLAttributes<HTMLElement> = {
 		onClick: () => setTimeout(() => {
@@ -142,17 +158,22 @@ export function TimelineButton({ timestamp, timelineBounds, onChange, activeHove
 				<button
 					className="timeline-box-inner"
 					style={{
-						width: `${textWidth}px`,
-						borderBottomRightRadius: `${Math.min(6, spaceRemainingRight)}px`,
-						borderBottomLeftRadius: `${Math.min(6, spaceRemainingLeft)}px`
+						width: !isAutoplayButton ? `${textWidth!}px` : undefined,
+						borderBottomRightRadius: isAutoplayButton ? undefined : `${Math.min(6, spaceRemainingRight)}px`,
+						borderBottomLeftRadius: isAutoplayButton ? undefined : `${Math.min(6, spaceRemainingLeft)}px`
 					}}
-					ref={buttonRef}>
-						<p className="timeline-inner-text">{content}</p>
+					ref={buttonRef}
+					data-active-toggle={isAutoplayButton}
+					data-circle={isAutoplayButton}>
+						{content}
 				</button>
 			</div>
-			<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover && !isDragging}>
-				<IconContainer asset={ArrowDown}/>
-			</div>
+			{!isAutoplayButton ?
+				<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover && !isDragging}>
+					<IconContainer asset={ArrowDown}/>
+				</div>
+				: <></>
+			}
 		</div>
 	)
 }

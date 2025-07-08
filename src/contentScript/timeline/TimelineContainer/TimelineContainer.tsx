@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocalVideoData } from "../../features/useLocalVideoData";
 import { TimelineButton } from "../components/TimelineButton/TimelineButton";
 import { useBoundsChangeEvent } from "../../features/useBoundsChangeEvent";
-import { IVideo, Timestamp } from "../../../lib/video/video";
+import { createTimestamp, IVideo, Timestamp } from "../../../lib/video/video";
 import { useDispatch, useSelector } from "react-redux";
 import { videoActions } from "../../../features/video/videoSlice";
 import { RootState } from "../../../app/store";
@@ -33,7 +33,7 @@ export function TimelineContainer() {
 			return;
 		}
 
-		let timestampIndex = video.timestamps.findIndex(t => t.message == autoSaveLatestTimestampMessage);
+		let timestampIndex = video.timestamps.findIndex(t => t.id == video.autoplayTimestamp);
 		let updatedVideo: IVideo = {
 			...video
 		} as IVideo;
@@ -42,11 +42,12 @@ export function TimelineContainer() {
 			timestampIndex = updatedVideo.timestamps.length;
 
 			let newTimestamp = {
-				id: crypto.randomUUID(),
+				id: createTimestamp(),
 				message: autoSaveLatestTimestampMessage as string,
 				time: Math.round(videoData.data.currentTime)
 			};
 
+			updatedVideo.autoplayTimestamp = newTimestamp.id;
 			updatedVideo.timestamps = [ ...updatedVideo.timestamps, newTimestamp ];
 		}
 		else {
@@ -103,6 +104,7 @@ export function TimelineContainer() {
 					<TimelineButton
 						timestamp={x}
 						timelineBounds={timelineBounds}
+						isAutoplayButton={video.autoplayTimestamp == x.id}
 						data-hover-highlight={hover != null}
 						data-active-hover-highlight={hover == x.id}
 						onChange={onTimestampChange}
