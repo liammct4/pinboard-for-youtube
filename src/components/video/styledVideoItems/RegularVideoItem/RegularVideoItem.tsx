@@ -26,7 +26,7 @@ export function RegularVideoItem(): React.ReactNode {
 					<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
 				</SmallButton>
 				<span className="video-title">{videoInfo?.title}</span>
-				<a className="link-text video-channel" href={videoInfo?.author_url}>{videoInfo?.author_name}</a>
+				<a className="link-text video-channel" href={videoInfo?.author_url} target="_blank">{videoInfo?.author_name}</a>
 			</div>
 			<LabeledArrowExpander
 				className="timestamp-expander"

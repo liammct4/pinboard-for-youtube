@@ -96,7 +96,7 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 				</SmallButton>
 				: <></>
 			}
-			<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
+			<a className="link-text timestamp-text" href={timeLink} target="_blank">{stringTime}</a>
 			<div>
 				<span className="message-text" title={`${stringTime}: ${timestamp.message}`}>{timestamp.message}</span>
 			</div>

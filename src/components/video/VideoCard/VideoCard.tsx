@@ -23,7 +23,7 @@ export function VideoCard({
 				videoID={videoID!}
 				alt={videoExists ? `The thumbnail for the video titled '${video!.title}'.` : ""} width={80}/>
 			<h2 className="video-title">{videoExists ? video!.title : placeholderTitle}</h2>
-			{showLink && videoExists ? <a className="link-text video-link" href={video!.url}>{video!.url}</a> : <></>}
+			{showLink && videoExists ? <a className="link-text video-link" href={video!.url} target="_blank">{video!.url}</a> : <></>}
 		</div>
 	)
 }

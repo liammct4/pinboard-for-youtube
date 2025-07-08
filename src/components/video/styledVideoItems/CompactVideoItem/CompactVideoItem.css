@@ -6,6 +6,10 @@
 	row-gap: var(--pfy-spacing-standard-compact);
 	align-items: center;
 
+	& button {
+		align-self: flex-start;
+	}
+
 	.thumbnail-image {
 		grid-column: 1;
 		grid-row: 1;

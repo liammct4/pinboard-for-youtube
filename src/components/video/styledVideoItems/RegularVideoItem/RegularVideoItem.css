@@ -8,6 +8,10 @@
 		grid-template-columns: auto 1fr auto;
 		grid-template-rows: auto auto;
 		align-items: center;
+
+		& button {
+			align-self: flex-start;
+		}
 		
 		.video-thumbnail {
 			margin-right: var(--pfy-spacing-standard);

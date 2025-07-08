@@ -7,6 +7,10 @@
 		flex-grow: 1;
 	}
 
+	& button {
+		align-self: flex-start;
+	}
+
 	.compact-video-item-inner {
 		display: flex;
 		flex-direction: column;

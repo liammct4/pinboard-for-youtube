@@ -65,7 +65,7 @@ export function ErrorPage(): React.ReactNode {
 				please include the error details in the box below
 				and if possible, the exact steps to reproduce the error.
 				<br/><br/>
-				Visit the issues page by clicking <a href="https://github.com/liammct4/pinboard-for-youtube/issues">here</a>. Or visit the "Help" page.
+				Visit the issues page by clicking <a href="https://github.com/liammct4/pinboard-for-youtube/issues" target="_blank">here</a>. Or visit the "Help" page.
 				Please do check that the issue has not already been reported if you
 				are making a report.
 			</p>
