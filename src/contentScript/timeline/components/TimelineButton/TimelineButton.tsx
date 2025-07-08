@@ -4,7 +4,8 @@ import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil";
 import { useLocalVideoData } from "../../../features/useLocalVideoData";
 import { IconContainer } from "../../../../components/images/svgAsset";
 import ArrowDown from "./../../../../../assets/misc/arrow_down_timeline.svg?react"
-import AutoplayIcon from "./../../../../../assets/icons/autoplay.svg?react"
+import PausedIcon from "./../../../../../assets/icons/jump_icon.svg?react"
+import PlayIcon from "./../../../../../assets/icons/play.svg?react"
 import { useLocalVideoControls } from "../../../features/useLocalVideoControls";
 import { Coordinates, Rect } from "../../../../lib/util/objects/types";
 import { useDomEvent } from "../../../features/useDomEvent";
@@ -104,7 +105,7 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 	if (isAutoplayButton) {
 		content = <IconContainer
 			className="autoplay-icon icon-colour-standard"
-			asset={AutoplayIcon}
+			asset={videoData.data.paused ? PausedIcon : PlayIcon}
 			use-fill
 			use-stroke
 			data-active-toggle="true"/>
