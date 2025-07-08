@@ -1,8 +1,8 @@
 import { createContext, useReducer, useRef } from "react"
-import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
-import { Coordinates, Rect } from "../util/objects/types";
-import { areObjectsEqual } from "../util/objects/objects";
-import { distanceTwoPoints } from "../util/generic/miscUtil";
+import { useGlobalEvent } from "../../features/events/useGlobalEvent";
+import { Coordinates, Rect } from "../../../lib/util/objects/types";
+import { areObjectsEqual } from "../../../lib/util/objects/objects";
+import { distanceTwoPoints } from "../../../lib/util/generic/miscUtil";
 
 export type DragListEvent<T extends string> = {
 	startDragID: T;

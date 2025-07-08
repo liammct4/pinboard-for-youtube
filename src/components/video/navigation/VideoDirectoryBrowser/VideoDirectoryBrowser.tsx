@@ -5,7 +5,7 @@ import { VideoDirectory, VideoDirectoryPresentationContext } from "../VideoDirec
 import { useNotificationMessage } from "../../../features/notifications/useNotificationMessage";
 import { IconContainer } from "../../../images/svgAsset";
 import CategoryDiamond from "./../../../../../assets/icons/category_diamond.svg?react"
-import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
+import { DragListEvent, DragList } from "../../../interactive/DragList/DragList";
 import { IVideoDirectoryBrowserContext, VideoDirectoryBrowserContext } from "./VideoDirectoryBrowserContext";
 import { MouseTooltip } from "../../../interactive/MouseTooltip/MouseTooltip";
 import { useVideoInfo } from "../../../features/useVideoInfo";

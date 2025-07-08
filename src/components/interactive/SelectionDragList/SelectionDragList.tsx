@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { DragListItemData } from "../../../lib/dragList/DragList";
+import { DragListItemData } from "../DragList/DragList";
 import { SelectionBoxScrollbox } from "../SelectionBoxScrollbox/SelectionBoxScrollbox";
 import { Rect } from "../../../lib/util/objects/types";
 import { rectIntersects } from "../../../lib/util/generic/miscUtil";

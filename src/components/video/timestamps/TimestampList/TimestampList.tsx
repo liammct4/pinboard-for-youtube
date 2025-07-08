@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
-import { DragListEvent, DragList } from "../../../../lib/dragList/DragList";
-import { DragListItem } from "../../../../lib/dragList/DragListItem";
+import { DragListEvent, DragList } from "../../../interactive/DragList/DragList";
+import { DragListItem } from "../../../interactive/DragList/DragListItem";
 import { Timestamp } from "../../../../lib/video/video";
 import { VideoTimestamp } from "../VideoTimestamp/VideoTimestamp";
 import "./TimestampList.css"
