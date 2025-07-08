@@ -70,7 +70,7 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 			</SmallButton>
 			<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
 			<div>
-				<span className="message-text">{timestamp.message}</span>
+				<span className="message-text" title={timestamp.message}>{timestamp.message}</span>
 			</div>
 			{
 				allowControls ?
@@ -79,6 +79,7 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 							className="autoplay-button"
 							onClick={() => onAutoplayClick(!isAutoplay)}
 							circle
+							title="Set this timestamp to be an automatically update as the video progresses (Auto timestamp)."
 							data-is-auto={isAutoplay}
 							data-active-toggle={isAutoplay}>
 							<IconContainer

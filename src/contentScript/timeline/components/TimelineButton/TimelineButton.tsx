@@ -163,6 +163,7 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 						borderBottomLeftRadius: isAutoplayButton ? undefined : `${Math.min(6, spaceRemainingLeft)}px`
 					}}
 					ref={buttonRef}
+					title={timestamp.message}
 					data-active-toggle={isAutoplayButton}
 					data-circle={isAutoplayButton}>
 						{content}
