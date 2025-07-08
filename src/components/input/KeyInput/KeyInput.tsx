@@ -31,7 +31,7 @@ const matchingKeysFilter = new Map<string, string>([
 	[ "?", "/" ],
 ]);
 
-export function KeyInput<TField extends string>({ label, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
+export function KeyInput<TField extends string>({ label, title, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	const [ keyInput, setKeyInput ] = useState<string>(startValue);
 	const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ export function KeyInput<TField extends string>({ label, fieldSize, name, startV
 	
 	return (
 		<FieldErrorContainer name={name}>
-			<div className="field-row">
+			<div className="field-row" title={title}>
 				<label className="label" data-size={labelSize}>{label}</label>
 				<input
 					className="field-input small-text-input"

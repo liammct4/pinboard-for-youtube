@@ -5,13 +5,13 @@ import { convertRGBToHex } from "../../../lib/util/generic/colour/colourUtil";
 import "./../Input.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
-export function ColourInput<TField extends string>({ label, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
+export function ColourInput<TField extends string>({ label, title, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	const colour = useMemo(() => startValue.startsWith("rgb(") ? convertRGBToHex(startValue) : startValue, [startValue]);
 	
 	return (
 		<FieldErrorContainer name={name}>
-			<div className="field-row">
+			<div className="field-row" title={title}>
 				<label className="label" data-size={labelSize}>{label}</label>
 				<div data-size={fieldSize}>
 					<input

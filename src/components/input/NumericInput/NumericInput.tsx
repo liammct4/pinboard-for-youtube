@@ -4,12 +4,12 @@ import { FormStyleContext } from "../formStyleContext";
 import "./../Input.css"
 import { FieldErrorContainer } from "../../forms/Errors/FieldErrorContainer/FieldErrorContainer";
 
-export function NumericInput<TField extends string>({ label, fieldSize, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
+export function NumericInput<TField extends string>({ label, fieldSize, title, name, startValue }: IInputComponentProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
 		<FieldErrorContainer name={name}>
-			<div className="field-row">
+			<div className="field-row" title={title}>
 				<label className="label" data-size={labelSize}>{label}</label>
 				<input
 					type="number"

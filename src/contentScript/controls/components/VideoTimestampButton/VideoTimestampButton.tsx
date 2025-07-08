@@ -5,13 +5,19 @@ import { videoActions } from "../../../../features/video/videoSlice";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { RootState } from "../../../../app/store";
 import { Keys, useHotkeys } from "react-hotkeys-hook";
-import { extractIDRegex } from "../../../features/useLocalVideoData";
+import { extractIDRegex, useLocalVideoData } from "../../../features/useLocalVideoData";
+import { getNodeFromPath } from "../../../../lib/directory/directory";
+import { directoryPathConcat, filterDirectoryName, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
+import { cacheActions } from "../../../../features/cache/cacheSlice";
+import { useVideoCache } from "../../../../components/features/useVideoInfo";
 
 export function VideoTimestampButton() {
 	const dispatch = useDispatch();
+	const { retrieveInfo } = useVideoCache(); 
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
+	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videos = useSelector((state: RootState) => state.video.videos);
-	const { saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut } = useSelector((state: RootState) => state.settings.settings);
+	const { saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut, saveToChannelDirectory } = useSelector((state: RootState) => state.settings.settings);
 
 	const onSaveVideo = async () => {
 		let result = extractIDRegex.exec(window.location.href);
@@ -40,9 +46,34 @@ export function VideoTimestampButton() {
 				autoplayTimestamp: null
 			}
 			
+			let path: NodePath;
+
+			if (saveToChannelDirectory) {
+				let info = await retrieveInfo(videoID);
+
+				if (info == undefined) {
+					return;
+				}
+
+				let filtered = filterDirectoryName(info?.author_name);
+
+				if (!filtered.success || validateDirectoryName(filtered.result) != null) {
+					return;
+				}
+
+				path = parsePath(`$ > ${filtered.result}`);
+
+				if (getNodeFromPath(tree, path) == null) {
+					dispatch(directoryActions.createDirectoryNode({ parentPath: "$", slice: filtered.result }));
+				}
+			}
+			else {
+				path = parsePath("$");
+			}
+
 			// TODO: Selection menu.
 			dispatch(directoryActions.createVideoNode({
-				parentPath: "$",
+				parentPath: path,
 				videoID,
 				videoData: videoCache
 			}));

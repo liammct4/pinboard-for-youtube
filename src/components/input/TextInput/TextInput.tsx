@@ -8,12 +8,12 @@ export interface ITextInputProperties<TField extends string> extends IInputCompo
 	textInputType?: HTMLInputTypeAttribute;
 }
 
-export function TextInput<TField extends string>({ label, name, fieldSize, startValue, textInputType = "text" }: ITextInputProperties<TField>): React.ReactNode {
+export function TextInput<TField extends string>({ label, name, fieldSize, title, startValue, textInputType = "text" }: ITextInputProperties<TField>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
 		<FieldErrorContainer name={name}>
-			<div className="field-row">
+			<div className="field-row" title={title}>
 				<label className="label" data-size={labelSize}>{label}</label>
 				<input
 					className="small-text-input field-input"

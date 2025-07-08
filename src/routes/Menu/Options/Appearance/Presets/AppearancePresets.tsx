@@ -162,11 +162,13 @@ export function AppearancePresets(): React.ReactNode {
 						<TextInput<AddCustomThemeFormField>
 							label="Theme name"
 							name="customName"
+							title="The name of the theme, must be unique."
 							fieldSize="medium"
 							startValue="My Theme"/>
 						<DropdownInput<AddCustomThemeFormField, ThemeID>
 							label="Based on"
 							name="basedOn"
+							title="Used as a starting point for your custom theme, copies the palette of that theme and allows you to modify it."
 							startValue={DEFAULT_THEME}
 							fieldSize="small"
 							options={[

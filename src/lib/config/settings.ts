@@ -9,7 +9,8 @@ export type SettingName =
 	"pinCurrentTimestampShortcut" |
 	"useAutoSaveLatestTimestamp" |
 	"autoSaveLatestTimestampMessage" |
-	"extensionSize"
+	"extensionSize" | 
+	"saveToChannelDirectory"
 
 export type Settings = {
 	[name in SettingName]: SettingValue;
@@ -57,7 +58,7 @@ export const settingDefinitions: SettingDefinitions = {
 	},
 	useAutoSaveLatestTimestamp: {
 		displayName: "Use auto timestamp",
-		description: "Will automatically make a timestamp on the current video position, useful in the case of losing the current position where the timestamp had not been saved (E.g. A crash).",
+		description: "Will automatically make a timestamp on the current video position, useful in the case of losing the current position where the timestamp had not been saved (E.g. Accidentally closing the page).",
 		inputFormat: "Switch",	
 		defaultValue: true
 	},
@@ -79,6 +80,12 @@ export const settingDefinitions: SettingDefinitions = {
 			{ id: "very large", label: "Very Large" },
 			{ id: "max", label: "Maximum" }
 		]
+	},
+	saveToChannelDirectory: {
+		displayName: "Create channel directory",
+		description: "When the save video button is pressed, this option will create a separate directory with the channel name.",
+		defaultValue: true,
+		inputFormat: "Switch"
 	}
 }
 
@@ -88,5 +95,6 @@ export const defaultSettings: Settings = {
 	saveVideoTimestampButtonEnabled: settingDefinitions.saveVideoTimestampButtonEnabled.defaultValue,
 	timestampButtonsEnabled: settingDefinitions.timestampButtonsEnabled.defaultValue,
 	useAutoSaveLatestTimestamp: settingDefinitions.useAutoSaveLatestTimestamp.defaultValue,
-	extensionSize: settingDefinitions.extensionSize.defaultValue
+	extensionSize: settingDefinitions.extensionSize.defaultValue,
+	saveToChannelDirectory: settingDefinitions.saveToChannelDirectory.defaultValue
 };

@@ -255,17 +255,20 @@ export function AccountView(): React.ReactNode {
 											<TextInput<UpdatePasswordFormField>
 												name="previousPassword"
 												label="Previous Password"
+												title="Enter your previous password."
 												fieldSize="max"
 												startValue=""/>
 											<hr className="regular-separator"/>
 											<TextInput<UpdatePasswordFormField>
 												name="newPassword"
 												label="New Password"
+												title="Enter your new password."
 												fieldSize="max"
 												startValue=""/>
 											<TextInput<UpdatePasswordFormField>
 												name="confirmNewPassword"
 												label="Confirm New Password"
+												title="Re-enter your new password."
 												fieldSize="max"
 												startValue=""/>
 									</FormDialog>

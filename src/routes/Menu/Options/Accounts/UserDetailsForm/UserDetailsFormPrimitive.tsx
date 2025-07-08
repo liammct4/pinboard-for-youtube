@@ -21,11 +21,13 @@ export function UserDetailsFormPrimitive({ showEmail = true, showPassword = true
 		<FormStyleContext.Provider value={{ labelSize: "medium" }}>
 			<TextInput<UserDetailsFormField>
 				label="Email address"
+				title="Enter your email address."
 				name="email"
 				fieldSize="large"
 				startValue=""/>
 			<TextInput<UserDetailsFormField>
 				label="Password"
+				title="Enter your password."
 				name="password"
 				fieldSize="large"
 				startValue=""

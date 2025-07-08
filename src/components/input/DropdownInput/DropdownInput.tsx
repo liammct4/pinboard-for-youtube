@@ -15,11 +15,11 @@ export interface IDropdownInputProperties<TField, TOptionID> extends IInputCompo
 	options?: SelectOption<TOptionID>[]
 }
 
-export function DropdownInput<TField extends string, TOptionID extends string>({ label, name, fieldSize, startValue, options = [] }: IDropdownInputProperties<TField, TOptionID>): React.ReactNode {
+export function DropdownInput<TField extends string, TOptionID extends string>({ label, title, name, fieldSize, startValue, options = [] }: IDropdownInputProperties<TField, TOptionID>): React.ReactNode {
 	const { labelSize } = useContext(FormStyleContext);
 	
 	return (
-		<div className="field-row">
+		<div className="field-row" title={title}>
 			<label className="label" data-size={labelSize}>{label}</label>
 			<select
 				className="dropdown-input small-text-input field-input"

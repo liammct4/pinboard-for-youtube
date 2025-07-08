@@ -29,6 +29,7 @@ export const settingsLayout: ElementCollection[] = [
 	{ type: "Heading", message: "Timeline Settings", style: "Bold" },
 	{ type: "Field", fieldName: "timestampButtonsEnabled" },
 	{ type: "Field", fieldName: "saveVideoTimestampButtonEnabled" },
+	{ type: "Field", fieldName: "saveToChannelDirectory" },
 	
 	{ type: "Heading", message: "Autosaved Timestamp", style: "Regular" },
 	{ type: "Field", fieldName: "useAutoSaveLatestTimestamp" },

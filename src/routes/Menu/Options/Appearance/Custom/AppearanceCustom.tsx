@@ -116,6 +116,7 @@ export function AppearanceCustom(): React.ReactNode {
 						<TextInput
 							name="name"
 							label="Theme name"
+							title=""
 							fieldSize="medium"
 							startValue={editingTheme.name}
 							/>
@@ -124,6 +125,7 @@ export function AppearanceCustom(): React.ReactNode {
 								key={x}
 								name={x as ColourPaletteColours}
 								label={toTitleCase(x.replace(/\-/g, " "))}
+								title={toTitleCase(x.replace(/\-/g, " "))}
 								fieldSize="very small"
 								startValue={editingTheme.palette[x as ColourPaletteColours]}/>
 						)}

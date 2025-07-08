@@ -142,17 +142,20 @@ export function ForgotPassword(): React.ReactNode {
 							<FormStyleContext.Provider value={{ labelSize: "large" }}>
 								<TextInput<ResetPasswordFormField>
 									label="Verification Code"
+									title="Enter the verification code sent to your email address."
 									name="verificationCode"
 									fieldSize="small"
 									startValue=""/>
 								<TextInput<ResetPasswordFormField>
 									label="New Password"
+									title="Enter your new password."
 									name="newPassword"
 									fieldSize="medium"
 									startValue=""
 									textInputType="password"/>
 								<TextInput<ResetPasswordFormField>
 									label="Re-enter Password"
+									title="Re-enter your new password."
 									name="reenterNewPassword"
 									fieldSize="medium"
 									startValue=""

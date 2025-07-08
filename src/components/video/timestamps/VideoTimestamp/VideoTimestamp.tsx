@@ -104,11 +104,13 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 							trigger={<SmallButton className="edit-button">Edit</SmallButton>}>
 								<TextInput<EditTimestampFormNames>
 									label="Time:"
+									title="The timestamp in the format HH:MM:SS."
 									name="time"
 									fieldSize="small"
 									startValue={stringTime}/>
 								<TextInput<EditTimestampFormNames>
 									label="Message:"
+									title="The message associated with this timestamp, will show up in the timeline if enabled."
 									name="message"
 									fieldSize="large"
 									startValue={timestamp.message}/>

@@ -7,6 +7,7 @@ import { SizeOption } from "./formStyleContext";
 export interface IInputComponentProperties<TField> {
 	label: string;
 	name: TField
+	title: string;
 	fieldSize: SizeOption;
 	startValue: string;
 }

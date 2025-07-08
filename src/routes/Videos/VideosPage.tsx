@@ -284,6 +284,7 @@ export function VideosPage(): React.ReactNode {
 											<TextInput<AddVideoFormFields>
 												label="Link:"
 												name="link"
+												title="The YouTube URL of the video to add. This will be added to the current directory."
 												fieldSize="max"
 												startValue=""/>
 									</FormDialog>
@@ -346,6 +347,7 @@ export function VideosPage(): React.ReactNode {
 										]}>
 											<TextInput<AddDirectoryFormFields>
 												label="Section Name:"
+												title="Name of the new directory to be created in this directory."
 												name="directoryName"
 												fieldSize="max"
 												startValue=""/>

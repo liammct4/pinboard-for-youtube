@@ -4,7 +4,7 @@ import { FormStyleContext } from "../../../../components/input/formStyleContext"
 import { SplitHeading } from "../../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import { useState } from "react";
 import "./GeneralPage.css"
-import { settingDefinitions, Settings } from "../../../../lib/config/settings";
+import { settingDefinitions, SettingName, Settings } from "../../../../lib/config/settings";
 import { settingsActions } from "../../../../features/settings/settingsSlice";
 import { settingsLayout } from "./settingsLayout";
 import { ValidatedForm } from "../../../../components/forms/ValidatedForm";
@@ -12,6 +12,7 @@ import { getInputComponent } from "../../../../components/input/componentLocator
 import { TemporaryText } from "../../../../components/presentation/Decorative/TemporaryText/TemporaryText";
 import { SmallInputButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";
 import { DropdownInput } from "../../../../components/input/DropdownInput/DropdownInput";
+import { IInputComponentProperties } from "../../../../components/input/inputComponent";
 
 interface ISettingsForm extends Settings { }
 
@@ -43,28 +44,24 @@ export function GeneralPage(): React.ReactNode {
 									return <hr className="regular-separator"/>
 							}
 
-
 							let settingDefinition = settingDefinitions[x.fieldName];
 							let existingValue = settingValues[x.fieldName];
 
+							let baseProps: IInputComponentProperties<SettingName> = {
+								fieldSize: "medium",
+								label: settingDefinition.displayName,
+								title: settingDefinition.description,
+								name: x.fieldName,
+								startValue: existingValue.toString()
+							}
+
 							switch (settingDefinition.inputFormat) {
 								case "Dropdown":
-									return <DropdownInput
-										key={x.fieldName}
-										fieldSize="medium"
-										label={settingDefinition.displayName}
-										name={x.fieldName}
-										startValue={existingValue.toString()}
-										options={settingDefinition.options}/>
+									return <DropdownInput {...baseProps} options={settingDefinition.options}/>
 								default:
 									let InputComponent = getInputComponent(settingDefinition.inputFormat);
 
-									return <InputComponent
-										key={x.fieldName}
-										fieldSize="medium"
-										label={settingDefinition.displayName}
-										name={x.fieldName}
-										startValue={existingValue.toString()}/>
+									return <InputComponent {...baseProps}/>
 							}
 						})
 					}
