@@ -2,7 +2,7 @@
 
 import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
-import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
+import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp } from "../../../../lib/video/video.ts";
 import { FormDialog } from "../../../dialogs/FormDialog.tsx";
 import BinIcon from "./../../../../../assets/icons/bin.svg?react"
@@ -16,8 +16,13 @@ import { RootState } from "../../../../app/store.ts";
 import { TextInput } from "../../../input/TextInput/TextInput.tsx";
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton.tsx";
 import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel.tsx";
+import { ValidatorResult } from "../../../forms/ValidatedForm.tsx";
 
 type EditTimestampFormNames = "time" | "message";
+type EditTimestampForm = {
+	time: string
+	message: string
+}
 
 export interface IVideoTimestampProperties {
 	className?: string;
@@ -29,11 +34,46 @@ export interface IVideoTimestampProperties {
 	onChange: (oldTimestamp: Timestamp, newTimestamp: Timestamp | null) => void;
 }
 
+function validateTimestamp(value: string): ValidatorResult<EditTimestampFormNames> {
+	if (value.length == 0) {
+		return {
+			error: true,
+			details: {
+				name: "time",
+				message: "This value is required."
+			}
+		};
+	}
+
+	try {
+		getSecondsFromTimestamp(value);
+	}
+	catch {
+		return {
+			error: true,
+			details: {
+				name: "time",
+				message: "Invalid value provided."
+			}
+		};
+	}
+
+	return { error: false };
+}
+
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
 export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAutoplayClick, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
 	const onDelete: () => void = () => {
 		onChange(timestamp, null);
+	}
+
+	const onSave = (data: EditTimestampForm) => {
+		onChange(timestamp, {
+			...timestamp,
+			message: data.message,
+			time: getSecondsFromTimestamp(data.time)
+		});
 	}
 	
 	const onJumpToTimestamp: () => void = () => {
@@ -77,12 +117,19 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 								use-stroke/>
 						</SmallButton>
 						{/* Edit dialog */}
-						<FormDialog
+						<FormDialog<EditTimestampForm, EditTimestampFormNames>
 							name="edit-timestamp-form"
 							title="Edit timestamp"
 							submitText="Save"
 							labelSize="small"
-							trigger={<SmallButton className="edit-button">Edit</SmallButton>}>
+							trigger={<SmallButton className="edit-button">Edit</SmallButton>}
+							onSuccess={onSave}
+							fieldData={[
+								{
+									name: "time",
+									validator: validateTimestamp
+								}
+							]}>
 								<TextInput<EditTimestampFormNames>
 									label="Time:"
 									title="The timestamp in the format HH:MM:SS."
