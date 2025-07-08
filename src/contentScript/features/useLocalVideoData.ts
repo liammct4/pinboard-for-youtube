@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePageLink } from "./usePageLink";
 import { areObjectsEqual } from "../../lib/util/objects/objects";
 
@@ -11,7 +11,7 @@ export type VideoData = {
 	length: number;
 }
 
-type VideoExists = { isVideoPage: true, isAdvertisement: boolean, data: VideoData };
+type VideoExists = { isVideoPage: true, isLivestream: boolean, isAdvertisement: boolean, data: VideoData };
 type VideoDoesntExist = { isVideoPage: false };
 
 function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist {
@@ -26,22 +26,25 @@ function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist 
 	}
 
 	let video = document.querySelector("video") as HTMLVideoElement;
-	let adContainer = document.querySelector(".video-ads.ytp-ad-module") as HTMLDivElement
+	let adContainer = document.querySelector(".video-ads.ytp-ad-module") as HTMLDivElement;
+	let isLive = document.querySelector(".ytp-live") != null;
 
 	return {
 		isVideoPage: true,
 		isAdvertisement: adContainer != null && adContainer.hasChildNodes(),
+		isLivestream: isLive,
 		data: {
 			videoID: result.groups["videoID"],
 			paused: video.paused,
 			currentTime: video.currentTime,
-			length: video.duration
+			length: Math.round(video.duration)
 		}
 	};
 }
 
 export function useLocalVideoData(): VideoExists | VideoDoesntExist {
 	const pageLink = usePageLink();
+	const video = useRef<HTMLVideoElement | null>(null!);
 	const [ videoResult, setVideoResult ] = useState<VideoExists | VideoDoesntExist>(recalculateVideoData(pageLink));
 
 	useEffect(() => {
@@ -55,9 +58,35 @@ export function useLocalVideoData(): VideoExists | VideoDoesntExist {
 				setTimeout(check, 100);
 			}
 		}
-
+		
 		check();
-	}, [videoResult]);
+	}, [pageLink, videoResult]);
+
+	useEffect(() => {
+		if (videoResult.isVideoPage && videoResult.isLivestream) {
+			if (video.current == null) {
+				video.current = document.querySelector("video");
+			}
+
+			const update = () => {
+				if (Math.round(video.current!.duration) != videoResult.data.length) {
+					let result: VideoExists = {
+						...videoResult,
+						data: {
+							...videoResult.data,
+							length: Math.round(video.current!.duration)
+						}
+					}
+
+					setVideoResult(result);
+				}
+
+				setTimeout(() => update(), 900);
+			}
+
+			setTimeout(() => update(), 900);
+		}
+	}, [ videoResult ]);
 
 	return videoResult;
 }
