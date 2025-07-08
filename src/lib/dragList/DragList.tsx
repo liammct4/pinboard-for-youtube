@@ -2,6 +2,7 @@ import { createContext, useReducer, useRef } from "react"
 import { useGlobalEvent } from "../../components/features/events/useGlobalEvent";
 import { Coordinates, Rect } from "../util/objects/types";
 import { areObjectsEqual } from "../util/objects/objects";
+import { distanceTwoPoints } from "../util/generic/miscUtil";
 
 export type DragListEvent<T extends string> = {
 	startDragID: T;
@@ -28,6 +29,7 @@ let defaultState: DragListState = {
 
 interface IDragListStateDragging {
 	dragging: true;
+	preDrag: boolean;
 	event: {
 		info: DragListEvent<string>;
 	}
@@ -40,16 +42,19 @@ interface IDragListStateDragging {
 type DragListState = IDragListStateDragging | { dragging: false };
 
 type DragListAction = 
-	{ type: "START_DRAG", startID: string, listBox: HTMLElement, dragListName: string, startDragPosition: Coordinates } |
+	{ type: "PRE_DRAG", startID: string, listBox: HTMLElement, dragListName: string, startDragPosition: Coordinates } |
+	{ type: "START_DRAG" } |
 	{ type: "CHANGED_DRAG", info: DragListEvent<string> } |
 	{ type: "DRAG_ELEMENT_UPDATE", yPosition: number, scroll: number } |
 	{ type: "END_DRAG" }
 
+
 function reducer(state: DragListState, action: DragListAction): DragListState {
 	switch (action.type) {
-		case "START_DRAG":
+		case "PRE_DRAG":
 			return {
 				dragging: true,
+				preDrag: true,
 				event: {
 					info: {
 						startDragID: action.startID,
@@ -64,6 +69,16 @@ function reducer(state: DragListState, action: DragListAction): DragListState {
 				yBasePosition: action.listBox.getBoundingClientRect().y!,
 				scroll: action.listBox.scrollTop
 			}
+		case "START_DRAG":
+			if (!state.dragging || state.preDrag) {
+				return { ...state };
+			}
+
+			return {
+				...state,
+				dragging: true,
+				preDrag: false
+			};
 		case "CHANGED_DRAG":
 			if (!state.dragging) {
 				return { ...state };
@@ -90,6 +105,9 @@ function reducer(state: DragListState, action: DragListAction): DragListState {
 	}
 }
 
+// In pixels.
+const START_DRAG_THRESHOLD = 5;
+
 export function DragList<T extends string>({ className, dragListName, children, onDragStart, onDragChanged, onDragEnd }: IDragListProperties<T>) {
 	const listBox = useRef<HTMLUListElement>(null);
 	const [ state, dispatch ] = useReducer(reducer, defaultState);
@@ -100,15 +118,26 @@ export function DragList<T extends string>({ className, dragListName, children, 
 			if (!state.dragging) {
 				return;
 			}
-			
-			let listBoxPosition = e.clientY - state.yBasePosition;
-			let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
-			
-			let info = calculateDragInfo(e.clientX, listBoxPositionWithScroll);
 
-			if (!areObjectsEqual(info, state.event.info)) {
-				dispatch({ type: "CHANGED_DRAG", info });
-				onDragChanged?.(info as DragListEvent<T>);
+			if (state.preDrag) {				
+				if (distanceTwoPoints(state.startDragPosition, { x: e.clientX, y: e.clientY }) < START_DRAG_THRESHOLD) {
+					return;
+				}
+
+				dispatch({ type: "START_DRAG" });
+				onDragStart?.(state.event.info.startDragID as T);
+			}
+
+			if (state.dragging) {
+				let listBoxPosition = e.clientY - state.yBasePosition;
+				let listBoxPositionWithScroll = listBoxPosition + listBox?.current?.scrollTop!;
+				
+				let info = calculateDragInfo(e.clientX, listBoxPositionWithScroll);
+
+				if (!areObjectsEqual(info, state.event.info)) {
+					dispatch({ type: "CHANGED_DRAG", info });
+					onDragChanged?.(info as DragListEvent<T>);
+				}
 			}
 		}
 	})
@@ -218,13 +247,12 @@ export function DragList<T extends string>({ className, dragListName, children, 
 				inbetweenEndID: state.dragging && !state.event.info.notInBounds ? state.event.info.inbetweenEndID : null,
 				startDragFromItem: (e, position) => {
 					dispatch({
-						type: "START_DRAG",
+						type: "PRE_DRAG",
 						startID: e,
 						listBox: listBox.current as HTMLElement,
 						startDragPosition: position,
 						dragListName: dragListName
 					});
-					onDragStart?.(e as T);
 				},
 				baseY: state.dragging ? state.yBasePosition : 0,
 				scrollY: state.dragging ? state.scroll : 0

@@ -1,4 +1,4 @@
-import { Rect } from "../objects/types";
+import { Coordinates, Rect } from "../objects/types";
 
 export function rectIntersects(a: Rect, b: Rect) {
 	return (
@@ -7,4 +7,8 @@ export function rectIntersects(a: Rect, b: Rect) {
 		(a.position.y + a.size.height >= b.position.y) &&
 		a.position.y <= b.position.y + b.size.height
 	);
+}
+
+export function distanceTwoPoints(a: Coordinates, b: Coordinates): number {
+	return Math.hypot(b.x - a.x, b.y - a.y);
 }
