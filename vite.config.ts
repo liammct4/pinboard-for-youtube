@@ -5,10 +5,10 @@ import svgr from "vite-plugin-svgr"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [patchCssModules(), react(), svgr()],
+	plugins: [patchCssModules({ exportMode: "both", generateSourceTypes: true }), react(), svgr()],
 	css: {
 		modules: {
-			localsConvention: "camelCaseOnly"
+			localsConvention: "camelCaseOnly",
 		}
 	},
 	build: {

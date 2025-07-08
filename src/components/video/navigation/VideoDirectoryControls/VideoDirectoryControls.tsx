@@ -8,13 +8,15 @@ import CompactViewIcon from "./../../../../../assets/icons/view/compact_option.s
 import RegularViewIcon from "./../../../../../assets/icons/view/regular_option.svg?react"
 import HomeIcon from "./../../../../../assets/icons/home.svg?react"
 import LongArrow from "./../../../../../assets/symbols/arrows/long_arrow.svg?react"
+import ButtonsIcon from "./../../../../../assets/icons/buttons.svg?react"
+import TextIcon from "./../../../../../assets/icons/text.svg?react"
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { tempStateActions } from "../../../../features/state/tempStateSlice";
 import { RootState } from "../../../../app/store";
 import { ToggleExpander } from "../../../presentation/ToggleExpander/ToggleExpander";
 import { LabelGroup } from "../../../presentation/Decorative/LabelGroup/LabelGroup";
-import "./VideoDirectoryControls.css"
+import styles from "./VideoDirectoryControls.module.css";
 import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
 import { getNodeFromPath } from "../../../../lib/directory/directory";
@@ -61,8 +63,8 @@ export function VideoDirectoryControls({
 	
 	return (
 		<>
-			<div className="directory-navigator">
-				<ButtonPanel className="navigation-buttons">
+			<div className={styles.directoryNavigator}>
+				<ButtonPanel className={styles.navigationButtons}>
 					<SmallButton
 						square
 						disabled={path.slices[path.slices.length - 1] == "$"}	
@@ -71,7 +73,7 @@ export function VideoDirectoryControls({
 							onDirectoryPathChanged(getParentPathFromPath(path));
 							onNavigate([ ...navigationStack, directory!.slice ]);
 						}}>
-							<IconContainer className="back-arrow icon-colour-standard" asset={LongArrow} use-stroke/>
+							<IconContainer className={styles.backArrow + " icon-colour-standard"} asset={LongArrow} use-stroke/>
 					</SmallButton>
 					<SmallButton
 						square
@@ -98,7 +100,7 @@ export function VideoDirectoryControls({
 				{
 					isEditingPathManually ?
 						<input
-							className="directory-path-bar small-text-input"
+							className={styles.pathBar + " small-text-input"}
 							onBlur={(e) => {
 								let result = processTypedPath(e.currentTarget.value);
 
@@ -114,7 +116,7 @@ export function VideoDirectoryControls({
 							autoFocus
 							defaultValue={pathToString(path)}/>
 						:
-						<ul className="directory-path-bar small-text-input directory-navigator-slices" onClick={() => setIsEditingPathManually(true)}>
+						<ul className={styles.pathBar + " small-text-input " + styles.navigatorSlices} onClick={() => setIsEditingPathManually(true)}>
 							{
 								parentSlices.map(x => {
 									accumulator += x;
@@ -124,7 +126,7 @@ export function VideoDirectoryControls({
 									
 									return (
 										<li key={directPath}>
-											<button className="jump-to-slice-path-button" onClick={(e) => {
+											<button className={styles.jumpToSlicePathButton} onClick={(e) => {
 												onDirectoryPathChanged(parsePath(directPath));
 												onNavigate([]);
 												e.stopPropagation();
@@ -141,15 +143,15 @@ export function VideoDirectoryControls({
 				}
 				<SmallButton
 					square
-					className="settings-button"
+					className={styles.settingsButton}
 					onClick={() => dispatch(tempStateActions.setLayoutState({ ...layout, isDirectoryBrowserSettingsExpanded: !layout.isDirectoryBrowserSettingsExpanded }))}>
 						<IconContainer className="icon-colour-standard" asset={SettingsIcon} use-stroke use-fill/>
 				</SmallButton>
 			</div>
 			<ToggleExpander expanded={layout.isDirectoryBrowserSettingsExpanded}>
-				<div className="settings-panel">
-					<LabelGroup label="View">
-						<ButtonPanel className="view-section">
+				<div className={styles.settingsPanel}>
+					<LabelGroup label="Video Card">
+						<ButtonPanel className={styles.viewSection}>
 							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("MINIMAL"))} data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}>
 								<IconContainer className="icon-colour-standard" asset={MinimalViewIcon} use-stroke use-fill data-active-toggle={layout.videoItemViewStyle == "MINIMAL"}/>
 							</SmallButton>
@@ -158,6 +160,26 @@ export function VideoDirectoryControls({
 							</SmallButton>
 							<SmallButton square onClick={() => dispatch(tempStateActions.changeVideoViewStyle("REGULAR"))} data-active-toggle={layout.videoItemViewStyle == "REGULAR"}>
 								<IconContainer className="icon-colour-standard" asset={RegularViewIcon} use-stroke use-fill data-active-toggle={layout.videoItemViewStyle == "REGULAR"}/>
+							</SmallButton>
+						</ButtonPanel>
+					</LabelGroup>
+					<LabelGroup label="Timestamp">
+						<ButtonPanel>
+							<SmallButton className={styles.timestampStyleButton} onClick={() => dispatch(tempStateActions.changeTimestampStyle("FULL"))} title="Show the full controls and a smaller amount of message text per timestamp." data-active-toggle={layout.timestampStyle == "FULL"}>
+								<IconContainer
+									className="icon-colour-standard"
+									asset={ButtonsIcon}
+									use-stroke
+									use-fill
+									data-active-toggle={layout.timestampStyle == "FULL"}/>
+							</SmallButton>
+							<SmallButton className={styles.timestampStyleButton} onClick={() => dispatch(tempStateActions.changeTimestampStyle("TEXT"))} title="Only show the timestamp message per timestamp. Allows no editing but provides the most room to read." data-active-toggle={layout.timestampStyle == "TEXT"}>
+								<IconContainer
+									className="icon-colour-standard"
+									asset={TextIcon}
+									use-stroke
+									use-fill
+									data-active-toggle={layout.timestampStyle == "TEXT"}/>
 							</SmallButton>
 						</ButtonPanel>
 					</LabelGroup>

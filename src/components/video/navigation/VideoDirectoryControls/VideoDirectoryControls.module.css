@@ -18,11 +18,11 @@
 		}
 	}
 
-	.directory-path-bar {
+	.path-bar {
 		width: 100%;
 	}
 
-	.directory-navigator-slices {
+	.navigator-slices {
 		display: flex;
 		flex-direction: row;
 		list-style-type: none;
@@ -84,9 +84,9 @@
 		padding-left: var(--pfy-spacing-standard-compact);
 		padding-right: var(--pfy-spacing-standard-compact);
 
-		& button {
+		& button {                
 			display: flex;
-				
+
 			& svg {
 				width: calc(100% - 2px);
 				margin: auto;
@@ -94,5 +94,10 @@
 				margin: auto;
 			}
 		}
+	}
+
+	.timestamp-style-button {
+		padding-left: var(--pfy-spacing-standard-compact);
+		padding-right: var(--pfy-spacing-standard-compact);
 	}
 }

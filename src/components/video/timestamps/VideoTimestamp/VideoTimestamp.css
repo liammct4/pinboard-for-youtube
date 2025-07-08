@@ -6,6 +6,11 @@
 	gap: var(--pfy-spacing-standard-compact);
 	overflow-y: hidden;
 
+	&[data-style="TEXT"] {
+		display: flex;
+		flex-direction: row;
+	}
+
 	.timestamp-text {
 		width: 54px;
 		margin-left: var(--pfy-spacing-standard-compact);

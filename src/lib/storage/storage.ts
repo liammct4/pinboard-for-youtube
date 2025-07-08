@@ -101,6 +101,7 @@ export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 		layout: {
 			isCurrentVideosSectionExpanded: true,
 			videoItemViewStyle: "MINIMAL",
+			timestampStyle: "FULL",
 			isDirectoryBrowserSettingsExpanded: false
 		}
 	},

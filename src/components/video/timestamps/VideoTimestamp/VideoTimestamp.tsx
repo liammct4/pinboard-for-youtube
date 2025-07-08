@@ -67,6 +67,7 @@ function validateTimestamp(value: string): ValidatorResult<EditTimestampFormName
 export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAutoplayClick, onChange, allowControls }: IVideoTimestampProperties): React.ReactNode {
 	const activeVideoID = useSelector((state: RootState) => state.video.activeVideoID);
 	const { autoplayTimestamp } = useSelector((state: RootState) => state.video.videos[videoID]!);
+	const { timestampStyle } = useSelector((state: RootState) => state.tempState.layout);
 	const onDelete: () => void = () => {
 		onChange(timestamp, null, false);
 	}
@@ -88,16 +89,19 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
 
 	return (
-		<li className={`${className} timestamp-inner`}>
-			<SmallButton square type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
-				<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
-			</SmallButton>
+		<li className={`${className} timestamp-inner`} data-style={timestampStyle}>
+			{timestampStyle == "FULL" ?
+				<SmallButton square type="button" onClick={onJumpToTimestamp} disabled={!isActiveId} aria-label="Set current video position to timestamp button.">
+					<IconContainer className="" asset={JumpVideoIcon} manual-fill={isActiveId ? "--pfy-content-shade-standard" : "--pfy-content-shade-faded"}/>
+				</SmallButton>
+				: <></>
+			}
 			<a className="link-text timestamp-text" href={timeLink}>{stringTime}</a>
 			<div>
-				<span className="message-text" title={timestamp.message}>{timestamp.message}</span>
+				<span className="message-text" title={`${stringTime}: ${timestamp.message}`}>{timestamp.message}</span>
 			</div>
 			{
-				allowControls ?
+				timestampStyle == "FULL" && allowControls ?
 					<ButtonPanel>
 						<SmallButton
 							className="autoplay-button"

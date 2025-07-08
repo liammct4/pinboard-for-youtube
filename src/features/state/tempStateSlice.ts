@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { LayoutState, VideoPresentationStyle } from "../../lib/storage/tempState/layoutState";
+import { LayoutState, TimestampStyle, VideoPresentationStyle } from "../../lib/storage/tempState/layoutState";
 import { IPrimaryStorage } from "../../lib/storage/storage";
 
 export interface IStateSlice {
@@ -19,6 +19,7 @@ const initialState: IStateSlice = {
 	layout: {
 		isCurrentVideosSectionExpanded: true,
 		videoItemViewStyle: "MINIMAL",
+		timestampStyle: "FULL",
 		isDirectoryBrowserSettingsExpanded: false
 	},
 	temporarySingleState: {
@@ -55,7 +56,8 @@ export const tempStateSlice = createSlice({
 		setLayoutState: (state, action: PayloadAction<LayoutState>) => { state.layout = action.payload },
 		enableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = true },
 		disableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = false },
-		setDirectoryPath: (state, action: PayloadAction<string>) => { state.currentDirectory = action.payload }
+		setDirectoryPath: (state, action: PayloadAction<string>) => { state.currentDirectory = action.payload },
+		changeTimestampStyle: (state, action: PayloadAction<TimestampStyle>) => { state.layout.timestampStyle = action.payload }
 	}
 })
 
