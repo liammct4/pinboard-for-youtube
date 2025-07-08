@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Timestamp } from "../../../../lib/video/video"
 import { getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil";
 import { useLocalVideoData } from "../../../features/useLocalVideoData";
@@ -25,6 +25,7 @@ export interface ITimelineButtonProperties {
 export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, onChange, activeHover, onHoverChanged }: ITimelineButtonProperties) {
 	const buttonRef = useRef<HTMLButtonElement>(null!);
 	const arrowRef = useRef<HTMLDivElement>(null!);
+	const arrowImageRef = useRef<SVGSVGElement>(null!);
 	const videoData = useLocalVideoData();
 	const { setCurrentTime } = useLocalVideoControls();
 	const secondTimeData = useMemo(() => getTimestampFromSeconds(timestamp.time), [timestamp.time]);
@@ -72,7 +73,19 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 				y: e.y
 			});
 		}
-	})
+	});
+	
+	useEffect(() => {
+		if (isAutoplayButton || arrowImageRef.current == null) {
+			return;
+		}
+
+		let buttonBottom = buttonRef.current.getBoundingClientRect().bottom;
+		let arrowTop = arrowImageRef.current.getBoundingClientRect().top;
+
+		let arrowVerticalOffset = (buttonBottom - arrowTop) - 1;
+		arrowRef.current.style.setProperty("--arrow-offset-align-distance", `${arrowVerticalOffset}px`);
+	}, [arrowImageRef, isAutoplayButton]);
 
 	if (!videoData.isVideoPage) {
 		return <></>;
@@ -123,15 +136,17 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 			}
 		}, 50),
 		onMouseEnter: () => {
-			setHover(true)
+			setHover(true);
+			document.body.style.setProperty("cursor", "pointer");
 			onHoverChanged(timestamp.id);
 		},
 		onMouseLeave: () => {
 			setHover(false);
+			document.body.style.removeProperty("cursor");
 			onHoverChanged(null);
 		},
 		onMouseDown: (e) => {
-			setStartIsDragging(true)
+			setStartIsDragging(true);
 			setMousePosition({
 				x: e.clientX,
 				y: e.clientY
@@ -172,7 +187,7 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 			</div>
 			{!isAutoplayButton ?
 				<div className="arrow-icon-container" style={{ left: `${arrowOffsetPercentage}%` }} ref={arrowRef} {...mouseEvents} data-hover={hover && !isDragging}>
-					<IconContainer asset={ArrowDown}/>
+					<IconContainer ref={arrowImageRef} asset={ArrowDown}/>
 				</div>
 				: <></>
 			}

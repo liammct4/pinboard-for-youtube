@@ -5,7 +5,7 @@ interface DataProps {
 	[name: DataPropName]: string
 }
 
-export interface ISVGContainerProperties extends DataProps {
+export interface ISVGContainerProperties extends DataProps, React.SVGProps<SVGSVGElement> {
 	asset?: Asset
 	className?: string;
 	"manual-fill"?: string;

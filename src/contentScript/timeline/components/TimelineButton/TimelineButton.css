@@ -53,14 +53,18 @@
 	}
 
 	.arrow-icon-container {
-		--arrow-offset-align-distance: calc(100%);
+		--arrow-offset-align-distance: 0px;
 		cursor: pointer;
 		position: absolute;
-		transform: translate(-50%, var(--arrow-offset-align-distance));
+		transform: translateX(-50%);
 		transition: transform var(--pfy-timing-fast);
 
+		& svg {
+			transform: translateY(var(--arrow-offset-align-distance));
+		}
+
 		&[data-hover="true"] {
-			transform: translate(-50%, calc(var(--arrow-offset-align-distance) + var(--hover-move-distance)));
+			transform: translate(-50%, calc(var(--hover-move-distance)));
 		}
 	}
 	
