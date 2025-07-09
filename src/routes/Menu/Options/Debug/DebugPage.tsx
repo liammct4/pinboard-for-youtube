@@ -4,10 +4,12 @@ import { accessMainStorage, BLANK_MAIN_STORAGE_TEMPLATE } from "../../../../lib/
 import { useNotificationMessage } from "../../../../components/features/notifications/useNotificationMessage";
 import "./DebugPage.css";
 import { SmallButton } from "../../../../components/interactive/buttons/SmallButton/SmallButton";
+import { ButtonPanel } from "../../../../components/interactive/ButtonPanel/ButtonPanel";
 
 export function DebugPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
 	const [ toolsActivated, setToolsActivated ] = useState<boolean>(false);
+	const [ crash, setCrash ] = useState<boolean>(false);
 
 	useEffect(() => {
 		activateMessage(
@@ -18,6 +20,10 @@ export function DebugPage(): React.ReactNode {
 			-1
 		);
 	}, []);
+
+	if (crash) {
+		throw new Error("Crashed the application.");
+	}
 
 	return (
 		<>
@@ -33,7 +39,7 @@ export function DebugPage(): React.ReactNode {
 				value={toolsActivated}
 				onChange={setToolsActivated}/>
 			{toolsActivated ?
-				<div className="debug-tools">
+				<ButtonPanel className="debug-tools" direction="Vertical">
 					{/* Print storage */}
 					<SmallButton onClick={async () => {
 						console.log("Printing storage:")
@@ -52,7 +58,8 @@ export function DebugPage(): React.ReactNode {
 					<SmallButton onClick={async () => {
 						await chrome.storage.sync.set(BLANK_MAIN_STORAGE_TEMPLATE);
 					}}>Wipe storage</SmallButton>
-				</div>
+					<SmallButton onClick={() => setCrash(true)}>Crash</SmallButton>
+				</ButtonPanel>
 			: <></>}
 		</>
 	);

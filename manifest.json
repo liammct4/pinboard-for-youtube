@@ -1,10 +1,10 @@
 {
 	"$schema": "https://json.schemastore.org/chrome-manifest",
     "name": "Pinboard for YouTube",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A convenient YouTube extension which stores links and timestamps for quick retrieval.",
     "manifest_version": 3,
-    "author": "Liam McRailt",
+    "author": "liammct4",
     "action":{
         "default_popup": "index.html",
         "default_title": "Pinboard for YouTube"

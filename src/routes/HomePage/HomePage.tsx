@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "../../components/presentation/extension/Header/Header";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
+import about from "./../../about.json";
 import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {
@@ -24,12 +25,12 @@ export function HomePage(): React.ReactNode {
 							Options
 					</SmallButton>
 					<SmallButton
-						onClick={() => navigate("menu/help")}
-						title="Find guides and report bugs.">
-							Help
+						onClick={() => navigate("menu/options/help")}
+						title="Extension information and where to report bugs.">
+							About & Help
 					</SmallButton>
 				</ButtonPanel>
-				<h2 className="extension-version">Version 1.0.0</h2>
+				<h2 className="extension-version">Version {about.version}</h2>
 			</div>
 		</div>
 	);

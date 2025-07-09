@@ -9,7 +9,6 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterP
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
 import { MenuPage } from "./routes/Menu/MenuPage.tsx"
 import { OptionsPage } from "./routes/Menu/Options/OptionsPage.tsx"
-import { HelpPage } from "./routes/Menu/Help/HelpPage.tsx"
 import { GeneralPage } from "./routes/Menu/Options/General/GeneralPage.tsx"
 import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.tsx"
 import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
@@ -28,6 +27,7 @@ import { DataPage } from "./routes/Menu/Options/Data/DataPage.tsx"
 import { ClosePage } from "./routes/Menu/Options/ClosePage/ClosePage.tsx"
 import { PfyWrapper } from "./routes/PfyWrapper/PfyWrapper.tsx"
 import { HomePage } from "./routes/HomePage/HomePage.tsx"
+import { HelpPage } from "./routes/Menu/HelpPage/HelpPage.tsx"
 
 async function initializeExtension() {
 	await ensureInitialized();
@@ -88,8 +88,8 @@ async function initializeExtension() {
 									<Route path="appearance/*" element={<AppearancePage/>}/>
 									<Route path="debug/*" element={<DebugPage/>}/>
 									<Route path="*" element={<OptionsNavigator/>}/>
+									<Route path="help" element={<HelpPage/>}/>				
 								</Route>
-								<Route path="help" element={<HelpPage/>}/>				
 							</Route>
 							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={errorPage}/>
 						</Route>
