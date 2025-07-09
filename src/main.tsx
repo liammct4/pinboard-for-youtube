@@ -6,7 +6,6 @@ import { getActiveTabURL } from "./lib/browser/page.ts"
 import { ensureInitialized, getApplicationContextType } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
-import { HomePage } from "./routes/HomePage.tsx"
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
 import { MenuPage } from "./routes/Menu/MenuPage.tsx"
 import { OptionsPage } from "./routes/Menu/Options/OptionsPage.tsx"
@@ -16,7 +15,6 @@ import { AppearancePage } from "./routes/Menu/Options/Appearance/AppearancePage.
 import { AccountsPage } from "./routes/Menu/Options/Accounts/AccountsPage.tsx"
 import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
-import { PfyWrapper } from "./routes/PfyWrapper.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { sampleCacheData, sampleVideoData } from "./../testData/testDataSet.ts";
 import { setupStorageAndStoreSync, syncStoreToLocalStorage, syncStoreToMainStorage } from "./app/setup.ts"
@@ -28,6 +26,8 @@ import { videoActions } from "./features/video/videoSlice.ts"
 import { cacheActions } from "./features/cache/cacheSlice.ts"
 import { DataPage } from "./routes/Menu/Options/Data/DataPage.tsx"
 import { ClosePage } from "./routes/Menu/Options/ClosePage/ClosePage.tsx"
+import { PfyWrapper } from "./routes/PfyWrapper/PfyWrapper.tsx"
+import { HomePage } from "./routes/HomePage/HomePage.tsx"
 
 async function initializeExtension() {
 	await ensureInitialized();

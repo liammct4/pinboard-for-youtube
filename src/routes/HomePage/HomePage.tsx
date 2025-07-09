@@ -1,9 +1,10 @@
 /// <reference types="vite-plugin-svgr/client" />
 
 import { Outlet, useNavigate } from "react-router-dom";
-import { ButtonPanel } from "../components/interactive/ButtonPanel/ButtonPanel";
-import { SmallButton } from "../components/interactive/buttons/SmallButton/SmallButton";
-import { Header } from "../components/presentation/extension/Header/Header";
+import { Header } from "../../components/presentation/extension/Header/Header";
+import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
+import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
+import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {
 	const navigate = useNavigate();
