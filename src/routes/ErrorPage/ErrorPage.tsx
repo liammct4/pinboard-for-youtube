@@ -8,6 +8,8 @@ import { CodeBlock } from "../../components/presentation/Decorative/CodeBlock/Co
 import { MediumButton } from "../../components/interactive/buttons/MediumButton/MediumButton";
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage";
 import "./ErrorPage.css"
+import { LinkText } from "../../components/interactive/LinkText/LinkText";
+import about from "./../../about.json"
 
 export function ErrorPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
@@ -66,7 +68,7 @@ export function ErrorPage(): React.ReactNode {
 				please include the error details in the box below
 				and if possible, the exact steps to reproduce the error.
 				<br/><br/>
-				Visit the issues page by clicking <a href="https://github.com/liammct4/pinboard-for-youtube/issues" target="_blank">here</a>. Or visit the "Help" page.
+				Visit the issues page by clicking <LinkText href={about.links.issues}>here</LinkText>. Or visit the "Help" page.
 				Please do check that the issue has not already been reported if you
 				are making a report.
 			</p>

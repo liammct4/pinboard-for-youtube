@@ -26,15 +26,6 @@
 		border-top: 1px;
 		border-color: var(--pfy-primary-dark);
 	}
-
-	.link-text {
-		color: var(--pfy-content-link);
-	
-		&:visited {
-			color: var(--pfy-content-link-visited);
-		}
-
-	}
 	
 	.embedded-link-button {
 		background: none;

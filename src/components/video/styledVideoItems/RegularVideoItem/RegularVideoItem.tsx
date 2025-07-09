@@ -13,6 +13,7 @@ import { TimestampList } from "../../timestamps/TimestampList/TimestampList";
 import { LabeledArrowExpander } from "../../../presentation/LabeledArrowExpander/LabeledArrowExpander";
 import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButton";
 import { createTimestamp } from "../../../../lib/video/video";
+import { LinkText } from "../../../interactive/LinkText/LinkText";
 
 export function RegularVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
@@ -26,7 +27,7 @@ export function RegularVideoItem(): React.ReactNode {
 					<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
 				</SmallButton>
 				<span className="video-title">{videoInfo?.title}</span>
-				<a className="link-text video-channel" href={videoInfo?.author_url} target="_blank">{videoInfo?.author_name}</a>
+				<LinkText href={videoInfo?.author_url}>{videoInfo?.author_name}</LinkText>
 			</div>
 			<LabeledArrowExpander
 				className="timestamp-expander"

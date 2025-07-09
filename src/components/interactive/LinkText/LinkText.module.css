@@ -1,0 +1,11 @@
+.link {
+	color: var(--pfy-content-link);
+	
+	&:visited {
+		color: var(--pfy-content-link-visited);
+	}
+
+	&:focus {
+		outline: 2px solid var(--pfy-content-link);
+	}
+}

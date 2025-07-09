@@ -18,6 +18,7 @@ import { SmallButton } from "../../../interactive/buttons/SmallButton/SmallButto
 import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel.tsx";
 import { ValidatorResult } from "../../../forms/ValidatedForm.tsx";
 import { SwitchInput } from "../../../input/SwitchInput/SwitchInput.tsx";
+import { LinkText } from "../../../interactive/LinkText/LinkText.tsx";
 
 type EditTimestampFormNames = "time" | "message" | "isAutoplay";
 type EditTimestampForm = {
@@ -96,7 +97,7 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 				</SmallButton>
 				: <></>
 			}
-			<a className="link-text timestamp-text" href={timeLink} target="_blank">{stringTime}</a>
+			<LinkText className="timestamp-text" href={timeLink}>{stringTime}</LinkText>
 			<div>
 				<span className="message-text" title={`${stringTime}: ${timestamp.message}`}>{timestamp.message}</span>
 			</div>

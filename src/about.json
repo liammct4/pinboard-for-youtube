@@ -1,5 +1,11 @@
 {
 	"version": "1.0.1",
-	"github": "https://github.com/liammct4/pinboard-for-youtube",
-	"author": "liammct4"
+	"author": "liammct4",
+	"links": {
+		"github": "https://github.com/liammct4/pinboard-for-youtube",
+		"discussions": "https://github.com/liammct4/pinboard-for-youtube/discussions",
+		"issues": "https://github.com/liammct4/pinboard-for-youtube/issues",
+		"readme": "https://github.com/liammct4/pinboard-for-youtube/blob/main/README.md",
+		"license": "https://github.com/liammct4/pinboard-for-youtube/blob/main/LICENSE"
+	}
 }
