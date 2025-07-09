@@ -66,7 +66,12 @@ async function initializeExtension() {
 
 	store.dispatch(videoActions.changeActiveVideoID(activeID as string));
 
-	let errorPage = getApplicationContextType() == "DEVMODE" ? undefined : ErrorPage;
+	const errorPageDebug = true; 
+	let errorPage: (() => React.ReactNode) | undefined = undefined;
+
+	if (errorPageDebug && getApplicationContextType() == "DEVMODE") {
+		errorPage = ErrorPage;
+	}
 
 	ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<React.StrictMode>
