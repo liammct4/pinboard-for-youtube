@@ -1,0 +1,22 @@
+.subtle-button {
+	background: none;
+	padding-left: var(--pfy-spacing-standard);
+	padding-right: var(--pfy-spacing-standard);
+	padding-top: var(--pfy-spacing-standard-compact);
+	padding-bottom: var(--pfy-spacing-standard-compact);
+	border-radius: var(--pfy-spacing-standard-compact);
+	font-family: var(--pfy-font-scheme-standard);
+	outline: 0;
+	border: 0;
+	transition: background var(--pfy-timing-very-long), outline var(--pfy-timing-very-long);
+
+	&:focus {
+		font-weight: bold;
+		outline: 1px dashed var(--pfy-primary-common);
+		background: var(--pfy-empty-02-normal);
+	}
+
+	&:hover {
+		background: var(--pfy-empty-02-normal);
+	}
+}

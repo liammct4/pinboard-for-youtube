@@ -1,7 +1,6 @@
 import styles from "./LinkText.module.css";
 
-export interface ILinkProperties extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>
-{
+export interface ILinkProperties extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
 	
 }
 

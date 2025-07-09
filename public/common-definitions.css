@@ -84,22 +84,6 @@
 	}
 
 	/* A button with no strong outline or background, useful for links. */
-	.button-subtle {
-		background: none;
-		padding-left: var(--pfy-spacing-standard);
-		padding-right: var(--pfy-spacing-standard);
-		padding-top: var(--pfy-spacing-standard-compact);
-		padding-bottom: var(--pfy-spacing-standard-compact);
-		border-radius: var(--pfy-spacing-standard-compact);
-		font-family: var(--pfy-font-scheme-standard);
-		outline: 0;
-		border: 0;
-		transition: background var(--pfy-timing-very-long);
-
-		&:hover {
-			background: var(--pfy-empty-02-normal);
-		}
-	}
 
 	/* Small form text input */
 	.small-text-input {
