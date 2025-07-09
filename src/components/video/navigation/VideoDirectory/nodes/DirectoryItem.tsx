@@ -30,27 +30,29 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 	}
 
 	return (
-		<button data-focus data-is-hover-overlap={isHover} className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
-			{
-				isHover ?
-				<IconContainer className="icon-colour-standard" asset={DropIcon} use-fill use-stroke/> :
-				<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
-			}
-			{
-				currentlyEditing == node.nodeID ?
-				<input
-					className="medium-text-input"
-					onBlur={() => requestEditEnd(editSlice)}
-					onKeyDown={(e) => {
-						if (e.key == "Enter") {
-							requestEditEnd(e.currentTarget.value);
-						}
-					}}
-					value={editSlice}
-					onChange={(e) => setEditSlice(e.target.value)}
-					autoFocus/> :
-				<span>{node.slice}</span>
-			}
+		<div className="directory-item-outer">
+			<button data-focus data-is-hover-overlap={isHover} className="enter-navigate-button" onDoubleClick={() => navigateRequest(node)}>
+				{
+					isHover ?
+					<IconContainer className="icon-colour-standard" asset={DropIcon} use-fill use-stroke/> :
+					<IconContainer className="icon-colour-standard" asset={CategoryIcon} use-fill use-stroke/>
+				}
+				{
+					currentlyEditing == node.nodeID ?
+					<input
+						className="medium-text-input"
+						onBlur={() => requestEditEnd(editSlice)}
+						onKeyDown={(e) => {
+							if (e.key == "Enter") {
+								requestEditEnd(e.currentTarget.value);
+							}
+						}}
+						value={editSlice}
+						onChange={(e) => setEditSlice(e.target.value)}
+						autoFocus/> :
+					<span>{node.slice}</span>
+				}
+			</button>
 			<SmallButton
 				className="rename-button"
 				onClick={() => {
@@ -68,6 +70,6 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 						use-fill
 						use-stroke/>
 			</SmallButton>
-		</button>
+		</div>
 	)
 }

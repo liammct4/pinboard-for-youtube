@@ -9,38 +9,44 @@
 	.directory-node-item {
 		font-size: var(--pfy-font-text-big);
 
-		.rename-button {
-			padding-left: var(--pfy-spacing-standard-compact);
-			padding-right: var(--pfy-spacing-standard-compact);
-		}
-
-		.enter-navigate-button {
+		.directory-item-outer {
 			display: flex;
-			background-color: transparent;
-			border: none;
-			flex-direction: row;
-			align-items: center;
-			padding: 0;
-			font-size: var(--pfy-font-text-standard);
 			width: 100%;
-			color: var(--pfy-text-normal);
+			flex-direction: row;
 
-			& button {
-				align-self: flex-start;
-				margin-left: auto;
+			.enter-navigate-button {
+				display: flex;
+				background-color: transparent;
+				border: none;
+				flex-direction: row;
+				align-items: center;
+				padding: 0;
+				font-size: var(--pfy-font-text-standard);
+				width: 100%;
+				color: var(--pfy-text-normal);
+
+				& button {
+					align-self: flex-start;
+					margin-left: auto;
+				}
 			}
-		}
 
-		&[data-is-hover-overlap="true"] {
-			margin-left: var(--pfy-spacing-very-large);
+			&[data-is-hover-overlap="true"] {
+				margin-left: var(--pfy-spacing-very-large);
 
-			& svg {
-				margin-right: var(--pfy-spacing-large);
+				& svg {
+					margin-right: var(--pfy-spacing-large);
+				}
 			}
-		}
-		
-		hr {
-			margin: var(--pfy-spacing-standard-compact);
+			
+			hr {
+				margin: var(--pfy-spacing-standard-compact);
+			}
+
+			.rename-button {
+				padding-left: var(--pfy-spacing-standard-compact);
+				padding-right: var(--pfy-spacing-standard-compact);
+			}
 		}
 	}
 
