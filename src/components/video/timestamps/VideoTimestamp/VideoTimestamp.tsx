@@ -105,11 +105,9 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 				timestampStyle == "FULL" && allowControls ?
 					<ButtonPanel>
 						<SmallButton
-							className="autoplay-button"
 							onClick={() => onAutoplayClick(!isAutoplay)}
 							circle
 							title="Set this timestamp to be an automatically update as the video progresses (Auto timestamp)."
-							data-is-auto={isAutoplay}
 							data-active-toggle={isAutoplay}>
 							<IconContainer
 								className="autoplay-icon icon-colour-standard"

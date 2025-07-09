@@ -27,12 +27,6 @@
 		text-overflow: ellipsis;
 	}
 
-	.autoplay-button {
-		&[data-is-auto="true"] {
-			background-color: red;
-		}
-	}
-
 	.edit-button {
 		/* This compensates for the border and box shadow being cut off. */
 		margin-right: var(--pfy-spacing-standard-compact);
