@@ -28,7 +28,7 @@
 
 	.video-selection-box {
 		--transparent-background: color-mix(in srgb, var(--pfy-selection-primary) 50%, transparent);
-		border: 1px solid var(--pfy-selection-primary);
+		outline: 1px solid var(--pfy-selection-primary);
 		background-color: var(--transparent-background);
 	}
 }

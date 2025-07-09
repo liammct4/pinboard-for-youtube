@@ -89,14 +89,17 @@ export function SelectionBoxScrollbox({
 			return null;
 		}
 
+		let x = Math.min(selectionAnchor.x, relativeToScrollboxMouse.x);
+		let y = Math.min(selectionAnchor.y, relativeToScrollboxMouse.y);
+
+		let remainingWidth = Math.floor((frameBounds.size.width + frameRef.current.scrollLeft) - x)
+		let remainingHeight = Math.floor((frameBounds.size.height + frameRef.current.scrollTop) - y);
+
 		let selectionBox: Rect = {
-			position: {
-				x: Math.min(selectionAnchor.x, relativeToScrollboxMouse.x),
-				y: Math.min(selectionAnchor.y, relativeToScrollboxMouse.y)
-			},
+			position: { x, y },
 			size: {
-				width: Math.abs(relativeToScrollboxMouse.x - selectionAnchor.x),
-				height: Math.abs(relativeToScrollboxMouse.y - selectionAnchor.y)
+				width: Math.min(Math.abs(relativeToScrollboxMouse.x - selectionAnchor.x), remainingWidth - 1) - 1,
+				height: Math.min(Math.abs(relativeToScrollboxMouse.y - selectionAnchor.y), remainingHeight - 1) - 1
 			}
 		};
 
