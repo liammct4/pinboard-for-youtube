@@ -127,7 +127,6 @@ export function DragList<T extends string>({ className, dragListName, children, 
 				}
 
 				dispatch({ type: "START_DRAG" });
-				onDragStart?.(state.event.info.startDragID as T);
 			}
 
 			if (state.dragging) {
@@ -252,6 +251,7 @@ export function DragList<T extends string>({ className, dragListName, children, 
 						return;
 					}
 					
+					onDragStart?.(e as T);
 					dispatch({
 						type: "PRE_DRAG",
 						startID: e,
