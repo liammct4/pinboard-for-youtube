@@ -37,53 +37,7 @@
 			text-decoration: underline;
 			cursor: pointer;
 		}
-	}
-
-	/* Button base, does not define size, only visuals. */
-	.button-base {
-		box-shadow: var(--pfy-box-shadow-standard) var(--pfy-empty-01-shadow);
-		font-family: var(--pfy-font-scheme-standard);
-		background: var(--pfy-field-background);
-		color: var(--pfy-field-content);
-		border-style: solid;
-		border-color: var(--pfy-primary-dark);
-		font-weight: bold;
-		line-height: 0px;
-		text-align: center;
-		transition: background var(--pfy-timing-fast), border var(--pfy-timing-snappy), outline var(--pfy-timing-snappy);
-	
-		&:focus {
-			outline: 1px solid var(--pfy-primary-ultradark);
-		}
-
-		&:hover {
-			background: var(--pfy-shade-05);
-			border-color: var(--pfy-primary-ultradark);
-		}
-
-		&:active {
-			background: var(--pfy-shade-04);
-		}
-
-		&:disabled {
-			background-color: var(--pfy-empty-02-raised);
-			color: var(--pfy-shade-03);
-			border-style: solid;
-			border-color: var(--pfy-primary-faded);
-			cursor: not-allowed;
-		}
-
-		&[data-active-toggle="true"] {
-			background-color: var(--pfy-primary-dark);
-		}
-	}
-
-	.button-invisible {
-		background: none;
-		border: 0px;
-	}
-
-	/* A button with no strong outline or background, useful for links. */
+	}	
 
 	/* Small form text input */
 	.small-text-input {

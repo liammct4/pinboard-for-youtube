@@ -16,6 +16,10 @@
 		background: var(--pfy-empty-02-normal);
 	}
 
+	&:active {
+		font-weight: normal;
+	}
+
 	&:hover {
 		background: var(--pfy-empty-02-normal);
 	}

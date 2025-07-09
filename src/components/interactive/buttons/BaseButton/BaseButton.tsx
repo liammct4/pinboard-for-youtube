@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./BaseButton.module.css"
 
 export interface IBaseButtonProperties extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
 
@@ -8,7 +9,7 @@ export function BaseButton(props: IBaseButtonProperties) {
 	return (
 		<button
 			{...props}
-			className={`${props.className} button-base`}/>
+			className={`${props.className} ${styles.buttonBase}`}/>
 	)
 }
 
