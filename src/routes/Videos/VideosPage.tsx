@@ -26,7 +26,7 @@ import "./VideosPage.css"
 import { videoActions } from "../../features/video/videoSlice.ts";
 import { directoryActions } from "../../features/directory/directorySlice.ts";
 import { useVideoCache } from "../../components/features/useVideoInfo.ts";
-import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeType, getPathOfNode, NodeRef } from "../../lib/directory/directory.ts";
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromPath, getNodeFromVideoID, getNodeType, getPathOfNode, NodeRef } from "../../lib/directory/directory.ts";
 import { NodePath, parsePath, pathToString, validateDirectoryName } from "../../lib/directory/path.ts";
 import { tempStateActions } from "../../features/state/tempStateSlice.ts";
 import { TextInput } from "../../components/input/TextInput/TextInput.tsx";
@@ -130,12 +130,12 @@ export function VideosPage(): React.ReactNode {
 		let video = videos[activeVideo.id] as IVideo;
 		
 		let newActiveVideo: IVideo = {
+			...video,
 			id: activeVideo.id,
 			timestamps: [
 				...video.timestamps,
 				generateTimestamp(Math.floor(activeVideo!.currentTime), "Current time")
-			],
-			autoplayTimestamp: null
+			]
 		}
 		
 		dispatch(videoActions.addOrReplaceVideo(newActiveVideo));
@@ -212,8 +212,8 @@ export function VideosPage(): React.ReactNode {
 						<VideoCard className="current-video-card" videoID={activeVideoID ?? undefined} placeholderTitle="No video found!"/>
 						{/* Current video controls */}
 						<ButtonPanel className="current-video-buttons">
-							<SmallButton onClick={onSaveActiveVideo} disabled={activeVideoID == null} title="Save this video to the current directory.">Save video</SmallButton>
-							<SmallButton onClick={onPinCurrentTimestamp} disabled={activeVideoID == null} title="Save the current time of the playing video as a new timestamp.">Pin timestamp</SmallButton>
+							<SmallButton onClick={onSaveActiveVideo} disabled={activeVideoID == null || getNodeFromVideoID(tree, activeVideoID) != null} title="Save this video to the current directory.">Save video</SmallButton>
+							<SmallButton onClick={onPinCurrentTimestamp} disabled={activeVideoID == null || getNodeFromVideoID(tree, activeVideoID) == null} title="Save the current time of the playing video as a new timestamp.">Pin timestamp</SmallButton>
 						</ButtonPanel>
 				</TwoToggleLayoutExpander>
 				{/* My timestamps */}

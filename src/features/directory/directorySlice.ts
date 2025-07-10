@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IPrimaryStorage } from "../../lib/storage/storage";
-import { createNode, DirectoryTree, getNodeFromPath, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
+import { createNode, DirectoryTree, getNodeFromPath, getNodeFromVideoID, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
 import { getParentPathFromPath, NodePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
 
@@ -142,6 +142,13 @@ export const directorySlice = createSlice({
 
 			if (targetDirectoryID == null) {
 				console.error("directory.createVideoNode: targetDirectoryID is null.");
+				return;
+			}
+
+			let alreadyExists = getNodeFromVideoID(state.videoBrowser, action.payload.videoID) != null;
+
+			if (alreadyExists) {
+				console.error(`directory.createVideoNode: Video node ${action.payload.videoID} already exists.`);
 				return;
 			}
 
