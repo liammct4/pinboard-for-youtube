@@ -32,6 +32,7 @@
 		grid-row: 2;
 		outline: 1px solid var(--pfy-empty-02-normal);
 		transition: background var(--pfy-timing-fast), outline var(--pfy-timing-fast);
+		color: var(--pfy-text-light);
 
 		&:hover {
 			outline: 1px solid var(--pfy-empty-01-shadow);
