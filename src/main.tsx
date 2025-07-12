@@ -54,10 +54,10 @@ async function initializeExtension() {
 		createTestUserData();
 	}
 
-	const errorPageDebug = true; 
+	const errorPageDebug = false; 
 	let errorPage: (() => React.ReactNode) | undefined = undefined;
 
-	if (errorPageDebug && getApplicationContextType() == "DEVMODE") {
+	if (errorPageDebug || getApplicationContextType() == "EXTENSION") {
 		errorPage = ErrorPage;
 	}
 
