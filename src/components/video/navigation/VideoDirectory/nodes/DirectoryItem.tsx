@@ -41,10 +41,14 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 					currentlyEditing == node.nodeID ?
 					<input
 						className="medium-text-input"
-						onBlur={() => requestEditEnd(editSlice)}
+						onBlur={() => {
+							requestEditEnd(editSlice)
+							wasEditing.current = false;
+						}}
 						onKeyDown={(e) => {
 							if (e.key == "Enter") {
 								requestEditEnd(e.currentTarget.value);
+								wasEditing.current = false;
 							}
 						}}
 						value={editSlice}
