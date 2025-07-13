@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import "./../VideoDirectory/VideoDirectory.css"
 import "./VideoDirectoryBrowser.css"
-import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromRef, getNodeSection, getNodeType, getPathOfNode, NodeRef } from "../../../../lib/directory/directory";
+import { DIRECTORY_NAME_MAX_LENGTH, getNodeFromRef, getNodeSection, getNodeType, getPathOfNode, IDirectoryNode, NodeRef } from "../../../../lib/directory/directory";
 import { directoryPathConcat, getParentPathFromPath, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
 import { directoryActions } from "../../../../features/directory/directorySlice";
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
@@ -103,9 +103,13 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		}
 
 		if (getNodeType(tree, selectedItems[0]) == "DIRECTORY") {
-			let node = selectedItems[0];
+			let node = getNodeFromRef(tree, selectedItems[0]) as IDirectoryNode;
 
-			onDirectoryPathChanged(directoryPathConcat(directoryPath, tree.directoryNodes[node].slice, "DIRECTORY"));
+			onDirectoryPathChanged(directoryPathConcat(directoryPath, tree.directoryNodes[node.nodeID].slice, "DIRECTORY"));
+
+			if (node.subNodes.length > 0) {
+				setSelectedItems([ node.subNodes[0] ]);
+			}
 		}
 		else {
 			let videoID = tree.videoNodes[selectedItems[0]].videoID;
