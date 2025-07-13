@@ -40,19 +40,11 @@ export function validateDirectoryName(directoryName: string): ValidateDirectoryN
 	return null;
 }
 
-// TODO: Replace with actual result library...
-type Result<TResult> = {
-	success: false;
-} | {
-	success: true,
-	result: TResult
-}
+export function filterDirectoryName(directoryName: string): ResultMessage<string> {
+	let result = Array.from(directoryName.matchAll(/[A-z0-9\s.,()\/\[\]\;\@\~\-=\+]+/g));
 
-export function filterDirectoryName(directoryName: string): Result<string> {
-	let result = directoryName.matchAll(/[A-z0-9\s.,()\/\[\]\;\@\~\-=\+]+/g);
-
-	if (result == null) {
-		return { success: false };
+	if (result.length == 0) {
+		return { success: false, reason: "No valid characters." };
 	}
 
 	let valid = Array.from(result).map(s => s[0]).join("");

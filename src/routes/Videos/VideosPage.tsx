@@ -32,11 +32,12 @@ import { tempStateActions } from "../../features/state/tempStateSlice.ts";
 import { TextInput } from "../../components/input/TextInput/TextInput.tsx";
 import { VideoDirectoryControls } from "../../components/video/navigation/VideoDirectoryControls/VideoDirectoryControls.tsx";
 import { useDirectoryPath } from "../../components/video/navigation/useDirectory.ts";
-import { ValidatedForm } from "../../components/forms/ValidatedForm.tsx";
+import { ValidatedForm, ValidatorResult } from "../../components/forms/ValidatedForm.tsx";
 import { VideoSearchItem } from "../../components/video/VideoSearchItem/VideoSearchItem.tsx";
 import { SwitchInputPrimitive } from "../../components/input/SwitchInput/SwitchInput.tsx";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton.tsx";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel.tsx";
+import { extractIDRegex } from "../../contentScript/features/LocalVideoDataWrapper.tsx";
 
 type AddVideoFormFields = "link";
 type AddVideoForm = {
@@ -276,12 +277,62 @@ export function VideosPage(): React.ReactNode {
 									<FormDialog
 										name="add-video-form"
 										title="Add video"
-										labelSize="small"
+										labelSize="medium"
 										submitText="Add"
 										onSuccess={addVideoFormHandler}
-										trigger={<SmallButton>Video</SmallButton>}>
+										trigger={<SmallButton>Video</SmallButton>}
+										fieldData={[
+											{
+												name: "link",
+												validator: (data: string) => {
+													if (data.trim() == "") {
+														return {
+															error: true,
+															details: {
+																name: "link",
+																message: "This field is required."
+															}
+														}
+													}
+
+													let alreadyExistsResult: ValidatorResult<"link"> = {
+														error: true,
+														details: {
+															name: "link",
+															message: "That video already exists."
+														}
+													}
+
+													if (!extractIDRegex.test(data)) {
+														if (data.length == 11) {
+															if (getNodeFromVideoID(tree, data) != null) {
+																return alreadyExistsResult;
+															}
+
+															return { error: false };
+														}
+
+														return {
+															error: true,
+															details: {
+																name: "link",
+																message: "The link provided was not a video."
+															}
+														}
+													}
+
+													let videoID = getVideoIdFromYouTubeLink(data);
+													
+													if (getNodeFromVideoID(tree, videoID) != null) {
+														return alreadyExistsResult;
+													}
+
+													return { error: false };
+												}
+											}
+										]}>
 											<TextInput<AddVideoFormFields>
-												label="Link:"
+												label="Link or video:"
 												name="link"
 												title="The YouTube URL of the video to add. This will be added to the current directory."
 												fieldSize="max"
