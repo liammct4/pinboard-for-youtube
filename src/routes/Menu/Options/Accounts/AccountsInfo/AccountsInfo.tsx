@@ -11,7 +11,7 @@ export function AccountsInfo(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();
 
 	useEffect(() => {
-		activateMessage(undefined, "Unfortunately, accounts are not available currently and will not be for the foreseeable future.", "Warning", "Warning", undefined, "Shake");
+		activateMessage(undefined, "Unfortunately, accounts are not available currently.", "Warning", "Warning", undefined, "Shake");
 
 		async function checkRedirectOnLoggedIn() {
 			if (isSignedIn) {
