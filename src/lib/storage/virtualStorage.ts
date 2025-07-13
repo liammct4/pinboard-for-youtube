@@ -55,5 +55,4 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 	}
 }
 
-export const ExtensionMainVirtualStorage = new VirtualStorageArea<IPrimaryStorage>(chrome.storage.sync);
-export const ExtensionLocalVirtualStorage = new VirtualStorageArea<ILocalStorage>(chrome.storage.local);
+export const ExtensionVirtualStorage = new VirtualStorageArea<IPrimaryStorage>(chrome.storage.sync);

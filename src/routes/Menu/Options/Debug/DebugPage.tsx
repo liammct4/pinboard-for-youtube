@@ -56,7 +56,7 @@ export function DebugPage(): React.ReactNode {
 					}}>Copy storage to clipboard</SmallButton>
 					{/* Wipe storage. */}
 					<SmallButton onClick={async () => {
-						await chrome.storage.sync.set(BLANK_MAIN_STORAGE_TEMPLATE);
+						await chrome.storage.local.set(BLANK_MAIN_STORAGE_TEMPLATE);
 					}}>Wipe storage</SmallButton>
 					<SmallButton onClick={() => setCrash(true)}>Crash</SmallButton>
 				</ButtonPanel>

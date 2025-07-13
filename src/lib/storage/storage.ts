@@ -127,42 +127,30 @@ export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 
 export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
-	let mainStorage: IPrimaryStorage | {} | undefined = await chrome.storage.sync.get();
-	let localStorage: ILocalStorage | {} | undefined = await chrome.storage.local.get();
+	let storage: IStorage | {} | undefined = await chrome.storage.local.get();
 
-	deepMerge(mainStorage, BLANK_MAIN_STORAGE_TEMPLATE);
-	deepMerge(localStorage, BLANK_LOCAL_STORAGE_TEMPLATE);
-
-	(mainStorage as IPrimaryStorage).userData.config.customThemes.forEach(x => deepMerge(x.palette, AppThemes[x.basedOn!]));
-
-	await chrome.storage.sync.set(mainStorage);
-	await chrome.storage.local.set(localStorage);
+	deepMerge(storage, BLANK_STORAGE_TEMPLATE)
+	await chrome.storage.local.set(storage);
 }
 
-export async function getItemFromStorage<T>(accessor: (storage: IPrimaryStorage) => T): Promise<T> {
-	let storage = await chrome.storage.sync.get() as IPrimaryStorage;
+export async function getItemFromStorage<T>(accessor: (storage: IStorage) => T): Promise<T> {
+	let storage = await chrome.storage.local.get() as IStorage;
 
 	return accessor(storage);
 }
 
-export async function accessMainStorage(): Promise<IPrimaryStorage> {
-	let storage = await chrome.storage.sync.get() as IPrimaryStorage;
-
-	return storage;
-}
-
-export async function accessLocalStorage(): Promise<ILocalStorage> {
-	let storage = await chrome.storage.local.get() as ILocalStorage;
+export async function accessStorage(): Promise<IStorage> {
+	let storage = await chrome.storage.local.get() as IStorage;
 
 	return storage;
 }
 
 export async function modifyStorage(modifier: (s: IPrimaryStorage) => void): Promise<void> {
-	let storage = await accessMainStorage();
+	let storage = await accessStorage();
 
 	modifier(storage);
 
 	storage.meta.author = getApplicationContextType();
 
-	await chrome.storage.sync.set(storage);
+	await chrome.storage.local.set(storage);
 }

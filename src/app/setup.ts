@@ -35,25 +35,18 @@ export async function syncStoreToLocalStorage(onlyUpdateWhenChanged: boolean) {
 }
 
 export function setupStorageAndStoreSync() {
-	const syncListener = async (storageArea: any, delayTime: number, sync: (onlyUpdateWhenChanged: boolean) => void) => {
-		let storage = await storageArea.get() as IMetaStorage;
-
-		if (storage.meta.changed.length == 0) {
-			return;
-		}
+	chrome.storage.local.onChanged.addListener(async () => {	
+		let storage = await chrome.storage.local.get() as IStorage;
 
 		if (getApplicationContextType() == storage.meta.author) {
 			// Since the end of the sync method never runs which resets the changed array.
 			setTimeout(() => {
 				storage.meta.changed = [];
-				storageArea.set(storage);
-			}, delayTime * 2);
+				chrome.storage.local.set(storage);
+			}, ExtensionMainVirtualStorage.delayTime * 2);
 			return;
 		}
 
-		sync(true);
+		syncStoreToLocalStorage(true);
 	}
-
-	chrome.storage.sync.onChanged.addListener(() => syncListener(chrome.storage.sync, ExtensionMainVirtualStorage.delayTime, syncStoreToMainStorage));
-	chrome.storage.local.onChanged.addListener(() => syncListener(chrome.storage.local, ExtensionLocalVirtualStorage.delayTime, syncStoreToLocalStorage));
 }
