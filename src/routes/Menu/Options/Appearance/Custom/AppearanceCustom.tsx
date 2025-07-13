@@ -99,15 +99,15 @@ export function AppearanceCustom(): React.ReactNode {
 							validator: (value: string) => {
 								if (allThemes.find(x => x.name == value) != undefined && editingTheme.name != value) {
 									return {
-										error: true,
-										details: {
+										success: false,
+										reason: {
 											name: "name",
 											message: `Theme with the name "${value}" already exists.`
 										}
 									}
 								}
 
-								return { error: false };
+								return { success: true };
 							}
 						}
 					]}

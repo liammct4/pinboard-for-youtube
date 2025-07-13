@@ -18,16 +18,18 @@ type UpdatePasswordFormField = "previousPassword" | "newPassword" | "confirmNewP
 const passwordValidator = (data: string, field: UpdatePasswordFormField): ValidatorResult<UpdatePasswordFormField> => {
 	let result = validatePasswordInputField(data);
 
-	if (result == null) {
-		return { error: false };
+	if (!result.success) {
+		return {
+			success: false,
+			reason: {
+				name: field,
+				message: result.reason
+			}
+		};
 	}
 
 	return {
-		error: true,
-		details: {
-			name: field,
-			message: result
-		}
+		success: true
 	}
 }
 

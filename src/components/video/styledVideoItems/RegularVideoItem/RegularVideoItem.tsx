@@ -19,11 +19,17 @@ export function RegularVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo } = useVideoInfo(video.id);
 
+	let linkResult = getYouTubeLinkFromVideoID(video.id);
+
 	return (
 		<div className="regular-video-item">
 			<div className="video-info-area">
 				<VideoThumbnail className="video-thumbnail" videoID={video.id} alt=""/>
-				<SmallButton square onClick={() => window.open(getYouTubeLinkFromVideoID(video.id))}>
+				<SmallButton square onClick={() => {
+						if (linkResult.success) {
+							window.open(linkResult.result);
+						}
+					}}>
 					<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
 				</SmallButton>
 				<span className="video-title">{videoInfo?.title}</span>

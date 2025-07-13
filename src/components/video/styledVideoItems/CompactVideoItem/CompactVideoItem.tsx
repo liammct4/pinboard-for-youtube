@@ -16,6 +16,8 @@ export function CompactVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo, videoExists } = useVideoInfo(video.id);
 
+	let linkResult = getYouTubeLinkFromVideoID(video.id);
+
 	return (
 		<div className="compact-video-item">
 			<VideoThumbnail
@@ -23,8 +25,12 @@ export function CompactVideoItem(): React.ReactNode {
 				alt={videoExists ? `The thumbnail for the video titled '${videoInfo?.title}'.` : "A blank thumbnail image."}
 				width={50}/>
 			<span>{videoInfo?.title}</span>
-			<SmallButton square onClick={() => window.open(getYouTubeLinkFromVideoID(video.id))}>
-				<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
+			<SmallButton square onClick={() => {
+					if (linkResult.success) {
+						window.open(linkResult.result);
+					}
+				}}>
+					<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
 			</SmallButton>
 			<LabeledArrowExpander
 				className="timestamp-expander"

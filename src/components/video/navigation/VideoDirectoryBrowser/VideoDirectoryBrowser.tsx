@@ -110,8 +110,12 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		else {
 			let videoID = tree.videoNodes[selectedItems[0]].videoID;
 
+			let result = getYouTubeLinkFromVideoID(videoID);
+
 			if (e.key == "Enter") {
-				window.open(getYouTubeLinkFromVideoID(videoID));
+				if (result.success) {
+					window.open(result.result);
+				}
 			}
 			else if (expandedVideoIDs.includes(videoID)) {
 				dispatch(tempStateActions.collapseVideo(videoID));

@@ -8,7 +8,7 @@ import { Keys, useHotkeys } from "react-hotkeys-hook";
 import { getNodeFromPath } from "../../../../lib/directory/directory";
 import { filterDirectoryName, NodePath, parsePath, validateDirectoryName } from "../../../../lib/directory/path";
 import { useVideoCache } from "../../../../components/features/useVideoInfo";
-import { extractIDRegex } from "../../../features/LocalVideoDataWrapper";
+import { YOUTUBE_EXTRACT_VIDEO_ID_REGEX } from "../../../../lib/util/youtube/youtubeUtil";
 
 export function VideoTimestampButton() {
 	const dispatch = useDispatch();
@@ -19,7 +19,7 @@ export function VideoTimestampButton() {
 	const { saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut, saveToChannelDirectory } = useSelector((state: RootState) => state.settings.settings);
 
 	const onSaveVideo = async () => {
-		let result = extractIDRegex.exec(window.location.href);
+		let result = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(window.location.href);
 		
 		if (result == null || result.groups == undefined) {
 			return;

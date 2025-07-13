@@ -17,14 +17,14 @@ export function useVideoCache() {
 
 		let info = await getYoutubeVideoInfoFromVideoID(videoID);
 
-		if (info == undefined) {
+		if (!info.success || info.result == undefined) {
 			return undefined;
 		}
 
 
-		dispatch(cacheActions.saveVideoToCache(info));
+		dispatch(cacheActions.saveVideoToCache(info.result));
 
-		return info;
+		return info.result;
 	}
 
 	return { retrieveInfo };
@@ -51,14 +51,14 @@ export function useVideoInfo(videoID: string | undefined) {
 			const getVideoInfo = async () => {
 				let info = await getYoutubeVideoInfoFromVideoID(videoID);
 	
-				if (info == undefined) {
+				if (!info.success || info.result == undefined) {
 					return;
 				}
 	
-				setVideo(info);
+				setVideo(info.result);
 				setVideoExists(true);
 	
-				dispatch(cacheActions.saveVideoToCache(info));
+				dispatch(cacheActions.saveVideoToCache(info.result));
 			}
 
 			getVideoInfo();

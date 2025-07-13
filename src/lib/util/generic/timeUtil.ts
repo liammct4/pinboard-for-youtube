@@ -10,7 +10,7 @@ export class SyncTimer {
 	}
 }
 
-export function getSecondsFromTimestamp(time: string): number {
+export function getSecondsFromTimestamp(time: string): ResultMessage<number> {
 	/* Validates the timestamp according to the format: H:MM:SS. E.g.
 	* Good cases:
 	* 	1:02:03
@@ -24,7 +24,7 @@ export function getSecondsFromTimestamp(time: string): number {
 	*	10:2
 	*/
 	if (!/^(\d+:)(\d{2}(:|$)){1,2}$/.test(time)) {
-		throw new TypeError(`Invalid argument provided, the timestamp was an invalid value. Value proivded: '${time}'.`);
+		return { success: false, reason: "The timestamp was an invalid value/could not be parsed." };
 	}
 
 	let parts: string[] = time.split(":").reverse();
@@ -38,12 +38,12 @@ export function getSecondsFromTimestamp(time: string): number {
 		total += num * mult[i];
 	}
 
-	return total;
+	return { success: true, result: total };
 }
 
-export function getTimestampFromSeconds(seconds: number): string {
+export function getTimestampFromSeconds(seconds: number): ResultMessage<string> {
 	if (seconds < 0) {
-		throw new TypeError("Invalid argument provided, seconds was negative.");
+		return { success: false, reason: "Seconds was negative." };
 	}
 
 	let remaining: number = seconds;
@@ -62,5 +62,5 @@ export function getTimestampFromSeconds(seconds: number): string {
 
 	result += `${minutes.toString().padStart(2, "0")}:${remaining.toString().padStart(2, "0")}`;
 
-	return result;
+	return { success: true, result };
 }

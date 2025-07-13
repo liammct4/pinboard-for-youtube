@@ -1,6 +1,5 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import * as YTUtil from "../../../../lib/util/youtube/youtubeUtil.ts" 
 import { setCurrentVideoTime } from "../../../../lib/browser/youtube.ts";
 import { getSecondsFromTimestamp, getTimestampFromSeconds } from "../../../../lib/util/generic/timeUtil.ts"
 import { Timestamp } from "../../../../lib/video/video.ts";
@@ -19,6 +18,7 @@ import { ButtonPanel } from "../../../interactive/ButtonPanel/ButtonPanel.tsx";
 import { ValidatorResult } from "../../../forms/ValidatedForm.tsx";
 import { SwitchInput } from "../../../input/SwitchInput/SwitchInput.tsx";
 import { LinkText } from "../../../interactive/LinkText/LinkText.tsx";
+import { getTimestampVideoLinkFromSeconds } from "../../../../lib/util/youtube/youtubeUtil.ts";
 
 type EditTimestampFormNames = "time" | "message" | "isAutoplay";
 type EditTimestampForm = {
@@ -40,8 +40,8 @@ export interface IVideoTimestampProperties {
 function validateTimestamp(value: string): ValidatorResult<EditTimestampFormNames> {
 	if (value.length == 0) {
 		return {
-			error: true,
-			details: {
+			success: false,
+			reason: {
 				name: "time",
 				message: "This value is required."
 			}
@@ -53,15 +53,15 @@ function validateTimestamp(value: string): ValidatorResult<EditTimestampFormName
 	}
 	catch {
 		return {
-			error: true,
-			details: {
+			success: false,
+			reason: {
 				name: "time",
 				message: "Invalid value provided."
 			}
 		};
 	}
 
-	return { error: false };
+	return { success: true };
 }
 
 /* "time" is in seconds, not a timestamp. So 1032 seconds total instead of 17:12 for example. */
@@ -74,10 +74,17 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 	}
 
 	const onSave = (data: EditTimestampForm) => {
+		let result = getSecondsFromTimestamp(data.time);
+
+		if (!result.success) {
+			console.error(`VideoTimestamp.onSave(): getSecondsFromTimestamp: ${result.reason}`);
+			return;
+		}
+
 		onChange(timestamp, {
 			...timestamp,
 			message: data.message,
-			time: getSecondsFromTimestamp(data.time)
+			time: result.result
 		}, data.isAutoplay);
 	}
 	
@@ -86,8 +93,11 @@ export function VideoTimestamp({ className, videoID, timestamp, isAutoplay, onAu
 	}
 
 	let isActiveId = activeVideoID == videoID;
-	let stringTime: string = getTimestampFromSeconds(timestamp.time);
-	let timeLink: string = YTUtil.getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
+	let stringTimeResult = getTimestampFromSeconds(timestamp.time);
+	let timeLinkResult = getTimestampVideoLinkFromSeconds(videoID, timestamp.time);
+
+	let stringTime = stringTimeResult.success ? stringTimeResult.result : "";
+	let timeLink = timeLinkResult.success ? timeLinkResult.result : "00:00";
 
 	return (
 		<li className={`${className} timestamp-inner`} data-style={timestampStyle}>

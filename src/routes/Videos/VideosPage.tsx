@@ -37,7 +37,6 @@ import { VideoSearchItem } from "../../components/video/VideoSearchItem/VideoSea
 import { SwitchInputPrimitive } from "../../components/input/SwitchInput/SwitchInput.tsx";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton.tsx";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel.tsx";
-import { extractIDRegex } from "../../contentScript/features/LocalVideoDataWrapper.tsx";
 
 type AddVideoFormFields = "link";
 type AddVideoForm = {
@@ -86,17 +85,23 @@ export function VideosPage(): React.ReactNode {
 
 	let addVideoFormHandler = async (data: AddVideoForm) => {
 		let id = getVideoIdFromYouTubeLink(data.link);
-		let info = await retrieveInfo(id);
+
+		if (!id.success) {
+			console.error(`addVideoFormHandler: ${id.reason}`);
+			return;
+		}
+
+		let info = await retrieveInfo(id.result);
 
 		dispatch(videoActions.addVideo({
-			id,
+			id: id.result,
 			timestamps: [],
 			autoplayTimestamp: null
 		}));
 
 		dispatch(directoryActions.createVideoNode({
 			parentPath: directoryPath,
-			videoID: id,
+			videoID: id.result,
 			videoData: [ ...videoCache, info as IYoutubeVideoInfo ]
 		}));
 	};
@@ -287,8 +292,8 @@ export function VideosPage(): React.ReactNode {
 												validator: (data: string) => {
 													if (data.trim() == "") {
 														return {
-															error: true,
-															details: {
+															success: false,
+															reason: {
 																name: "link",
 																message: "This field is required."
 															}
@@ -296,38 +301,34 @@ export function VideosPage(): React.ReactNode {
 													}
 
 													let alreadyExistsResult: ValidatorResult<"link"> = {
-														error: true,
-														details: {
+														success: false,
+														reason: {
 															name: "link",
 															message: "That video already exists."
 														}
 													}
 
-													if (!extractIDRegex.test(data)) {
-														if (data.length == 11) {
-															if (getNodeFromVideoID(tree, data) != null) {
-																return alreadyExistsResult;
-															}
-
-															return { error: false };
-														}
-
-														return {
-															error: true,
-															details: {
-																name: "link",
-																message: "The link provided was not a video."
-															}
-														}
-													}
-
 													let videoID = getVideoIdFromYouTubeLink(data);
+
+													if (videoID.success) {
+														if (getNodeFromVideoID(tree, videoID.result) != null) {
+															return alreadyExistsResult;
+														}
+
+														return { success: true };
+													}
 													
-													if (getNodeFromVideoID(tree, videoID) != null) {
+													if (data.length == 11 && getNodeFromVideoID(tree, data) != null) {
 														return alreadyExistsResult;
 													}
 
-													return { error: false };
+													return {
+														success: false,
+														reason: {
+															name: "link",
+															message: "The link provided was not a video."
+														}
+													}
 												}
 											}
 										]}>
@@ -369,8 +370,8 @@ export function VideosPage(): React.ReactNode {
 
 													if (message != undefined) {
 														return {
-															error: true,
-															details: { name: "directoryName", message }
+															success: false,
+															reason: { name: "directoryName", message }
 														}
 													}
 
@@ -383,15 +384,15 @@ export function VideosPage(): React.ReactNode {
 
 													if (existingIndex != -1) {
 														return {
-															error: true,
-															details: {
+															success: false,
+															reason: {
 																name: "directoryName",
 																message: "That directory already exists in this directory."	
 															}
 														}
 													}
 
-													return { error: false };
+													return { success: true };
 												}
 											}
 										]}>

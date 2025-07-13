@@ -1,5 +1,5 @@
 import { IVideoInfo, VideoScriptAction } from "../lib/browser/youtube";
-import { extractIDRegex } from "./features/LocalVideoDataWrapper";
+import { YOUTUBE_EXTRACT_VIDEO_ID_REGEX } from "../lib/util/youtube/youtubeUtil";
 
 function setVideoPosition(time: number): {} {
 	let mainVideo = document.querySelector("video");
@@ -13,7 +13,7 @@ function setVideoPosition(time: number): {} {
 }
 
 function getVideoInfo(): IVideoInfo | null {
-	let result = extractIDRegex.exec(window.location.href);
+	let result = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(window.location.href);
 
 	if (result == null || result.groups == undefined) {
 		return null;
@@ -22,7 +22,7 @@ function getVideoInfo(): IVideoInfo | null {
 	let video = document.querySelector("video") as HTMLVideoElement;
 
 	return {
-		id: result.groups["videoID"],
+		id: result.groups["VideoID"],
 		currentTime: video.currentTime,
 		length: video.duration,
 		paused: video.paused

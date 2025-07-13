@@ -42,15 +42,15 @@ export const userDetailsFieldData: FormField<UserDetailsFormField>[] = [
 		validator: (value: string) => {
 			if (!value.includes("@")) {
 				return {
-					error: true,
-					details: {
+					success: false,
+					reason: {
 						name: "email",
 						message: "That email address is not valid."
 					}
 				}
 			}
 	
-			return { error: false };
+			return { success: true };
 		}
 	},
 	{
@@ -58,15 +58,15 @@ export const userDetailsFieldData: FormField<UserDetailsFormField>[] = [
 		validator: (value: string) => {
 			let result = validatePasswordInputField(value);
 
-			if (result == null) {
-				return { error: false };
+			if (result.success) {
+				return result;
 			}
 
 			return {
-				error: true,
-				details: {
+				success: false,
+				reason: {
 					name: "password",
-					message: result
+					message: result.reason
 				}
 			}
 		}

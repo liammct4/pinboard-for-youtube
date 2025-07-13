@@ -17,6 +17,8 @@ export function MinimalVideoItem(): React.ReactNode {
 	const { video, onTimestampAdded, onTimestampChanged, setTimestamps, expanded, setExpanded } = useContext<IVideoItemContext>(VideoItemContext);
 	const { video: videoInfo } = useVideoInfo(video.id);
 
+	let linkResult = getYouTubeLinkFromVideoID(video.id);
+
 	return (
 		<div className="compact-video-item-outer">
 			<LabeledArrowExpander
@@ -38,7 +40,11 @@ export function MinimalVideoItem(): React.ReactNode {
 					</SmallButton>
 				</div>
 			</LabeledArrowExpander>
-			<SmallButton square onClick={() => window.open(getYouTubeLinkFromVideoID(video.id))}>
+			<SmallButton square onClick={() => {
+				if (linkResult.success) {
+					window.open(linkResult.result);
+				}
+			}}>
 				<IconContainer className="icon-colour-standard" asset={PlayIcon} use-fill/>
 			</SmallButton>
 		</div>

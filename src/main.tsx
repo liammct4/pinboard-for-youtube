@@ -42,12 +42,13 @@ async function initializeExtension() {
 	if (environment == "EXTENSION") {
 		let currentUrl: string | undefined = await getActiveTabURL();
 
-		if (currentUrl != undefined && doesVideoExist(currentUrl)) {
+		if (currentUrl != undefined && await doesVideoExist(currentUrl)) {
 			// If an error happens, it means that the current page is not a youtube video.
-			try {
-				activeID = getVideoIdFromYouTubeLink(currentUrl);
-				store.dispatch(videoActions.changeActiveVideoID(activeID as string));
-			} catch { }
+			let activeID = getVideoIdFromYouTubeLink(currentUrl);
+
+			if (activeID.success) {
+				store.dispatch(videoActions.changeActiveVideoID(activeID.result as string));
+			}
 		}
 	}
 	else if (environment == "DEVMODE") {

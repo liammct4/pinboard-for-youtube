@@ -1,7 +1,7 @@
-export function validatePasswordInputField(value: string): string | null {
+export function validatePasswordInputField(value: string): ResultAction<string> {
 	if (value.length < 10) {
-		return "Password must have a minimum of 10 characters.";
+		return { success: false, reason: "Password must have a minimum of 10 characters." };
 	}
 
-	return null;
+	return { success: true };
 }

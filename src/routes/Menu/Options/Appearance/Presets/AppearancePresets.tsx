@@ -146,15 +146,15 @@ export function AppearancePresets(): React.ReactNode {
 							validator: (data: string) => {
 								if (allThemes.findIndex(x => x.name == data) != -1) {
 									return {
-										error: true,
-										details: {
+										success: false,
+										reason: {
 											name: "customName",
 											message: "A theme already exists with that name."
 										}
 									}
 								}
 
-								return { error: false };
+								return { success: true };
 							}
 						}
 					]}

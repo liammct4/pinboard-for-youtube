@@ -28,7 +28,15 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 	const arrowImageRef = useRef<SVGSVGElement>(null!);
 	const videoData = useContext(LocalVideoDataContext);
 	const { setCurrentTime } = useLocalVideoControls();
-	const secondTimeData = useMemo(() => getTimestampFromSeconds(timestamp.time), [timestamp.time]);
+	const secondTimeData = useMemo(() => {
+		let result = getTimestampFromSeconds(timestamp.time);
+
+		if (result.success) {
+			return result.result;
+		}
+
+		return "00:00";
+	}, [timestamp.time]);
 	const [ isDragging, setIsDragging ] = useState<boolean>(false);
 	const [ startIsDragging, setStartIsDragging ] = useState<boolean>(false);
 	const [ hover, setHover ] = useState<boolean>(false);
@@ -99,7 +107,14 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 		let secondTimeMouse = Math.round(multiplierAlongTimeline * videoData.data.length);
 
 		percentage = secondTimeMouse / videoData.data.length;
-		secondTime = getTimestampFromSeconds(secondTimeMouse);
+		let result = getTimestampFromSeconds(secondTimeMouse);
+
+		if (!result.success) {
+			console.error("PFY: " + result.reason);
+		}
+		else {
+			secondTime = result.result;
+		}
 	}
 	else {
 		percentage = timestamp.time / videoData.data.length;

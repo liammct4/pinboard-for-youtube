@@ -2,8 +2,7 @@ import { createContext, useEffect, useRef, useState } from "react";
 import { IWrapperProperties } from "../../components/features/wrapper";
 import { areObjectsEqual } from "../../lib/util/objects/objects";
 import { usePageLink } from "./usePageLink";
-
-export let extractIDRegex = /watch\?v=(?<videoID>.{11})/;
+import { YOUTUBE_EXTRACT_VIDEO_ID_REGEX } from "../../lib/util/youtube/youtubeUtil";
 
 export type VideoData = {
 	videoID: string;
@@ -16,7 +15,7 @@ type VideoExists = { isVideoPage: true, isLivestream: boolean, isAdvertisement: 
 type VideoDoesntExist = { isVideoPage: false };
 
 function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist {
-	let result = extractIDRegex.exec(pageLink);
+	let result = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(pageLink);
 
 	if (result == null) {
 		return { isVideoPage: false };
@@ -35,7 +34,7 @@ function recalculateVideoData(pageLink: string): VideoExists | VideoDoesntExist 
 		isAdvertisement: adContainer != null && adContainer.hasChildNodes(),
 		isLivestream: isLive,
 		data: {
-			videoID: result.groups["videoID"],
+			videoID: result.groups["VideoID"],
 			paused: video.paused,
 			currentTime: video.currentTime,
 			length: Math.round(video.duration)

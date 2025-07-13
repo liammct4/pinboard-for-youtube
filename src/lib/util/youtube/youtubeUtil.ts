@@ -1,5 +1,5 @@
-import * as TimeUtil from "./../generic/timeUtil.ts"
-import * as request from "./../request.ts"
+import { getSecondsFromTimestamp } from "../generic/timeUtil";
+import { GlobalRequestHandler } from "../request";
 
 export class DoesNotExistError extends Error {
 	public requested: string;
@@ -34,71 +34,82 @@ export interface IYoutubeVideoInfo {
 
 export const YOUTUBE_EXTRACT_VIDEO_ID_REGEX: RegExp = /(?<VideoID>[A-z0-9\-_]{11})/
 
-export function getVideoIdFromYouTubeLink(url: string): string {
+type GetVideoIDReason = "NO_VIDEO_ID" | "NOT_11_CHARACTERS";
+export function getVideoIdFromYouTubeLink(url: string): Result<string, GetVideoIDReason> {
 	const match = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(url);
 	
 	if (match == null) {
-		throw new TypeError("Invalid argument provided, the link provided does not contain a video ID.")
+		return { success: false, reason: "NO_VIDEO_ID" };
 	}
 
 	let videoID: string = match!.groups!["VideoID"]!;
 
 	if (videoID?.length != 11) {
-		throw new TypeError("Invalid argument provided, the extracted video ID was not 11 characters long.")
+		return { success: false, reason: "NOT_11_CHARACTERS" };
 	}
 
-	return videoID;
+	return { success: true, result: videoID };
 }
 
-export function getYouTubeLinkFromVideoID(videoID: string): string {
-	if (!videoID) {
-		throw new TypeError("Invalid argument provided, the video ID was empty.");
-	}
-
+export function getYouTubeLinkFromVideoID(videoID: string): Result<string, "NOT_11_CHARACTERS"> {
 	if (videoID.length != 11) {
-		throw new TypeError("Invalid argument provided, the video ID was not the correct length, all ID's must be 11 characters long.")
+		return { success: false, reason: "NOT_11_CHARACTERS" };
 	}
 
-	return `https://www.youtube.com/watch?v=${videoID}`;
+	return {
+		success: true,
+		result: `https://www.youtube.com/watch?v=${videoID}`
+	};
 }
 
-export function getTimestampVideoLinkFromSeconds(videoID: string, seconds: number): string {
-	if (!videoID) {
-		throw new TypeError("Invalid argument provided, the video ID was empty.");
-	}
-
+export function getTimestampVideoLinkFromSeconds(videoID: string, seconds: number): Result<string, "SECONDS_ARE_NEGATIVE" | "INVALID_ID"> {
 	if (seconds < 0) {
-		throw new TypeError("Invalid argument provided, seconds cannot be negative.")
+		return { success: false, reason: "SECONDS_ARE_NEGATIVE" }
 	}
 
-	return `${getYouTubeLinkFromVideoID(videoID)}&t=${seconds}`;
+	let result = getYouTubeLinkFromVideoID(videoID);
+
+	if (!result.success) {
+		return { success: false, reason: "INVALID_ID" };
+	}
+
+	return {
+		success: true,
+		result: `${result.result}&t=${seconds}`
+	};
 }
 
-export function getTimestampVideoLinkFromTimestamp(videoID: string, timestamp: string) : string {
-	let seconds: number = TimeUtil.getSecondsFromTimestamp(timestamp);
+export async function getYoutubeVideoInfoFromLink(url: string): Promise<Result<IYoutubeVideoInfo, "404" | GetVideoIDReason>> {
+	let videoIDResult = getVideoIdFromYouTubeLink(url);
 
-	return getTimestampVideoLinkFromSeconds(videoID, seconds);
-}
+	if (!videoIDResult.success) {
+		return { success: false, reason: videoIDResult.reason };
+	}
 
-export async function getYoutubeVideoInfoFromLink(url: string): Promise<IYoutubeVideoInfo | undefined> {
-	let response = await request.GlobalRequestHandler.sendRequest("GET", `https://www.youtube.com/oembed?url=${url}`);
+	let response = await GlobalRequestHandler.sendRequest("GET", `https://www.youtube.com/oembed?url=${url}`);
 	
 	if (response?.status == 404) {
-		return undefined;
-		//throw new DoesNotExistError("The video requested does not exist.", url, response.body);
+		return { success: false, reason: "404" };
 	}
 	
 	let info = JSON.parse(response?.body) as IYoutubeVideoInfo;
 	info.url = url;
-	info.video_id = getVideoIdFromYouTubeLink(url);
+	info.video_id = videoIDResult.result;
 
-	return info;
+	return {
+		success: true,
+		result: info
+	};
 }
 
-export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<IYoutubeVideoInfo | undefined> {
-	let link: string = getYouTubeLinkFromVideoID(videoID);
+export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<Result<IYoutubeVideoInfo | undefined, "INVALID_ID" | "404" | GetVideoIDReason>> {
+	let link = getYouTubeLinkFromVideoID(videoID);
+
+	if (!link.success) {
+		return { success: false, reason: "INVALID_ID" };
+	}
 	
-	return getYoutubeVideoInfoFromLink(link);
+	return getYoutubeVideoInfoFromLink(link.result);
 }
 
 /**
@@ -106,14 +117,8 @@ export async function getYoutubeVideoInfoFromVideoID(videoID: string): Promise<I
  * @param url The url to check.
  * @returns True if the video in a YouTube url exists, otherwise False.
  */
-export function doesVideoExist(url: string): boolean {
-	try {
-		getYoutubeVideoInfoFromLink(url);
-		return true;
-	}
-	catch (DoesNotExistError) {
-		return false;
-	}
+export async function doesVideoExist(url: string): Promise<boolean> {
+	return (await getYoutubeVideoInfoFromLink(url)).success;
 }
 
 /**

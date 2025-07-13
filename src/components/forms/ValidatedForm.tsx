@@ -5,10 +5,7 @@ export type FormFieldError<TField> = {
 	message: string;
 }
 
-type ValidatorError<TField> = { error: true, details: FormFieldError<TField> };
-type ValidatorNoError = { error: false };
-
-export type ValidatorResult<TField> = ValidatorError<TField> | ValidatorNoError
+export type ValidatorResult<TField> = ResultAction<FormFieldError<TField>>;
 export type Validator<TField> = (data: string) => ValidatorResult<TField>;
 
 type ConverterType = "boolean" | "numeric"
@@ -68,8 +65,8 @@ export function ValidatedForm<TForm, TField extends string>({ className, name, f
 
 				let errors = fieldData
 					.map(f => f.validator(rawData.get(f.name) as string))
-					.filter(e => e.error)
-					.map(e => e.details);
+					.filter(e => !e.success)
+					.map(e => e.reason);
 
 				if (errors.length > 0) {
 					onError?.(data as TForm, errors);
