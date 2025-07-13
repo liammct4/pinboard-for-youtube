@@ -25,7 +25,7 @@ export function VideoTimestampButton() {
 			return;
 		}
 
-		let videoID = result.groups["videoID"] as string;
+		let videoID = result.groups["VideoID"] as string;
 		let video = document.querySelector("video") as HTMLVideoElement;
 	
 		let existingVideo = videos[videoID] as IVideo;
