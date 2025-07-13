@@ -1,7 +1,7 @@
 import { tempStateActions, tempStateSlice } from "./tempStateSlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const tempStateSyncStorageMiddleware = createListenerMiddleware();
 
@@ -16,7 +16,7 @@ tempStateSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+		ExtensionVirtualStorage.modifyStorage((storage) => {
 			storage.tempState = {
 				expandedVideos: state.tempState.expandedVideoIDs,
 				currentDirectoryPath: state.tempState.currentDirectory,

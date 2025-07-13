@@ -1,7 +1,7 @@
 import { directoryActions, directorySlice } from "./directorySlice";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const directorySyncStorageMiddleware = createListenerMiddleware();
 
@@ -16,7 +16,7 @@ directorySyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+		ExtensionVirtualStorage.modifyStorage((storage) => {
 			storage.userData.directory = state.directory.videoBrowser
 
 			if (!storage.meta.changed.includes(directorySlice.name)) {

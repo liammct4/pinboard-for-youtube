@@ -1,7 +1,7 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { authActions, authSlice } from "./authSlice";
-import { ExtensionMainVirtualStorage } from "../../lib/storage/virtualStorage";
+import { ExtensionVirtualStorage } from "../../lib/storage/virtualStorage";
 
 export const authSyncStorageMiddleware = createListenerMiddleware();
 
@@ -16,7 +16,7 @@ authSyncStorageMiddleware.startListening({
 	effect: async (_action, listenerApi) => {
 		let state = listenerApi.getState() as RootState;
 
-		ExtensionMainVirtualStorage.modifyStorage((storage) => {
+		ExtensionVirtualStorage.modifyStorage((storage) => {
 			storage.auth.currentUser = state.auth.currentUser;
 			
 			if (!storage.meta.changed.includes(authSlice.name)) {

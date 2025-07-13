@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
-import { ILocalStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 
 export interface ICacheSlice {
 	videoCache: IYoutubeVideoInfo[]
@@ -14,7 +14,7 @@ export const cacheSlice = createSlice({
 	name: "cache",
 	initialState,
 	reducers: {
-		updateCacheSliceFromStorage: (state, action: PayloadAction<ILocalStorage>) => {
+		updateCacheSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videoCache = action.payload.cache.videos;
 		},
 		saveVideoToCache: (state, action: PayloadAction<IYoutubeVideoInfo>) => {

@@ -1,4 +1,4 @@
-import { setupStorageAndStoreSync, syncStoreToLocalStorage, syncStoreToMainStorage } from "../app/setup";
+import { setupStorageAndStoreSync, syncStoreToStorage } from "../app/setup";
 import { controlsSetup } from "./controls/controls";
 import { timelineSetup } from "./timeline/timeline";
 import { videoSetup } from "./video";
@@ -9,8 +9,7 @@ let lastLink = "";
 
 function contentScriptMain() {
 	setupStorageAndStoreSync();
-	syncStoreToLocalStorage(false);
-	syncStoreToMainStorage(false);
+	syncStoreToStorage(false);
 	
 	injectionSetup();
 	videoSetup();

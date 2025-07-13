@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { ICustomTheme, ThemeID } from "../../lib/config/theming/appTheme";
-import { IPrimaryStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 import { DEFAULT_THEME } from "../../styling/themes";
 
 export interface IThemeSlice {
@@ -17,7 +17,7 @@ export const themeSlice = createSlice({
 	name: "theme",
 	initialState,
 	reducers: {
-		updateThemeSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
+		updateThemeSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.currentTheme = action.payload.userData.config.theme;
 			state.customThemes = action.payload.userData.config.customThemes;
 		},

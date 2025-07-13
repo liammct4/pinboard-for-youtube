@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IPrimaryStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 import { IVideo, TimestampID } from "../../lib/video/video";
 
 export interface IVideoSlice {
@@ -18,7 +18,7 @@ export const videoSlice = createSlice({
 	name: "video",
 	initialState,
 	reducers: {
-		updateVideoSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
+		updateVideoSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videos = action.payload.userData.videos;
 		},
 		changeActiveVideoID: (state, action: PayloadAction<string>) => {

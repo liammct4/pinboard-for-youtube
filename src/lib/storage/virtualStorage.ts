@@ -1,16 +1,15 @@
 import { checkAndImplementLocalStorage } from "../browser/features/localStorage";
-import { getApplicationContextType, ILocalStorage, IMetaStorage, IPrimaryStorage } from "./storage";
+import { getApplicationContextType, IMetaStorage, IStorage } from "./storage";
 
 checkAndImplementLocalStorage();
 
 /*
 Acts as a StorageArea but does not immediately push
 changes to the actual storage area. Instead waiting with a delay.
-Allows multiple writes to storage concurrently without overwriting data,
-as well as preventing exceeding the request limit by chrome.storage.sync (MAX_WRITE_OPERATIONS_PER_MINUTE).
+Allows multiple writes to storage concurrently without overwriting data.
 */
 export class VirtualStorageArea<T extends IMetaStorage> {
-	public delayTime: number = 230;
+	public delayTime: number = 150;
 	private pushChangesTime: number;
 	private virtualStorage: T;
 	private saved: boolean = true;
@@ -40,13 +39,13 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 		this.check();
 	}
 
-	private check() {
+	private async check() {
 		if (!this.saved) {
 			if (Date.now() > this.pushChangesTime) {
 				this.virtualStorage.meta.author = getApplicationContextType();
 				this.saved = true;
 
-				this.storageArea.set(this.virtualStorage);
+				await this.storageArea.set(this.virtualStorage);
 			}
 			else {
 				setTimeout(() => this.check(), 10);
@@ -55,4 +54,4 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 	}
 }
 
-export const ExtensionVirtualStorage = new VirtualStorageArea<IPrimaryStorage>(chrome.storage.sync);
+export const ExtensionVirtualStorage = new VirtualStorageArea<IStorage>(chrome.storage.local);

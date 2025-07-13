@@ -16,7 +16,7 @@ import { OptionsNavigator } from "./routes/Menu/Options/OptionsNavigator.tsx"
 import { DebugPage } from "./routes/Menu/Options/Debug/DebugPage.tsx"
 import { ErrorPage } from "./routes/ErrorPage/ErrorPage.tsx"
 import { createTestUserData, sampleCacheData, sampleVideoData } from "./../testData/testDataSet.ts";
-import { setupStorageAndStoreSync, syncStoreToLocalStorage, syncStoreToMainStorage } from "./app/setup.ts"
+import { setupStorageAndStoreSync, syncStoreToStorage } from "./app/setup.ts"
 import "./../public/common-definitions.css"
 import "./../public/globals.css"
 import "./main.css"
@@ -33,8 +33,7 @@ async function initializeExtension() {
 	await ensureInitialized();
 	setupStorageAndStoreSync();
 	
-	await syncStoreToLocalStorage(false);
-	await syncStoreToMainStorage(false);
+	await syncStoreToStorage(false);
 
 	let activeID: string | undefined;
 	let environment = getApplicationContextType();

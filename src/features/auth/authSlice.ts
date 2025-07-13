@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { IAuthenticatedUser, TemporaryTokens } from "../../lib/user/accounts";
-import { IPrimaryStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 
 export interface IAuthSlice {
 	currentUser: IAuthenticatedUser | undefined;
@@ -16,7 +16,7 @@ export const authSlice = createSlice({
 	name: "auth",
 	initialState,
 	reducers: {
-		updateAuthSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
+		updateAuthSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.currentUser = action.payload.auth.currentUser;
 		},
 		setCurrentUserAndStorage: (state, action: PayloadAction<IAuthenticatedUser>) => {

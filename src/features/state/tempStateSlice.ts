@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LayoutState, TimestampStyle, VideoPresentationStyle } from "../../lib/storage/tempState/layoutState";
-import { IPrimaryStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 
 export interface IStateSlice {
 	expandedVideoIDs: string[];
@@ -31,7 +31,7 @@ export const tempStateSlice = createSlice({
 	name: "tempState",
 	initialState,
 	reducers: {
-		updateTempSliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
+		updateTempSliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.expandedVideoIDs = action.payload.tempState.expandedVideos;
 			state.currentDirectory = action.payload.tempState.currentDirectoryPath;
 			state.layout = action.payload.tempState.layout;

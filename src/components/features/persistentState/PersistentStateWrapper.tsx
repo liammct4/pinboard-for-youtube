@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { To, useNavigate } from "react-router-dom";
 import { IWrapperProperties } from "../wrapper";
-import { accessMainStorage } from "../../../lib/storage/storage";
+import { accessStorage } from "../../../lib/storage/storage";
 
 export function PersistentStateWrapper({ children }: IWrapperProperties) {
 	const navigate = useNavigate();
@@ -11,7 +11,7 @@ export function PersistentStateWrapper({ children }: IWrapperProperties) {
 	useEffect(() => {
 		// Persistent state.
 		const checkPersistentState = async () => {
-			let storage = await accessMainStorage();
+			let storage = await accessStorage();
 			let path: string | undefined = storage.persistentState.path;
 
 			if (path != undefined) {

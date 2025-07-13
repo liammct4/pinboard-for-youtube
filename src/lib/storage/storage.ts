@@ -25,13 +25,7 @@ export interface IMetaStorage {
 	}
 }
 
-export interface ILocalStorage extends IMetaStorage {
-	cache: {
-		videos: IYoutubeVideoInfo[]
-	}
-}
-
-export interface IPrimaryStorage extends IMetaStorage {
+export interface IStorage extends IMetaStorage {
 	userData: {
 		videos: {
 			[videoID: string]: IVideo | undefined
@@ -46,6 +40,9 @@ export interface IPrimaryStorage extends IMetaStorage {
 	persistentState: IPersistentState;
 	account: {
 		mutationQueues: IMutationQueues;
+	},
+	cache: {
+		videos: IYoutubeVideoInfo[]
 	}
 }
 
@@ -68,17 +65,7 @@ export function getApplicationContextType(): StorageAuthorSources {
 	return "CONTENT_SCRIPT";
 }
 
-export const BLANK_LOCAL_STORAGE_TEMPLATE: ILocalStorage = {
-	cache: {
-		videos: []
-	},
-	meta: {
-		author: getApplicationContextType(),
-		changed: []
-	}
-}
-
-export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
+export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	userData: {
 		videos: {},
 		directory: {
@@ -119,6 +106,9 @@ export const BLANK_MAIN_STORAGE_TEMPLATE: IPrimaryStorage = {
 			videoPendingQueue: [],
 		}
 	},
+	cache: {
+		videos: []
+	},
 	meta: {
 		author: getApplicationContextType(),
 		changed: []
@@ -145,7 +135,7 @@ export async function accessStorage(): Promise<IStorage> {
 	return storage;
 }
 
-export async function modifyStorage(modifier: (s: IPrimaryStorage) => void): Promise<void> {
+export async function modifyStorage(modifier: (s: IStorage) => void): Promise<void> {
 	let storage = await accessStorage();
 
 	modifier(storage);

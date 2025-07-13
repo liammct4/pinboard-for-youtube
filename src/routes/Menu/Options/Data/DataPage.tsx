@@ -39,7 +39,7 @@ export function DataPage({}) {
 	const showEditor = params.get("showEditor") == "true";
 
 	useEffect(() => {
-		chrome.storage.sync.get().then(s => setStorageText(JSON.stringify(s, null, 4)));
+		chrome.storage.local.get().then(s => setStorageText(JSON.stringify(s, null, 4)));
 	}, []);
 
 	const onDeleteCache = () => {
@@ -53,7 +53,7 @@ export function DataPage({}) {
 		}
 
 		if (button == "Copy data, then reset") {
-			let storage = await chrome.storage.sync.get();
+			let storage = await chrome.storage.local.get();
 			let data = btoa(JSON.stringify(storage));
 
 			try {
@@ -72,7 +72,6 @@ export function DataPage({}) {
 			}
 		}
 
-		await chrome.storage.sync.clear();
 		await chrome.storage.local.clear();
 
 		activateMessage("Successfully wiped your data.", "You can now close the extension.", "Success", "Tick", 8000);
@@ -80,7 +79,7 @@ export function DataPage({}) {
 	}
 
 	const onCopyData = async () => {
-		let storage = JSON.stringify(await chrome.storage.sync.get());
+		let storage = JSON.stringify(await chrome.storage.local.get());
 		let string = encoded ? btoa(storage) : storage;
 
 		try {
@@ -120,8 +119,8 @@ export function DataPage({}) {
 			return;
 		}
 
-		chrome.storage.sync.clear();
-		chrome.storage.sync.set(parsed);
+		chrome.storage.local.clear();
+		chrome.storage.local.set(parsed);
 
 		activateMessage(
 			undefined,
@@ -150,8 +149,8 @@ export function DataPage({}) {
 			return;
 		}
 
-		chrome.storage.sync.clear();
-		chrome.storage.sync.set(parsed);
+		chrome.storage.local.clear();
+		chrome.storage.local.set(parsed);
 
 		navigate("/close");
 

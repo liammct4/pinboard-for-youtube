@@ -1,4 +1,4 @@
-import { accessLocalStorage, accessMainStorage, getApplicationContextType, IMetaStorage } from "../lib/storage/storage";
+import { accessStorage, getApplicationContextType, IMetaStorage, IStorage } from "../lib/storage/storage";
 import { authActions, authSlice } from "../features/auth/authSlice";
 import { store } from "./store";
 import { tempStateActions, tempStateSlice } from "../features/state/tempStateSlice";
@@ -7,10 +7,10 @@ import { settingsActions, settingsSlice } from "../features/settings/settingsSli
 import { cacheActions, cacheSlice } from "../features/cache/cacheSlice";
 import { videoActions, videoSlice } from "../features/video/videoSlice";
 import { directoryActions, directorySlice } from "../features/directory/directorySlice";
-import { ExtensionLocalVirtualStorage, ExtensionMainVirtualStorage } from "../lib/storage/virtualStorage";
+import { ExtensionVirtualStorage } from "../lib/storage/virtualStorage";
 
-export async function syncStoreToMainStorage(onlyUpdateWhenChanged: boolean) {
-	let mainStorage = await accessMainStorage();
+export async function syncStoreToStorage(onlyUpdateWhenChanged: boolean) {
+	let mainStorage = await accessStorage();
 
 	if (!onlyUpdateWhenChanged || mainStorage.meta.changed.includes(tempStateSlice.name)) store.dispatch(tempStateActions.updateTempSliceFromStorage(mainStorage));
 	
@@ -23,15 +23,11 @@ export async function syncStoreToMainStorage(onlyUpdateWhenChanged: boolean) {
 	if (!onlyUpdateWhenChanged || mainStorage.meta.changed.includes(videoSlice.name)) store.dispatch(videoActions.updateVideoSliceFromStorage(mainStorage));
 	
 	if (!onlyUpdateWhenChanged || mainStorage.meta.changed.includes(directorySlice.name)) store.dispatch(directoryActions.updateDirectorySliceFromStorage(mainStorage));
+
+	if (!onlyUpdateWhenChanged || mainStorage.meta.changed.includes(cacheSlice.name)) store.dispatch(cacheActions.updateCacheSliceFromStorage(mainStorage));
 	
 	mainStorage.meta.changed = [];
-	chrome.storage.sync.set(mainStorage);
-}
-
-export async function syncStoreToLocalStorage(onlyUpdateWhenChanged: boolean) {
-	let localStorage = await accessLocalStorage();
-
-	if (!onlyUpdateWhenChanged || localStorage.meta.changed.includes(cacheSlice.name)) store.dispatch(cacheActions.updateCacheSliceFromStorage(localStorage));
+	chrome.storage.local.set(mainStorage);
 }
 
 export function setupStorageAndStoreSync() {
@@ -43,10 +39,10 @@ export function setupStorageAndStoreSync() {
 			setTimeout(() => {
 				storage.meta.changed = [];
 				chrome.storage.local.set(storage);
-			}, ExtensionMainVirtualStorage.delayTime * 2);
+			}, ExtensionVirtualStorage.delayTime * 2);
 			return;
 		}
 
-		syncStoreToLocalStorage(true);
-	}
+		syncStoreToStorage(true);
+	});
 }

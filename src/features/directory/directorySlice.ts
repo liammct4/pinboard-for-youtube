@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IPrimaryStorage } from "../../lib/storage/storage";
+import { IStorage } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeFromVideoID, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
 import { getParentPathFromPath, NodePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
@@ -50,7 +50,7 @@ export const directorySlice = createSlice({
 	name: "directory",
 	initialState,
 	reducers: {
-		updateDirectorySliceFromStorage: (state, action: PayloadAction<IPrimaryStorage>) => {
+		updateDirectorySliceFromStorage: (state, action: PayloadAction<IStorage>) => {
 			state.videoBrowser = action.payload.userData.directory;
 		},
 		renameDirectory: (state, action: PayloadAction<DirectoryRenameDirectoryPayload>) => {
