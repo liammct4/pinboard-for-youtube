@@ -88,12 +88,15 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 			return;
 		}
 
+		let existingOffset = arrowRef.current.style.getPropertyValue("--arrow-offset-align-distance");
+		let existingOffsetValue = Number(existingOffset.split("px")[0]);
+
 		let buttonBottom = buttonRef.current.getBoundingClientRect().bottom;
 		let arrowTop = arrowImageRef.current.getBoundingClientRect().top;
 
-		let arrowVerticalOffset = (buttonBottom - arrowTop) - 1;
+		let arrowVerticalOffset = ((buttonBottom - arrowTop) - 1) + existingOffsetValue;
 		arrowRef.current.style.setProperty("--arrow-offset-align-distance", `${arrowVerticalOffset}px`);
-	}, [arrowImageRef, isAutoplayButton]);
+	}, [arrowImageRef, isAutoplayButton, timelineBounds.size]);
 
 	if (!videoData.isVideoPage) {
 		return <></>;
