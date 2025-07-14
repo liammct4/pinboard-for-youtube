@@ -397,7 +397,7 @@ export function VideosPage(): React.ReactNode {
 											}
 										]}>
 											<TextInput<AddDirectoryFormFields>
-												label="Section Name:"
+												label="Directory Name:"
 												title="Name of the new directory to be created in this directory."
 												name="directoryName"
 												fieldSize="max"

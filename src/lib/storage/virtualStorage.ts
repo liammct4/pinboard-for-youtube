@@ -9,7 +9,7 @@ changes to the actual storage area. Instead waiting with a delay.
 Allows multiple writes to storage concurrently without overwriting data.
 */
 export class VirtualStorageArea<T extends IMetaStorage> {
-	public delayTime: number = 150;
+	public delayTime: number = 15;
 	private pushChangesTime: number;
 	private virtualStorage: T;
 	private saved: boolean = true;
