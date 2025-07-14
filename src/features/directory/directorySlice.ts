@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { IStorage } from "../../lib/storage/storage";
+import { IStorage, ROOT_NODE_ID } from "../../lib/storage/storage";
 import { createNode, DirectoryTree, getNodeFromPath, getNodeFromVideoID, getNodeType, getPathOfNode, IDirectoryNode, insertNodeInOrder, IVideoNode, NodeRef, removeSubBranches } from "../../lib/directory/directory";
 import { getParentPathFromPath, NodePath, pathEquals, pathToString, resolvePath, validateDirectoryName } from "../../lib/directory/path";
 import { IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil";
@@ -8,18 +8,16 @@ export interface IDirectorySlice {
 	videoBrowser: DirectoryTree;
 }
 
-let rootNodeID = createNode();
-
 const initialState: IDirectorySlice = {
 	videoBrowser: {
-		rootNode: rootNodeID,
+		rootNode: ROOT_NODE_ID,
 		directoryNodes: {},
 		videoNodes: {}
 	}
 }
 
-initialState.videoBrowser.directoryNodes[rootNodeID] = {
-	nodeID: rootNodeID,
+initialState.videoBrowser.directoryNodes[ROOT_NODE_ID] = {
+	nodeID: ROOT_NODE_ID,
 	slice: "$",
 	subNodes: []
 }

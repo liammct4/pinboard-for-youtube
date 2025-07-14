@@ -6,7 +6,7 @@ import DropIcon from "./../../../../../../assets/icons/drop_in.svg?react"
 import RenameIcon from "./../../../../../../assets/icons/rename.svg?react"
 import { IconContainer } from "../../../../images/svgAsset";
 import { VideoDirectoryInteractionContext } from "../../../../../context/directory";
-import { createNode, getNodeSection, IDirectoryNode, NodeRef } from "../../../../../lib/directory/directory";
+import { IDirectoryNode } from "../../../../../lib/directory/directory";
 import { SmallButton } from "../../../../interactive/buttons/SmallButton/SmallButton";
 
 interface IDirectoryItemProperties {

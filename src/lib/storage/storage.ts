@@ -46,9 +46,11 @@ export interface IStorage extends IMetaStorage {
 	}
 }
 
+export const ROOT_NODE_ID = "cd108e87-e3fb-41cf-b5e2-d9d4ef8824e0:NODE";
+
 let rootNode: IDirectoryNode = {
 	slice: "$",
-	nodeID: createNode(),
+	nodeID: ROOT_NODE_ID,
 	subNodes: []
 }
 
@@ -119,7 +121,7 @@ export async function ensureInitialized(): Promise<void> {
 	// Storage is empty if not initialized.
 	let storage: IStorage | {} | undefined = await chrome.storage.local.get();
 
-	deepMerge(storage, BLANK_STORAGE_TEMPLATE)
+	deepMerge(storage, BLANK_STORAGE_TEMPLATE);
 	await chrome.storage.local.set(storage);
 }
 

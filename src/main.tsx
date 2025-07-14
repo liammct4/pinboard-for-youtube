@@ -35,7 +35,6 @@ async function initializeExtension() {
 	
 	await syncStoreToStorage(false);
 
-	let activeID: string | undefined;
 	let environment = getApplicationContextType();
 
 	if (environment == "EXTENSION") {
