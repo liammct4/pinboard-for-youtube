@@ -144,7 +144,7 @@ export function TimelineButton({ timestamp, timelineBounds, isAutoplayButton, on
 	else {
 		let text = hover && !isDragging ? timestamp.message : secondTime;
 		content = <p className="timeline-inner-text">{text}</p>
-		textWidth = measureText(text, `9pt "Roboto"`) + 14;
+		textWidth = measureText(text, `9pt "Open Sans"`) + 14;
 	}
 
 	let mouseEvents: React.HTMLAttributes<HTMLElement> = {
