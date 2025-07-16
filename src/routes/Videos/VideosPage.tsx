@@ -149,6 +149,7 @@ export function VideosPage(): React.ReactNode {
 	const clearEverything = (action: string) => {
 		if (action == "I understand, remove everything") {
 			dispatch(directoryActions.removeNodes([ "$" ]));
+			dispatch(tempStateActions.setDirectoryPath("$"));
 			setSelectedItems([]);
 		}
 	};

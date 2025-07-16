@@ -3,7 +3,7 @@ import { getApplicationContextType, IMetaStorage, IStorage } from "./storage";
 
 checkAndImplementLocalStorage();
 
-const DEBUG_STORAGE = true;
+const DEBUG_STORAGE = false;
 
 /*
 Acts as a StorageArea but does not immediately push
