@@ -3,6 +3,8 @@ import { getApplicationContextType, IMetaStorage, IStorage } from "./storage";
 
 checkAndImplementLocalStorage();
 
+const DEBUG_STORAGE = true;
+
 /*
 Acts as a StorageArea but does not immediately push
 changes to the actual storage area. Instead waiting with a delay.
@@ -45,6 +47,10 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 				this.virtualStorage.meta.author = getApplicationContextType();
 				this.saved = true;
 
+				if (DEBUG_STORAGE) {
+					console.log(this.virtualStorage);
+				}
+				
 				await this.storageArea.set(this.virtualStorage);
 			}
 			else {
