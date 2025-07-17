@@ -20,6 +20,7 @@ export const VersionInfo: VersionData[] = [
 			"Fixed an issue where the \"Clear All\" button would still leave video data behind.",
 			"Fixed an issue where scrollbars would be extremely difficult to see when using a dark theme.",
 			"Fix UTF-8 incompatibility when copying/encoding data. (Removed encoding)",
+			"Fixed an issue where the mouse tooltip when dragging a node would wrap improperly when cut off by the edge of the extension."
 		]
 	}
 ]
