@@ -150,6 +150,7 @@ export function VideosPage(): React.ReactNode {
 		if (action == "I understand, remove everything") {
 			dispatch(directoryActions.removeNodes([ "$" ]));
 			dispatch(tempStateActions.setDirectoryPath("$"));
+			dispatch(videoActions.clearVideos());
 			setSelectedItems([]);
 		}
 	};
