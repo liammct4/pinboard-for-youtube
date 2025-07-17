@@ -45,8 +45,8 @@ export function HelpPage(): React.ReactNode {
 				<ButtonPanel className={styles.buttonPanel} direction="Vertical">
 					<SmallButton onClick={() => window.open(about.links.github)}>Repository</SmallButton>
 					<SmallButton onClick={() => window.open(about.links.readme)}>README</SmallButton>
-					<SmallButton onClick={() => window.open(about.links.license)}>License</SmallButton>
 					<SmallButton onClick={() => navigate("/app/menu/options/updates")}>Update Notes</SmallButton>
+					<SmallButton onClick={() => window.open(about.links.chromeWebStore)}>Chrome Web Store</SmallButton>
 				</ButtonPanel>
 			</div>
 			<SplitHeading text="Issues"/>

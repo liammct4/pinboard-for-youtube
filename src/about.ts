@@ -10,6 +10,6 @@ export const about = {
 		discussions: "https://github.com/liammct4/pinboard-for-youtube/discussions",
 		issues: "https://github.com/liammct4/pinboard-for-youtube/issues",
 		readme: "https://github.com/liammct4/pinboard-for-youtube/blob/main/README.md",
-		license: "https://github.com/liammct4/pinboard-for-youtube/blob/main/LICENSE"
+		chromeWebStore: "https://chromewebstore.google.com/detail/onhlcaclglibpmkgdjcaaijnepbiljam"
 	}
 }
