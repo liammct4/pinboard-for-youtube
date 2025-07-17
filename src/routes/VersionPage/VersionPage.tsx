@@ -37,11 +37,11 @@ export function VersionPage() {
 					: <></>
 			}
 			{
-				versionData.features ?
+				versionData.changes ?
 					<>
-						<h4 className={styles.subtitle}>Features:</h4>
+						<h4 className={styles.subtitle}>Changes:</h4>
 						<ul className={styles.list}>
-							{versionData.features.map(f => <li key={f}>{f}</li>)}
+							{versionData.changes.map(f => <li key={f}>{f}</li>)}
 						</ul>
 					</>
 					: <></>

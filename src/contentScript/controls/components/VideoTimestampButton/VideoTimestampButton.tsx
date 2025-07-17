@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { createTimestamp, IVideo } from "../../../../lib/video/video";
+import { createTimestamp, IVideo, TimestampID } from "../../../../lib/video/video";
 import { CircularLargeButton } from "../CircularLargeButton/CircularLargeButton";
 import { videoActions } from "../../../../features/video/videoSlice";
 import { directoryActions } from "../../../../features/directory/directorySlice";
@@ -16,7 +16,7 @@ export function VideoTimestampButton() {
 	const videoCache = useSelector((state: RootState) => state.cache.videoCache);
 	const tree = useSelector((state: RootState) => state.directory.videoBrowser);
 	const videos = useSelector((state: RootState) => state.video.videos);
-	const { saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut, saveToChannelDirectory } = useSelector((state: RootState) => state.settings.settings);
+	const { useAutoSaveLatestTimestamp, saveVideoTimestampButtonEnabled, pinCurrentTimestampShortcut, saveToChannelDirectory } = useSelector((state: RootState) => state.settings.settings);
 
 	const onSaveVideo = async () => {
 		let result = YOUTUBE_EXTRACT_VIDEO_ID_REGEX.exec(window.location.href);
@@ -42,7 +42,7 @@ export function VideoTimestampButton() {
 			updatedVideo = {
 				id: videoID,
 				timestamps: [ newTimestamp ],
-				autoplayTimestamp: null
+				autoplayTimestamp: useAutoSaveLatestTimestamp ? newTimestamp.id : null
 			}
 			
 			let path: NodePath;
@@ -78,12 +78,22 @@ export function VideoTimestampButton() {
 			}));
 		}
 		else {
+			let autoplayTimestamp: TimestampID | null = null;
+
+			if (existingVideo.autoplayTimestamp != null) {
+				autoplayTimestamp = existingVideo.autoplayTimestamp;
+			}
+			else if (useAutoSaveLatestTimestamp) {
+				autoplayTimestamp = newTimestamp.id;
+			}
+
 			updatedVideo = {
 				...existingVideo,
 				timestamps: [
 					...existingVideo.timestamps,
 					newTimestamp
-				]
+				],
+				autoplayTimestamp: autoplayTimestamp
 			};
 		}
 
