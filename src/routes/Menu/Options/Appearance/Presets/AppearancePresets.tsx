@@ -127,9 +127,9 @@ export function AppearancePresets(): React.ReactNode {
 
 	return (
 		<>
-			<ul className="theme-list">
+			<ButtonPanel direction="Vertical" className="theme-list">
 				{AppThemesArray.map(t => <ThemePreset key={t.id} theme={t.id}/>)}
-			</ul>
+			</ButtonPanel>
 			<hr className="bold-separator"/>
 			<SplitHeading text="Custom Themes"/>
 			<div className="custom-theme-controls">
