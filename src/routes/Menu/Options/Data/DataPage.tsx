@@ -30,7 +30,6 @@ type SaveChangesFormFields = "editorText";
 export function DataPage({}) {
 	const { activateMessage } = useNotificationMessage();
 	const navigate = useNavigate();
-	const [ encoded, setEncoded ] = useState<boolean>(true);
 	const [ storageText, setStorageText ] = useState<string>("");
 	const [ showEditorDialog, setShowEditorDialog ] = useState<boolean>(false);
 	const [ params, setSearchParams] = useSearchParams();
@@ -54,7 +53,7 @@ export function DataPage({}) {
 
 		if (button == "Copy data, then reset") {
 			let storage = await chrome.storage.local.get();
-			let data = btoa(JSON.stringify(storage));
+			let data = JSON.stringify(storage);
 
 			try {
 				navigator.clipboard.writeText(data);
@@ -80,10 +79,9 @@ export function DataPage({}) {
 
 	const onCopyData = async () => {
 		let storage = JSON.stringify(await chrome.storage.local.get());
-		let string = encoded ? btoa(storage) : storage;
 
 		try {
-			navigator.clipboard.writeText(string);
+			navigator.clipboard.writeText(storage);
 		}
 		catch (e) {
 			activateMessage(
@@ -106,13 +104,10 @@ export function DataPage({}) {
 	}
 
 	const onReplaceData = async (data: string) => {
-		let isJson = data.charAt(0) == "{";
-		let decoded = isJson ? data : atob(data);
-
 		let parsed;
 
 		try {
-			parsed = JSON.parse(decoded);
+			parsed = JSON.parse(data);
 		}
 		catch {
 			activateMessage("Could not load", "The provided text in the clipboard was invalid.", "Error", "Error", undefined, "Shake");
@@ -170,11 +165,6 @@ export function DataPage({}) {
 				<MediumButton onClick={onDeleteCache}>Delete Cache</MediumButton>
 			</ButtonPanel>
 			<SplitHeading className={styles.heading} text="Your Data"/>
-			<SwitchInputPrimitive
-				label="Encode Data"
-				labelSize="medium"
-				onChange={setEncoded}
-				value={encoded}/>
 			<ButtonPanel className={styles.optionsPanel} direction="Vertical">
 				<ActionMessageDialog<ResetDialog>
 					title="Reset Extension"
@@ -185,7 +175,7 @@ export function DataPage({}) {
 					onButtonPressed={onReset}>
 						<MediumButton title="Reset the extension and remove all personal data.">Reset Extension</MediumButton>
 				</ActionMessageDialog>
-				<MediumButton onClick={onCopyData} title={encoded ? "Copies the data encoded in Base64." : "Copies the raw JSON data."}>Copy Data</MediumButton>
+				<MediumButton onClick={onCopyData} title="Copies the raw JSON data.">Copy Data</MediumButton>
 			</ButtonPanel>
 			<ActionMessageDialog
 				title="Manually modify data"

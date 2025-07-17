@@ -16,7 +16,8 @@ export const VersionInfo: VersionData[] = [
 		],
 		bugFixes: [
 			"Fixed an issue where clicking the \"Clear All\" button would not reset the current directory path.",
-			"Fixed an issue where scrollbars would be extremely difficult to see when using a dark theme."
+			"Fixed an issue where scrollbars would be extremely difficult to see when using a dark theme.",
+			"Fix UTF-8 incompatibility when copying/encoding data."
 		]
 	}
 ]
