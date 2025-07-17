@@ -54,6 +54,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--pfy-spacing-standard);
+		text-wrap: nowrap;
 	}
 
 	.directory-item {
