@@ -7,14 +7,15 @@ import { ButtonPanel } from "../../../components/interactive/ButtonPanel/ButtonP
 interface IOptionProperties {
 	name: string;
 	path: string;
+	autoFocus?: boolean;
 }
 
-function Option({ name, path }: IOptionProperties): React.ReactNode {
+function Option({ name, path, autoFocus }: IOptionProperties): React.ReactNode {
 	const navigate = useNavigate();
 
 	return (
 		<li className={styles.optionItem}>
-			<SubtleButton className={styles.optionButton} onClick={() => navigate(path)}>{name}</SubtleButton>
+			<SubtleButton autoFocus={autoFocus} className={styles.optionButton} onClick={() => navigate(path)}>{name}</SubtleButton>
 			<hr className={`${styles.regularSeparator} regular-separator`}></hr>
 		</li>
 	)
@@ -28,7 +29,7 @@ export function OptionsNavigator(): React.ReactNode {
 	return (
 		<ButtonPanel direction="Vertical">
 			<ul className={styles.optionsList}>
-				<Option name="About & Help" path="help"/>
+				<Option name="About & Help" path="help" autoFocus/>
 				<Option name="General" path="general"/>
 				<Option name="Data" path="data"/>
 				<Option name="Accounts" path="accounts"/>
