@@ -9,7 +9,7 @@ import { MediumButton } from "../../components/interactive/buttons/MediumButton/
 import { useNotificationMessage } from "../../components/features/notifications/useNotificationMessage";
 import "./ErrorPage.css"
 import { LinkText } from "../../components/interactive/LinkText/LinkText";
-import about from "./../../about.json"
+import { about } from "../../about"
 
 export function ErrorPage(): React.ReactNode {
 	const { activateMessage } = useNotificationMessage();

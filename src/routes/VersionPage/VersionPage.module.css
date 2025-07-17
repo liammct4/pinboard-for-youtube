@@ -1,0 +1,35 @@
+.page {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	.latest-text {
+		margin-top: var(--pfy-spacing-standard);
+		margin-bottom: var(--pfy-spacing-standard-compact);
+	}
+
+	.subtitle {
+		font-size: var(--pfy-font-heading-tiny);
+		margin-top: var(--pfy-spacing-standard);
+		margin-bottom: var(--pfy-spacing-standard);
+	}
+
+	.list {
+		list-style: square;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+	
+	.buttons {
+		flex-grow: 1;
+		align-items: end;
+		gap: var(--pfy-spacing-standard);
+		margin-left: var(--pfy-spacing-very-large);
+		margin-right: var(--pfy-spacing-very-large);
+		margin-bottom: var(--pfy-spacing-standard);
+
+		& button {
+			width: 50%;
+		}
+	}
+}

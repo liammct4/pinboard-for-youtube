@@ -6,10 +6,10 @@
 	gap: var(--pfy-spacing-very-large);
 
 	.about-area {
+		align-self: flex-start;
 		display: grid;
 		width: 50%;
 		grid-template-columns: auto auto;
-		grid-template-rows: 1fr 1fr;
 		font-size: var(--pfy-font-text-big);
 		padding: var(--pfy-spacing-standard-compact) var(--pfy-spacing-standard);
 		border-radius: var(--pfy-spacing-standard);

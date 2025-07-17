@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Header } from "../../components/presentation/extension/Header/Header";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
-import about from "./../../about.json";
+import { about } from "../../about";
 import "./HomePage.css"
 
 export function HomePage(): React.ReactNode {

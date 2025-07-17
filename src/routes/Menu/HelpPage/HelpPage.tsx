@@ -1,9 +1,10 @@
 import { SplitHeading } from "../../../components/presentation/Decorative/Headings/SplitHeading/SplitHeading";
 import styles from "./HelpPage.module.css";
-import about from "./../../../about.json";
+import { about } from "../../../about";
 import { ButtonPanel } from "../../../components/interactive/ButtonPanel/ButtonPanel";
 import { SmallButton } from "../../../components/interactive/buttons/SmallButton/SmallButton";
 import { LinkText } from "../../../components/interactive/LinkText/LinkText";
+import { useNavigate } from "react-router-dom";
 
 type IRowProperties = {
 	row: number;
@@ -30,6 +31,7 @@ function Row({ row, label, text, bold }: IRowProperties) {
 }
 
 export function HelpPage(): React.ReactNode {
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -44,6 +46,7 @@ export function HelpPage(): React.ReactNode {
 					<SmallButton onClick={() => window.open(about.links.github)}>Repository</SmallButton>
 					<SmallButton onClick={() => window.open(about.links.readme)}>README</SmallButton>
 					<SmallButton onClick={() => window.open(about.links.license)}>License</SmallButton>
+					<SmallButton onClick={() => navigate("/app/menu/options/updates")}>Update Notes</SmallButton>
 				</ButtonPanel>
 			</div>
 			<SplitHeading text="Issues"/>

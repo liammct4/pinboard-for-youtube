@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { store } from "./app/store.js"
 import { Provider } from "react-redux"
 import { getActiveTabURL } from "./lib/browser/page.ts"
-import { ensureInitialized, getApplicationContextType } from "./lib/storage/storage.ts"
+import { accessStorage, ensureInitialized, getApplicationContextType, IStorage } from "./lib/storage/storage.ts"
 import { getVideoIdFromYouTubeLink, doesVideoExist } from "./lib/util/youtube/youtubeUtil.ts"
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 import { VideosPage } from "./routes/Videos/VideosPage.tsx"
@@ -28,6 +28,9 @@ import { ClosePage } from "./routes/Menu/Options/ClosePage/ClosePage.tsx"
 import { PfyWrapper } from "./routes/PfyWrapper/PfyWrapper.tsx"
 import { HomePage } from "./routes/HomePage/HomePage.tsx"
 import { HelpPage } from "./routes/Menu/HelpPage/HelpPage.tsx"
+import { isVersionGreater, Version } from "./lib/util/versioning.ts"
+import { about } from "./about.ts"
+import { VersionPage } from "./routes/VersionPage/VersionPage.tsx"
 
 async function initializeExtension() {
 	await ensureInitialized();
@@ -75,7 +78,8 @@ async function initializeExtension() {
 									<Route path="appearance/*" element={<AppearancePage/>}/>
 									<Route path="debug/*" element={<DebugPage/>}/>
 									<Route path="*" element={<OptionsNavigator/>}/>
-									<Route path="help" element={<HelpPage/>}/>				
+									<Route path="help" element={<HelpPage/>}/>
+									<Route path="updates" element={<VersionPage/>}/>			
 								</Route>
 							</Route>
 							<Route path="" element={<Navigate to="videos" replace/>} ErrorBoundary={errorPage}/>

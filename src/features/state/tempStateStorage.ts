@@ -21,7 +21,8 @@ tempStateSyncStorageMiddleware.startListening({
 				expandedVideos: state.tempState.expandedVideoIDs,
 				currentDirectoryPath: state.tempState.currentDirectory,
 				layout: state.tempState.layout,
-				videoBrowserScrollDistance: state.tempState.videoBrowserScrollDistance
+				videoBrowserScrollDistance: state.tempState.videoBrowserScrollDistance,
+				lastVersionRead: state.tempState.acceptedVersion
 			};
 
 			if (!storage.meta.changed.includes(tempStateSlice.name)) {

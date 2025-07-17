@@ -3,13 +3,15 @@ import { ITempState } from "./tempState/tempState"
 import { IAuthenticatedUser } from "../user/accounts.ts"
 import { IPersistentState } from "./persistentState/persistentState.ts"
 import { IYoutubeVideoInfo } from "../util/youtube/youtubeUtil.ts"
-import { createNode, DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
+import { DirectoryTree, IDirectoryNode } from "../directory/directory.ts"
 import { DataMutation } from "../../components/features/useUserAccount.ts"
 import { IAppTheme } from "../config/theming/appTheme.ts"
 import { IConfig } from "./config.ts"
 import { defaultSettings } from "../config/settings.ts"
 import { deepMerge } from "../util/objects/objects.ts"
-import { AppThemes, DEFAULT_THEME } from "../../styling/themes.ts"
+import { DEFAULT_THEME } from "../../styling/themes.ts"
+import { about } from "../../about.ts"
+import { Version } from "../util/versioning.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
@@ -92,7 +94,8 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 			videoItemViewStyle: "MINIMAL",
 			timestampStyle: "FULL",
 			isDirectoryBrowserSettingsExpanded: false
-		}
+		},
+		lastVersionRead: about.version
 	},
 	auth: {
 		currentUser: undefined

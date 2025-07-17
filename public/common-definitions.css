@@ -104,6 +104,7 @@
 		
 	::-webkit-scrollbar-thumb {
 		background: var(--pfy-empty-02-depth);
+		border: 1px solid var(--pfy-primary-ultradark);
 		border-radius: calc(var(--pfy-spanning-scroll-element) / 2);
 		
 		&:hover {

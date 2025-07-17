@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { LayoutState, TimestampStyle, VideoPresentationStyle } from "../../lib/storage/tempState/layoutState";
 import { IStorage } from "../../lib/storage/storage";
+import { Version } from "../../lib/util/versioning";
 
 export interface IStateSlice {
 	expandedVideoIDs: string[];
@@ -10,7 +11,8 @@ export interface IStateSlice {
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: boolean;
 	};
-}
+	acceptedVersion: Version
+};
 
 const initialState: IStateSlice = {
 	expandedVideoIDs: [],
@@ -24,8 +26,9 @@ const initialState: IStateSlice = {
 	},
 	temporarySingleState: {
 		onRequestIsVideoControlLocked: false
-	}
-}
+	},
+	acceptedVersion: "1.0.1"
+};
 
 export const tempStateSlice = createSlice({
 	name: "tempState",
@@ -36,6 +39,7 @@ export const tempStateSlice = createSlice({
 			state.currentDirectory = action.payload.tempState.currentDirectoryPath;
 			state.layout = action.payload.tempState.layout;
 			state.videoBrowserScrollDistance = action.payload.tempState.videoBrowserScrollDistance;
+			state.acceptedVersion = action.payload.tempState.lastVersionRead;
 		},
 		setVideoBrowserScrollDistance: (state, action: PayloadAction<number>) => {
 			state.videoBrowserScrollDistance = action.payload;
@@ -57,7 +61,8 @@ export const tempStateSlice = createSlice({
 		enableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = true },
 		disableControlsLock: (state) => { state.temporarySingleState.onRequestIsVideoControlLocked = false },
 		setDirectoryPath: (state, action: PayloadAction<string>) => { state.currentDirectory = action.payload },
-		changeTimestampStyle: (state, action: PayloadAction<TimestampStyle>) => { state.layout.timestampStyle = action.payload }
+		changeTimestampStyle: (state, action: PayloadAction<TimestampStyle>) => { state.layout.timestampStyle = action.payload },
+		readVersion: (state, action: PayloadAction<Version>) => { state.acceptedVersion = action.payload; }
 	}
 })
 
