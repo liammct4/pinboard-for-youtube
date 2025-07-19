@@ -6,6 +6,11 @@
 
 This is a simple, convenient Chrome (and Edge) extension which allows you to save and "bookmark" videos and timestamps in a very organized manner using a directory system.
 
+## Demo
+Find the demo video here:
+
+[![Pinboard for YouTube Demo](https://img.youtube.com/vi/CJy-5docF3w/1.jpg)](https://www.youtube.com/watch?v=CJy-5docF3w)
+
 ## How to install 
 Download the extension via the [Chrome Web Store](https://chromewebstore.google.com/detail/onhlcaclglibpmkgdjcaaijnepbiljam).
 
