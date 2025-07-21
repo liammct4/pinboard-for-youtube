@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useHotkeys } from 'react-hotkeys-hook'
 import styles from "./OptionsNavigator.module.css"
 import { SubtleButton } from "../../../components/interactive/buttons/SubtleButton/SubtleButton";
 import { ButtonPanel } from "../../../components/interactive/ButtonPanel/ButtonPanel";
+import { useDialogPausedHotkeys } from "../../../components/dialogs/useDialogPausedHotkeys";
 
 interface IOptionProperties {
 	name: string;
@@ -24,7 +24,7 @@ function Option({ name, path, autoFocus }: IOptionProperties): React.ReactNode {
 export function OptionsNavigator(): React.ReactNode {
 	const navigate = useNavigate();
 	// Keep the debug menu hidden from the user.
-	useHotkeys('shift+d', () => navigate("debug"))
+	useDialogPausedHotkeys('shift+d', () => navigate("debug"))
 	
 	return (
 		<ButtonPanel direction="Vertical">

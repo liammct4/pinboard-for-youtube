@@ -12,7 +12,6 @@ import { TwoToggleLayoutExpander } from "../../components/presentation/TwoToggle
 import OpenLayoutIcon from "./../../../assets/icons/layout_expander_open.svg?react"
 import CloseLayoutIcon from "./../../../assets/icons/layout_expander_close.svg?react"
 import SearchIcon from "./../../../assets/symbols/search.svg?react"
-import { useHotkeys } from "react-hotkeys-hook";
 import { Spinner } from "../../components/presentation/Decorative/Spinner/Spinner.tsx";
 import { getVideoIdFromYouTubeLink, IYoutubeVideoInfo } from "../../lib/util/youtube/youtubeUtil.ts";
 import { VideoDirectoryBrowser } from "../../components/video/navigation/VideoDirectoryBrowser/VideoDirectoryBrowser.tsx";
@@ -37,6 +36,7 @@ import { VideoSearchItem } from "../../components/video/VideoSearchItem/VideoSea
 import { SwitchInputPrimitive } from "../../components/input/SwitchInput/SwitchInput.tsx";
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton.tsx";
 import { ButtonPanel } from "../../components/interactive/ButtonPanel/ButtonPanel.tsx";
+import { useDialogPausedHotkeys } from "../../components/dialogs/useDialogPausedHotkeys.ts";
 
 type AddVideoFormFields = "link";
 type AddVideoForm = {
@@ -76,8 +76,8 @@ export function VideosPage(): React.ReactNode {
 	const searchLower = useMemo(() => (searchTerm ?? "").toLowerCase().trim(), [searchTerm]);
 
 	// Hotkeys for directory browser.
-	useHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
-	useHotkeys("F2", () => {
+	useDialogPausedHotkeys("delete", () => setDeleteConfirmationOpen(selectedItems.length > 0));
+	useDialogPausedHotkeys("F2", () => {
 		if (selectedItems.length == 1) {
 			setCurrentlyEditing(selectedItems[0]);
 		}

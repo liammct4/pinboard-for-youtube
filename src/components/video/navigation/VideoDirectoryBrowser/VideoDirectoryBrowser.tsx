@@ -21,10 +21,10 @@ import { directoryActions } from "../../../../features/directory/directorySlice"
 import { VideoDirectoryInteractionContext } from "../../../../context/directory";
 import { VideoPresentationStyle } from "../../../../lib/storage/tempState/layoutState";
 import { useDirectory } from "../useDirectory";
-import { useHotkeys } from "react-hotkeys-hook";
 import { getYouTubeLinkFromVideoID } from "../../../../lib/util/youtube/youtubeUtil";
 import { videoActions } from "../../../../features/video/videoSlice";
 import { ActionMessageDialog } from "../../../dialogs/ActionDialogMessage";
+import { useDialogPausedHotkeys } from "../../../dialogs/useDialogPausedHotkeys";
 
 export interface IVideoDirectoryBrowserProperties {
 	defaultVideoStyle: VideoPresentationStyle;
@@ -70,7 +70,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 	const directory = useDirectory(directoryPath);
 	const listRef = useRef<HTMLDivElement>(null!);
 	
-	useHotkeys("ArrowUp", (e) => {
+	useDialogPausedHotkeys("ArrowUp", (e) => {
 		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
@@ -84,7 +84,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ newNode ]);
 	});
 
-	useHotkeys("ArrowDown", (e) => {
+	useDialogPausedHotkeys("ArrowDown", (e) => {
 		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
@@ -97,7 +97,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ newNode ]);
 	});
 
-	useHotkeys("Enter, ArrowRight", (e) => {
+	useDialogPausedHotkeys("Enter, ArrowRight", (e) => {
 		if (selectedItems.length != 1 || !listRef.current.contains(document.activeElement)) {
 			return;
 		}
@@ -130,7 +130,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		}
 	});
 
-	useHotkeys("Backspace, ArrowLeft", () => {
+	useDialogPausedHotkeys("Backspace, ArrowLeft", () => {
 		if (directory.slice == "$") {
 			return;
 		}
@@ -139,7 +139,7 @@ export function VideoDirectoryBrowser({ directoryPath, directoryBarHoverPath, on
 		setSelectedItems([ directory.nodeID ]);
 	});
 
-	useHotkeys("Ctrl + A", (e) => {
+	useDialogPausedHotkeys("Ctrl + A", (e) => {
 		if (document.querySelector(".video-directory-browser-list:focus-within") != null) {
 			e.preventDefault();
 

@@ -7,7 +7,7 @@ import { toTitleCase } from "../../lib/util/generic/stringUtil";
 import "./MenuPage.css"
 import { SmallButton } from "../../components/interactive/buttons/SmallButton/SmallButton";
 import { SubtleButton } from "../../components/interactive/buttons/SubtleButton/SubtleButton";
-import { useHotkeys } from "react-hotkeys-hook";
+import { useDialogPausedHotkeys } from "../../components/dialogs/useDialogPausedHotkeys";
 
 export function MenuPage(): React.ReactNode {
 	const navigate = useNavigate();
@@ -17,7 +17,7 @@ export function MenuPage(): React.ReactNode {
 	// Remove everything before options page.
 	currentPath.splice(0, 3);
 
-	useHotkeys("ArrowLeft", () => {
+	useDialogPausedHotkeys("ArrowLeft", () => {
 		if (currentPath.length != 1) {
 			navigate("/app/menu/" + encodeURI(currentPath.slice(0, currentPath.length - 1).join("/")));
 		}
