@@ -27,7 +27,8 @@ export const VersionInfo: VersionData[] = [
 		version: "1.2.3",
 		bugFixes: [
 			"Fixed an issue where having multiple YouTube pages open at one time and interacting with the extension on one page would overwrite the changes made on another page.",
-			"Fixed an issue where hotkeys could be used even though a dialog box was open, which caused unintended side effects."	
+			"Fixed an issue where hotkeys could be used even though a dialog box was open, which caused unintended side effects.",
+			"Improved directory renaming behaviour by fixing unintended actions occuring when interacting with the textbox (such as entering the directory)."
 		]
 	}
 ]

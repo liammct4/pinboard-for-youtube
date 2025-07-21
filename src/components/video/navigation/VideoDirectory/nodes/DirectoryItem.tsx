@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-svgr/client" />
 
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import CategoryIcon from "./../../../../../../assets/icons/category.svg?react"
 import DropIcon from "./../../../../../../assets/icons/drop_in.svg?react"
 import RenameIcon from "./../../../../../../assets/icons/rename.svg?react"
@@ -23,11 +23,17 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 	} = useContext(VideoDirectoryInteractionContext);
 	const [ editSlice, setEditSlice ] = useState<string>(node.slice);
 	const wasEditing = useRef<boolean>(false);
-	let isHover = draggingID == node.slice;
 
-	if (currentlyEditing == node.nodeID) {
-		wasEditing.current = true;
-	}
+	useEffect(() => {
+		// Reset to default valid value.
+		if (currentlyEditing == node.nodeID) {
+			setEditSlice(node.slice);
+		}
+
+		wasEditing.current = currentlyEditing == node.nodeID;
+	}, [currentlyEditing]);
+
+	let isHover = draggingID == node.slice;
 
 	return (
 		<div className="directory-item-outer">
@@ -42,7 +48,7 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 					<input
 						className="medium-text-input"
 						onBlur={() => {
-							requestEditEnd(editSlice)
+							requestEditEnd(editSlice);
 							wasEditing.current = false;
 						}}
 						onKeyDown={(e) => {
@@ -51,6 +57,10 @@ export function DirectoryItem({ node }: IDirectoryItemProperties): React.ReactNo
 								wasEditing.current = false;
 							}
 						}}
+						onDoubleClick={(e) => e.stopPropagation()}
+						onClick={(e) => e.stopPropagation()}
+						onMouseDown={(e) => e.stopPropagation()}
+						onMouseUp={(e) => e.stopPropagation()}
 						value={editSlice}
 						onChange={(e) => setEditSlice(e.target.value)}
 						autoFocus/> :
