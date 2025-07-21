@@ -11,6 +11,7 @@ import { tempStateActions } from "../../../../../features/state/tempStateSlice";
 import { videoActions } from "../../../../../features/video/videoSlice";
 import { IVideoNode } from "../../../../../lib/directory/directory";
 import { IVideoDirectoryInteractionContext, VideoDirectoryInteractionContext } from "../../../../../context/directory";
+import { SmallButton } from "../../../../interactive/buttons/SmallButton/SmallButton";
 
 interface IVideoItemProperties {
 	node: IVideoNode;
@@ -88,7 +89,18 @@ export function VideoItem({ node }: IVideoItemProperties): React.ReactNode {
 	
 	if (video == undefined) {
 		console.error(`Could not retrive video ID. Video ID of ${node.videoID} exists but no matching video was found.`);
-		return <p>ERROR</p>;
+		return (
+			<div className="error-line">
+				<span><strong>ERROR:</strong> Video data not found ({node.videoID})</span>
+				<SmallButton onClick={() => {
+					dispatch(videoActions.addVideo({
+						id: node.videoID,
+						timestamps: [],
+						autoplayTimestamp: null
+					}))
+				}}>Remake video</SmallButton>
+			</div>
+		);
 	}
 
 	return (

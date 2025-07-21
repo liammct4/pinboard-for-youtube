@@ -8,6 +8,15 @@
 	--transparent-bg-selected: color-mix(in srgb, var(--pfy-selection-primary) 10%, transparent);
 	--transparent-bg-hover: color-mix(in srgb, var(--pfy-selection-primary) 5%, transparent);
 
+	.error-line {
+		display: flex;
+		flex-grow: 1;
+
+		& span {
+			flex-grow: 1;
+		}
+	}
+
 	*[data-focus] {
 		flex-grow: 1;
 

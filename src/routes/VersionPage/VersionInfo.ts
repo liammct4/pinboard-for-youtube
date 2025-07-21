@@ -25,6 +25,9 @@ export const VersionInfo: VersionData[] = [
 	},
 	{
 		version: "1.2.3",
+		changes: [
+			"Improved error info whenever a video node has missing video data. There is now an option to remake the video from the node ID."
+		],
 		bugFixes: [
 			"Fixed an issue where having multiple YouTube pages open at one time and interacting with the extension on one page would overwrite the changes made on another page.",
 			"Fixed an issue where hotkeys could be used even though a dialog box was open, which caused unintended side effects.",
