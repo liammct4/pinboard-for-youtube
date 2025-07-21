@@ -7,7 +7,7 @@ import { settingsActions, settingsSlice } from "../features/settings/settingsSli
 import { cacheActions, cacheSlice } from "../features/cache/cacheSlice";
 import { videoActions, videoSlice } from "../features/video/videoSlice";
 import { directoryActions, directorySlice } from "../features/directory/directorySlice";
-import { ExtensionVirtualStorage } from "../lib/storage/virtualStorage";
+import { contentScriptID, ExtensionVirtualStorage } from "../lib/storage/virtualStorage";
 
 export async function syncStoreToStorage(onlyUpdateWhenChanged: boolean) {
 	let mainStorage = await accessStorage();
@@ -34,15 +34,17 @@ export function setupStorageAndStoreSync() {
 	chrome.storage.local.onChanged.addListener(async () => {	
 		let storage = await chrome.storage.local.get() as IStorage;
 
-		if (getApplicationContextType() == storage.meta.author) {
+		let modifiedFromDifferentScript = getApplicationContextType() == "CONTENT_SCRIPT" && storage.meta.authorScript != contentScriptID;
+		
+		if (modifiedFromDifferentScript || getApplicationContextType() != storage.meta.author) {
+			syncStoreToStorage(true);
+		}
+		else {
 			// Since the end of the sync method never runs which resets the changed array.
 			setTimeout(() => {
 				storage.meta.changed = [];
 				chrome.storage.local.set(storage);
 			}, ExtensionVirtualStorage.delayTime * 2);
-			return;
 		}
-
-		syncStoreToStorage(true);
 	});
 }

@@ -22,5 +22,11 @@ export const VersionInfo: VersionData[] = [
 			"Fix UTF-8 incompatibility when copying/encoding data. (Removed encoding)",
 			"Fixed an issue where the mouse tooltip when dragging a node would wrap improperly when cut off by the edge of the extension."
 		]
+	},
+	{
+		version: "1.2.3",
+		bugFixes: [
+			"Fixed an issue where having multiple YouTube pages open at one time and interacting with the extension on one page would overwrite the changes made on another page."
+		]
 	}
 ]

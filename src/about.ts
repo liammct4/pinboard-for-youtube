@@ -1,6 +1,6 @@
 import { Version } from "./lib/util/versioning"
 
-let version: Version = "1.1.2";
+let version: Version = "1.2.3";
 
 export const about = {
 	version,

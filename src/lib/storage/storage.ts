@@ -12,6 +12,7 @@ import { deepMerge } from "../util/objects/objects.ts"
 import { DEFAULT_THEME } from "../../styling/themes.ts"
 import { about } from "../../about.ts"
 import { Version } from "../util/versioning.ts"
+import { GUID } from "../util/objects/types.ts"
 
 export interface IMutationQueues {
 	videoPendingQueue: DataMutation<IVideo>[],
@@ -19,10 +20,12 @@ export interface IMutationQueues {
 }
 
 export type StorageAuthorSources = "CONTENT_SCRIPT" | "EXTENSION" | "DEVMODE";
+export type ContentScriptID = `${GUID}:SCRIPT`;
 
 export interface IMetaStorage {
 	meta: {
 		author: StorageAuthorSources;
+		authorScript: ContentScriptID | null;
 		changed: string[];
 	}
 }
@@ -116,6 +119,7 @@ export const BLANK_STORAGE_TEMPLATE: IStorage = {
 	},
 	meta: {
 		author: getApplicationContextType(),
+		authorScript: null,
 		changed: []
 	}
 };

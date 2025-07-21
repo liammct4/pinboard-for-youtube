@@ -1,9 +1,12 @@
 import { checkAndImplementLocalStorage } from "../browser/features/localStorage";
-import { getApplicationContextType, IMetaStorage, IStorage } from "./storage";
+import { ContentScriptID, getApplicationContextType, IMetaStorage, IStorage } from "./storage";
 
 checkAndImplementLocalStorage();
 
 const DEBUG_STORAGE = false;
+
+// Unique to this particular instance of the content script. Used to distinguish this script from scripts in other pages. 
+export const contentScriptID: ContentScriptID = `${crypto.randomUUID()}:SCRIPT`;
 
 /*
 Acts as a StorageArea but does not immediately push
@@ -45,6 +48,11 @@ export class VirtualStorageArea<T extends IMetaStorage> {
 		if (!this.saved) {
 			if (Date.now() > this.pushChangesTime) {
 				this.virtualStorage.meta.author = getApplicationContextType();
+
+				if (getApplicationContextType() == "CONTENT_SCRIPT") {
+					this.virtualStorage.meta.authorScript = contentScriptID;
+				}
+				
 				this.saved = true;
 
 				if (DEBUG_STORAGE) {
