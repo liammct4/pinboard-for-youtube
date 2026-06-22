@@ -3,13 +3,22 @@
 }
 
 .dropdown-input {
+	min-height: 0;
+	padding-block: 0;
+	height: calc(2px + var(--pfy-element-button-size-regular)) !important;
+
+	& button {
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+
 	&::picker-icon {
 		display: none;
 	}
 
 	& svg {
-		margin: auto;
-		margin-right: 0;
+		margin-left: auto;
 		transition: transform var(--pfy-timing-fast);
 	}
 
