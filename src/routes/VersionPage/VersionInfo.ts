@@ -33,5 +33,11 @@ export const VersionInfo: VersionData[] = [
 			"Fixed an issue where hotkeys could be used even though a dialog box was open, which caused unintended side effects.",
 			"Improved directory renaming behaviour by fixing unintended actions occuring when interacting with the textbox (such as entering the directory)."
 		]
+	},
+	{
+		version: "1.2.4",
+		bugFixes: [
+			"Fixed an issue where sometimes the timeline buttons would cause excessive CPU load/power consumption when playing a video or livestream.",
+		]
 	}
 ]

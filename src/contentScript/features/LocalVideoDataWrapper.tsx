@@ -46,47 +46,63 @@ export function LocalVideoDataWrapper({ children }: IWrapperProperties) {
 	const pageLink = usePageLink();
 	const video = useRef<HTMLVideoElement | null>(null!);
 	const [ videoResult, setVideoResult ] = useState<VideoExists | VideoDoesntExist>(recalculateVideoData(pageLink));
+	const videoResultRef = useRef(videoResult);
 
 	useEffect(() => {
+		videoResultRef.current = videoResult;
+	}, [videoResult]);
+
+	useEffect(() => {
+		let timeoutId: ReturnType<typeof setTimeout>;
+
 		const check = () => {
 			let result = recalculateVideoData(window.location.href);
 
-			if (!areObjectsEqual(result, videoResult)) {
+			if (!areObjectsEqual(result, videoResultRef.current)) {
 				setVideoResult(result);
 			}
-			else {
-				setTimeout(check, 100);
-			}
+
+			timeoutId = setTimeout(check, 100);
 		}
 		
-		check();
-	}, [pageLink, videoResult]);
+		timeoutId = setTimeout(check, 100);
+
+		return () => clearTimeout(timeoutId);
+	}, [pageLink]);
 
 	useEffect(() => {
-		if (videoResult.isVideoPage && videoResult.isLivestream) {
-			if (video.current == null) {
-				video.current = document.querySelector("video");
-			}
+		if (!videoResult.isVideoPage || !videoResult.isLivestream) {
+			return;
+		}
 
-			const update = () => {
-				if (Math.round(video.current!.duration) != videoResult.data.length) {
-					let result: VideoExists = {
-						...videoResult,
-						data: {
-							...videoResult.data,
-							length: Math.round(video.current!.duration)
-						}
+		if (video.current == null) {
+			video.current = document.querySelector("video");
+		}
+
+		let timeoutId: ReturnType<typeof setTimeout>;
+
+		const update = () => {
+			const currentLength = Math.round(video.current!.duration);
+			const currentData = videoResultRef.current as VideoExists;
+			if (currentLength !== currentData.data.length) {
+				let result: VideoExists = {
+					...currentData,
+					data: {
+						...currentData.data,
+						length: currentLength
 					}
-
-					setVideoResult(result);
 				}
 
-				setTimeout(() => update(), 900);
+				setVideoResult(result);
 			}
 
-			setTimeout(() => update(), 900);
+			timeoutId = setTimeout(update, 900);
 		}
-	}, [ videoResult ]);
+
+		timeoutId = setTimeout(update, 900);
+
+		return () => clearTimeout(timeoutId);
+	}, [videoResult.isVideoPage, videoResult.isVideoPage && videoResult.isLivestream]);
 	
 	return (
 		<LocalVideoDataContext.Provider value={videoResult}>
