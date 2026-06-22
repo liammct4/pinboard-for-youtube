@@ -79,6 +79,7 @@
 	.timeline-inner-text {
 		text-align: center;
 		text-wrap: nowrap;
+		font-family: "Roboto";
 		font-size: var(--pfy-font-text-standard);
 		color: var(--pfy-text-normal);
 		overflow: hidden;

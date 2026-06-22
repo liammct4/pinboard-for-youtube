@@ -38,6 +38,7 @@ export const VersionInfo: VersionData[] = [
 		version: "1.2.4",
 		bugFixes: [
 			"Fixed an issue where sometimes the timeline buttons would cause excessive CPU load/power consumption when playing a video or livestream.",
+			"Fixed an issue with the timeline buttons where the time/message would be cut off in the timestamp bubble."
 		]
 	}
 ]
